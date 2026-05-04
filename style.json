@@ -1,0 +1,37 @@
+{
+    "QCustomSlideMenu": {
+        "left_side_menu_widget": {
+            "defaultSize": {
+                "width": 70,
+                "height": "parent"
+            },
+            "collapsedSize": {
+                "width": 70,
+                "height": "parent"
+            },
+            "expandedSize": {
+                "width": 175,
+                "height": "parent"
+            },
+            "toggleButton": {
+                "buttonName": "open_side_menu_btn",
+                "icons": {
+                    "whenMenuIsCollapsed": ":/newPrefix/align-justify.png",
+                    "whenMenuIsExpanded": ":/newPrefix/align-justify.png"
+                }
+            },
+            "menuTransitionAnimation": {
+                "animationDuration": 500,
+                "animationEasingCurve": "Linear",
+                "whenCollapsing": {
+                    "animationDuration": 250,
+                    "animationEasingCurve": "Linear"
+                },
+                "whenExpanding": {
+                    "animationDuration": 250,
+                    "animationEasingCurve": "Linear"
+                }
+            }
+        }
+    }
+}
