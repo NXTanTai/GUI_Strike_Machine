@@ -7312,11 +7312,12 @@ class Ui_MainWindow(object):
         self.ver_layout_device.setObjectName(u"ver_layout_device")
         self.stackedWidget_3 = QStackedWidget(self.device_page)
         self.stackedWidget_3.setObjectName(u"stackedWidget_3")
-        self.page = QWidget()
-        self.page.setObjectName(u"page")
-        self.verticalLayout_27 = QVBoxLayout(self.page)
+        self.connection_page = QWidget()
+        self.connection_page.setObjectName(u"connection_page")
+        self.verticalLayout_27 = QVBoxLayout(self.connection_page)
         self.verticalLayout_27.setObjectName(u"verticalLayout_27")
-        self.device_frame = QFrame(self.page)
+        self.verticalLayout_27.setContentsMargins(0, 0, 0, 0)
+        self.device_frame = QFrame(self.connection_page)
         self.device_frame.setObjectName(u"device_frame")
         self.device_frame.setMinimumSize(QSize(0, 800))
         self.device_frame.setStyleSheet(u"QFrame {\n"
@@ -7330,22 +7331,22 @@ class Ui_MainWindow(object):
 "}")
         self.device_frame.setFrameShape(QFrame.NoFrame)
         self.verticalLayout_24 = QVBoxLayout(self.device_frame)
-        self.verticalLayout_24.setSpacing(15)
+        self.verticalLayout_24.setSpacing(10)
         self.verticalLayout_24.setObjectName(u"verticalLayout_24")
         self.verticalLayout_24.setContentsMargins(0, 15, 0, 15)
         self.connection_status_layout = QHBoxLayout()
         self.connection_status_layout.setSpacing(0)
         self.connection_status_layout.setObjectName(u"connection_status_layout")
-        self.pushButton_2 = QPushButton(self.device_frame)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        sizePolicy.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
-        self.pushButton_2.setSizePolicy(sizePolicy)
-        self.pushButton_2.setStyleSheet(u"font-size: 24px; \n"
+        self.plc_io_btn = QPushButton(self.device_frame)
+        self.plc_io_btn.setObjectName(u"plc_io_btn")
+        sizePolicy.setHeightForWidth(self.plc_io_btn.sizePolicy().hasHeightForWidth())
+        self.plc_io_btn.setSizePolicy(sizePolicy)
+        self.plc_io_btn.setStyleSheet(u"font-size: 24px; \n"
 "color: #0B7EC8;\n"
 "border: none;\n"
 "image:url(:/newPrefix/Image_20260416155332_127_10.png)")
 
-        self.connection_status_layout.addWidget(self.pushButton_2)
+        self.connection_status_layout.addWidget(self.plc_io_btn)
 
 
         self.verticalLayout_24.addLayout(self.connection_status_layout)
@@ -7599,12 +7600,13 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_27.addWidget(self.device_frame)
 
-        self.stackedWidget_3.addWidget(self.page)
-        self.page_2 = QWidget()
-        self.page_2.setObjectName(u"page_2")
-        self.verticalLayout_40 = QVBoxLayout(self.page_2)
+        self.stackedWidget_3.addWidget(self.connection_page)
+        self.i_o_page = QWidget()
+        self.i_o_page.setObjectName(u"i_o_page")
+        self.verticalLayout_40 = QVBoxLayout(self.i_o_page)
         self.verticalLayout_40.setObjectName(u"verticalLayout_40")
-        self.device_frame_2 = QFrame(self.page_2)
+        self.verticalLayout_40.setContentsMargins(0, 0, 0, 0)
+        self.device_frame_2 = QFrame(self.i_o_page)
         self.device_frame_2.setObjectName(u"device_frame_2")
         self.device_frame_2.setMinimumSize(QSize(0, 800))
         self.device_frame_2.setStyleSheet(u"QFrame {\n"
@@ -7618,7 +7620,7 @@ class Ui_MainWindow(object):
 "}")
         self.device_frame_2.setFrameShape(QFrame.NoFrame)
         self.verticalLayout_28 = QVBoxLayout(self.device_frame_2)
-        self.verticalLayout_28.setSpacing(5)
+        self.verticalLayout_28.setSpacing(10)
         self.verticalLayout_28.setObjectName(u"verticalLayout_28")
         self.verticalLayout_28.setContentsMargins(0, 15, 0, 15)
         self.widget_26 = QWidget(self.device_frame_2)
@@ -7627,7 +7629,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_24 = QHBoxLayout(self.widget_26)
         self.horizontalLayout_24.setSpacing(10)
         self.horizontalLayout_24.setObjectName(u"horizontalLayout_24")
-        self.horizontalLayout_24.setContentsMargins(10, 10, 10, 10)
+        self.horizontalLayout_24.setContentsMargins(10, 0, 10, 0)
         self.i_o_group_1 = QGroupBox(self.widget_26)
         self.i_o_group_1.setObjectName(u"i_o_group_1")
         self.i_o_group_1.setFont(font22)
@@ -7678,7 +7680,9 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_3.setObjectName(u"i_o_group_1_switch_3")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_3.sizePolicy().hasHeightForWidth())
         self.i_o_group_1_switch_3.setSizePolicy(sizePolicy)
-        self.i_o_group_1_switch_3.setStyleSheet(u"")
+        self.i_o_group_1_switch_3.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_9 = QWidget()
         self.on_light_9.setObjectName(u"on_light_9")
         self.horizontalLayout_486 = QHBoxLayout(self.on_light_9)
@@ -7690,9 +7694,7 @@ class Ui_MainWindow(object):
         self.pushButton_58.setSizePolicy(sizePolicy)
         self.pushButton_58.setFont(font6)
         self.pushButton_58.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_58.setIcon(icon7)
         self.pushButton_58.setIconSize(QSize(45, 45))
 
@@ -7710,9 +7712,7 @@ class Ui_MainWindow(object):
         self.pushButton_59.setSizePolicy(sizePolicy)
         self.pushButton_59.setFont(font6)
         self.pushButton_59.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_59.setIcon(icon9)
         self.pushButton_59.setIconSize(QSize(45, 45))
 
@@ -7738,9 +7738,7 @@ class Ui_MainWindow(object):
         self.pushButton_62.setSizePolicy(sizePolicy)
         self.pushButton_62.setFont(font6)
         self.pushButton_62.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_62.setIcon(icon7)
         self.pushButton_62.setIconSize(QSize(45, 45))
 
@@ -7758,9 +7756,7 @@ class Ui_MainWindow(object):
         self.pushButton_63.setSizePolicy(sizePolicy)
         self.pushButton_63.setFont(font6)
         self.pushButton_63.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_63.setIcon(icon9)
         self.pushButton_63.setIconSize(QSize(45, 45))
 
@@ -7774,7 +7770,9 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_6.setObjectName(u"i_o_group_1_switch_6")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_6.sizePolicy().hasHeightForWidth())
         self.i_o_group_1_switch_6.setSizePolicy(sizePolicy)
-        self.i_o_group_1_switch_6.setStyleSheet(u"")
+        self.i_o_group_1_switch_6.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_12 = QWidget()
         self.on_light_12.setObjectName(u"on_light_12")
         self.horizontalLayout_492 = QHBoxLayout(self.on_light_12)
@@ -7786,9 +7784,7 @@ class Ui_MainWindow(object):
         self.pushButton_64.setSizePolicy(sizePolicy)
         self.pushButton_64.setFont(font6)
         self.pushButton_64.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_64.setIcon(icon7)
         self.pushButton_64.setIconSize(QSize(45, 45))
 
@@ -7806,9 +7802,7 @@ class Ui_MainWindow(object):
         self.pushButton_65.setSizePolicy(sizePolicy)
         self.pushButton_65.setFont(font6)
         self.pushButton_65.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_65.setIcon(icon9)
         self.pushButton_65.setIconSize(QSize(45, 45))
 
@@ -7822,7 +7816,9 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_7.setObjectName(u"i_o_group_1_switch_7")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_7.sizePolicy().hasHeightForWidth())
         self.i_o_group_1_switch_7.setSizePolicy(sizePolicy)
-        self.i_o_group_1_switch_7.setStyleSheet(u"")
+        self.i_o_group_1_switch_7.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_13 = QWidget()
         self.on_light_13.setObjectName(u"on_light_13")
         self.horizontalLayout_494 = QHBoxLayout(self.on_light_13)
@@ -7834,9 +7830,7 @@ class Ui_MainWindow(object):
         self.pushButton_66.setSizePolicy(sizePolicy)
         self.pushButton_66.setFont(font6)
         self.pushButton_66.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_66.setIcon(icon7)
         self.pushButton_66.setIconSize(QSize(45, 45))
 
@@ -7854,9 +7848,7 @@ class Ui_MainWindow(object):
         self.pushButton_67.setSizePolicy(sizePolicy)
         self.pushButton_67.setFont(font6)
         self.pushButton_67.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_67.setIcon(icon9)
         self.pushButton_67.setIconSize(QSize(45, 45))
 
@@ -7870,7 +7862,9 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_2.setObjectName(u"i_o_group_1_switch_2")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_2.sizePolicy().hasHeightForWidth())
         self.i_o_group_1_switch_2.setSizePolicy(sizePolicy)
-        self.i_o_group_1_switch_2.setStyleSheet(u"")
+        self.i_o_group_1_switch_2.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_8 = QWidget()
         self.on_light_8.setObjectName(u"on_light_8")
         self.horizontalLayout_484 = QHBoxLayout(self.on_light_8)
@@ -7882,9 +7876,7 @@ class Ui_MainWindow(object):
         self.pushButton_56.setSizePolicy(sizePolicy)
         self.pushButton_56.setFont(font6)
         self.pushButton_56.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_56.setIcon(icon7)
         self.pushButton_56.setIconSize(QSize(45, 45))
 
@@ -7902,9 +7894,7 @@ class Ui_MainWindow(object):
         self.pushButton_57.setSizePolicy(sizePolicy)
         self.pushButton_57.setFont(font6)
         self.pushButton_57.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_57.setIcon(icon9)
         self.pushButton_57.setIconSize(QSize(45, 45))
 
@@ -7916,7 +7906,10 @@ class Ui_MainWindow(object):
 
         self.di_name_1 = QLabel(self.i_o_group_1)
         self.di_name_1.setObjectName(u"di_name_1")
-        self.di_name_1.setFont(font2)
+        font24 = QFont()
+        font24.setPointSize(20)
+        font24.setBold(True)
+        self.di_name_1.setFont(font24)
 
         self.gridLayout_7.addWidget(self.di_name_1, 0, 0, 1, 1)
 
@@ -7924,7 +7917,9 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_1.setObjectName(u"i_o_group_1_switch_1")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_1.sizePolicy().hasHeightForWidth())
         self.i_o_group_1_switch_1.setSizePolicy(sizePolicy)
-        self.i_o_group_1_switch_1.setStyleSheet(u"")
+        self.i_o_group_1_switch_1.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_1 = QWidget()
         self.on_light_1.setObjectName(u"on_light_1")
         self.horizontalLayout_470 = QHBoxLayout(self.on_light_1)
@@ -7936,9 +7931,7 @@ class Ui_MainWindow(object):
         self.pushButton_42.setSizePolicy(sizePolicy)
         self.pushButton_42.setFont(font6)
         self.pushButton_42.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_42.setIcon(icon7)
         self.pushButton_42.setIconSize(QSize(45, 45))
 
@@ -7956,9 +7949,7 @@ class Ui_MainWindow(object):
         self.pushButton_43.setSizePolicy(sizePolicy)
         self.pushButton_43.setFont(font6)
         self.pushButton_43.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_43.setIcon(icon9)
         self.pushButton_43.setIconSize(QSize(45, 45))
 
@@ -7972,7 +7963,9 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_4.setObjectName(u"i_o_group_1_switch_4")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_4.sizePolicy().hasHeightForWidth())
         self.i_o_group_1_switch_4.setSizePolicy(sizePolicy)
-        self.i_o_group_1_switch_4.setStyleSheet(u"")
+        self.i_o_group_1_switch_4.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_10 = QWidget()
         self.on_light_10.setObjectName(u"on_light_10")
         self.horizontalLayout_488 = QHBoxLayout(self.on_light_10)
@@ -7984,9 +7977,7 @@ class Ui_MainWindow(object):
         self.pushButton_60.setSizePolicy(sizePolicy)
         self.pushButton_60.setFont(font6)
         self.pushButton_60.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_60.setIcon(icon7)
         self.pushButton_60.setIconSize(QSize(45, 45))
 
@@ -8004,9 +7995,7 @@ class Ui_MainWindow(object):
         self.pushButton_61.setSizePolicy(sizePolicy)
         self.pushButton_61.setFont(font6)
         self.pushButton_61.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_61.setIcon(icon9)
         self.pushButton_61.setIconSize(QSize(45, 45))
 
@@ -8020,7 +8009,9 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_8.setObjectName(u"i_o_group_1_switch_8")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_8.sizePolicy().hasHeightForWidth())
         self.i_o_group_1_switch_8.setSizePolicy(sizePolicy)
-        self.i_o_group_1_switch_8.setStyleSheet(u"")
+        self.i_o_group_1_switch_8.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_14 = QWidget()
         self.on_light_14.setObjectName(u"on_light_14")
         self.horizontalLayout_496 = QHBoxLayout(self.on_light_14)
@@ -8032,9 +8023,7 @@ class Ui_MainWindow(object):
         self.pushButton_68.setSizePolicy(sizePolicy)
         self.pushButton_68.setFont(font6)
         self.pushButton_68.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_68.setIcon(icon7)
         self.pushButton_68.setIconSize(QSize(45, 45))
 
@@ -8052,9 +8041,7 @@ class Ui_MainWindow(object):
         self.pushButton_69.setSizePolicy(sizePolicy)
         self.pushButton_69.setFont(font6)
         self.pushButton_69.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_69.setIcon(icon9)
         self.pushButton_69.setIconSize(QSize(45, 45))
 
@@ -8066,46 +8053,47 @@ class Ui_MainWindow(object):
 
         self.di_name_2 = QLabel(self.i_o_group_1)
         self.di_name_2.setObjectName(u"di_name_2")
-        self.di_name_2.setFont(font2)
+        self.di_name_2.setFont(font24)
 
         self.gridLayout_7.addWidget(self.di_name_2, 1, 0, 1, 1)
 
         self.di_name_3 = QLabel(self.i_o_group_1)
         self.di_name_3.setObjectName(u"di_name_3")
-        self.di_name_3.setFont(font2)
+        self.di_name_3.setFont(font24)
 
         self.gridLayout_7.addWidget(self.di_name_3, 2, 0, 1, 1)
 
         self.di_name_4 = QLabel(self.i_o_group_1)
         self.di_name_4.setObjectName(u"di_name_4")
-        self.di_name_4.setFont(font2)
+        self.di_name_4.setFont(font24)
 
         self.gridLayout_7.addWidget(self.di_name_4, 3, 0, 1, 1)
 
         self.di_name_5 = QLabel(self.i_o_group_1)
         self.di_name_5.setObjectName(u"di_name_5")
-        self.di_name_5.setFont(font2)
+        self.di_name_5.setFont(font24)
 
         self.gridLayout_7.addWidget(self.di_name_5, 4, 0, 1, 1)
 
         self.di_name_6 = QLabel(self.i_o_group_1)
         self.di_name_6.setObjectName(u"di_name_6")
-        self.di_name_6.setFont(font2)
+        self.di_name_6.setFont(font24)
 
         self.gridLayout_7.addWidget(self.di_name_6, 5, 0, 1, 1)
 
         self.di_name_7 = QLabel(self.i_o_group_1)
         self.di_name_7.setObjectName(u"di_name_7")
-        self.di_name_7.setFont(font2)
+        self.di_name_7.setFont(font24)
 
         self.gridLayout_7.addWidget(self.di_name_7, 6, 0, 1, 1)
 
         self.di_name_8 = QLabel(self.i_o_group_1)
         self.di_name_8.setObjectName(u"di_name_8")
-        self.di_name_8.setFont(font2)
+        self.di_name_8.setFont(font24)
 
         self.gridLayout_7.addWidget(self.di_name_8, 7, 0, 1, 1)
 
+        self.gridLayout_7.setColumnStretch(1, 1)
 
         self.horizontalLayout_24.addWidget(self.i_o_group_1)
 
@@ -8139,7 +8127,9 @@ class Ui_MainWindow(object):
 "    border: 2px solid #0B7EC8;\n"
 "    background-color: white;\n"
 "}\n"
-"\n"
+"QLabel{\n"
+"	color: #2C81D1;\n"
+"}\n"
 "QLineEdit {\n"
 "    border: 1px solid #D1D5DB;\n"
 "    border-radius: 6px;\n"
@@ -8154,11 +8144,13 @@ class Ui_MainWindow(object):
         self.gridLayout_6.setSpacing(10)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
         self.gridLayout_6.setContentsMargins(10, 10, 10, 10)
-        self.i_o_group_2_switch_6 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_6.setObjectName(u"i_o_group_2_switch_6")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_6.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_6.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_6.setStyleSheet(u"")
+        self.i_o_group_2_switch_5 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_5.setObjectName(u"i_o_group_2_switch_5")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_5.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_5.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_5.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_34 = QWidget()
         self.on_light_34.setObjectName(u"on_light_34")
         self.horizontalLayout_536 = QHBoxLayout(self.on_light_34)
@@ -8170,15 +8162,13 @@ class Ui_MainWindow(object):
         self.pushButton_108.setSizePolicy(sizePolicy)
         self.pushButton_108.setFont(font6)
         self.pushButton_108.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_108.setIcon(icon7)
         self.pushButton_108.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_536.addWidget(self.pushButton_108)
 
-        self.i_o_group_2_switch_6.addWidget(self.on_light_34)
+        self.i_o_group_2_switch_5.addWidget(self.on_light_34)
         self.off_light_34 = QWidget()
         self.off_light_34.setObjectName(u"off_light_34")
         self.horizontalLayout_537 = QHBoxLayout(self.off_light_34)
@@ -8190,23 +8180,23 @@ class Ui_MainWindow(object):
         self.pushButton_109.setSizePolicy(sizePolicy)
         self.pushButton_109.setFont(font6)
         self.pushButton_109.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_109.setIcon(icon9)
         self.pushButton_109.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_537.addWidget(self.pushButton_109)
 
-        self.i_o_group_2_switch_6.addWidget(self.off_light_34)
+        self.i_o_group_2_switch_5.addWidget(self.off_light_34)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_6, 2, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_5, 2, 1, 1, 1)
 
-        self.i_o_group_2_switch_7 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_7.setObjectName(u"i_o_group_2_switch_7")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_7.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_7.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_7.setStyleSheet(u"")
+        self.i_o_group_2_switch_6 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_6.setObjectName(u"i_o_group_2_switch_6")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_6.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_6.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_6.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_35 = QWidget()
         self.on_light_35.setObjectName(u"on_light_35")
         self.horizontalLayout_538 = QHBoxLayout(self.on_light_35)
@@ -8218,15 +8208,13 @@ class Ui_MainWindow(object):
         self.pushButton_110.setSizePolicy(sizePolicy)
         self.pushButton_110.setFont(font6)
         self.pushButton_110.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_110.setIcon(icon7)
         self.pushButton_110.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_538.addWidget(self.pushButton_110)
 
-        self.i_o_group_2_switch_7.addWidget(self.on_light_35)
+        self.i_o_group_2_switch_6.addWidget(self.on_light_35)
         self.off_light_35 = QWidget()
         self.off_light_35.setObjectName(u"off_light_35")
         self.horizontalLayout_539 = QHBoxLayout(self.off_light_35)
@@ -8238,23 +8226,23 @@ class Ui_MainWindow(object):
         self.pushButton_111.setSizePolicy(sizePolicy)
         self.pushButton_111.setFont(font6)
         self.pushButton_111.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_111.setIcon(icon9)
         self.pushButton_111.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_539.addWidget(self.pushButton_111)
 
-        self.i_o_group_2_switch_7.addWidget(self.off_light_35)
+        self.i_o_group_2_switch_6.addWidget(self.off_light_35)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_7, 2, 3, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_6, 2, 3, 1, 1)
 
-        self.i_o_group_2_switch_8 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_8.setObjectName(u"i_o_group_2_switch_8")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_8.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_8.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_8.setStyleSheet(u"")
+        self.i_o_group_2_switch_7 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_7.setObjectName(u"i_o_group_2_switch_7")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_7.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_7.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_7.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_36 = QWidget()
         self.on_light_36.setObjectName(u"on_light_36")
         self.horizontalLayout_540 = QHBoxLayout(self.on_light_36)
@@ -8266,15 +8254,13 @@ class Ui_MainWindow(object):
         self.pushButton_112.setSizePolicy(sizePolicy)
         self.pushButton_112.setFont(font6)
         self.pushButton_112.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_112.setIcon(icon7)
         self.pushButton_112.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_540.addWidget(self.pushButton_112)
 
-        self.i_o_group_2_switch_8.addWidget(self.on_light_36)
+        self.i_o_group_2_switch_7.addWidget(self.on_light_36)
         self.off_light_36 = QWidget()
         self.off_light_36.setObjectName(u"off_light_36")
         self.horizontalLayout_541 = QHBoxLayout(self.off_light_36)
@@ -8286,23 +8272,23 @@ class Ui_MainWindow(object):
         self.pushButton_113.setSizePolicy(sizePolicy)
         self.pushButton_113.setFont(font6)
         self.pushButton_113.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_113.setIcon(icon9)
         self.pushButton_113.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_541.addWidget(self.pushButton_113)
 
-        self.i_o_group_2_switch_8.addWidget(self.off_light_36)
+        self.i_o_group_2_switch_7.addWidget(self.off_light_36)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_8, 3, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_7, 3, 1, 1, 1)
 
-        self.i_o_group_2_switch_9 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_9.setObjectName(u"i_o_group_2_switch_9")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_9.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_9.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_9.setStyleSheet(u"")
+        self.i_o_group_2_switch_8 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_8.setObjectName(u"i_o_group_2_switch_8")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_8.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_8.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_8.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_37 = QWidget()
         self.on_light_37.setObjectName(u"on_light_37")
         self.horizontalLayout_542 = QHBoxLayout(self.on_light_37)
@@ -8314,15 +8300,13 @@ class Ui_MainWindow(object):
         self.pushButton_114.setSizePolicy(sizePolicy)
         self.pushButton_114.setFont(font6)
         self.pushButton_114.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_114.setIcon(icon7)
         self.pushButton_114.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_542.addWidget(self.pushButton_114)
 
-        self.i_o_group_2_switch_9.addWidget(self.on_light_37)
+        self.i_o_group_2_switch_8.addWidget(self.on_light_37)
         self.off_light_37 = QWidget()
         self.off_light_37.setObjectName(u"off_light_37")
         self.horizontalLayout_543 = QHBoxLayout(self.off_light_37)
@@ -8334,23 +8318,23 @@ class Ui_MainWindow(object):
         self.pushButton_115.setSizePolicy(sizePolicy)
         self.pushButton_115.setFont(font6)
         self.pushButton_115.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_115.setIcon(icon9)
         self.pushButton_115.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_543.addWidget(self.pushButton_115)
 
-        self.i_o_group_2_switch_9.addWidget(self.off_light_37)
+        self.i_o_group_2_switch_8.addWidget(self.off_light_37)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_9, 3, 3, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_8, 3, 3, 1, 1)
 
-        self.i_o_group_2_switch_10 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_10.setObjectName(u"i_o_group_2_switch_10")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_10.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_10.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_10.setStyleSheet(u"")
+        self.i_o_group_2_switch_9 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_9.setObjectName(u"i_o_group_2_switch_9")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_9.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_9.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_9.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_38 = QWidget()
         self.on_light_38.setObjectName(u"on_light_38")
         self.horizontalLayout_544 = QHBoxLayout(self.on_light_38)
@@ -8362,15 +8346,13 @@ class Ui_MainWindow(object):
         self.pushButton_116.setSizePolicy(sizePolicy)
         self.pushButton_116.setFont(font6)
         self.pushButton_116.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_116.setIcon(icon7)
         self.pushButton_116.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_544.addWidget(self.pushButton_116)
 
-        self.i_o_group_2_switch_10.addWidget(self.on_light_38)
+        self.i_o_group_2_switch_9.addWidget(self.on_light_38)
         self.off_light_38 = QWidget()
         self.off_light_38.setObjectName(u"off_light_38")
         self.horizontalLayout_545 = QHBoxLayout(self.off_light_38)
@@ -8382,23 +8364,23 @@ class Ui_MainWindow(object):
         self.pushButton_117.setSizePolicy(sizePolicy)
         self.pushButton_117.setFont(font6)
         self.pushButton_117.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_117.setIcon(icon9)
         self.pushButton_117.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_545.addWidget(self.pushButton_117)
 
-        self.i_o_group_2_switch_10.addWidget(self.off_light_38)
+        self.i_o_group_2_switch_9.addWidget(self.off_light_38)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_10, 4, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_9, 4, 1, 1, 1)
 
-        self.i_o_group_2_switch_11 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_11.setObjectName(u"i_o_group_2_switch_11")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_11.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_11.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_11.setStyleSheet(u"")
+        self.i_o_group_2_switch_10 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_10.setObjectName(u"i_o_group_2_switch_10")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_10.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_10.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_10.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_39 = QWidget()
         self.on_light_39.setObjectName(u"on_light_39")
         self.horizontalLayout_546 = QHBoxLayout(self.on_light_39)
@@ -8410,15 +8392,13 @@ class Ui_MainWindow(object):
         self.pushButton_118.setSizePolicy(sizePolicy)
         self.pushButton_118.setFont(font6)
         self.pushButton_118.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_118.setIcon(icon7)
         self.pushButton_118.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_546.addWidget(self.pushButton_118)
 
-        self.i_o_group_2_switch_11.addWidget(self.on_light_39)
+        self.i_o_group_2_switch_10.addWidget(self.on_light_39)
         self.off_light_39 = QWidget()
         self.off_light_39.setObjectName(u"off_light_39")
         self.horizontalLayout_547 = QHBoxLayout(self.off_light_39)
@@ -8430,23 +8410,23 @@ class Ui_MainWindow(object):
         self.pushButton_119.setSizePolicy(sizePolicy)
         self.pushButton_119.setFont(font6)
         self.pushButton_119.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_119.setIcon(icon9)
         self.pushButton_119.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_547.addWidget(self.pushButton_119)
 
-        self.i_o_group_2_switch_11.addWidget(self.off_light_39)
+        self.i_o_group_2_switch_10.addWidget(self.off_light_39)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_11, 4, 3, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_10, 4, 3, 1, 1)
 
-        self.i_o_group_2_switch_12 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_12.setObjectName(u"i_o_group_2_switch_12")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_12.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_12.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_12.setStyleSheet(u"")
+        self.i_o_group_2_switch_11 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_11.setObjectName(u"i_o_group_2_switch_11")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_11.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_11.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_11.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_40 = QWidget()
         self.on_light_40.setObjectName(u"on_light_40")
         self.horizontalLayout_548 = QHBoxLayout(self.on_light_40)
@@ -8458,15 +8438,13 @@ class Ui_MainWindow(object):
         self.pushButton_120.setSizePolicy(sizePolicy)
         self.pushButton_120.setFont(font6)
         self.pushButton_120.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_120.setIcon(icon7)
         self.pushButton_120.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_548.addWidget(self.pushButton_120)
 
-        self.i_o_group_2_switch_12.addWidget(self.on_light_40)
+        self.i_o_group_2_switch_11.addWidget(self.on_light_40)
         self.off_light_40 = QWidget()
         self.off_light_40.setObjectName(u"off_light_40")
         self.horizontalLayout_549 = QHBoxLayout(self.off_light_40)
@@ -8478,23 +8456,23 @@ class Ui_MainWindow(object):
         self.pushButton_121.setSizePolicy(sizePolicy)
         self.pushButton_121.setFont(font6)
         self.pushButton_121.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_121.setIcon(icon9)
         self.pushButton_121.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_549.addWidget(self.pushButton_121)
 
-        self.i_o_group_2_switch_12.addWidget(self.off_light_40)
+        self.i_o_group_2_switch_11.addWidget(self.off_light_40)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_12, 5, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_11, 5, 1, 1, 1)
 
-        self.i_o_group_2_switch_13 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_13.setObjectName(u"i_o_group_2_switch_13")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_13.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_13.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_13.setStyleSheet(u"")
+        self.i_o_group_2_switch_12 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_12.setObjectName(u"i_o_group_2_switch_12")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_12.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_12.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_12.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_41 = QWidget()
         self.on_light_41.setObjectName(u"on_light_41")
         self.horizontalLayout_550 = QHBoxLayout(self.on_light_41)
@@ -8506,15 +8484,13 @@ class Ui_MainWindow(object):
         self.pushButton_122.setSizePolicy(sizePolicy)
         self.pushButton_122.setFont(font6)
         self.pushButton_122.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_122.setIcon(icon7)
         self.pushButton_122.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_550.addWidget(self.pushButton_122)
 
-        self.i_o_group_2_switch_13.addWidget(self.on_light_41)
+        self.i_o_group_2_switch_12.addWidget(self.on_light_41)
         self.off_light_41 = QWidget()
         self.off_light_41.setObjectName(u"off_light_41")
         self.horizontalLayout_551 = QHBoxLayout(self.off_light_41)
@@ -8526,29 +8502,29 @@ class Ui_MainWindow(object):
         self.pushButton_123.setSizePolicy(sizePolicy)
         self.pushButton_123.setFont(font6)
         self.pushButton_123.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_123.setIcon(icon9)
         self.pushButton_123.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_551.addWidget(self.pushButton_123)
 
-        self.i_o_group_2_switch_13.addWidget(self.off_light_41)
+        self.i_o_group_2_switch_12.addWidget(self.off_light_41)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_13, 5, 3, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_12, 5, 3, 1, 1)
 
         self.dq_name_1 = QLabel(self.i_o_group_2)
         self.dq_name_1.setObjectName(u"dq_name_1")
-        self.dq_name_1.setFont(font2)
+        self.dq_name_1.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_1, 0, 0, 1, 1)
 
-        self.i_o_group_2_switch_14 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_14.setObjectName(u"i_o_group_2_switch_14")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_14.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_14.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_14.setStyleSheet(u"")
+        self.i_o_group_2_switch_13 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_13.setObjectName(u"i_o_group_2_switch_13")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_13.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_13.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_13.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_42 = QWidget()
         self.on_light_42.setObjectName(u"on_light_42")
         self.horizontalLayout_552 = QHBoxLayout(self.on_light_42)
@@ -8560,15 +8536,13 @@ class Ui_MainWindow(object):
         self.pushButton_124.setSizePolicy(sizePolicy)
         self.pushButton_124.setFont(font6)
         self.pushButton_124.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_124.setIcon(icon7)
         self.pushButton_124.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_552.addWidget(self.pushButton_124)
 
-        self.i_o_group_2_switch_14.addWidget(self.on_light_42)
+        self.i_o_group_2_switch_13.addWidget(self.on_light_42)
         self.off_light_42 = QWidget()
         self.off_light_42.setObjectName(u"off_light_42")
         self.horizontalLayout_553 = QHBoxLayout(self.off_light_42)
@@ -8580,29 +8554,29 @@ class Ui_MainWindow(object):
         self.pushButton_125.setSizePolicy(sizePolicy)
         self.pushButton_125.setFont(font6)
         self.pushButton_125.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_125.setIcon(icon9)
         self.pushButton_125.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_553.addWidget(self.pushButton_125)
 
-        self.i_o_group_2_switch_14.addWidget(self.off_light_42)
+        self.i_o_group_2_switch_13.addWidget(self.off_light_42)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_14, 6, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_13, 6, 1, 1, 1)
 
         self.dq_name_2 = QLabel(self.i_o_group_2)
         self.dq_name_2.setObjectName(u"dq_name_2")
-        self.dq_name_2.setFont(font2)
+        self.dq_name_2.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_2, 0, 2, 1, 1)
 
-        self.i_o_group_2_switch_16 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_16.setObjectName(u"i_o_group_2_switch_16")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_16.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_16.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_16.setStyleSheet(u"")
+        self.i_o_group_2_switch_15 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_15.setObjectName(u"i_o_group_2_switch_15")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_15.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_15.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_15.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_44 = QWidget()
         self.on_light_44.setObjectName(u"on_light_44")
         self.horizontalLayout_556 = QHBoxLayout(self.on_light_44)
@@ -8614,15 +8588,13 @@ class Ui_MainWindow(object):
         self.pushButton_128.setSizePolicy(sizePolicy)
         self.pushButton_128.setFont(font6)
         self.pushButton_128.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_128.setIcon(icon7)
         self.pushButton_128.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_556.addWidget(self.pushButton_128)
 
-        self.i_o_group_2_switch_16.addWidget(self.on_light_44)
+        self.i_o_group_2_switch_15.addWidget(self.on_light_44)
         self.off_light_44 = QWidget()
         self.off_light_44.setObjectName(u"off_light_44")
         self.horizontalLayout_557 = QHBoxLayout(self.off_light_44)
@@ -8634,101 +8606,101 @@ class Ui_MainWindow(object):
         self.pushButton_129.setSizePolicy(sizePolicy)
         self.pushButton_129.setFont(font6)
         self.pushButton_129.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_129.setIcon(icon9)
         self.pushButton_129.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_557.addWidget(self.pushButton_129)
 
-        self.i_o_group_2_switch_16.addWidget(self.off_light_44)
+        self.i_o_group_2_switch_15.addWidget(self.off_light_44)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_16, 7, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_15, 7, 1, 1, 1)
 
         self.dq_name_3 = QLabel(self.i_o_group_2)
         self.dq_name_3.setObjectName(u"dq_name_3")
-        self.dq_name_3.setFont(font2)
+        self.dq_name_3.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_3, 1, 0, 1, 1)
 
         self.dq_name_4 = QLabel(self.i_o_group_2)
         self.dq_name_4.setObjectName(u"dq_name_4")
-        self.dq_name_4.setFont(font2)
+        self.dq_name_4.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_4, 1, 2, 1, 1)
 
         self.dq_name_6 = QLabel(self.i_o_group_2)
         self.dq_name_6.setObjectName(u"dq_name_6")
-        self.dq_name_6.setFont(font2)
+        self.dq_name_6.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_6, 2, 2, 1, 1)
 
         self.dq_name_5 = QLabel(self.i_o_group_2)
         self.dq_name_5.setObjectName(u"dq_name_5")
-        self.dq_name_5.setFont(font2)
+        self.dq_name_5.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_5, 2, 0, 1, 1)
 
         self.dq_name_7 = QLabel(self.i_o_group_2)
         self.dq_name_7.setObjectName(u"dq_name_7")
-        self.dq_name_7.setFont(font2)
+        self.dq_name_7.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_7, 3, 0, 1, 1)
 
         self.dq_name_8 = QLabel(self.i_o_group_2)
         self.dq_name_8.setObjectName(u"dq_name_8")
-        self.dq_name_8.setFont(font2)
+        self.dq_name_8.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_8, 3, 2, 1, 1)
 
         self.dq_name_9 = QLabel(self.i_o_group_2)
         self.dq_name_9.setObjectName(u"dq_name_9")
-        self.dq_name_9.setFont(font2)
+        self.dq_name_9.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_9, 4, 0, 1, 1)
 
         self.dq_name_10 = QLabel(self.i_o_group_2)
         self.dq_name_10.setObjectName(u"dq_name_10")
-        self.dq_name_10.setFont(font2)
+        self.dq_name_10.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_10, 4, 2, 1, 1)
 
         self.dq_name_11 = QLabel(self.i_o_group_2)
         self.dq_name_11.setObjectName(u"dq_name_11")
-        self.dq_name_11.setFont(font2)
+        self.dq_name_11.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_11, 5, 0, 1, 1)
 
         self.dq_name_13 = QLabel(self.i_o_group_2)
         self.dq_name_13.setObjectName(u"dq_name_13")
-        self.dq_name_13.setFont(font2)
+        self.dq_name_13.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_13, 6, 0, 1, 1)
 
         self.dq_name_12 = QLabel(self.i_o_group_2)
         self.dq_name_12.setObjectName(u"dq_name_12")
-        self.dq_name_12.setFont(font2)
+        self.dq_name_12.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_12, 5, 2, 1, 1)
 
         self.dq_name_14 = QLabel(self.i_o_group_2)
         self.dq_name_14.setObjectName(u"dq_name_14")
-        self.dq_name_14.setFont(font2)
+        self.dq_name_14.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_14, 6, 2, 1, 1)
 
         self.dq_name_15 = QLabel(self.i_o_group_2)
         self.dq_name_15.setObjectName(u"dq_name_15")
-        self.dq_name_15.setFont(font2)
+        self.dq_name_15.setFont(font24)
 
         self.gridLayout_6.addWidget(self.dq_name_15, 7, 0, 1, 1)
 
-        self.i_o_group_2_switch_15 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_15.setObjectName(u"i_o_group_2_switch_15")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_15.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_15.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_15.setStyleSheet(u"")
+        self.i_o_group_2_switch_14 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_14.setObjectName(u"i_o_group_2_switch_14")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_14.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_14.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_14.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_43 = QWidget()
         self.on_light_43.setObjectName(u"on_light_43")
         self.horizontalLayout_554 = QHBoxLayout(self.on_light_43)
@@ -8740,15 +8712,13 @@ class Ui_MainWindow(object):
         self.pushButton_126.setSizePolicy(sizePolicy)
         self.pushButton_126.setFont(font6)
         self.pushButton_126.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_126.setIcon(icon7)
         self.pushButton_126.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_554.addWidget(self.pushButton_126)
 
-        self.i_o_group_2_switch_15.addWidget(self.on_light_43)
+        self.i_o_group_2_switch_14.addWidget(self.on_light_43)
         self.off_light_43 = QWidget()
         self.off_light_43.setObjectName(u"off_light_43")
         self.horizontalLayout_555 = QHBoxLayout(self.off_light_43)
@@ -8760,23 +8730,23 @@ class Ui_MainWindow(object):
         self.pushButton_127.setSizePolicy(sizePolicy)
         self.pushButton_127.setFont(font6)
         self.pushButton_127.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_127.setIcon(icon9)
         self.pushButton_127.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_555.addWidget(self.pushButton_127)
 
-        self.i_o_group_2_switch_15.addWidget(self.off_light_43)
+        self.i_o_group_2_switch_14.addWidget(self.off_light_43)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_15, 6, 3, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_14, 6, 3, 1, 1)
 
-        self.i_o_group_2_switch_4 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_4.setObjectName(u"i_o_group_2_switch_4")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_4.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_4.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_4.setStyleSheet(u"")
+        self.i_o_group_2_switch_3 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_3.setObjectName(u"i_o_group_2_switch_3")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_3.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_3.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_3.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_32 = QWidget()
         self.on_light_32.setObjectName(u"on_light_32")
         self.horizontalLayout_532 = QHBoxLayout(self.on_light_32)
@@ -8788,15 +8758,13 @@ class Ui_MainWindow(object):
         self.pushButton_104.setSizePolicy(sizePolicy)
         self.pushButton_104.setFont(font6)
         self.pushButton_104.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_104.setIcon(icon7)
         self.pushButton_104.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_532.addWidget(self.pushButton_104)
 
-        self.i_o_group_2_switch_4.addWidget(self.on_light_32)
+        self.i_o_group_2_switch_3.addWidget(self.on_light_32)
         self.off_light_32 = QWidget()
         self.off_light_32.setObjectName(u"off_light_32")
         self.horizontalLayout_533 = QHBoxLayout(self.off_light_32)
@@ -8808,23 +8776,23 @@ class Ui_MainWindow(object):
         self.pushButton_105.setSizePolicy(sizePolicy)
         self.pushButton_105.setFont(font6)
         self.pushButton_105.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_105.setIcon(icon9)
         self.pushButton_105.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_533.addWidget(self.pushButton_105)
 
-        self.i_o_group_2_switch_4.addWidget(self.off_light_32)
+        self.i_o_group_2_switch_3.addWidget(self.off_light_32)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_4, 1, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_3, 1, 1, 1, 1)
 
-        self.i_o_group_2_switch_5 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_5.setObjectName(u"i_o_group_2_switch_5")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_5.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_5.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_5.setStyleSheet(u"")
+        self.i_o_group_2_switch_4 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_4.setObjectName(u"i_o_group_2_switch_4")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_4.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_4.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_4.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_33 = QWidget()
         self.on_light_33.setObjectName(u"on_light_33")
         self.horizontalLayout_534 = QHBoxLayout(self.on_light_33)
@@ -8836,15 +8804,13 @@ class Ui_MainWindow(object):
         self.pushButton_106.setSizePolicy(sizePolicy)
         self.pushButton_106.setFont(font6)
         self.pushButton_106.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_106.setIcon(icon7)
         self.pushButton_106.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_534.addWidget(self.pushButton_106)
 
-        self.i_o_group_2_switch_5.addWidget(self.on_light_33)
+        self.i_o_group_2_switch_4.addWidget(self.on_light_33)
         self.off_light_33 = QWidget()
         self.off_light_33.setObjectName(u"off_light_33")
         self.horizontalLayout_535 = QHBoxLayout(self.off_light_33)
@@ -8856,23 +8822,23 @@ class Ui_MainWindow(object):
         self.pushButton_107.setSizePolicy(sizePolicy)
         self.pushButton_107.setFont(font6)
         self.pushButton_107.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_107.setIcon(icon9)
         self.pushButton_107.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_535.addWidget(self.pushButton_107)
 
-        self.i_o_group_2_switch_5.addWidget(self.off_light_33)
+        self.i_o_group_2_switch_4.addWidget(self.off_light_33)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_5, 1, 3, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_4, 1, 3, 1, 1)
 
         self.i_o_group_2_switch_1 = QStackedWidget(self.i_o_group_2)
         self.i_o_group_2_switch_1.setObjectName(u"i_o_group_2_switch_1")
         sizePolicy.setHeightForWidth(self.i_o_group_2_switch_1.sizePolicy().hasHeightForWidth())
         self.i_o_group_2_switch_1.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_1.setStyleSheet(u"")
+        self.i_o_group_2_switch_1.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_16 = QWidget()
         self.on_light_16.setObjectName(u"on_light_16")
         self.horizontalLayout_500 = QHBoxLayout(self.on_light_16)
@@ -8884,9 +8850,7 @@ class Ui_MainWindow(object):
         self.pushButton_72.setSizePolicy(sizePolicy)
         self.pushButton_72.setFont(font6)
         self.pushButton_72.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_72.setIcon(icon7)
         self.pushButton_72.setIconSize(QSize(45, 45))
 
@@ -8904,9 +8868,7 @@ class Ui_MainWindow(object):
         self.pushButton_73.setSizePolicy(sizePolicy)
         self.pushButton_73.setFont(font6)
         self.pushButton_73.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_73.setIcon(icon9)
         self.pushButton_73.setIconSize(QSize(45, 45))
 
@@ -8916,11 +8878,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.i_o_group_2_switch_1, 0, 1, 1, 1)
 
-        self.i_o_group_2_switch_3 = QStackedWidget(self.i_o_group_2)
-        self.i_o_group_2_switch_3.setObjectName(u"i_o_group_2_switch_3")
-        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_3.sizePolicy().hasHeightForWidth())
-        self.i_o_group_2_switch_3.setSizePolicy(sizePolicy)
-        self.i_o_group_2_switch_3.setStyleSheet(u"")
+        self.i_o_group_2_switch_2 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_2.setObjectName(u"i_o_group_2_switch_2")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_2.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_2.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_2.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.on_light_31 = QWidget()
         self.on_light_31.setObjectName(u"on_light_31")
         self.horizontalLayout_530 = QHBoxLayout(self.on_light_31)
@@ -8932,15 +8896,13 @@ class Ui_MainWindow(object):
         self.pushButton_102.setSizePolicy(sizePolicy)
         self.pushButton_102.setFont(font6)
         self.pushButton_102.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_102.setIcon(icon7)
         self.pushButton_102.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_530.addWidget(self.pushButton_102)
 
-        self.i_o_group_2_switch_3.addWidget(self.on_light_31)
+        self.i_o_group_2_switch_2.addWidget(self.on_light_31)
         self.off_light_31 = QWidget()
         self.off_light_31.setObjectName(u"off_light_31")
         self.horizontalLayout_531 = QHBoxLayout(self.off_light_31)
@@ -8952,18 +8914,18 @@ class Ui_MainWindow(object):
         self.pushButton_103.setSizePolicy(sizePolicy)
         self.pushButton_103.setFont(font6)
         self.pushButton_103.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
+"border-radius: 20px;")
         self.pushButton_103.setIcon(icon9)
         self.pushButton_103.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_531.addWidget(self.pushButton_103)
 
-        self.i_o_group_2_switch_3.addWidget(self.off_light_31)
+        self.i_o_group_2_switch_2.addWidget(self.off_light_31)
 
-        self.gridLayout_6.addWidget(self.i_o_group_2_switch_3, 0, 3, 1, 1)
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_2, 0, 3, 1, 1)
 
+        self.gridLayout_6.setColumnStretch(1, 1)
+        self.gridLayout_6.setColumnStretch(3, 1)
 
         self.horizontalLayout_24.addWidget(self.i_o_group_2)
 
@@ -8985,6 +8947,7 @@ class Ui_MainWindow(object):
 "\n"
 "QLabel {\n"
 "	border: none;\n"
+"	color: #E6AC2E;\n"
 "}\n"
 "\n"
 "QSpinBox {\n"
@@ -9016,11 +8979,13 @@ class Ui_MainWindow(object):
         self.t0_value.setObjectName(u"t0_value")
         sizePolicy.setHeightForWidth(self.t0_value.sizePolicy().hasHeightForWidth())
         self.t0_value.setSizePolicy(sizePolicy)
-        self.t0_value.setFont(font2)
-        self.t0_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        font25 = QFont()
+        font25.setPointSize(22)
+        font25.setBold(True)
+        self.t0_value.setFont(font25)
+        self.t0_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.t0_value.setAlignment(Qt.AlignCenter)
         self.t0_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t0_value.setDecimals(1)
@@ -9031,7 +8996,7 @@ class Ui_MainWindow(object):
 
         self.ai_name_1 = QLabel(self.i_o_group_3)
         self.ai_name_1.setObjectName(u"ai_name_1")
-        self.ai_name_1.setFont(font2)
+        self.ai_name_1.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_1, 0, 0, 1, 1)
 
@@ -9039,11 +9004,10 @@ class Ui_MainWindow(object):
         self.t1_1_value.setObjectName(u"t1_1_value")
         sizePolicy.setHeightForWidth(self.t1_1_value.sizePolicy().hasHeightForWidth())
         self.t1_1_value.setSizePolicy(sizePolicy)
-        self.t1_1_value.setFont(font2)
-        self.t1_1_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.t1_1_value.setFont(font25)
+        self.t1_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.t1_1_value.setAlignment(Qt.AlignCenter)
         self.t1_1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t1_1_value.setDecimals(1)
@@ -9054,91 +9018,91 @@ class Ui_MainWindow(object):
 
         self.ai_name_15 = QLabel(self.i_o_group_3)
         self.ai_name_15.setObjectName(u"ai_name_15")
-        self.ai_name_15.setFont(font2)
+        self.ai_name_15.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_15, 7, 2, 1, 1)
 
         self.ai_name_14 = QLabel(self.i_o_group_3)
         self.ai_name_14.setObjectName(u"ai_name_14")
-        self.ai_name_14.setFont(font2)
+        self.ai_name_14.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_14, 6, 2, 1, 1)
 
         self.ai_name_12 = QLabel(self.i_o_group_3)
         self.ai_name_12.setObjectName(u"ai_name_12")
-        self.ai_name_12.setFont(font2)
+        self.ai_name_12.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_12, 7, 0, 1, 1)
 
         self.ai_name_13 = QLabel(self.i_o_group_3)
         self.ai_name_13.setObjectName(u"ai_name_13")
-        self.ai_name_13.setFont(font2)
+        self.ai_name_13.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_13, 9, 0, 1, 1)
 
         self.ai_name_16 = QLabel(self.i_o_group_3)
         self.ai_name_16.setObjectName(u"ai_name_16")
-        self.ai_name_16.setFont(font2)
+        self.ai_name_16.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_16, 9, 2, 1, 1)
 
         self.ai_name_4 = QLabel(self.i_o_group_3)
         self.ai_name_4.setObjectName(u"ai_name_4")
-        self.ai_name_4.setFont(font2)
+        self.ai_name_4.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_4, 1, 2, 1, 1)
 
         self.ai_name_3 = QLabel(self.i_o_group_3)
         self.ai_name_3.setObjectName(u"ai_name_3")
-        self.ai_name_3.setFont(font2)
+        self.ai_name_3.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_3, 1, 0, 1, 1)
 
         self.ai_name_5 = QLabel(self.i_o_group_3)
         self.ai_name_5.setObjectName(u"ai_name_5")
-        self.ai_name_5.setFont(font2)
+        self.ai_name_5.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_5, 2, 0, 1, 1)
 
         self.ai_name_2 = QLabel(self.i_o_group_3)
         self.ai_name_2.setObjectName(u"ai_name_2")
-        self.ai_name_2.setFont(font2)
+        self.ai_name_2.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_2, 0, 2, 1, 1)
 
         self.ai_name_6 = QLabel(self.i_o_group_3)
         self.ai_name_6.setObjectName(u"ai_name_6")
-        self.ai_name_6.setFont(font2)
+        self.ai_name_6.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_6, 2, 2, 1, 1)
 
         self.ai_name_7 = QLabel(self.i_o_group_3)
         self.ai_name_7.setObjectName(u"ai_name_7")
-        self.ai_name_7.setFont(font2)
+        self.ai_name_7.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_7, 3, 0, 1, 1)
 
         self.ai_name_8 = QLabel(self.i_o_group_3)
         self.ai_name_8.setObjectName(u"ai_name_8")
-        self.ai_name_8.setFont(font2)
+        self.ai_name_8.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_8, 3, 2, 1, 1)
 
         self.ai_name_9 = QLabel(self.i_o_group_3)
         self.ai_name_9.setObjectName(u"ai_name_9")
-        self.ai_name_9.setFont(font2)
+        self.ai_name_9.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_9, 4, 0, 1, 1)
 
         self.ai_name_10 = QLabel(self.i_o_group_3)
         self.ai_name_10.setObjectName(u"ai_name_10")
-        self.ai_name_10.setFont(font2)
+        self.ai_name_10.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_10, 4, 2, 1, 1)
 
         self.ai_name_11 = QLabel(self.i_o_group_3)
         self.ai_name_11.setObjectName(u"ai_name_11")
-        self.ai_name_11.setFont(font2)
+        self.ai_name_11.setFont(font24)
 
         self.gridLayout_5.addWidget(self.ai_name_11, 6, 0, 1, 1)
 
@@ -9146,11 +9110,10 @@ class Ui_MainWindow(object):
         self.t1_2_value.setObjectName(u"t1_2_value")
         sizePolicy.setHeightForWidth(self.t1_2_value.sizePolicy().hasHeightForWidth())
         self.t1_2_value.setSizePolicy(sizePolicy)
-        self.t1_2_value.setFont(font2)
-        self.t1_2_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.t1_2_value.setFont(font25)
+        self.t1_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.t1_2_value.setAlignment(Qt.AlignCenter)
         self.t1_2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t1_2_value.setDecimals(1)
@@ -9159,32 +9122,30 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.t1_2_value, 1, 1, 1, 1)
 
-        self.t1_1_value_3 = QDoubleSpinBox(self.i_o_group_3)
-        self.t1_1_value_3.setObjectName(u"t1_1_value_3")
-        sizePolicy.setHeightForWidth(self.t1_1_value_3.sizePolicy().hasHeightForWidth())
-        self.t1_1_value_3.setSizePolicy(sizePolicy)
-        self.t1_1_value_3.setFont(font2)
-        self.t1_1_value_3.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
-        self.t1_1_value_3.setAlignment(Qt.AlignCenter)
-        self.t1_1_value_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.t1_1_value_3.setDecimals(1)
-        self.t1_1_value_3.setMinimum(-10.000000000000000)
-        self.t1_1_value_3.setMaximum(999.899999999999977)
+        self.t1_3_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t1_3_value.setObjectName(u"t1_3_value")
+        sizePolicy.setHeightForWidth(self.t1_3_value.sizePolicy().hasHeightForWidth())
+        self.t1_3_value.setSizePolicy(sizePolicy)
+        self.t1_3_value.setFont(font25)
+        self.t1_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t1_3_value.setAlignment(Qt.AlignCenter)
+        self.t1_3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t1_3_value.setDecimals(1)
+        self.t1_3_value.setMinimum(-10.000000000000000)
+        self.t1_3_value.setMaximum(999.899999999999977)
 
-        self.gridLayout_5.addWidget(self.t1_1_value_3, 1, 3, 1, 1)
+        self.gridLayout_5.addWidget(self.t1_3_value, 1, 3, 1, 1)
 
         self.t2_1_value = QDoubleSpinBox(self.i_o_group_3)
         self.t2_1_value.setObjectName(u"t2_1_value")
         sizePolicy.setHeightForWidth(self.t2_1_value.sizePolicy().hasHeightForWidth())
         self.t2_1_value.setSizePolicy(sizePolicy)
-        self.t2_1_value.setFont(font2)
-        self.t2_1_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.t2_1_value.setFont(font25)
+        self.t2_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.t2_1_value.setAlignment(Qt.AlignCenter)
         self.t2_1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t2_1_value.setDecimals(1)
@@ -9197,11 +9158,10 @@ class Ui_MainWindow(object):
         self.t2_2_value.setObjectName(u"t2_2_value")
         sizePolicy.setHeightForWidth(self.t2_2_value.sizePolicy().hasHeightForWidth())
         self.t2_2_value.setSizePolicy(sizePolicy)
-        self.t2_2_value.setFont(font2)
-        self.t2_2_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.t2_2_value.setFont(font25)
+        self.t2_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.t2_2_value.setAlignment(Qt.AlignCenter)
         self.t2_2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t2_2_value.setDecimals(1)
@@ -9214,11 +9174,10 @@ class Ui_MainWindow(object):
         self.t2_3_value.setObjectName(u"t2_3_value")
         sizePolicy.setHeightForWidth(self.t2_3_value.sizePolicy().hasHeightForWidth())
         self.t2_3_value.setSizePolicy(sizePolicy)
-        self.t2_3_value.setFont(font2)
-        self.t2_3_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.t2_3_value.setFont(font25)
+        self.t2_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.t2_3_value.setAlignment(Qt.AlignCenter)
         self.t2_3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t2_3_value.setDecimals(1)
@@ -9231,11 +9190,10 @@ class Ui_MainWindow(object):
         self.t3_1_value.setObjectName(u"t3_1_value")
         sizePolicy.setHeightForWidth(self.t3_1_value.sizePolicy().hasHeightForWidth())
         self.t3_1_value.setSizePolicy(sizePolicy)
-        self.t3_1_value.setFont(font2)
-        self.t3_1_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.t3_1_value.setFont(font25)
+        self.t3_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.t3_1_value.setAlignment(Qt.AlignCenter)
         self.t3_1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t3_1_value.setDecimals(1)
@@ -9248,11 +9206,10 @@ class Ui_MainWindow(object):
         self.t3_2_value.setObjectName(u"t3_2_value")
         sizePolicy.setHeightForWidth(self.t3_2_value.sizePolicy().hasHeightForWidth())
         self.t3_2_value.setSizePolicy(sizePolicy)
-        self.t3_2_value.setFont(font2)
-        self.t3_2_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.t3_2_value.setFont(font25)
+        self.t3_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.t3_2_value.setAlignment(Qt.AlignCenter)
         self.t3_2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t3_2_value.setDecimals(1)
@@ -9265,11 +9222,10 @@ class Ui_MainWindow(object):
         self.t3_3_value.setObjectName(u"t3_3_value")
         sizePolicy.setHeightForWidth(self.t3_3_value.sizePolicy().hasHeightForWidth())
         self.t3_3_value.setSizePolicy(sizePolicy)
-        self.t3_3_value.setFont(font2)
-        self.t3_3_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.t3_3_value.setFont(font25)
+        self.t3_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.t3_3_value.setAlignment(Qt.AlignCenter)
         self.t3_3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t3_3_value.setDecimals(1)
@@ -9282,11 +9238,10 @@ class Ui_MainWindow(object):
         self.p1_value.setObjectName(u"p1_value")
         sizePolicy.setHeightForWidth(self.p1_value.sizePolicy().hasHeightForWidth())
         self.p1_value.setSizePolicy(sizePolicy)
-        self.p1_value.setFont(font2)
-        self.p1_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.p1_value.setFont(font25)
+        self.p1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.p1_value.setAlignment(Qt.AlignCenter)
         self.p1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.p1_value.setDecimals(1)
@@ -9298,11 +9253,10 @@ class Ui_MainWindow(object):
         self.p2_value.setObjectName(u"p2_value")
         sizePolicy.setHeightForWidth(self.p2_value.sizePolicy().hasHeightForWidth())
         self.p2_value.setSizePolicy(sizePolicy)
-        self.p2_value.setFont(font2)
-        self.p2_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.p2_value.setFont(font25)
+        self.p2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.p2_value.setAlignment(Qt.AlignCenter)
         self.p2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.p2_value.setDecimals(1)
@@ -9314,11 +9268,10 @@ class Ui_MainWindow(object):
         self.p3_value.setObjectName(u"p3_value")
         sizePolicy.setHeightForWidth(self.p3_value.sizePolicy().hasHeightForWidth())
         self.p3_value.setSizePolicy(sizePolicy)
-        self.p3_value.setFont(font2)
-        self.p3_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.p3_value.setFont(font25)
+        self.p3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.p3_value.setAlignment(Qt.AlignCenter)
         self.p3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.p3_value.setDecimals(1)
@@ -9330,11 +9283,10 @@ class Ui_MainWindow(object):
         self.fp1_value.setObjectName(u"fp1_value")
         sizePolicy.setHeightForWidth(self.fp1_value.sizePolicy().hasHeightForWidth())
         self.fp1_value.setSizePolicy(sizePolicy)
-        self.fp1_value.setFont(font2)
-        self.fp1_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.fp1_value.setFont(font25)
+        self.fp1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.fp1_value.setAlignment(Qt.AlignCenter)
         self.fp1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.fp1_value.setDecimals(1)
@@ -9346,11 +9298,10 @@ class Ui_MainWindow(object):
         self.fp2_value.setObjectName(u"fp2_value")
         sizePolicy.setHeightForWidth(self.fp2_value.sizePolicy().hasHeightForWidth())
         self.fp2_value.setSizePolicy(sizePolicy)
-        self.fp2_value.setFont(font2)
-        self.fp2_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.fp2_value.setFont(font25)
+        self.fp2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.fp2_value.setAlignment(Qt.AlignCenter)
         self.fp2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.fp2_value.setDecimals(1)
@@ -9362,11 +9313,10 @@ class Ui_MainWindow(object):
         self.fp3_value.setObjectName(u"fp3_value")
         sizePolicy.setHeightForWidth(self.fp3_value.sizePolicy().hasHeightForWidth())
         self.fp3_value.setSizePolicy(sizePolicy)
-        self.fp3_value.setFont(font2)
-        self.fp3_value.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
+        self.fp3_value.setFont(font25)
+        self.fp3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
         self.fp3_value.setAlignment(Qt.AlignCenter)
         self.fp3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.fp3_value.setDecimals(1)
@@ -9374,9 +9324,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.fp3_value, 9, 3, 1, 1)
 
+        self.gridLayout_5.setColumnStretch(1, 1)
+        self.gridLayout_5.setColumnStretch(3, 1)
 
         self.horizontalLayout_24.addWidget(self.i_o_group_3)
 
+        self.horizontalLayout_24.setStretch(0, 1)
+        self.horizontalLayout_24.setStretch(1, 2)
+        self.horizontalLayout_24.setStretch(2, 2)
 
         self.verticalLayout_28.addWidget(self.widget_26)
 
@@ -9453,7 +9408,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_40.addWidget(self.device_frame_2)
 
-        self.stackedWidget_3.addWidget(self.page_2)
+        self.stackedWidget_3.addWidget(self.i_o_page)
 
         self.ver_layout_device.addWidget(self.stackedWidget_3)
 
@@ -9708,6 +9663,7 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_1.setCurrentIndex(0)
         self.i_o_group_1_switch_4.setCurrentIndex(0)
         self.i_o_group_1_switch_8.setCurrentIndex(0)
+        self.i_o_group_2_switch_5.setCurrentIndex(0)
         self.i_o_group_2_switch_6.setCurrentIndex(0)
         self.i_o_group_2_switch_7.setCurrentIndex(0)
         self.i_o_group_2_switch_8.setCurrentIndex(0)
@@ -9716,13 +9672,12 @@ class Ui_MainWindow(object):
         self.i_o_group_2_switch_11.setCurrentIndex(0)
         self.i_o_group_2_switch_12.setCurrentIndex(0)
         self.i_o_group_2_switch_13.setCurrentIndex(0)
-        self.i_o_group_2_switch_14.setCurrentIndex(0)
-        self.i_o_group_2_switch_16.setCurrentIndex(0)
         self.i_o_group_2_switch_15.setCurrentIndex(0)
-        self.i_o_group_2_switch_4.setCurrentIndex(0)
-        self.i_o_group_2_switch_5.setCurrentIndex(0)
-        self.i_o_group_2_switch_1.setCurrentIndex(0)
+        self.i_o_group_2_switch_14.setCurrentIndex(0)
         self.i_o_group_2_switch_3.setCurrentIndex(0)
+        self.i_o_group_2_switch_4.setCurrentIndex(0)
+        self.i_o_group_2_switch_1.setCurrentIndex(0)
+        self.i_o_group_2_switch_2.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -10072,7 +10027,7 @@ class Ui_MainWindow(object):
         self.label_363.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
         self.heat_btn_t0.setText(QCoreApplication.translate("MainWindow", u" Heating T0", None))
         self.back_home_btn.setText(QCoreApplication.translate("MainWindow", u"\U0001f4c8 Back", None))
-        self.pushButton_2.setText("")
+        self.plc_io_btn.setText("")
         self.connection_group.setTitle(QCoreApplication.translate("MainWindow", u"Connection Settings", None))
         self.db_data_size_input.setSuffix(QCoreApplication.translate("MainWindow", u" ~ 2056", None))
         self.slot_label_8.setText(QCoreApplication.translate("MainWindow", u"Interupt Time:", None))
@@ -10142,9 +10097,9 @@ class Ui_MainWindow(object):
         self.dq_name_9.setText(QCoreApplication.translate("MainWindow", u"R9:", None))
         self.dq_name_10.setText(QCoreApplication.translate("MainWindow", u"R10:", None))
         self.dq_name_11.setText(QCoreApplication.translate("MainWindow", u"R11:", None))
-        self.dq_name_13.setText(QCoreApplication.translate("MainWindow", u"R14:", None))
+        self.dq_name_13.setText(QCoreApplication.translate("MainWindow", u"R13:", None))
         self.dq_name_12.setText(QCoreApplication.translate("MainWindow", u"R12:", None))
-        self.dq_name_14.setText(QCoreApplication.translate("MainWindow", u"R13:", None))
+        self.dq_name_14.setText(QCoreApplication.translate("MainWindow", u"R14:", None))
         self.dq_name_15.setText(QCoreApplication.translate("MainWindow", u"R15:", None))
         self.pushButton_126.setText("")
         self.pushButton_127.setText("")

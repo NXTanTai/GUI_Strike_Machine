@@ -7255,29 +7255,29 @@ class Ui_MainWindow(object):
         self.horizontalLayout_33.setSpacing(10)
         self.horizontalLayout_33.setObjectName(u"horizontalLayout_33")
         self.horizontalLayout_33.setContentsMargins(0, 0, 0, 0)
-        self.heat_btn_a_2 = QPushButton(self.widget_18)
-        self.heat_btn_a_2.setObjectName(u"heat_btn_a_2")
-        sizePolicy.setHeightForWidth(self.heat_btn_a_2.sizePolicy().hasHeightForWidth())
-        self.heat_btn_a_2.setSizePolicy(sizePolicy)
-        self.heat_btn_a_2.setMaximumSize(QSize(16777215, 150))
+        self.heat_btn_t0 = QPushButton(self.widget_18)
+        self.heat_btn_t0.setObjectName(u"heat_btn_t0")
+        sizePolicy.setHeightForWidth(self.heat_btn_t0.sizePolicy().hasHeightForWidth())
+        self.heat_btn_t0.setSizePolicy(sizePolicy)
+        self.heat_btn_t0.setMaximumSize(QSize(16777215, 150))
         font21 = QFont()
         font21.setFamilies([u"Segoe UI"])
         font21.setPointSize(16)
         font21.setBold(True)
-        self.heat_btn_a_2.setFont(font21)
-        self.heat_btn_a_2.setStyleSheet(u"")
-        self.heat_btn_a_2.setIcon(icon13)
-        self.heat_btn_a_2.setIconSize(QSize(30, 30))
-        self.heat_btn_a_2.setCheckable(True)
+        self.heat_btn_t0.setFont(font21)
+        self.heat_btn_t0.setStyleSheet(u"")
+        self.heat_btn_t0.setIcon(icon13)
+        self.heat_btn_t0.setIconSize(QSize(30, 30))
+        self.heat_btn_t0.setCheckable(True)
 
-        self.horizontalLayout_33.addWidget(self.heat_btn_a_2)
+        self.horizontalLayout_33.addWidget(self.heat_btn_t0)
 
-        self.back_home_btn_4 = QPushButton(self.widget_18)
-        self.back_home_btn_4.setObjectName(u"back_home_btn_4")
-        sizePolicy.setHeightForWidth(self.back_home_btn_4.sizePolicy().hasHeightForWidth())
-        self.back_home_btn_4.setSizePolicy(sizePolicy)
-        self.back_home_btn_4.setFont(font21)
-        self.back_home_btn_4.setStyleSheet(u"QPushButton {\n"
+        self.back_home_btn = QPushButton(self.widget_18)
+        self.back_home_btn.setObjectName(u"back_home_btn")
+        sizePolicy.setHeightForWidth(self.back_home_btn.sizePolicy().hasHeightForWidth())
+        self.back_home_btn.setSizePolicy(sizePolicy)
+        self.back_home_btn.setFont(font21)
+        self.back_home_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "    border: 1px solid #0B7EC8;\n"
@@ -7291,7 +7291,7 @@ class Ui_MainWindow(object):
 "    background-color: #E0F2FE;\n"
 "}")
 
-        self.horizontalLayout_33.addWidget(self.back_home_btn_4)
+        self.horizontalLayout_33.addWidget(self.back_home_btn)
 
 
         self.verticalLayout_8.addWidget(self.widget_18)
@@ -7310,7 +7310,14 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.ver_layout_device = QVBoxLayout()
         self.ver_layout_device.setObjectName(u"ver_layout_device")
-        self.device_frame = QFrame(self.device_page)
+        self.stackedWidget_3 = QStackedWidget(self.device_page)
+        self.stackedWidget_3.setObjectName(u"stackedWidget_3")
+        self.connection_page = QWidget()
+        self.connection_page.setObjectName(u"connection_page")
+        self.verticalLayout_27 = QVBoxLayout(self.connection_page)
+        self.verticalLayout_27.setObjectName(u"verticalLayout_27")
+        self.verticalLayout_27.setContentsMargins(0, 0, 0, 0)
+        self.device_frame = QFrame(self.connection_page)
         self.device_frame.setObjectName(u"device_frame")
         self.device_frame.setMinimumSize(QSize(0, 800))
         self.device_frame.setStyleSheet(u"QFrame {\n"
@@ -7324,22 +7331,22 @@ class Ui_MainWindow(object):
 "}")
         self.device_frame.setFrameShape(QFrame.NoFrame)
         self.verticalLayout_24 = QVBoxLayout(self.device_frame)
-        self.verticalLayout_24.setSpacing(15)
+        self.verticalLayout_24.setSpacing(10)
         self.verticalLayout_24.setObjectName(u"verticalLayout_24")
         self.verticalLayout_24.setContentsMargins(0, 15, 0, 15)
         self.connection_status_layout = QHBoxLayout()
         self.connection_status_layout.setSpacing(0)
         self.connection_status_layout.setObjectName(u"connection_status_layout")
-        self.device_icon = QLabel(self.device_frame)
-        self.device_icon.setObjectName(u"device_icon")
-        sizePolicy1.setHeightForWidth(self.device_icon.sizePolicy().hasHeightForWidth())
-        self.device_icon.setSizePolicy(sizePolicy1)
-        self.device_icon.setStyleSheet(u"font-size: 24px; \n"
+        self.plc_io_btn = QPushButton(self.device_frame)
+        self.plc_io_btn.setObjectName(u"plc_io_btn")
+        sizePolicy.setHeightForWidth(self.plc_io_btn.sizePolicy().hasHeightForWidth())
+        self.plc_io_btn.setSizePolicy(sizePolicy)
+        self.plc_io_btn.setStyleSheet(u"font-size: 24px; \n"
 "color: #0B7EC8;\n"
 "border: none;\n"
 "image:url(:/newPrefix/Image_20260416155332_127_10.png)")
 
-        self.connection_status_layout.addWidget(self.device_icon)
+        self.connection_status_layout.addWidget(self.plc_io_btn)
 
 
         self.verticalLayout_24.addLayout(self.connection_status_layout)
@@ -7575,6 +7582,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_28.addWidget(self.clear_data_btn_2)
 
+        self.horizontalLayout_28.setStretch(0, 1)
+        self.horizontalLayout_28.setStretch(1, 1)
 
         self.verticalLayout_17.addWidget(self.widget_27)
 
@@ -7589,7 +7598,1819 @@ class Ui_MainWindow(object):
         self.verticalLayout_24.setStretch(0, 4)
         self.verticalLayout_24.setStretch(1, 7)
 
-        self.ver_layout_device.addWidget(self.device_frame)
+        self.verticalLayout_27.addWidget(self.device_frame)
+
+        self.stackedWidget_3.addWidget(self.connection_page)
+        self.i_o_page = QWidget()
+        self.i_o_page.setObjectName(u"i_o_page")
+        self.verticalLayout_40 = QVBoxLayout(self.i_o_page)
+        self.verticalLayout_40.setObjectName(u"verticalLayout_40")
+        self.verticalLayout_40.setContentsMargins(0, 0, 0, 0)
+        self.device_frame_2 = QFrame(self.i_o_page)
+        self.device_frame_2.setObjectName(u"device_frame_2")
+        self.device_frame_2.setMinimumSize(QSize(0, 800))
+        self.device_frame_2.setStyleSheet(u"QFrame {\n"
+"    background-color: white;\n"
+"    border-radius: 12px;\n"
+"    border: 1px solid #E5E5E5;\n"
+"    margin: 5px;\n"
+"}\n"
+"QFrame:hover {\n"
+"    border: 1px solid #0B7EC8;\n"
+"}")
+        self.device_frame_2.setFrameShape(QFrame.NoFrame)
+        self.verticalLayout_28 = QVBoxLayout(self.device_frame_2)
+        self.verticalLayout_28.setSpacing(10)
+        self.verticalLayout_28.setObjectName(u"verticalLayout_28")
+        self.verticalLayout_28.setContentsMargins(0, 15, 0, 15)
+        self.widget_26 = QWidget(self.device_frame_2)
+        self.widget_26.setObjectName(u"widget_26")
+        self.widget_26.setStyleSheet(u"")
+        self.horizontalLayout_24 = QHBoxLayout(self.widget_26)
+        self.horizontalLayout_24.setSpacing(10)
+        self.horizontalLayout_24.setObjectName(u"horizontalLayout_24")
+        self.horizontalLayout_24.setContentsMargins(10, 0, 10, 0)
+        self.i_o_group_1 = QGroupBox(self.widget_26)
+        self.i_o_group_1.setObjectName(u"i_o_group_1")
+        self.i_o_group_1.setFont(font22)
+        self.i_o_group_1.setStyleSheet(u"QGroupBox {\n"
+"    border: 2px solid #E5E5E5;\n"
+"    border-radius: 6px;\n"
+"    margin-top: 10px;\n"
+"    padding-top: 10px;\n"
+"}\n"
+"QGroupBox::title {\n"
+"    subcontrol-origin: margin;\n"
+"    left: 10px;\n"
+"    padding: 0 5px 0 5px;\n"
+"    color: #374151;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"	color: #D12323;\n"
+"	border: none;\n"
+"}\n"
+"\n"
+"QSpinBox {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QSpinBox:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}")
+        self.gridLayout_7 = QGridLayout(self.i_o_group_1)
+        self.gridLayout_7.setSpacing(10)
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.gridLayout_7.setContentsMargins(10, 10, 10, 10)
+        self.i_o_group_1_switch_3 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_3.setObjectName(u"i_o_group_1_switch_3")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_3.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_3.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_3.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_9 = QWidget()
+        self.on_light_9.setObjectName(u"on_light_9")
+        self.horizontalLayout_486 = QHBoxLayout(self.on_light_9)
+        self.horizontalLayout_486.setObjectName(u"horizontalLayout_486")
+        self.horizontalLayout_486.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_58 = QPushButton(self.on_light_9)
+        self.pushButton_58.setObjectName(u"pushButton_58")
+        sizePolicy.setHeightForWidth(self.pushButton_58.sizePolicy().hasHeightForWidth())
+        self.pushButton_58.setSizePolicy(sizePolicy)
+        self.pushButton_58.setFont(font6)
+        self.pushButton_58.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_58.setIcon(icon7)
+        self.pushButton_58.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_486.addWidget(self.pushButton_58)
+
+        self.i_o_group_1_switch_3.addWidget(self.on_light_9)
+        self.off_light_9 = QWidget()
+        self.off_light_9.setObjectName(u"off_light_9")
+        self.horizontalLayout_487 = QHBoxLayout(self.off_light_9)
+        self.horizontalLayout_487.setObjectName(u"horizontalLayout_487")
+        self.horizontalLayout_487.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_59 = QPushButton(self.off_light_9)
+        self.pushButton_59.setObjectName(u"pushButton_59")
+        sizePolicy.setHeightForWidth(self.pushButton_59.sizePolicy().hasHeightForWidth())
+        self.pushButton_59.setSizePolicy(sizePolicy)
+        self.pushButton_59.setFont(font6)
+        self.pushButton_59.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_59.setIcon(icon9)
+        self.pushButton_59.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_487.addWidget(self.pushButton_59)
+
+        self.i_o_group_1_switch_3.addWidget(self.off_light_9)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_3, 2, 1, 1, 1)
+
+        self.i_o_group_1_switch_5 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_5.setObjectName(u"i_o_group_1_switch_5")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_5.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_5.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_5.setStyleSheet(u"")
+        self.on_light_11 = QWidget()
+        self.on_light_11.setObjectName(u"on_light_11")
+        self.horizontalLayout_490 = QHBoxLayout(self.on_light_11)
+        self.horizontalLayout_490.setObjectName(u"horizontalLayout_490")
+        self.horizontalLayout_490.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_62 = QPushButton(self.on_light_11)
+        self.pushButton_62.setObjectName(u"pushButton_62")
+        sizePolicy.setHeightForWidth(self.pushButton_62.sizePolicy().hasHeightForWidth())
+        self.pushButton_62.setSizePolicy(sizePolicy)
+        self.pushButton_62.setFont(font6)
+        self.pushButton_62.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_62.setIcon(icon7)
+        self.pushButton_62.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_490.addWidget(self.pushButton_62)
+
+        self.i_o_group_1_switch_5.addWidget(self.on_light_11)
+        self.off_light_11 = QWidget()
+        self.off_light_11.setObjectName(u"off_light_11")
+        self.horizontalLayout_491 = QHBoxLayout(self.off_light_11)
+        self.horizontalLayout_491.setObjectName(u"horizontalLayout_491")
+        self.horizontalLayout_491.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_63 = QPushButton(self.off_light_11)
+        self.pushButton_63.setObjectName(u"pushButton_63")
+        sizePolicy.setHeightForWidth(self.pushButton_63.sizePolicy().hasHeightForWidth())
+        self.pushButton_63.setSizePolicy(sizePolicy)
+        self.pushButton_63.setFont(font6)
+        self.pushButton_63.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_63.setIcon(icon9)
+        self.pushButton_63.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_491.addWidget(self.pushButton_63)
+
+        self.i_o_group_1_switch_5.addWidget(self.off_light_11)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_5, 4, 1, 1, 1)
+
+        self.i_o_group_1_switch_6 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_6.setObjectName(u"i_o_group_1_switch_6")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_6.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_6.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_6.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_12 = QWidget()
+        self.on_light_12.setObjectName(u"on_light_12")
+        self.horizontalLayout_492 = QHBoxLayout(self.on_light_12)
+        self.horizontalLayout_492.setObjectName(u"horizontalLayout_492")
+        self.horizontalLayout_492.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_64 = QPushButton(self.on_light_12)
+        self.pushButton_64.setObjectName(u"pushButton_64")
+        sizePolicy.setHeightForWidth(self.pushButton_64.sizePolicy().hasHeightForWidth())
+        self.pushButton_64.setSizePolicy(sizePolicy)
+        self.pushButton_64.setFont(font6)
+        self.pushButton_64.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_64.setIcon(icon7)
+        self.pushButton_64.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_492.addWidget(self.pushButton_64)
+
+        self.i_o_group_1_switch_6.addWidget(self.on_light_12)
+        self.off_light_12 = QWidget()
+        self.off_light_12.setObjectName(u"off_light_12")
+        self.horizontalLayout_493 = QHBoxLayout(self.off_light_12)
+        self.horizontalLayout_493.setObjectName(u"horizontalLayout_493")
+        self.horizontalLayout_493.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_65 = QPushButton(self.off_light_12)
+        self.pushButton_65.setObjectName(u"pushButton_65")
+        sizePolicy.setHeightForWidth(self.pushButton_65.sizePolicy().hasHeightForWidth())
+        self.pushButton_65.setSizePolicy(sizePolicy)
+        self.pushButton_65.setFont(font6)
+        self.pushButton_65.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_65.setIcon(icon9)
+        self.pushButton_65.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_493.addWidget(self.pushButton_65)
+
+        self.i_o_group_1_switch_6.addWidget(self.off_light_12)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_6, 5, 1, 1, 1)
+
+        self.i_o_group_1_switch_7 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_7.setObjectName(u"i_o_group_1_switch_7")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_7.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_7.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_7.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_13 = QWidget()
+        self.on_light_13.setObjectName(u"on_light_13")
+        self.horizontalLayout_494 = QHBoxLayout(self.on_light_13)
+        self.horizontalLayout_494.setObjectName(u"horizontalLayout_494")
+        self.horizontalLayout_494.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_66 = QPushButton(self.on_light_13)
+        self.pushButton_66.setObjectName(u"pushButton_66")
+        sizePolicy.setHeightForWidth(self.pushButton_66.sizePolicy().hasHeightForWidth())
+        self.pushButton_66.setSizePolicy(sizePolicy)
+        self.pushButton_66.setFont(font6)
+        self.pushButton_66.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_66.setIcon(icon7)
+        self.pushButton_66.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_494.addWidget(self.pushButton_66)
+
+        self.i_o_group_1_switch_7.addWidget(self.on_light_13)
+        self.off_light_13 = QWidget()
+        self.off_light_13.setObjectName(u"off_light_13")
+        self.horizontalLayout_495 = QHBoxLayout(self.off_light_13)
+        self.horizontalLayout_495.setObjectName(u"horizontalLayout_495")
+        self.horizontalLayout_495.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_67 = QPushButton(self.off_light_13)
+        self.pushButton_67.setObjectName(u"pushButton_67")
+        sizePolicy.setHeightForWidth(self.pushButton_67.sizePolicy().hasHeightForWidth())
+        self.pushButton_67.setSizePolicy(sizePolicy)
+        self.pushButton_67.setFont(font6)
+        self.pushButton_67.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_67.setIcon(icon9)
+        self.pushButton_67.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_495.addWidget(self.pushButton_67)
+
+        self.i_o_group_1_switch_7.addWidget(self.off_light_13)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_7, 6, 1, 1, 1)
+
+        self.i_o_group_1_switch_2 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_2.setObjectName(u"i_o_group_1_switch_2")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_2.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_2.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_2.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_8 = QWidget()
+        self.on_light_8.setObjectName(u"on_light_8")
+        self.horizontalLayout_484 = QHBoxLayout(self.on_light_8)
+        self.horizontalLayout_484.setObjectName(u"horizontalLayout_484")
+        self.horizontalLayout_484.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_56 = QPushButton(self.on_light_8)
+        self.pushButton_56.setObjectName(u"pushButton_56")
+        sizePolicy.setHeightForWidth(self.pushButton_56.sizePolicy().hasHeightForWidth())
+        self.pushButton_56.setSizePolicy(sizePolicy)
+        self.pushButton_56.setFont(font6)
+        self.pushButton_56.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_56.setIcon(icon7)
+        self.pushButton_56.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_484.addWidget(self.pushButton_56)
+
+        self.i_o_group_1_switch_2.addWidget(self.on_light_8)
+        self.off_light_8 = QWidget()
+        self.off_light_8.setObjectName(u"off_light_8")
+        self.horizontalLayout_485 = QHBoxLayout(self.off_light_8)
+        self.horizontalLayout_485.setObjectName(u"horizontalLayout_485")
+        self.horizontalLayout_485.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_57 = QPushButton(self.off_light_8)
+        self.pushButton_57.setObjectName(u"pushButton_57")
+        sizePolicy.setHeightForWidth(self.pushButton_57.sizePolicy().hasHeightForWidth())
+        self.pushButton_57.setSizePolicy(sizePolicy)
+        self.pushButton_57.setFont(font6)
+        self.pushButton_57.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_57.setIcon(icon9)
+        self.pushButton_57.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_485.addWidget(self.pushButton_57)
+
+        self.i_o_group_1_switch_2.addWidget(self.off_light_8)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_2, 1, 1, 1, 1)
+
+        self.di_name_1 = QLabel(self.i_o_group_1)
+        self.di_name_1.setObjectName(u"di_name_1")
+        font24 = QFont()
+        font24.setPointSize(20)
+        font24.setBold(True)
+        self.di_name_1.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_1, 0, 0, 1, 1)
+
+        self.i_o_group_1_switch_1 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_1.setObjectName(u"i_o_group_1_switch_1")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_1.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_1.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_1.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_1 = QWidget()
+        self.on_light_1.setObjectName(u"on_light_1")
+        self.horizontalLayout_470 = QHBoxLayout(self.on_light_1)
+        self.horizontalLayout_470.setObjectName(u"horizontalLayout_470")
+        self.horizontalLayout_470.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_42 = QPushButton(self.on_light_1)
+        self.pushButton_42.setObjectName(u"pushButton_42")
+        sizePolicy.setHeightForWidth(self.pushButton_42.sizePolicy().hasHeightForWidth())
+        self.pushButton_42.setSizePolicy(sizePolicy)
+        self.pushButton_42.setFont(font6)
+        self.pushButton_42.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_42.setIcon(icon7)
+        self.pushButton_42.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_470.addWidget(self.pushButton_42)
+
+        self.i_o_group_1_switch_1.addWidget(self.on_light_1)
+        self.off_light_1 = QWidget()
+        self.off_light_1.setObjectName(u"off_light_1")
+        self.horizontalLayout_471 = QHBoxLayout(self.off_light_1)
+        self.horizontalLayout_471.setObjectName(u"horizontalLayout_471")
+        self.horizontalLayout_471.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_43 = QPushButton(self.off_light_1)
+        self.pushButton_43.setObjectName(u"pushButton_43")
+        sizePolicy.setHeightForWidth(self.pushButton_43.sizePolicy().hasHeightForWidth())
+        self.pushButton_43.setSizePolicy(sizePolicy)
+        self.pushButton_43.setFont(font6)
+        self.pushButton_43.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_43.setIcon(icon9)
+        self.pushButton_43.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_471.addWidget(self.pushButton_43)
+
+        self.i_o_group_1_switch_1.addWidget(self.off_light_1)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_1, 0, 1, 1, 1)
+
+        self.i_o_group_1_switch_4 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_4.setObjectName(u"i_o_group_1_switch_4")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_4.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_4.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_4.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_10 = QWidget()
+        self.on_light_10.setObjectName(u"on_light_10")
+        self.horizontalLayout_488 = QHBoxLayout(self.on_light_10)
+        self.horizontalLayout_488.setObjectName(u"horizontalLayout_488")
+        self.horizontalLayout_488.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_60 = QPushButton(self.on_light_10)
+        self.pushButton_60.setObjectName(u"pushButton_60")
+        sizePolicy.setHeightForWidth(self.pushButton_60.sizePolicy().hasHeightForWidth())
+        self.pushButton_60.setSizePolicy(sizePolicy)
+        self.pushButton_60.setFont(font6)
+        self.pushButton_60.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_60.setIcon(icon7)
+        self.pushButton_60.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_488.addWidget(self.pushButton_60)
+
+        self.i_o_group_1_switch_4.addWidget(self.on_light_10)
+        self.off_light_10 = QWidget()
+        self.off_light_10.setObjectName(u"off_light_10")
+        self.horizontalLayout_489 = QHBoxLayout(self.off_light_10)
+        self.horizontalLayout_489.setObjectName(u"horizontalLayout_489")
+        self.horizontalLayout_489.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_61 = QPushButton(self.off_light_10)
+        self.pushButton_61.setObjectName(u"pushButton_61")
+        sizePolicy.setHeightForWidth(self.pushButton_61.sizePolicy().hasHeightForWidth())
+        self.pushButton_61.setSizePolicy(sizePolicy)
+        self.pushButton_61.setFont(font6)
+        self.pushButton_61.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_61.setIcon(icon9)
+        self.pushButton_61.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_489.addWidget(self.pushButton_61)
+
+        self.i_o_group_1_switch_4.addWidget(self.off_light_10)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_4, 3, 1, 1, 1)
+
+        self.i_o_group_1_switch_8 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_8.setObjectName(u"i_o_group_1_switch_8")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_8.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_8.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_8.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_14 = QWidget()
+        self.on_light_14.setObjectName(u"on_light_14")
+        self.horizontalLayout_496 = QHBoxLayout(self.on_light_14)
+        self.horizontalLayout_496.setObjectName(u"horizontalLayout_496")
+        self.horizontalLayout_496.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_68 = QPushButton(self.on_light_14)
+        self.pushButton_68.setObjectName(u"pushButton_68")
+        sizePolicy.setHeightForWidth(self.pushButton_68.sizePolicy().hasHeightForWidth())
+        self.pushButton_68.setSizePolicy(sizePolicy)
+        self.pushButton_68.setFont(font6)
+        self.pushButton_68.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_68.setIcon(icon7)
+        self.pushButton_68.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_496.addWidget(self.pushButton_68)
+
+        self.i_o_group_1_switch_8.addWidget(self.on_light_14)
+        self.off_light_14 = QWidget()
+        self.off_light_14.setObjectName(u"off_light_14")
+        self.horizontalLayout_497 = QHBoxLayout(self.off_light_14)
+        self.horizontalLayout_497.setObjectName(u"horizontalLayout_497")
+        self.horizontalLayout_497.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_69 = QPushButton(self.off_light_14)
+        self.pushButton_69.setObjectName(u"pushButton_69")
+        sizePolicy.setHeightForWidth(self.pushButton_69.sizePolicy().hasHeightForWidth())
+        self.pushButton_69.setSizePolicy(sizePolicy)
+        self.pushButton_69.setFont(font6)
+        self.pushButton_69.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_69.setIcon(icon9)
+        self.pushButton_69.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_497.addWidget(self.pushButton_69)
+
+        self.i_o_group_1_switch_8.addWidget(self.off_light_14)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_8, 7, 1, 1, 1)
+
+        self.di_name_2 = QLabel(self.i_o_group_1)
+        self.di_name_2.setObjectName(u"di_name_2")
+        self.di_name_2.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_2, 1, 0, 1, 1)
+
+        self.di_name_3 = QLabel(self.i_o_group_1)
+        self.di_name_3.setObjectName(u"di_name_3")
+        self.di_name_3.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_3, 2, 0, 1, 1)
+
+        self.di_name_4 = QLabel(self.i_o_group_1)
+        self.di_name_4.setObjectName(u"di_name_4")
+        self.di_name_4.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_4, 3, 0, 1, 1)
+
+        self.di_name_5 = QLabel(self.i_o_group_1)
+        self.di_name_5.setObjectName(u"di_name_5")
+        self.di_name_5.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_5, 4, 0, 1, 1)
+
+        self.di_name_6 = QLabel(self.i_o_group_1)
+        self.di_name_6.setObjectName(u"di_name_6")
+        self.di_name_6.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_6, 5, 0, 1, 1)
+
+        self.di_name_7 = QLabel(self.i_o_group_1)
+        self.di_name_7.setObjectName(u"di_name_7")
+        self.di_name_7.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_7, 6, 0, 1, 1)
+
+        self.di_name_8 = QLabel(self.i_o_group_1)
+        self.di_name_8.setObjectName(u"di_name_8")
+        self.di_name_8.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_8, 7, 0, 1, 1)
+
+        self.gridLayout_7.setColumnStretch(1, 1)
+
+        self.horizontalLayout_24.addWidget(self.i_o_group_1)
+
+        self.i_o_group_2 = QGroupBox(self.widget_26)
+        self.i_o_group_2.setObjectName(u"i_o_group_2")
+        self.i_o_group_2.setFont(font22)
+        self.i_o_group_2.setStyleSheet(u"QGroupBox {\n"
+"    border: 2px solid #E5E5E5;\n"
+"    border-radius: 6px;\n"
+"    margin-top: 10px;\n"
+"    padding-top: 10px;\n"
+"}\n"
+"QGroupBox::title {\n"
+"    subcontrol-origin: margin;\n"
+"    left: 10px;\n"
+"    padding: 0 5px 0 5px;\n"
+"    color: #374151;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"	border: none;\n"
+"}\n"
+"\n"
+"QSpinBox {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QSpinBox:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}\n"
+"QLabel{\n"
+"	color: #2C81D1;\n"
+"}\n"
+"QLineEdit {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}")
+        self.gridLayout_6 = QGridLayout(self.i_o_group_2)
+        self.gridLayout_6.setSpacing(10)
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.gridLayout_6.setContentsMargins(10, 10, 10, 10)
+        self.i_o_group_2_switch_5 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_5.setObjectName(u"i_o_group_2_switch_5")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_5.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_5.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_5.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_34 = QWidget()
+        self.on_light_34.setObjectName(u"on_light_34")
+        self.horizontalLayout_536 = QHBoxLayout(self.on_light_34)
+        self.horizontalLayout_536.setObjectName(u"horizontalLayout_536")
+        self.horizontalLayout_536.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_108 = QPushButton(self.on_light_34)
+        self.pushButton_108.setObjectName(u"pushButton_108")
+        sizePolicy.setHeightForWidth(self.pushButton_108.sizePolicy().hasHeightForWidth())
+        self.pushButton_108.setSizePolicy(sizePolicy)
+        self.pushButton_108.setFont(font6)
+        self.pushButton_108.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_108.setIcon(icon7)
+        self.pushButton_108.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_536.addWidget(self.pushButton_108)
+
+        self.i_o_group_2_switch_5.addWidget(self.on_light_34)
+        self.off_light_34 = QWidget()
+        self.off_light_34.setObjectName(u"off_light_34")
+        self.horizontalLayout_537 = QHBoxLayout(self.off_light_34)
+        self.horizontalLayout_537.setObjectName(u"horizontalLayout_537")
+        self.horizontalLayout_537.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_109 = QPushButton(self.off_light_34)
+        self.pushButton_109.setObjectName(u"pushButton_109")
+        sizePolicy.setHeightForWidth(self.pushButton_109.sizePolicy().hasHeightForWidth())
+        self.pushButton_109.setSizePolicy(sizePolicy)
+        self.pushButton_109.setFont(font6)
+        self.pushButton_109.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_109.setIcon(icon9)
+        self.pushButton_109.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_537.addWidget(self.pushButton_109)
+
+        self.i_o_group_2_switch_5.addWidget(self.off_light_34)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_5, 2, 1, 1, 1)
+
+        self.i_o_group_2_switch_6 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_6.setObjectName(u"i_o_group_2_switch_6")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_6.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_6.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_6.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_35 = QWidget()
+        self.on_light_35.setObjectName(u"on_light_35")
+        self.horizontalLayout_538 = QHBoxLayout(self.on_light_35)
+        self.horizontalLayout_538.setObjectName(u"horizontalLayout_538")
+        self.horizontalLayout_538.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_110 = QPushButton(self.on_light_35)
+        self.pushButton_110.setObjectName(u"pushButton_110")
+        sizePolicy.setHeightForWidth(self.pushButton_110.sizePolicy().hasHeightForWidth())
+        self.pushButton_110.setSizePolicy(sizePolicy)
+        self.pushButton_110.setFont(font6)
+        self.pushButton_110.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_110.setIcon(icon7)
+        self.pushButton_110.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_538.addWidget(self.pushButton_110)
+
+        self.i_o_group_2_switch_6.addWidget(self.on_light_35)
+        self.off_light_35 = QWidget()
+        self.off_light_35.setObjectName(u"off_light_35")
+        self.horizontalLayout_539 = QHBoxLayout(self.off_light_35)
+        self.horizontalLayout_539.setObjectName(u"horizontalLayout_539")
+        self.horizontalLayout_539.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_111 = QPushButton(self.off_light_35)
+        self.pushButton_111.setObjectName(u"pushButton_111")
+        sizePolicy.setHeightForWidth(self.pushButton_111.sizePolicy().hasHeightForWidth())
+        self.pushButton_111.setSizePolicy(sizePolicy)
+        self.pushButton_111.setFont(font6)
+        self.pushButton_111.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_111.setIcon(icon9)
+        self.pushButton_111.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_539.addWidget(self.pushButton_111)
+
+        self.i_o_group_2_switch_6.addWidget(self.off_light_35)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_6, 2, 3, 1, 1)
+
+        self.i_o_group_2_switch_7 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_7.setObjectName(u"i_o_group_2_switch_7")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_7.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_7.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_7.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_36 = QWidget()
+        self.on_light_36.setObjectName(u"on_light_36")
+        self.horizontalLayout_540 = QHBoxLayout(self.on_light_36)
+        self.horizontalLayout_540.setObjectName(u"horizontalLayout_540")
+        self.horizontalLayout_540.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_112 = QPushButton(self.on_light_36)
+        self.pushButton_112.setObjectName(u"pushButton_112")
+        sizePolicy.setHeightForWidth(self.pushButton_112.sizePolicy().hasHeightForWidth())
+        self.pushButton_112.setSizePolicy(sizePolicy)
+        self.pushButton_112.setFont(font6)
+        self.pushButton_112.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_112.setIcon(icon7)
+        self.pushButton_112.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_540.addWidget(self.pushButton_112)
+
+        self.i_o_group_2_switch_7.addWidget(self.on_light_36)
+        self.off_light_36 = QWidget()
+        self.off_light_36.setObjectName(u"off_light_36")
+        self.horizontalLayout_541 = QHBoxLayout(self.off_light_36)
+        self.horizontalLayout_541.setObjectName(u"horizontalLayout_541")
+        self.horizontalLayout_541.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_113 = QPushButton(self.off_light_36)
+        self.pushButton_113.setObjectName(u"pushButton_113")
+        sizePolicy.setHeightForWidth(self.pushButton_113.sizePolicy().hasHeightForWidth())
+        self.pushButton_113.setSizePolicy(sizePolicy)
+        self.pushButton_113.setFont(font6)
+        self.pushButton_113.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_113.setIcon(icon9)
+        self.pushButton_113.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_541.addWidget(self.pushButton_113)
+
+        self.i_o_group_2_switch_7.addWidget(self.off_light_36)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_7, 3, 1, 1, 1)
+
+        self.i_o_group_2_switch_8 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_8.setObjectName(u"i_o_group_2_switch_8")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_8.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_8.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_8.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_37 = QWidget()
+        self.on_light_37.setObjectName(u"on_light_37")
+        self.horizontalLayout_542 = QHBoxLayout(self.on_light_37)
+        self.horizontalLayout_542.setObjectName(u"horizontalLayout_542")
+        self.horizontalLayout_542.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_114 = QPushButton(self.on_light_37)
+        self.pushButton_114.setObjectName(u"pushButton_114")
+        sizePolicy.setHeightForWidth(self.pushButton_114.sizePolicy().hasHeightForWidth())
+        self.pushButton_114.setSizePolicy(sizePolicy)
+        self.pushButton_114.setFont(font6)
+        self.pushButton_114.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_114.setIcon(icon7)
+        self.pushButton_114.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_542.addWidget(self.pushButton_114)
+
+        self.i_o_group_2_switch_8.addWidget(self.on_light_37)
+        self.off_light_37 = QWidget()
+        self.off_light_37.setObjectName(u"off_light_37")
+        self.horizontalLayout_543 = QHBoxLayout(self.off_light_37)
+        self.horizontalLayout_543.setObjectName(u"horizontalLayout_543")
+        self.horizontalLayout_543.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_115 = QPushButton(self.off_light_37)
+        self.pushButton_115.setObjectName(u"pushButton_115")
+        sizePolicy.setHeightForWidth(self.pushButton_115.sizePolicy().hasHeightForWidth())
+        self.pushButton_115.setSizePolicy(sizePolicy)
+        self.pushButton_115.setFont(font6)
+        self.pushButton_115.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_115.setIcon(icon9)
+        self.pushButton_115.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_543.addWidget(self.pushButton_115)
+
+        self.i_o_group_2_switch_8.addWidget(self.off_light_37)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_8, 3, 3, 1, 1)
+
+        self.i_o_group_2_switch_9 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_9.setObjectName(u"i_o_group_2_switch_9")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_9.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_9.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_9.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_38 = QWidget()
+        self.on_light_38.setObjectName(u"on_light_38")
+        self.horizontalLayout_544 = QHBoxLayout(self.on_light_38)
+        self.horizontalLayout_544.setObjectName(u"horizontalLayout_544")
+        self.horizontalLayout_544.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_116 = QPushButton(self.on_light_38)
+        self.pushButton_116.setObjectName(u"pushButton_116")
+        sizePolicy.setHeightForWidth(self.pushButton_116.sizePolicy().hasHeightForWidth())
+        self.pushButton_116.setSizePolicy(sizePolicy)
+        self.pushButton_116.setFont(font6)
+        self.pushButton_116.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_116.setIcon(icon7)
+        self.pushButton_116.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_544.addWidget(self.pushButton_116)
+
+        self.i_o_group_2_switch_9.addWidget(self.on_light_38)
+        self.off_light_38 = QWidget()
+        self.off_light_38.setObjectName(u"off_light_38")
+        self.horizontalLayout_545 = QHBoxLayout(self.off_light_38)
+        self.horizontalLayout_545.setObjectName(u"horizontalLayout_545")
+        self.horizontalLayout_545.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_117 = QPushButton(self.off_light_38)
+        self.pushButton_117.setObjectName(u"pushButton_117")
+        sizePolicy.setHeightForWidth(self.pushButton_117.sizePolicy().hasHeightForWidth())
+        self.pushButton_117.setSizePolicy(sizePolicy)
+        self.pushButton_117.setFont(font6)
+        self.pushButton_117.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_117.setIcon(icon9)
+        self.pushButton_117.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_545.addWidget(self.pushButton_117)
+
+        self.i_o_group_2_switch_9.addWidget(self.off_light_38)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_9, 4, 1, 1, 1)
+
+        self.i_o_group_2_switch_10 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_10.setObjectName(u"i_o_group_2_switch_10")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_10.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_10.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_10.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_39 = QWidget()
+        self.on_light_39.setObjectName(u"on_light_39")
+        self.horizontalLayout_546 = QHBoxLayout(self.on_light_39)
+        self.horizontalLayout_546.setObjectName(u"horizontalLayout_546")
+        self.horizontalLayout_546.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_118 = QPushButton(self.on_light_39)
+        self.pushButton_118.setObjectName(u"pushButton_118")
+        sizePolicy.setHeightForWidth(self.pushButton_118.sizePolicy().hasHeightForWidth())
+        self.pushButton_118.setSizePolicy(sizePolicy)
+        self.pushButton_118.setFont(font6)
+        self.pushButton_118.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_118.setIcon(icon7)
+        self.pushButton_118.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_546.addWidget(self.pushButton_118)
+
+        self.i_o_group_2_switch_10.addWidget(self.on_light_39)
+        self.off_light_39 = QWidget()
+        self.off_light_39.setObjectName(u"off_light_39")
+        self.horizontalLayout_547 = QHBoxLayout(self.off_light_39)
+        self.horizontalLayout_547.setObjectName(u"horizontalLayout_547")
+        self.horizontalLayout_547.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_119 = QPushButton(self.off_light_39)
+        self.pushButton_119.setObjectName(u"pushButton_119")
+        sizePolicy.setHeightForWidth(self.pushButton_119.sizePolicy().hasHeightForWidth())
+        self.pushButton_119.setSizePolicy(sizePolicy)
+        self.pushButton_119.setFont(font6)
+        self.pushButton_119.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_119.setIcon(icon9)
+        self.pushButton_119.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_547.addWidget(self.pushButton_119)
+
+        self.i_o_group_2_switch_10.addWidget(self.off_light_39)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_10, 4, 3, 1, 1)
+
+        self.i_o_group_2_switch_11 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_11.setObjectName(u"i_o_group_2_switch_11")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_11.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_11.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_11.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_40 = QWidget()
+        self.on_light_40.setObjectName(u"on_light_40")
+        self.horizontalLayout_548 = QHBoxLayout(self.on_light_40)
+        self.horizontalLayout_548.setObjectName(u"horizontalLayout_548")
+        self.horizontalLayout_548.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_120 = QPushButton(self.on_light_40)
+        self.pushButton_120.setObjectName(u"pushButton_120")
+        sizePolicy.setHeightForWidth(self.pushButton_120.sizePolicy().hasHeightForWidth())
+        self.pushButton_120.setSizePolicy(sizePolicy)
+        self.pushButton_120.setFont(font6)
+        self.pushButton_120.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_120.setIcon(icon7)
+        self.pushButton_120.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_548.addWidget(self.pushButton_120)
+
+        self.i_o_group_2_switch_11.addWidget(self.on_light_40)
+        self.off_light_40 = QWidget()
+        self.off_light_40.setObjectName(u"off_light_40")
+        self.horizontalLayout_549 = QHBoxLayout(self.off_light_40)
+        self.horizontalLayout_549.setObjectName(u"horizontalLayout_549")
+        self.horizontalLayout_549.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_121 = QPushButton(self.off_light_40)
+        self.pushButton_121.setObjectName(u"pushButton_121")
+        sizePolicy.setHeightForWidth(self.pushButton_121.sizePolicy().hasHeightForWidth())
+        self.pushButton_121.setSizePolicy(sizePolicy)
+        self.pushButton_121.setFont(font6)
+        self.pushButton_121.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_121.setIcon(icon9)
+        self.pushButton_121.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_549.addWidget(self.pushButton_121)
+
+        self.i_o_group_2_switch_11.addWidget(self.off_light_40)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_11, 5, 1, 1, 1)
+
+        self.i_o_group_2_switch_12 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_12.setObjectName(u"i_o_group_2_switch_12")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_12.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_12.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_12.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_41 = QWidget()
+        self.on_light_41.setObjectName(u"on_light_41")
+        self.horizontalLayout_550 = QHBoxLayout(self.on_light_41)
+        self.horizontalLayout_550.setObjectName(u"horizontalLayout_550")
+        self.horizontalLayout_550.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_122 = QPushButton(self.on_light_41)
+        self.pushButton_122.setObjectName(u"pushButton_122")
+        sizePolicy.setHeightForWidth(self.pushButton_122.sizePolicy().hasHeightForWidth())
+        self.pushButton_122.setSizePolicy(sizePolicy)
+        self.pushButton_122.setFont(font6)
+        self.pushButton_122.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_122.setIcon(icon7)
+        self.pushButton_122.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_550.addWidget(self.pushButton_122)
+
+        self.i_o_group_2_switch_12.addWidget(self.on_light_41)
+        self.off_light_41 = QWidget()
+        self.off_light_41.setObjectName(u"off_light_41")
+        self.horizontalLayout_551 = QHBoxLayout(self.off_light_41)
+        self.horizontalLayout_551.setObjectName(u"horizontalLayout_551")
+        self.horizontalLayout_551.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_123 = QPushButton(self.off_light_41)
+        self.pushButton_123.setObjectName(u"pushButton_123")
+        sizePolicy.setHeightForWidth(self.pushButton_123.sizePolicy().hasHeightForWidth())
+        self.pushButton_123.setSizePolicy(sizePolicy)
+        self.pushButton_123.setFont(font6)
+        self.pushButton_123.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_123.setIcon(icon9)
+        self.pushButton_123.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_551.addWidget(self.pushButton_123)
+
+        self.i_o_group_2_switch_12.addWidget(self.off_light_41)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_12, 5, 3, 1, 1)
+
+        self.dq_name_1 = QLabel(self.i_o_group_2)
+        self.dq_name_1.setObjectName(u"dq_name_1")
+        self.dq_name_1.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_1, 0, 0, 1, 1)
+
+        self.i_o_group_2_switch_13 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_13.setObjectName(u"i_o_group_2_switch_13")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_13.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_13.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_13.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_42 = QWidget()
+        self.on_light_42.setObjectName(u"on_light_42")
+        self.horizontalLayout_552 = QHBoxLayout(self.on_light_42)
+        self.horizontalLayout_552.setObjectName(u"horizontalLayout_552")
+        self.horizontalLayout_552.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_124 = QPushButton(self.on_light_42)
+        self.pushButton_124.setObjectName(u"pushButton_124")
+        sizePolicy.setHeightForWidth(self.pushButton_124.sizePolicy().hasHeightForWidth())
+        self.pushButton_124.setSizePolicy(sizePolicy)
+        self.pushButton_124.setFont(font6)
+        self.pushButton_124.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_124.setIcon(icon7)
+        self.pushButton_124.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_552.addWidget(self.pushButton_124)
+
+        self.i_o_group_2_switch_13.addWidget(self.on_light_42)
+        self.off_light_42 = QWidget()
+        self.off_light_42.setObjectName(u"off_light_42")
+        self.horizontalLayout_553 = QHBoxLayout(self.off_light_42)
+        self.horizontalLayout_553.setObjectName(u"horizontalLayout_553")
+        self.horizontalLayout_553.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_125 = QPushButton(self.off_light_42)
+        self.pushButton_125.setObjectName(u"pushButton_125")
+        sizePolicy.setHeightForWidth(self.pushButton_125.sizePolicy().hasHeightForWidth())
+        self.pushButton_125.setSizePolicy(sizePolicy)
+        self.pushButton_125.setFont(font6)
+        self.pushButton_125.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_125.setIcon(icon9)
+        self.pushButton_125.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_553.addWidget(self.pushButton_125)
+
+        self.i_o_group_2_switch_13.addWidget(self.off_light_42)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_13, 6, 1, 1, 1)
+
+        self.dq_name_2 = QLabel(self.i_o_group_2)
+        self.dq_name_2.setObjectName(u"dq_name_2")
+        self.dq_name_2.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_2, 0, 2, 1, 1)
+
+        self.i_o_group_2_switch_15 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_15.setObjectName(u"i_o_group_2_switch_15")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_15.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_15.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_15.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_44 = QWidget()
+        self.on_light_44.setObjectName(u"on_light_44")
+        self.horizontalLayout_556 = QHBoxLayout(self.on_light_44)
+        self.horizontalLayout_556.setObjectName(u"horizontalLayout_556")
+        self.horizontalLayout_556.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_128 = QPushButton(self.on_light_44)
+        self.pushButton_128.setObjectName(u"pushButton_128")
+        sizePolicy.setHeightForWidth(self.pushButton_128.sizePolicy().hasHeightForWidth())
+        self.pushButton_128.setSizePolicy(sizePolicy)
+        self.pushButton_128.setFont(font6)
+        self.pushButton_128.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_128.setIcon(icon7)
+        self.pushButton_128.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_556.addWidget(self.pushButton_128)
+
+        self.i_o_group_2_switch_15.addWidget(self.on_light_44)
+        self.off_light_44 = QWidget()
+        self.off_light_44.setObjectName(u"off_light_44")
+        self.horizontalLayout_557 = QHBoxLayout(self.off_light_44)
+        self.horizontalLayout_557.setObjectName(u"horizontalLayout_557")
+        self.horizontalLayout_557.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_129 = QPushButton(self.off_light_44)
+        self.pushButton_129.setObjectName(u"pushButton_129")
+        sizePolicy.setHeightForWidth(self.pushButton_129.sizePolicy().hasHeightForWidth())
+        self.pushButton_129.setSizePolicy(sizePolicy)
+        self.pushButton_129.setFont(font6)
+        self.pushButton_129.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_129.setIcon(icon9)
+        self.pushButton_129.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_557.addWidget(self.pushButton_129)
+
+        self.i_o_group_2_switch_15.addWidget(self.off_light_44)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_15, 7, 1, 1, 1)
+
+        self.dq_name_3 = QLabel(self.i_o_group_2)
+        self.dq_name_3.setObjectName(u"dq_name_3")
+        self.dq_name_3.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_3, 1, 0, 1, 1)
+
+        self.dq_name_4 = QLabel(self.i_o_group_2)
+        self.dq_name_4.setObjectName(u"dq_name_4")
+        self.dq_name_4.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_4, 1, 2, 1, 1)
+
+        self.dq_name_6 = QLabel(self.i_o_group_2)
+        self.dq_name_6.setObjectName(u"dq_name_6")
+        self.dq_name_6.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_6, 2, 2, 1, 1)
+
+        self.dq_name_5 = QLabel(self.i_o_group_2)
+        self.dq_name_5.setObjectName(u"dq_name_5")
+        self.dq_name_5.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_5, 2, 0, 1, 1)
+
+        self.dq_name_7 = QLabel(self.i_o_group_2)
+        self.dq_name_7.setObjectName(u"dq_name_7")
+        self.dq_name_7.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_7, 3, 0, 1, 1)
+
+        self.dq_name_8 = QLabel(self.i_o_group_2)
+        self.dq_name_8.setObjectName(u"dq_name_8")
+        self.dq_name_8.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_8, 3, 2, 1, 1)
+
+        self.dq_name_9 = QLabel(self.i_o_group_2)
+        self.dq_name_9.setObjectName(u"dq_name_9")
+        self.dq_name_9.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_9, 4, 0, 1, 1)
+
+        self.dq_name_10 = QLabel(self.i_o_group_2)
+        self.dq_name_10.setObjectName(u"dq_name_10")
+        self.dq_name_10.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_10, 4, 2, 1, 1)
+
+        self.dq_name_11 = QLabel(self.i_o_group_2)
+        self.dq_name_11.setObjectName(u"dq_name_11")
+        self.dq_name_11.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_11, 5, 0, 1, 1)
+
+        self.dq_name_13 = QLabel(self.i_o_group_2)
+        self.dq_name_13.setObjectName(u"dq_name_13")
+        self.dq_name_13.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_13, 6, 0, 1, 1)
+
+        self.dq_name_12 = QLabel(self.i_o_group_2)
+        self.dq_name_12.setObjectName(u"dq_name_12")
+        self.dq_name_12.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_12, 5, 2, 1, 1)
+
+        self.dq_name_14 = QLabel(self.i_o_group_2)
+        self.dq_name_14.setObjectName(u"dq_name_14")
+        self.dq_name_14.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_14, 6, 2, 1, 1)
+
+        self.dq_name_15 = QLabel(self.i_o_group_2)
+        self.dq_name_15.setObjectName(u"dq_name_15")
+        self.dq_name_15.setFont(font24)
+
+        self.gridLayout_6.addWidget(self.dq_name_15, 7, 0, 1, 1)
+
+        self.i_o_group_2_switch_14 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_14.setObjectName(u"i_o_group_2_switch_14")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_14.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_14.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_14.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_43 = QWidget()
+        self.on_light_43.setObjectName(u"on_light_43")
+        self.horizontalLayout_554 = QHBoxLayout(self.on_light_43)
+        self.horizontalLayout_554.setObjectName(u"horizontalLayout_554")
+        self.horizontalLayout_554.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_126 = QPushButton(self.on_light_43)
+        self.pushButton_126.setObjectName(u"pushButton_126")
+        sizePolicy.setHeightForWidth(self.pushButton_126.sizePolicy().hasHeightForWidth())
+        self.pushButton_126.setSizePolicy(sizePolicy)
+        self.pushButton_126.setFont(font6)
+        self.pushButton_126.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_126.setIcon(icon7)
+        self.pushButton_126.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_554.addWidget(self.pushButton_126)
+
+        self.i_o_group_2_switch_14.addWidget(self.on_light_43)
+        self.off_light_43 = QWidget()
+        self.off_light_43.setObjectName(u"off_light_43")
+        self.horizontalLayout_555 = QHBoxLayout(self.off_light_43)
+        self.horizontalLayout_555.setObjectName(u"horizontalLayout_555")
+        self.horizontalLayout_555.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_127 = QPushButton(self.off_light_43)
+        self.pushButton_127.setObjectName(u"pushButton_127")
+        sizePolicy.setHeightForWidth(self.pushButton_127.sizePolicy().hasHeightForWidth())
+        self.pushButton_127.setSizePolicy(sizePolicy)
+        self.pushButton_127.setFont(font6)
+        self.pushButton_127.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_127.setIcon(icon9)
+        self.pushButton_127.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_555.addWidget(self.pushButton_127)
+
+        self.i_o_group_2_switch_14.addWidget(self.off_light_43)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_14, 6, 3, 1, 1)
+
+        self.i_o_group_2_switch_3 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_3.setObjectName(u"i_o_group_2_switch_3")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_3.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_3.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_3.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_32 = QWidget()
+        self.on_light_32.setObjectName(u"on_light_32")
+        self.horizontalLayout_532 = QHBoxLayout(self.on_light_32)
+        self.horizontalLayout_532.setObjectName(u"horizontalLayout_532")
+        self.horizontalLayout_532.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_104 = QPushButton(self.on_light_32)
+        self.pushButton_104.setObjectName(u"pushButton_104")
+        sizePolicy.setHeightForWidth(self.pushButton_104.sizePolicy().hasHeightForWidth())
+        self.pushButton_104.setSizePolicy(sizePolicy)
+        self.pushButton_104.setFont(font6)
+        self.pushButton_104.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_104.setIcon(icon7)
+        self.pushButton_104.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_532.addWidget(self.pushButton_104)
+
+        self.i_o_group_2_switch_3.addWidget(self.on_light_32)
+        self.off_light_32 = QWidget()
+        self.off_light_32.setObjectName(u"off_light_32")
+        self.horizontalLayout_533 = QHBoxLayout(self.off_light_32)
+        self.horizontalLayout_533.setObjectName(u"horizontalLayout_533")
+        self.horizontalLayout_533.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_105 = QPushButton(self.off_light_32)
+        self.pushButton_105.setObjectName(u"pushButton_105")
+        sizePolicy.setHeightForWidth(self.pushButton_105.sizePolicy().hasHeightForWidth())
+        self.pushButton_105.setSizePolicy(sizePolicy)
+        self.pushButton_105.setFont(font6)
+        self.pushButton_105.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_105.setIcon(icon9)
+        self.pushButton_105.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_533.addWidget(self.pushButton_105)
+
+        self.i_o_group_2_switch_3.addWidget(self.off_light_32)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_3, 1, 1, 1, 1)
+
+        self.i_o_group_2_switch_4 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_4.setObjectName(u"i_o_group_2_switch_4")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_4.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_4.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_4.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_33 = QWidget()
+        self.on_light_33.setObjectName(u"on_light_33")
+        self.horizontalLayout_534 = QHBoxLayout(self.on_light_33)
+        self.horizontalLayout_534.setObjectName(u"horizontalLayout_534")
+        self.horizontalLayout_534.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_106 = QPushButton(self.on_light_33)
+        self.pushButton_106.setObjectName(u"pushButton_106")
+        sizePolicy.setHeightForWidth(self.pushButton_106.sizePolicy().hasHeightForWidth())
+        self.pushButton_106.setSizePolicy(sizePolicy)
+        self.pushButton_106.setFont(font6)
+        self.pushButton_106.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_106.setIcon(icon7)
+        self.pushButton_106.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_534.addWidget(self.pushButton_106)
+
+        self.i_o_group_2_switch_4.addWidget(self.on_light_33)
+        self.off_light_33 = QWidget()
+        self.off_light_33.setObjectName(u"off_light_33")
+        self.horizontalLayout_535 = QHBoxLayout(self.off_light_33)
+        self.horizontalLayout_535.setObjectName(u"horizontalLayout_535")
+        self.horizontalLayout_535.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_107 = QPushButton(self.off_light_33)
+        self.pushButton_107.setObjectName(u"pushButton_107")
+        sizePolicy.setHeightForWidth(self.pushButton_107.sizePolicy().hasHeightForWidth())
+        self.pushButton_107.setSizePolicy(sizePolicy)
+        self.pushButton_107.setFont(font6)
+        self.pushButton_107.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_107.setIcon(icon9)
+        self.pushButton_107.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_535.addWidget(self.pushButton_107)
+
+        self.i_o_group_2_switch_4.addWidget(self.off_light_33)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_4, 1, 3, 1, 1)
+
+        self.i_o_group_2_switch_1 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_1.setObjectName(u"i_o_group_2_switch_1")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_1.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_1.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_1.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_16 = QWidget()
+        self.on_light_16.setObjectName(u"on_light_16")
+        self.horizontalLayout_500 = QHBoxLayout(self.on_light_16)
+        self.horizontalLayout_500.setObjectName(u"horizontalLayout_500")
+        self.horizontalLayout_500.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_72 = QPushButton(self.on_light_16)
+        self.pushButton_72.setObjectName(u"pushButton_72")
+        sizePolicy.setHeightForWidth(self.pushButton_72.sizePolicy().hasHeightForWidth())
+        self.pushButton_72.setSizePolicy(sizePolicy)
+        self.pushButton_72.setFont(font6)
+        self.pushButton_72.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_72.setIcon(icon7)
+        self.pushButton_72.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_500.addWidget(self.pushButton_72)
+
+        self.i_o_group_2_switch_1.addWidget(self.on_light_16)
+        self.off_light_16 = QWidget()
+        self.off_light_16.setObjectName(u"off_light_16")
+        self.horizontalLayout_501 = QHBoxLayout(self.off_light_16)
+        self.horizontalLayout_501.setObjectName(u"horizontalLayout_501")
+        self.horizontalLayout_501.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_73 = QPushButton(self.off_light_16)
+        self.pushButton_73.setObjectName(u"pushButton_73")
+        sizePolicy.setHeightForWidth(self.pushButton_73.sizePolicy().hasHeightForWidth())
+        self.pushButton_73.setSizePolicy(sizePolicy)
+        self.pushButton_73.setFont(font6)
+        self.pushButton_73.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_73.setIcon(icon9)
+        self.pushButton_73.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_501.addWidget(self.pushButton_73)
+
+        self.i_o_group_2_switch_1.addWidget(self.off_light_16)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_1, 0, 1, 1, 1)
+
+        self.i_o_group_2_switch_2 = QStackedWidget(self.i_o_group_2)
+        self.i_o_group_2_switch_2.setObjectName(u"i_o_group_2_switch_2")
+        sizePolicy.setHeightForWidth(self.i_o_group_2_switch_2.sizePolicy().hasHeightForWidth())
+        self.i_o_group_2_switch_2.setSizePolicy(sizePolicy)
+        self.i_o_group_2_switch_2.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.on_light_31 = QWidget()
+        self.on_light_31.setObjectName(u"on_light_31")
+        self.horizontalLayout_530 = QHBoxLayout(self.on_light_31)
+        self.horizontalLayout_530.setObjectName(u"horizontalLayout_530")
+        self.horizontalLayout_530.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_102 = QPushButton(self.on_light_31)
+        self.pushButton_102.setObjectName(u"pushButton_102")
+        sizePolicy.setHeightForWidth(self.pushButton_102.sizePolicy().hasHeightForWidth())
+        self.pushButton_102.setSizePolicy(sizePolicy)
+        self.pushButton_102.setFont(font6)
+        self.pushButton_102.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_102.setIcon(icon7)
+        self.pushButton_102.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_530.addWidget(self.pushButton_102)
+
+        self.i_o_group_2_switch_2.addWidget(self.on_light_31)
+        self.off_light_31 = QWidget()
+        self.off_light_31.setObjectName(u"off_light_31")
+        self.horizontalLayout_531 = QHBoxLayout(self.off_light_31)
+        self.horizontalLayout_531.setObjectName(u"horizontalLayout_531")
+        self.horizontalLayout_531.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_103 = QPushButton(self.off_light_31)
+        self.pushButton_103.setObjectName(u"pushButton_103")
+        sizePolicy.setHeightForWidth(self.pushButton_103.sizePolicy().hasHeightForWidth())
+        self.pushButton_103.setSizePolicy(sizePolicy)
+        self.pushButton_103.setFont(font6)
+        self.pushButton_103.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_103.setIcon(icon9)
+        self.pushButton_103.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_531.addWidget(self.pushButton_103)
+
+        self.i_o_group_2_switch_2.addWidget(self.off_light_31)
+
+        self.gridLayout_6.addWidget(self.i_o_group_2_switch_2, 0, 3, 1, 1)
+
+        self.gridLayout_6.setColumnStretch(1, 1)
+        self.gridLayout_6.setColumnStretch(3, 1)
+
+        self.horizontalLayout_24.addWidget(self.i_o_group_2)
+
+        self.i_o_group_3 = QGroupBox(self.widget_26)
+        self.i_o_group_3.setObjectName(u"i_o_group_3")
+        self.i_o_group_3.setFont(font22)
+        self.i_o_group_3.setStyleSheet(u"QGroupBox {\n"
+"    border: 2px solid #E5E5E5;\n"
+"    border-radius: 6px;\n"
+"    margin-top: 10px;\n"
+"    padding-top: 10px;\n"
+"}\n"
+"QGroupBox::title {\n"
+"    subcontrol-origin: margin;\n"
+"    left: 10px;\n"
+"    padding: 0 5px 0 5px;\n"
+"    color: #374151;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"	border: none;\n"
+"	color: #E6AC2E;\n"
+"}\n"
+"\n"
+"QSpinBox {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QSpinBox:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}")
+        self.gridLayout_5 = QGridLayout(self.i_o_group_3)
+        self.gridLayout_5.setSpacing(10)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.gridLayout_5.setContentsMargins(10, 10, 10, 10)
+        self.t0_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t0_value.setObjectName(u"t0_value")
+        sizePolicy.setHeightForWidth(self.t0_value.sizePolicy().hasHeightForWidth())
+        self.t0_value.setSizePolicy(sizePolicy)
+        font25 = QFont()
+        font25.setPointSize(22)
+        font25.setBold(True)
+        self.t0_value.setFont(font25)
+        self.t0_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t0_value.setAlignment(Qt.AlignCenter)
+        self.t0_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t0_value.setDecimals(1)
+        self.t0_value.setMinimum(-10.000000000000000)
+        self.t0_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t0_value, 0, 1, 1, 1)
+
+        self.ai_name_1 = QLabel(self.i_o_group_3)
+        self.ai_name_1.setObjectName(u"ai_name_1")
+        self.ai_name_1.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_1, 0, 0, 1, 1)
+
+        self.t1_1_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t1_1_value.setObjectName(u"t1_1_value")
+        sizePolicy.setHeightForWidth(self.t1_1_value.sizePolicy().hasHeightForWidth())
+        self.t1_1_value.setSizePolicy(sizePolicy)
+        self.t1_1_value.setFont(font25)
+        self.t1_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t1_1_value.setAlignment(Qt.AlignCenter)
+        self.t1_1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t1_1_value.setDecimals(1)
+        self.t1_1_value.setMinimum(-10.000000000000000)
+        self.t1_1_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t1_1_value, 0, 3, 1, 1)
+
+        self.ai_name_15 = QLabel(self.i_o_group_3)
+        self.ai_name_15.setObjectName(u"ai_name_15")
+        self.ai_name_15.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_15, 7, 2, 1, 1)
+
+        self.ai_name_14 = QLabel(self.i_o_group_3)
+        self.ai_name_14.setObjectName(u"ai_name_14")
+        self.ai_name_14.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_14, 6, 2, 1, 1)
+
+        self.ai_name_12 = QLabel(self.i_o_group_3)
+        self.ai_name_12.setObjectName(u"ai_name_12")
+        self.ai_name_12.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_12, 7, 0, 1, 1)
+
+        self.ai_name_13 = QLabel(self.i_o_group_3)
+        self.ai_name_13.setObjectName(u"ai_name_13")
+        self.ai_name_13.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_13, 9, 0, 1, 1)
+
+        self.ai_name_16 = QLabel(self.i_o_group_3)
+        self.ai_name_16.setObjectName(u"ai_name_16")
+        self.ai_name_16.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_16, 9, 2, 1, 1)
+
+        self.ai_name_4 = QLabel(self.i_o_group_3)
+        self.ai_name_4.setObjectName(u"ai_name_4")
+        self.ai_name_4.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_4, 1, 2, 1, 1)
+
+        self.ai_name_3 = QLabel(self.i_o_group_3)
+        self.ai_name_3.setObjectName(u"ai_name_3")
+        self.ai_name_3.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_3, 1, 0, 1, 1)
+
+        self.ai_name_5 = QLabel(self.i_o_group_3)
+        self.ai_name_5.setObjectName(u"ai_name_5")
+        self.ai_name_5.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_5, 2, 0, 1, 1)
+
+        self.ai_name_2 = QLabel(self.i_o_group_3)
+        self.ai_name_2.setObjectName(u"ai_name_2")
+        self.ai_name_2.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_2, 0, 2, 1, 1)
+
+        self.ai_name_6 = QLabel(self.i_o_group_3)
+        self.ai_name_6.setObjectName(u"ai_name_6")
+        self.ai_name_6.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_6, 2, 2, 1, 1)
+
+        self.ai_name_7 = QLabel(self.i_o_group_3)
+        self.ai_name_7.setObjectName(u"ai_name_7")
+        self.ai_name_7.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_7, 3, 0, 1, 1)
+
+        self.ai_name_8 = QLabel(self.i_o_group_3)
+        self.ai_name_8.setObjectName(u"ai_name_8")
+        self.ai_name_8.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_8, 3, 2, 1, 1)
+
+        self.ai_name_9 = QLabel(self.i_o_group_3)
+        self.ai_name_9.setObjectName(u"ai_name_9")
+        self.ai_name_9.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_9, 4, 0, 1, 1)
+
+        self.ai_name_10 = QLabel(self.i_o_group_3)
+        self.ai_name_10.setObjectName(u"ai_name_10")
+        self.ai_name_10.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_10, 4, 2, 1, 1)
+
+        self.ai_name_11 = QLabel(self.i_o_group_3)
+        self.ai_name_11.setObjectName(u"ai_name_11")
+        self.ai_name_11.setFont(font24)
+
+        self.gridLayout_5.addWidget(self.ai_name_11, 6, 0, 1, 1)
+
+        self.t1_2_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t1_2_value.setObjectName(u"t1_2_value")
+        sizePolicy.setHeightForWidth(self.t1_2_value.sizePolicy().hasHeightForWidth())
+        self.t1_2_value.setSizePolicy(sizePolicy)
+        self.t1_2_value.setFont(font25)
+        self.t1_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t1_2_value.setAlignment(Qt.AlignCenter)
+        self.t1_2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t1_2_value.setDecimals(1)
+        self.t1_2_value.setMinimum(-10.000000000000000)
+        self.t1_2_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t1_2_value, 1, 1, 1, 1)
+
+        self.t1_3_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t1_3_value.setObjectName(u"t1_3_value")
+        sizePolicy.setHeightForWidth(self.t1_3_value.sizePolicy().hasHeightForWidth())
+        self.t1_3_value.setSizePolicy(sizePolicy)
+        self.t1_3_value.setFont(font25)
+        self.t1_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t1_3_value.setAlignment(Qt.AlignCenter)
+        self.t1_3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t1_3_value.setDecimals(1)
+        self.t1_3_value.setMinimum(-10.000000000000000)
+        self.t1_3_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t1_3_value, 1, 3, 1, 1)
+
+        self.t2_1_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t2_1_value.setObjectName(u"t2_1_value")
+        sizePolicy.setHeightForWidth(self.t2_1_value.sizePolicy().hasHeightForWidth())
+        self.t2_1_value.setSizePolicy(sizePolicy)
+        self.t2_1_value.setFont(font25)
+        self.t2_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t2_1_value.setAlignment(Qt.AlignCenter)
+        self.t2_1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t2_1_value.setDecimals(1)
+        self.t2_1_value.setMinimum(-10.000000000000000)
+        self.t2_1_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t2_1_value, 2, 1, 1, 1)
+
+        self.t2_2_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t2_2_value.setObjectName(u"t2_2_value")
+        sizePolicy.setHeightForWidth(self.t2_2_value.sizePolicy().hasHeightForWidth())
+        self.t2_2_value.setSizePolicy(sizePolicy)
+        self.t2_2_value.setFont(font25)
+        self.t2_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t2_2_value.setAlignment(Qt.AlignCenter)
+        self.t2_2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t2_2_value.setDecimals(1)
+        self.t2_2_value.setMinimum(-10.000000000000000)
+        self.t2_2_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t2_2_value, 2, 3, 1, 1)
+
+        self.t2_3_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t2_3_value.setObjectName(u"t2_3_value")
+        sizePolicy.setHeightForWidth(self.t2_3_value.sizePolicy().hasHeightForWidth())
+        self.t2_3_value.setSizePolicy(sizePolicy)
+        self.t2_3_value.setFont(font25)
+        self.t2_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t2_3_value.setAlignment(Qt.AlignCenter)
+        self.t2_3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t2_3_value.setDecimals(1)
+        self.t2_3_value.setMinimum(-10.000000000000000)
+        self.t2_3_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t2_3_value, 3, 1, 1, 1)
+
+        self.t3_1_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t3_1_value.setObjectName(u"t3_1_value")
+        sizePolicy.setHeightForWidth(self.t3_1_value.sizePolicy().hasHeightForWidth())
+        self.t3_1_value.setSizePolicy(sizePolicy)
+        self.t3_1_value.setFont(font25)
+        self.t3_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t3_1_value.setAlignment(Qt.AlignCenter)
+        self.t3_1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t3_1_value.setDecimals(1)
+        self.t3_1_value.setMinimum(-10.000000000000000)
+        self.t3_1_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t3_1_value, 3, 3, 1, 1)
+
+        self.t3_2_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t3_2_value.setObjectName(u"t3_2_value")
+        sizePolicy.setHeightForWidth(self.t3_2_value.sizePolicy().hasHeightForWidth())
+        self.t3_2_value.setSizePolicy(sizePolicy)
+        self.t3_2_value.setFont(font25)
+        self.t3_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t3_2_value.setAlignment(Qt.AlignCenter)
+        self.t3_2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t3_2_value.setDecimals(1)
+        self.t3_2_value.setMinimum(-10.000000000000000)
+        self.t3_2_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t3_2_value, 4, 1, 1, 1)
+
+        self.t3_3_value = QDoubleSpinBox(self.i_o_group_3)
+        self.t3_3_value.setObjectName(u"t3_3_value")
+        sizePolicy.setHeightForWidth(self.t3_3_value.sizePolicy().hasHeightForWidth())
+        self.t3_3_value.setSizePolicy(sizePolicy)
+        self.t3_3_value.setFont(font25)
+        self.t3_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.t3_3_value.setAlignment(Qt.AlignCenter)
+        self.t3_3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.t3_3_value.setDecimals(1)
+        self.t3_3_value.setMinimum(-10.000000000000000)
+        self.t3_3_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.t3_3_value, 4, 3, 1, 1)
+
+        self.p1_value = QDoubleSpinBox(self.i_o_group_3)
+        self.p1_value.setObjectName(u"p1_value")
+        sizePolicy.setHeightForWidth(self.p1_value.sizePolicy().hasHeightForWidth())
+        self.p1_value.setSizePolicy(sizePolicy)
+        self.p1_value.setFont(font25)
+        self.p1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.p1_value.setAlignment(Qt.AlignCenter)
+        self.p1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.p1_value.setDecimals(1)
+        self.p1_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.p1_value, 6, 1, 1, 1)
+
+        self.p2_value = QDoubleSpinBox(self.i_o_group_3)
+        self.p2_value.setObjectName(u"p2_value")
+        sizePolicy.setHeightForWidth(self.p2_value.sizePolicy().hasHeightForWidth())
+        self.p2_value.setSizePolicy(sizePolicy)
+        self.p2_value.setFont(font25)
+        self.p2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.p2_value.setAlignment(Qt.AlignCenter)
+        self.p2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.p2_value.setDecimals(1)
+        self.p2_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.p2_value, 7, 1, 1, 1)
+
+        self.p3_value = QDoubleSpinBox(self.i_o_group_3)
+        self.p3_value.setObjectName(u"p3_value")
+        sizePolicy.setHeightForWidth(self.p3_value.sizePolicy().hasHeightForWidth())
+        self.p3_value.setSizePolicy(sizePolicy)
+        self.p3_value.setFont(font25)
+        self.p3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.p3_value.setAlignment(Qt.AlignCenter)
+        self.p3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.p3_value.setDecimals(1)
+        self.p3_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.p3_value, 9, 1, 1, 1)
+
+        self.fp1_value = QDoubleSpinBox(self.i_o_group_3)
+        self.fp1_value.setObjectName(u"fp1_value")
+        sizePolicy.setHeightForWidth(self.fp1_value.sizePolicy().hasHeightForWidth())
+        self.fp1_value.setSizePolicy(sizePolicy)
+        self.fp1_value.setFont(font25)
+        self.fp1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.fp1_value.setAlignment(Qt.AlignCenter)
+        self.fp1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.fp1_value.setDecimals(1)
+        self.fp1_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.fp1_value, 6, 3, 1, 1)
+
+        self.fp2_value = QDoubleSpinBox(self.i_o_group_3)
+        self.fp2_value.setObjectName(u"fp2_value")
+        sizePolicy.setHeightForWidth(self.fp2_value.sizePolicy().hasHeightForWidth())
+        self.fp2_value.setSizePolicy(sizePolicy)
+        self.fp2_value.setFont(font25)
+        self.fp2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.fp2_value.setAlignment(Qt.AlignCenter)
+        self.fp2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.fp2_value.setDecimals(1)
+        self.fp2_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.fp2_value, 7, 3, 1, 1)
+
+        self.fp3_value = QDoubleSpinBox(self.i_o_group_3)
+        self.fp3_value.setObjectName(u"fp3_value")
+        sizePolicy.setHeightForWidth(self.fp3_value.sizePolicy().hasHeightForWidth())
+        self.fp3_value.setSizePolicy(sizePolicy)
+        self.fp3_value.setFont(font25)
+        self.fp3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
+"border-radius: 20px;\n"
+"color: #10B981;")
+        self.fp3_value.setAlignment(Qt.AlignCenter)
+        self.fp3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.fp3_value.setDecimals(1)
+        self.fp3_value.setMaximum(999.899999999999977)
+
+        self.gridLayout_5.addWidget(self.fp3_value, 9, 3, 1, 1)
+
+        self.gridLayout_5.setColumnStretch(1, 1)
+        self.gridLayout_5.setColumnStretch(3, 1)
+
+        self.horizontalLayout_24.addWidget(self.i_o_group_3)
+
+        self.horizontalLayout_24.setStretch(0, 1)
+        self.horizontalLayout_24.setStretch(1, 2)
+        self.horizontalLayout_24.setStretch(2, 2)
+
+        self.verticalLayout_28.addWidget(self.widget_26)
+
+        self.widget_29 = QWidget(self.device_frame_2)
+        self.widget_29.setObjectName(u"widget_29")
+        self.horizontalLayout_27 = QHBoxLayout(self.widget_29)
+        self.horizontalLayout_27.setSpacing(10)
+        self.horizontalLayout_27.setObjectName(u"horizontalLayout_27")
+        self.horizontalLayout_27.setContentsMargins(0, 0, 0, 0)
+        self.widget_30 = QWidget(self.widget_29)
+        self.widget_30.setObjectName(u"widget_30")
+        self.widget_30.setMaximumSize(QSize(16777215, 16777215))
+        self.widget_30.setStyleSheet(u"QPushButton {\n"
+"    background-color: white;\n"
+"    color: #0B7EC8;\n"
+"    border: 2px solid #0B7EC8;\n"
+"    padding: 4px 4px;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #F0F9FF;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    background-color: #E0F2FE;\n"
+"}")
+        self.horizontalLayout_30 = QHBoxLayout(self.widget_30)
+        self.horizontalLayout_30.setSpacing(10)
+        self.horizontalLayout_30.setObjectName(u"horizontalLayout_30")
+        self.horizontalLayout_30.setContentsMargins(10, 0, 10, 0)
+        self.previus_group_page_btn_2 = QPushButton(self.widget_30)
+        self.previus_group_page_btn_2.setObjectName(u"previus_group_page_btn_2")
+        sizePolicy.setHeightForWidth(self.previus_group_page_btn_2.sizePolicy().hasHeightForWidth())
+        self.previus_group_page_btn_2.setSizePolicy(sizePolicy)
+        self.previus_group_page_btn_2.setMaximumSize(QSize(16777215, 150))
+        self.previus_group_page_btn_2.setFont(font7)
+        self.previus_group_page_btn_2.setStyleSheet(u"QPushButton{\n"
+"	image: url(:/newPrefix/arrow-alt-circle-left.png);\n"
+"}\n"
+"QPushButton:pressed{\n"
+"	image: url(:/newPrefix/arrow-alt-circle-left_blue.png)\n"
+"}")
+        self.previus_group_page_btn_2.setIconSize(QSize(40, 40))
+        self.previus_group_page_btn_2.setCheckable(False)
+
+        self.horizontalLayout_30.addWidget(self.previus_group_page_btn_2)
+
+        self.next_group_page_btn_2 = QPushButton(self.widget_30)
+        self.next_group_page_btn_2.setObjectName(u"next_group_page_btn_2")
+        sizePolicy.setHeightForWidth(self.next_group_page_btn_2.sizePolicy().hasHeightForWidth())
+        self.next_group_page_btn_2.setSizePolicy(sizePolicy)
+        self.next_group_page_btn_2.setMaximumSize(QSize(16777215, 150))
+        self.next_group_page_btn_2.setFont(font7)
+        self.next_group_page_btn_2.setStyleSheet(u"QPushButton{\n"
+"	image: url(:/newPrefix/arrow-alt-circle-right.png)\n"
+"}\n"
+"QPushButton:pressed{\n"
+"	image: url(:/newPrefix/arrow-alt-circle-right_blue.png)\n"
+"}")
+        self.next_group_page_btn_2.setIconSize(QSize(40, 40))
+        self.next_group_page_btn_2.setCheckable(False)
+
+        self.horizontalLayout_30.addWidget(self.next_group_page_btn_2)
+
+        self.horizontalLayout_30.setStretch(0, 1)
+        self.horizontalLayout_30.setStretch(1, 1)
+
+        self.horizontalLayout_27.addWidget(self.widget_30)
+
+
+        self.verticalLayout_28.addWidget(self.widget_29)
+
+        self.verticalLayout_28.setStretch(0, 15)
+        self.verticalLayout_28.setStretch(1, 1)
+
+        self.verticalLayout_40.addWidget(self.device_frame_2)
+
+        self.stackedWidget_3.addWidget(self.i_o_page)
+
+        self.ver_layout_device.addWidget(self.stackedWidget_3)
 
 
         self.verticalLayout_5.addLayout(self.ver_layout_device)
@@ -7627,8 +9448,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_60.addWidget(self.lineEdit)
 
         self.list_history = QTableWidget(self.stacked_list_report)
-        if (self.list_history.columnCount() < 8):
-            self.list_history.setColumnCount(8)
+        if (self.list_history.columnCount() < 7):
+            self.list_history.setColumnCount(7)
         __qtablewidgetitem = QTableWidgetItem()
         self.list_history.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
@@ -7643,46 +9464,44 @@ class Ui_MainWindow(object):
         self.list_history.setHorizontalHeaderItem(5, __qtablewidgetitem5)
         __qtablewidgetitem6 = QTableWidgetItem()
         self.list_history.setHorizontalHeaderItem(6, __qtablewidgetitem6)
-        __qtablewidgetitem7 = QTableWidgetItem()
-        self.list_history.setHorizontalHeaderItem(7, __qtablewidgetitem7)
         if (self.list_history.rowCount() < 17):
             self.list_history.setRowCount(17)
+        __qtablewidgetitem7 = QTableWidgetItem()
+        self.list_history.setVerticalHeaderItem(0, __qtablewidgetitem7)
         __qtablewidgetitem8 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(0, __qtablewidgetitem8)
+        self.list_history.setVerticalHeaderItem(1, __qtablewidgetitem8)
         __qtablewidgetitem9 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(1, __qtablewidgetitem9)
+        self.list_history.setVerticalHeaderItem(2, __qtablewidgetitem9)
         __qtablewidgetitem10 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(2, __qtablewidgetitem10)
+        self.list_history.setVerticalHeaderItem(3, __qtablewidgetitem10)
         __qtablewidgetitem11 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(3, __qtablewidgetitem11)
+        self.list_history.setVerticalHeaderItem(4, __qtablewidgetitem11)
         __qtablewidgetitem12 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(4, __qtablewidgetitem12)
+        self.list_history.setVerticalHeaderItem(5, __qtablewidgetitem12)
         __qtablewidgetitem13 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(5, __qtablewidgetitem13)
+        self.list_history.setVerticalHeaderItem(6, __qtablewidgetitem13)
         __qtablewidgetitem14 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(6, __qtablewidgetitem14)
+        self.list_history.setVerticalHeaderItem(7, __qtablewidgetitem14)
         __qtablewidgetitem15 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(7, __qtablewidgetitem15)
+        self.list_history.setVerticalHeaderItem(8, __qtablewidgetitem15)
         __qtablewidgetitem16 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(8, __qtablewidgetitem16)
+        self.list_history.setVerticalHeaderItem(9, __qtablewidgetitem16)
         __qtablewidgetitem17 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(9, __qtablewidgetitem17)
+        self.list_history.setVerticalHeaderItem(10, __qtablewidgetitem17)
         __qtablewidgetitem18 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(10, __qtablewidgetitem18)
+        self.list_history.setVerticalHeaderItem(11, __qtablewidgetitem18)
         __qtablewidgetitem19 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(11, __qtablewidgetitem19)
+        self.list_history.setVerticalHeaderItem(12, __qtablewidgetitem19)
         __qtablewidgetitem20 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(12, __qtablewidgetitem20)
+        self.list_history.setVerticalHeaderItem(13, __qtablewidgetitem20)
         __qtablewidgetitem21 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(13, __qtablewidgetitem21)
+        self.list_history.setVerticalHeaderItem(14, __qtablewidgetitem21)
         __qtablewidgetitem22 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(14, __qtablewidgetitem22)
+        self.list_history.setVerticalHeaderItem(15, __qtablewidgetitem22)
         __qtablewidgetitem23 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(15, __qtablewidgetitem23)
+        self.list_history.setVerticalHeaderItem(16, __qtablewidgetitem23)
         __qtablewidgetitem24 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(16, __qtablewidgetitem24)
-        __qtablewidgetitem25 = QTableWidgetItem()
-        self.list_history.setItem(0, 0, __qtablewidgetitem25)
+        self.list_history.setItem(0, 0, __qtablewidgetitem24)
         self.list_history.setObjectName(u"list_history")
         self.list_history.setStyleSheet(u"QTableWidget {\n"
 "    background-color: #ffffff; border: 1px solid #BFC8D3; border-radius: 8px;\n"
@@ -7795,7 +9614,7 @@ class Ui_MainWindow(object):
 
         self.stackedWidget_2.setCurrentIndex(2)
         self.sys_state_stacked_wid_39.setCurrentIndex(2)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_2.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_3.setCurrentIndex(0)
@@ -7834,7 +9653,31 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_c_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_c_6.setCurrentIndex(0)
         self.stacked_cel_fah_temp_c_7.setCurrentIndex(0)
-        self.sys_state_stacked_wid_40.setCurrentIndex(0)
+        self.stackedWidget_3.setCurrentIndex(1)
+        self.sys_state_stacked_wid_40.setCurrentIndex(1)
+        self.i_o_group_1_switch_3.setCurrentIndex(0)
+        self.i_o_group_1_switch_5.setCurrentIndex(0)
+        self.i_o_group_1_switch_6.setCurrentIndex(0)
+        self.i_o_group_1_switch_7.setCurrentIndex(0)
+        self.i_o_group_1_switch_2.setCurrentIndex(0)
+        self.i_o_group_1_switch_1.setCurrentIndex(0)
+        self.i_o_group_1_switch_4.setCurrentIndex(0)
+        self.i_o_group_1_switch_8.setCurrentIndex(0)
+        self.i_o_group_2_switch_5.setCurrentIndex(0)
+        self.i_o_group_2_switch_6.setCurrentIndex(0)
+        self.i_o_group_2_switch_7.setCurrentIndex(0)
+        self.i_o_group_2_switch_8.setCurrentIndex(0)
+        self.i_o_group_2_switch_9.setCurrentIndex(0)
+        self.i_o_group_2_switch_10.setCurrentIndex(0)
+        self.i_o_group_2_switch_11.setCurrentIndex(0)
+        self.i_o_group_2_switch_12.setCurrentIndex(0)
+        self.i_o_group_2_switch_13.setCurrentIndex(0)
+        self.i_o_group_2_switch_15.setCurrentIndex(0)
+        self.i_o_group_2_switch_14.setCurrentIndex(0)
+        self.i_o_group_2_switch_3.setCurrentIndex(0)
+        self.i_o_group_2_switch_4.setCurrentIndex(0)
+        self.i_o_group_2_switch_1.setCurrentIndex(0)
+        self.i_o_group_2_switch_2.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -8182,9 +10025,9 @@ class Ui_MainWindow(object):
         self.ct_t3_offset_value.setSuffix("")
         self.label_362.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
         self.label_363.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.heat_btn_a_2.setText(QCoreApplication.translate("MainWindow", u" Heating T0", None))
-        self.back_home_btn_4.setText(QCoreApplication.translate("MainWindow", u"\U0001f4c8 Back", None))
-        self.device_icon.setText("")
+        self.heat_btn_t0.setText(QCoreApplication.translate("MainWindow", u" Heating T0", None))
+        self.back_home_btn.setText(QCoreApplication.translate("MainWindow", u"\U0001f4c8 Back", None))
+        self.plc_io_btn.setText("")
         self.connection_group.setTitle(QCoreApplication.translate("MainWindow", u"Connection Settings", None))
         self.db_data_size_input.setSuffix(QCoreApplication.translate("MainWindow", u" ~ 2056", None))
         self.slot_label_8.setText(QCoreApplication.translate("MainWindow", u"Interupt Time:", None))
@@ -8194,60 +10037,148 @@ class Ui_MainWindow(object):
         self.plc_ip_address_edit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter IP address: 172.16.100.///", None))
         self.interupt_time_input.setSuffix(QCoreApplication.translate("MainWindow", u" ms ~ 10000 ms", None))
         self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"Connected", None))
-        self.pushButton_21.setText(QCoreApplication.translate("MainWindow", u"No connection", None))
+        self.pushButton_21.setText(QCoreApplication.translate("MainWindow", u"Disconnected", None))
         self.new_data_btn_2.setText(QCoreApplication.translate("MainWindow", u" Save Data", None))
         self.clear_data_btn_2.setText(QCoreApplication.translate("MainWindow", u" Clear Data", None))
+        self.i_o_group_1.setTitle(QCoreApplication.translate("MainWindow", u"DI", None))
+        self.pushButton_58.setText("")
+        self.pushButton_59.setText("")
+        self.pushButton_62.setText("")
+        self.pushButton_63.setText("")
+        self.pushButton_64.setText("")
+        self.pushButton_65.setText("")
+        self.pushButton_66.setText("")
+        self.pushButton_67.setText("")
+        self.pushButton_56.setText("")
+        self.pushButton_57.setText("")
+        self.di_name_1.setText(QCoreApplication.translate("MainWindow", u"START:", None))
+        self.pushButton_42.setText("")
+        self.pushButton_43.setText("")
+        self.pushButton_60.setText("")
+        self.pushButton_61.setText("")
+        self.pushButton_68.setText("")
+        self.pushButton_69.setText("")
+        self.di_name_2.setText(QCoreApplication.translate("MainWindow", u"STOP:", None))
+        self.di_name_3.setText(QCoreApplication.translate("MainWindow", u"KT0:", None))
+        self.di_name_4.setText(QCoreApplication.translate("MainWindow", u"KF1:", None))
+        self.di_name_5.setText(QCoreApplication.translate("MainWindow", u"KF2:", None))
+        self.di_name_6.setText(QCoreApplication.translate("MainWindow", u"KT1:", None))
+        self.di_name_7.setText(QCoreApplication.translate("MainWindow", u"KT2:", None))
+        self.di_name_8.setText(QCoreApplication.translate("MainWindow", u"KT3:", None))
+        self.i_o_group_2.setTitle(QCoreApplication.translate("MainWindow", u"DQ", None))
+        self.pushButton_108.setText("")
+        self.pushButton_109.setText("")
+        self.pushButton_110.setText("")
+        self.pushButton_111.setText("")
+        self.pushButton_112.setText("")
+        self.pushButton_113.setText("")
+        self.pushButton_114.setText("")
+        self.pushButton_115.setText("")
+        self.pushButton_116.setText("")
+        self.pushButton_117.setText("")
+        self.pushButton_118.setText("")
+        self.pushButton_119.setText("")
+        self.pushButton_120.setText("")
+        self.pushButton_121.setText("")
+        self.pushButton_122.setText("")
+        self.pushButton_123.setText("")
+        self.dq_name_1.setText(QCoreApplication.translate("MainWindow", u"R1:", None))
+        self.pushButton_124.setText("")
+        self.pushButton_125.setText("")
+        self.dq_name_2.setText(QCoreApplication.translate("MainWindow", u"R2:", None))
+        self.pushButton_128.setText("")
+        self.pushButton_129.setText("")
+        self.dq_name_3.setText(QCoreApplication.translate("MainWindow", u"R3:", None))
+        self.dq_name_4.setText(QCoreApplication.translate("MainWindow", u"R4:", None))
+        self.dq_name_6.setText(QCoreApplication.translate("MainWindow", u"R6:", None))
+        self.dq_name_5.setText(QCoreApplication.translate("MainWindow", u"R5:", None))
+        self.dq_name_7.setText(QCoreApplication.translate("MainWindow", u"R7:", None))
+        self.dq_name_8.setText(QCoreApplication.translate("MainWindow", u"R8:", None))
+        self.dq_name_9.setText(QCoreApplication.translate("MainWindow", u"R9:", None))
+        self.dq_name_10.setText(QCoreApplication.translate("MainWindow", u"R10:", None))
+        self.dq_name_11.setText(QCoreApplication.translate("MainWindow", u"R11:", None))
+        self.dq_name_13.setText(QCoreApplication.translate("MainWindow", u"R13:", None))
+        self.dq_name_12.setText(QCoreApplication.translate("MainWindow", u"R12:", None))
+        self.dq_name_14.setText(QCoreApplication.translate("MainWindow", u"R14:", None))
+        self.dq_name_15.setText(QCoreApplication.translate("MainWindow", u"R15:", None))
+        self.pushButton_126.setText("")
+        self.pushButton_127.setText("")
+        self.pushButton_104.setText("")
+        self.pushButton_105.setText("")
+        self.pushButton_106.setText("")
+        self.pushButton_107.setText("")
+        self.pushButton_72.setText("")
+        self.pushButton_73.setText("")
+        self.pushButton_102.setText("")
+        self.pushButton_103.setText("")
+        self.i_o_group_3.setTitle(QCoreApplication.translate("MainWindow", u"AI", None))
+        self.ai_name_1.setText(QCoreApplication.translate("MainWindow", u"T0:", None))
+        self.ai_name_15.setText(QCoreApplication.translate("MainWindow", u"FP2:", None))
+        self.ai_name_14.setText(QCoreApplication.translate("MainWindow", u"FP1:", None))
+        self.ai_name_12.setText(QCoreApplication.translate("MainWindow", u"P2:", None))
+        self.ai_name_13.setText(QCoreApplication.translate("MainWindow", u"P3:", None))
+        self.ai_name_16.setText(QCoreApplication.translate("MainWindow", u"FP3:", None))
+        self.ai_name_4.setText(QCoreApplication.translate("MainWindow", u"T1-3:", None))
+        self.ai_name_3.setText(QCoreApplication.translate("MainWindow", u"T1-2:", None))
+        self.ai_name_5.setText(QCoreApplication.translate("MainWindow", u"T2-1:", None))
+        self.ai_name_2.setText(QCoreApplication.translate("MainWindow", u"T1-1:", None))
+        self.ai_name_6.setText(QCoreApplication.translate("MainWindow", u"T2-2:", None))
+        self.ai_name_7.setText(QCoreApplication.translate("MainWindow", u"T2-3:", None))
+        self.ai_name_8.setText(QCoreApplication.translate("MainWindow", u"T3-1:", None))
+        self.ai_name_9.setText(QCoreApplication.translate("MainWindow", u"T3-2:", None))
+        self.ai_name_10.setText(QCoreApplication.translate("MainWindow", u"T3-3:", None))
+        self.ai_name_11.setText(QCoreApplication.translate("MainWindow", u"P1:", None))
+        self.previus_group_page_btn_2.setText("")
+        self.next_group_page_btn_2.setText("")
         self.lineEdit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\U0001f50d Searching", None))
         ___qtablewidgetitem = self.list_history.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"No.", None))
         ___qtablewidgetitem1 = self.list_history.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Type.", None))
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Name.", None))
         ___qtablewidgetitem2 = self.list_history.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Name.", None))
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"T0.", None))
         ___qtablewidgetitem3 = self.list_history.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"T0.", None))
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Front.", None))
         ___qtablewidgetitem4 = self.list_history.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Front.", None))
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Middle.", None))
         ___qtablewidgetitem5 = self.list_history.horizontalHeaderItem(5)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Middle.", None))
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"End.", None))
         ___qtablewidgetitem6 = self.list_history.horizontalHeaderItem(6)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"End.", None))
-        ___qtablewidgetitem7 = self.list_history.horizontalHeaderItem(7)
-        ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"Date.", None))
-        ___qtablewidgetitem8 = self.list_history.verticalHeaderItem(0)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"1", None))
-        ___qtablewidgetitem9 = self.list_history.verticalHeaderItem(1)
-        ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"2", None))
-        ___qtablewidgetitem10 = self.list_history.verticalHeaderItem(2)
-        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"3", None))
-        ___qtablewidgetitem11 = self.list_history.verticalHeaderItem(3)
-        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"4", None))
-        ___qtablewidgetitem12 = self.list_history.verticalHeaderItem(4)
-        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"5", None))
-        ___qtablewidgetitem13 = self.list_history.verticalHeaderItem(5)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"6", None))
-        ___qtablewidgetitem14 = self.list_history.verticalHeaderItem(6)
-        ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"7", None))
-        ___qtablewidgetitem15 = self.list_history.verticalHeaderItem(7)
-        ___qtablewidgetitem15.setText(QCoreApplication.translate("MainWindow", u"8", None))
-        ___qtablewidgetitem16 = self.list_history.verticalHeaderItem(8)
-        ___qtablewidgetitem16.setText(QCoreApplication.translate("MainWindow", u"9", None))
-        ___qtablewidgetitem17 = self.list_history.verticalHeaderItem(9)
-        ___qtablewidgetitem17.setText(QCoreApplication.translate("MainWindow", u"10", None))
-        ___qtablewidgetitem18 = self.list_history.verticalHeaderItem(10)
-        ___qtablewidgetitem18.setText(QCoreApplication.translate("MainWindow", u"11", None))
-        ___qtablewidgetitem19 = self.list_history.verticalHeaderItem(11)
-        ___qtablewidgetitem19.setText(QCoreApplication.translate("MainWindow", u"12", None))
-        ___qtablewidgetitem20 = self.list_history.verticalHeaderItem(12)
-        ___qtablewidgetitem20.setText(QCoreApplication.translate("MainWindow", u"13", None))
-        ___qtablewidgetitem21 = self.list_history.verticalHeaderItem(13)
-        ___qtablewidgetitem21.setText(QCoreApplication.translate("MainWindow", u"14", None))
-        ___qtablewidgetitem22 = self.list_history.verticalHeaderItem(14)
-        ___qtablewidgetitem22.setText(QCoreApplication.translate("MainWindow", u"15", None))
-        ___qtablewidgetitem23 = self.list_history.verticalHeaderItem(15)
-        ___qtablewidgetitem23.setText(QCoreApplication.translate("MainWindow", u"16", None))
-        ___qtablewidgetitem24 = self.list_history.verticalHeaderItem(16)
-        ___qtablewidgetitem24.setText(QCoreApplication.translate("MainWindow", u"17", None))
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Date.", None))
+        ___qtablewidgetitem7 = self.list_history.verticalHeaderItem(0)
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"1", None))
+        ___qtablewidgetitem8 = self.list_history.verticalHeaderItem(1)
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"2", None))
+        ___qtablewidgetitem9 = self.list_history.verticalHeaderItem(2)
+        ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"3", None))
+        ___qtablewidgetitem10 = self.list_history.verticalHeaderItem(3)
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"4", None))
+        ___qtablewidgetitem11 = self.list_history.verticalHeaderItem(4)
+        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"5", None))
+        ___qtablewidgetitem12 = self.list_history.verticalHeaderItem(5)
+        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"6", None))
+        ___qtablewidgetitem13 = self.list_history.verticalHeaderItem(6)
+        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"7", None))
+        ___qtablewidgetitem14 = self.list_history.verticalHeaderItem(7)
+        ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"8", None))
+        ___qtablewidgetitem15 = self.list_history.verticalHeaderItem(8)
+        ___qtablewidgetitem15.setText(QCoreApplication.translate("MainWindow", u"9", None))
+        ___qtablewidgetitem16 = self.list_history.verticalHeaderItem(9)
+        ___qtablewidgetitem16.setText(QCoreApplication.translate("MainWindow", u"10", None))
+        ___qtablewidgetitem17 = self.list_history.verticalHeaderItem(10)
+        ___qtablewidgetitem17.setText(QCoreApplication.translate("MainWindow", u"11", None))
+        ___qtablewidgetitem18 = self.list_history.verticalHeaderItem(11)
+        ___qtablewidgetitem18.setText(QCoreApplication.translate("MainWindow", u"12", None))
+        ___qtablewidgetitem19 = self.list_history.verticalHeaderItem(12)
+        ___qtablewidgetitem19.setText(QCoreApplication.translate("MainWindow", u"13", None))
+        ___qtablewidgetitem20 = self.list_history.verticalHeaderItem(13)
+        ___qtablewidgetitem20.setText(QCoreApplication.translate("MainWindow", u"14", None))
+        ___qtablewidgetitem21 = self.list_history.verticalHeaderItem(14)
+        ___qtablewidgetitem21.setText(QCoreApplication.translate("MainWindow", u"15", None))
+        ___qtablewidgetitem22 = self.list_history.verticalHeaderItem(15)
+        ___qtablewidgetitem22.setText(QCoreApplication.translate("MainWindow", u"16", None))
+        ___qtablewidgetitem23 = self.list_history.verticalHeaderItem(16)
+        ___qtablewidgetitem23.setText(QCoreApplication.translate("MainWindow", u"17", None))
 
         __sortingEnabled = self.list_history.isSortingEnabled()
         self.list_history.setSortingEnabled(False)

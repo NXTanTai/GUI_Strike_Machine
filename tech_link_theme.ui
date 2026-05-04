@@ -15712,8 +15712,20 @@ QPushButton:pressed {
                    <property name="currentIndex">
                     <number>1</number>
                    </property>
-                   <widget class="QWidget" name="page">
+                   <widget class="QWidget" name="connection_page">
                     <layout class="QVBoxLayout" name="verticalLayout_27">
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
                      <item>
                       <widget class="QFrame" name="device_frame">
                        <property name="minimumSize">
@@ -15738,7 +15750,7 @@ QFrame:hover {
                        </property>
                        <layout class="QVBoxLayout" name="verticalLayout_24" stretch="4,7">
                         <property name="spacing">
-                         <number>15</number>
+                         <number>10</number>
                         </property>
                         <property name="leftMargin">
                          <number>0</number>
@@ -15758,7 +15770,7 @@ QFrame:hover {
                            <number>0</number>
                           </property>
                           <item>
-                           <widget class="QPushButton" name="pushButton_2">
+                           <widget class="QPushButton" name="plc_io_btn">
                             <property name="sizePolicy">
                              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                               <horstretch>0</horstretch>
@@ -16296,8 +16308,20 @@ QPushButton:hover {
                      </item>
                     </layout>
                    </widget>
-                   <widget class="QWidget" name="page_2">
+                   <widget class="QWidget" name="i_o_page">
                     <layout class="QVBoxLayout" name="verticalLayout_40">
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
                      <item>
                       <widget class="QFrame" name="device_frame_2">
                        <property name="minimumSize">
@@ -16322,7 +16346,7 @@ QFrame:hover {
                        </property>
                        <layout class="QVBoxLayout" name="verticalLayout_28" stretch="15,1">
                         <property name="spacing">
-                         <number>5</number>
+                         <number>10</number>
                         </property>
                         <property name="leftMargin">
                          <number>0</number>
@@ -16341,7 +16365,7 @@ QFrame:hover {
                           <property name="styleSheet">
                            <string notr="true"/>
                           </property>
-                          <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="0,0,0">
+                          <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="1,2,2">
                            <property name="spacing">
                             <number>10</number>
                            </property>
@@ -16349,13 +16373,13 @@ QFrame:hover {
                             <number>10</number>
                            </property>
                            <property name="topMargin">
-                            <number>10</number>
+                            <number>0</number>
                            </property>
                            <property name="rightMargin">
                             <number>10</number>
                            </property>
                            <property name="bottomMargin">
-                            <number>10</number>
+                            <number>0</number>
                            </property>
                            <item>
                             <widget class="QGroupBox" name="i_o_group_1">
@@ -16411,7 +16435,7 @@ QLineEdit:focus {
                              <property name="title">
                               <string>DI</string>
                              </property>
-                             <layout class="QGridLayout" name="gridLayout_7" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,0">
+                             <layout class="QGridLayout" name="gridLayout_7" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,1">
                               <property name="leftMargin">
                                <number>10</number>
                               </property>
@@ -16436,7 +16460,9 @@ QLineEdit:focus {
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -16472,9 +16498,7 @@ QLineEdit:focus {
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -16524,9 +16548,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -16592,9 +16614,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -16644,9 +16664,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -16676,7 +16694,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -16712,9 +16732,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -16764,9 +16782,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -16796,7 +16812,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -16832,9 +16850,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -16884,9 +16900,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -16916,7 +16930,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -16952,9 +16968,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17004,9 +17018,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17031,7 +17043,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="di_name_1">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -17050,7 +17062,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -17086,9 +17100,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17138,9 +17150,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17170,7 +17180,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -17206,9 +17218,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17258,9 +17268,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17290,7 +17298,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -17326,9 +17336,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17378,9 +17386,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17405,7 +17411,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="di_name_2">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -17419,7 +17425,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="di_name_3">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -17433,7 +17439,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="di_name_4">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -17447,7 +17453,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="di_name_5">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -17461,7 +17467,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="di_name_6">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -17475,7 +17481,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="di_name_7">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -17489,7 +17495,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="di_name_8">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -17540,7 +17546,9 @@ QSpinBox:focus {
     border: 2px solid #0B7EC8;
     background-color: white;
 }
-
+QLabel{
+	color: #2C81D1;
+}
 QLineEdit {
     border: 1px solid #D1D5DB;
     border-radius: 6px;
@@ -17555,7 +17563,7 @@ QLineEdit:focus {
                              <property name="title">
                               <string>DQ</string>
                              </property>
-                             <layout class="QGridLayout" name="gridLayout_6" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,0,0,0">
+                             <layout class="QGridLayout" name="gridLayout_6" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,1,0,1">
                               <property name="leftMargin">
                                <number>10</number>
                               </property>
@@ -17572,7 +17580,7 @@ QLineEdit:focus {
                                <number>10</number>
                               </property>
                               <item row="2" column="1">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_6">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_5">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -17580,7 +17588,9 @@ QLineEdit:focus {
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -17616,9 +17626,7 @@ QLineEdit:focus {
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17668,9 +17676,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17692,7 +17698,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="2" column="3">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_7">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_6">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -17700,7 +17706,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -17736,9 +17744,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17788,9 +17794,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17812,7 +17816,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="3" column="1">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_8">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_7">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -17820,7 +17824,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -17856,9 +17862,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17908,9 +17912,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17932,7 +17934,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="3" column="3">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_9">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_8">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -17940,7 +17942,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -17976,9 +17980,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18028,9 +18030,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18052,7 +18052,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="4" column="1">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_10">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_9">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -18060,7 +18060,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -18096,9 +18098,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18148,9 +18148,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18172,7 +18170,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="4" column="3">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_11">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_10">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -18180,7 +18178,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -18216,9 +18216,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18268,9 +18266,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18292,7 +18288,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="5" column="1">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_12">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_11">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -18300,7 +18296,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -18336,9 +18334,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18388,9 +18384,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18412,7 +18406,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="5" column="3">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_13">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_12">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -18420,7 +18414,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -18456,9 +18452,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18508,9 +18502,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18535,7 +18527,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_1">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18546,7 +18538,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="6" column="1">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_14">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_13">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -18554,7 +18546,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -18590,9 +18584,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18642,9 +18634,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18669,7 +18659,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_2">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18680,7 +18670,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="7" column="1">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_16">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_15">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -18688,7 +18678,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -18724,9 +18716,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18776,9 +18766,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18803,7 +18791,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_3">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18817,7 +18805,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_4">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18831,7 +18819,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_6">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18845,7 +18833,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_5">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18859,7 +18847,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_7">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18873,7 +18861,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_8">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18887,7 +18875,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_9">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18901,7 +18889,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_10">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18915,7 +18903,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_11">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18929,13 +18917,13 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_13">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="text">
-                                 <string>R14:</string>
+                                 <string>R13:</string>
                                 </property>
                                </widget>
                               </item>
@@ -18943,7 +18931,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_12">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18957,13 +18945,13 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_14">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="text">
-                                 <string>R13:</string>
+                                 <string>R14:</string>
                                 </property>
                                </widget>
                               </item>
@@ -18971,7 +18959,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="dq_name_15">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -18982,7 +18970,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="6" column="3">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_15">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_14">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -18990,7 +18978,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -19026,9 +19016,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19078,9 +19066,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19102,7 +19088,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="1" column="1">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_4">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_3">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -19110,7 +19096,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -19146,9 +19134,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19198,9 +19184,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19222,7 +19206,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="1" column="3">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_5">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_4">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -19230,7 +19214,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -19266,9 +19252,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19318,9 +19302,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19350,7 +19332,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -19386,9 +19370,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19438,9 +19420,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19462,7 +19442,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="0" column="3">
-                               <widget class="QStackedWidget" name="i_o_group_2_switch_3">
+                               <widget class="QStackedWidget" name="i_o_group_2_switch_2">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -19470,7 +19450,9 @@ padding-right: 3px;</string>
                                  </sizepolicy>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true"/>
+                                 <string notr="true">QWidget{
+	border: none;
+}</string>
                                 </property>
                                 <property name="currentIndex">
                                  <number>0</number>
@@ -19506,9 +19488,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19558,9 +19538,7 @@ padding-right: 3px;</string>
                                     </property>
                                     <property name="styleSheet">
                                      <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #F90A0A; 
-padding-right: 3px;</string>
+border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -19610,6 +19588,7 @@ QGroupBox::title {
 
 QLabel {
 	border: none;
+	color: #E6AC2E;
 }
 
 QSpinBox {
@@ -19637,7 +19616,7 @@ QLineEdit:focus {
                              <property name="title">
                               <string>AI</string>
                              </property>
-                             <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0,0,0,0,0,0,0,0" columnstretch="0,0,0,0">
+                             <layout class="QGridLayout" name="gridLayout_5" rowstretch="0,0,0,0,0,0,0,0,0,0" columnstretch="0,1,0,1">
                               <property name="leftMargin">
                                <number>10</number>
                               </property>
@@ -19663,16 +19642,15 @@ QLineEdit:focus {
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -19695,7 +19673,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_1">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19715,16 +19693,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -19747,7 +19724,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_15">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19761,7 +19738,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_14">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19775,7 +19752,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_12">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19789,7 +19766,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_13">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19803,7 +19780,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_16">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19817,7 +19794,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_4">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19831,7 +19808,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_3">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19845,7 +19822,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_5">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19859,7 +19836,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_2">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19873,7 +19850,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_6">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19887,7 +19864,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_7">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19901,7 +19878,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_8">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19915,7 +19892,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_9">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19929,7 +19906,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_10">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19943,7 +19920,7 @@ padding-right: 3px;</string>
                                <widget class="QLabel" name="ai_name_11">
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>20</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
@@ -19963,16 +19940,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -19992,7 +19968,7 @@ padding-right: 3px;</string>
                                </widget>
                               </item>
                               <item row="1" column="3">
-                               <widget class="QDoubleSpinBox" name="t1_1_value_3">
+                               <widget class="QDoubleSpinBox" name="t1_3_value">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -20001,16 +19977,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20039,16 +20014,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20077,16 +20051,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20115,16 +20088,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20153,16 +20125,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20191,16 +20162,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20229,16 +20199,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20267,16 +20236,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20302,16 +20270,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20337,16 +20304,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20372,16 +20338,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20407,16 +20372,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>
@@ -20442,16 +20406,15 @@ padding-right: 3px;</string>
                                 </property>
                                 <property name="font">
                                  <font>
-                                  <pointsize>16</pointsize>
+                                  <pointsize>22</pointsize>
                                   <weight>75</weight>
                                   <bold>true</bold>
                                  </font>
                                 </property>
                                 <property name="styleSheet">
-                                 <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
+                                 <string notr="true">border: 3px solid #E5E5E5; 
+border-radius: 20px;
+color: #10B981;</string>
                                 </property>
                                 <property name="alignment">
                                  <set>Qt::AlignCenter</set>

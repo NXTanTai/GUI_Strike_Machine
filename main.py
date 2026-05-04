@@ -48,6 +48,14 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
 os.environ["QT_FONT_DPI"] = "96"
 
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(os.path.dirname(__file__))
+    
+    return os.path.join(base_path, relative_path)
+
 @dataclass
 class DBField:
     offset: int      # byte offset trong DB
@@ -435,7 +443,9 @@ class StrikeMachine(QMainWindow):
         self.ui.previus_group_page_btn.clicked.connect(self.next_previous_pressure_page)
 
         self.ui.temp_unit_selection_combox.currentIndexChanged.connect(self._set_cur_unit)
-        self.ui.back_home_btn_4.clicked.connect(self.ui.home_page_btn.click)
+        # self.ui.back_home_btn_4.clicked.connect(self.ui.home_page_btn.click)
+
+        self.ui.plc_io_btn.clicked.connect(self.i_o_page_btn)
 
         self.ui.heat_btn_a.clicked.connect(lambda checked: self.on_heat_btn_clicked("A", checked))
         self.ui.heat_btn_b.clicked.connect(lambda checked: self.on_heat_btn_clicked("B", checked))
@@ -471,17 +481,20 @@ class StrikeMachine(QMainWindow):
     def temperature_page_btn(self):
         self.ui.home_page_btn.click()
         self.ui.stackedWidget.setCurrentWidget(self.ui.temperature_page)
-
+        
     def device_page_btn(self):
         self.ui.stackedWidget_2.setCurrentWidget(self.ui.device_page)
+        self.connection_page_btn()
 
+    def connection_page_btn(self):
+        self.ui.stackedWidget_3.setCurrentWidget(self.ui.connection_page)
+    
+    def i_o_page_btn(self):
+        self.ui.stackedWidget_3.setCurrentWidget(self.ui.i_o_page)
+    
     def history_page_btn(self):
         self.ui.stackedWidget_2.setCurrentWidget(self.ui.history_page)
 
-    # def (self):
-    
-    # def (self):
-    
     # def (self):
     
     def next_previous_pressure_page(self):
