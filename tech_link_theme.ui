@@ -38,7 +38,7 @@
    <string>Tech-Link - Production System</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+   <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
     <normaloff>:/newPrefix/Logo_Cty_2.png</normaloff>:/newPrefix/Logo_Cty_2.png</iconset>
   </property>
   <property name="styleSheet">
@@ -128,7 +128,7 @@ QComboBox QAbstractItemView {
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>75</height>
+        <height>125</height>
        </size>
       </property>
       <property name="styleSheet">
@@ -198,7 +198,8 @@ QComboBox QAbstractItemView {
            </property>
            <property name="font">
             <font>
-             <pointsize>25</pointsize>
+             <family>Segoe UI</family>
+             <pointsize>30</pointsize>
              <weight>75</weight>
              <bold>true</bold>
             </font>
@@ -244,7 +245,7 @@ QComboBox QAbstractItemView {
            </property>
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <pointsize>22</pointsize>
              <weight>75</weight>
              <bold>true</bold>
             </font>
@@ -261,7 +262,7 @@ QComboBox QAbstractItemView {
             <string> Language:</string>
            </property>
            <property name="icon">
-            <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+            <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
              <normaloff>:/newPrefix/language-exchange.png</normaloff>:/newPrefix/language-exchange.png</iconset>
            </property>
            <property name="iconSize">
@@ -282,13 +283,13 @@ QComboBox QAbstractItemView {
            </property>
            <property name="font">
             <font>
-             <pointsize>16</pointsize>
+             <pointsize>22</pointsize>
              <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true"/>
+            <string notr="true">color: rgb(0, 0, 0);</string>
            </property>
            <item>
             <property name="text">
@@ -315,14 +316,14 @@ QComboBox QAbstractItemView {
          <property name="font">
           <font>
            <family>MS Shell Dlg 2</family>
-           <pointsize>16</pointsize>
+           <pointsize>22</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true">
-color: rgb(0, 0, 0);
+          <string notr="true">color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);
 border: none;
 </string>
          </property>
@@ -353,7 +354,7 @@ border: none;
           </time>
          </property>
          <property name="displayFormat">
-          <string>dd/MM/yyyy h:mm AP</string>
+          <string>dd/MM/yyyy h:mm:ss AP</string>
          </property>
          <property name="timeSpec">
           <enum>Qt::LocalTime</enum>
@@ -370,6 +371,13 @@ border: none;
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame{
+background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+    stop:0 #eaebeb,
+    stop:1 #dfe1e5);
+}</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -481,7 +489,7 @@ QPushButton:checked {
                  <string> Group</string>
                 </property>
                 <property name="icon">
-                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                 <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                   <normaloff>:/newPrefix/home_off.png</normaloff>
                   <normalon>:/newPrefix/home.png</normalon>:/newPrefix/home_off.png</iconset>
                 </property>
@@ -522,7 +530,7 @@ QPushButton:checked {
                  <string> Chart</string>
                 </property>
                 <property name="icon">
-                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                 <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                   <normaloff>:/newPrefix/chart-line-up-down.png</normaloff>
                   <normalon>:/newPrefix/chart-line-up-down_blue.png</normalon>:/newPrefix/chart-line-up-down.png</iconset>
                 </property>
@@ -560,7 +568,7 @@ QPushButton:checked {
                  <string> Setting</string>
                 </property>
                 <property name="icon">
-                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                 <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                   <normaloff>:/newPrefix/settings.png</normaloff>
                   <normalon>:/newPrefix/settings (1).png</normalon>:/newPrefix/settings.png</iconset>
                 </property>
@@ -598,7 +606,7 @@ QPushButton:checked {
                  <string> History</string>
                 </property>
                 <property name="icon">
-                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                 <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                   <normaloff>:/newPrefix/stats.png</normaloff>
                   <normalon>:/newPrefix/stats (1).png</normalon>:/newPrefix/stats.png</iconset>
                 </property>
@@ -656,7 +664,7 @@ QPushButton:checked {
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+               <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                 <normaloff>:/newPrefix/align-justify.png</normaloff>:/newPrefix/align-justify.png</iconset>
               </property>
               <property name="iconSize">
@@ -678,7 +686,7 @@ QPushButton:checked {
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>2</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
@@ -707,18 +715,7 @@ QPushButton:checked {
                  <item row="0" column="1">
                   <widget class="QFrame" name="card_frame_7">
                    <property name="styleSheet">
-                    <string notr="true">QPushButton {
-    background-color: #0B7EC8;
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-}
-QPushButton:hover {
-    background-color: #0968A3;
-}</string>
+                    <string notr="true">color: black;</string>
                    </property>
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
@@ -752,18 +749,7 @@ QPushButton:hover {
                  <item row="1" column="0">
                   <widget class="QFrame" name="card_frame_8">
                    <property name="styleSheet">
-                    <string notr="true">QPushButton {
-    background-color: #0B7EC8;
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-}
-QPushButton:hover {
-    background-color: #0968A3;
-}</string>
+                    <string notr="true">color: black;</string>
                    </property>
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
@@ -797,18 +783,7 @@ QPushButton:hover {
                  <item row="1" column="1">
                   <widget class="QFrame" name="card_frame_9">
                    <property name="styleSheet">
-                    <string notr="true">QPushButton {
-    background-color: #0B7EC8;
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-}
-QPushButton:hover {
-    background-color: #0968A3;
-}</string>
+                    <string notr="true">color: black;</string>
                    </property>
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
@@ -842,18 +817,7 @@ QPushButton:hover {
                  <item row="0" column="0">
                   <widget class="QFrame" name="card_frame_6">
                    <property name="styleSheet">
-                    <string notr="true">QPushButton {
-    background-color: #0B7EC8;
-    color: white;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-}
-QPushButton:hover {
-    background-color: #0968A3;
-}</string>
+                    <string notr="true">color: black;</string>
                    </property>
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
@@ -932,6 +896,9 @@ border-radius:15px;</string>
                   </property>
                   <item>
                    <widget class="QWidget" name="widget_63" native="true">
+                    <property name="styleSheet">
+                     <string notr="true">color: black;</string>
+                    </property>
                     <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="0,0,0,0,0">
                      <property name="spacing">
                       <number>10</number>
@@ -1001,7 +968,7 @@ padding-right: 3px;</string>
                             <string>Running</string>
                            </property>
                            <property name="icon">
-                            <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                            <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                              <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                            </property>
                            <property name="iconSize">
@@ -1053,7 +1020,7 @@ padding-right: 3px;</string>
                             <string>Waiting</string>
                            </property>
                            <property name="icon">
-                            <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                            <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                              <normaloff>:/newPrefix/record-button (2).png</normaloff>:/newPrefix/record-button (2).png</iconset>
                            </property>
                            <property name="iconSize">
@@ -1090,7 +1057,7 @@ padding-right: 3px;</string>
                            </property>
                            <property name="font">
                             <font>
-                             <pointsize>15</pointsize>
+                             <pointsize>18</pointsize>
                              <weight>75</weight>
                              <bold>true</bold>
                             </font>
@@ -1105,7 +1072,7 @@ padding-right: 3px;</string>
                             <string>Stop</string>
                            </property>
                            <property name="icon">
-                            <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                            <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                              <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                            </property>
                            <property name="iconSize">
@@ -1256,7 +1223,7 @@ QPushButton:pressed{
                        </property>
                        <property name="font">
                         <font>
-                         <pointsize>17</pointsize>
+                         <pointsize>18</pointsize>
                          <weight>75</weight>
                          <bold>true</bold>
                         </font>
@@ -1320,7 +1287,7 @@ QPushButton:hover {
                           <property name="font">
                            <font>
                             <family>Segoe UI</family>
-                            <pointsize>15</pointsize>
+                            <pointsize>18</pointsize>
                             <weight>75</weight>
                             <bold>true</bold>
                            </font>
@@ -1329,7 +1296,7 @@ QPushButton:hover {
                            <string> Clear Data</string>
                           </property>
                           <property name="icon">
-                           <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                           <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                             <normaloff>:/newPrefix/data-cleaning.png</normaloff>:/newPrefix/data-cleaning.png</iconset>
                           </property>
                          </widget>
@@ -1345,7 +1312,7 @@ QPushButton:hover {
                           <property name="font">
                            <font>
                             <family>Segoe UI</family>
-                            <pointsize>15</pointsize>
+                            <pointsize>18</pointsize>
                             <weight>75</weight>
                             <bold>true</bold>
                            </font>
@@ -1354,7 +1321,7 @@ QPushButton:hover {
                            <string> New Data</string>
                           </property>
                           <property name="icon">
-                           <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                           <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                             <normaloff>:/newPrefix/folder-upload.png</normaloff>:/newPrefix/folder-upload.png</iconset>
                           </property>
                          </widget>
@@ -1378,7 +1345,7 @@ QPushButton:hover {
                        </property>
                        <property name="font">
                         <font>
-                         <pointsize>15</pointsize>
+                         <pointsize>18</pointsize>
                          <weight>75</weight>
                          <bold>true</bold>
                         </font>
@@ -1421,7 +1388,7 @@ QPushButton:hover {
 }</string>
                  </property>
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>1</number>
                  </property>
                  <widget class="QWidget" name="pressure_page">
                   <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -8985,7 +8952,7 @@ QPushButton:pressed {
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/broom.png</normaloff>:/newPrefix/broom.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -9028,7 +8995,7 @@ QPushButton:pressed {
                                   <string> Heating A</string>
                                  </property>
                                  <property name="icon">
-                                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                    <normaloff>:/newPrefix/heat.png</normaloff>:/newPrefix/heat.png</iconset>
                                  </property>
                                  <property name="iconSize">
@@ -9071,7 +9038,7 @@ QPushButton:pressed {
                                   <string> Heating B</string>
                                  </property>
                                  <property name="icon">
-                                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                    <normaloff>:/newPrefix/heat.png</normaloff>:/newPrefix/heat.png</iconset>
                                  </property>
                                  <property name="iconSize">
@@ -9114,7 +9081,7 @@ QPushButton:pressed {
                                   <string> Heating C</string>
                                  </property>
                                  <property name="icon">
-                                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                    <normaloff>:/newPrefix/heat.png</normaloff>:/newPrefix/heat.png</iconset>
                                  </property>
                                  <property name="iconSize">
@@ -9336,7 +9303,7 @@ QPushButton:pressed {
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/broom.png</normaloff>:/newPrefix/broom.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -9379,7 +9346,7 @@ QPushButton:pressed {
                                   <string> A.Pump A</string>
                                  </property>
                                  <property name="icon">
-                                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                    <normaloff>:/newPrefix/pump.png</normaloff>:/newPrefix/pump.png</iconset>
                                  </property>
                                  <property name="iconSize">
@@ -9422,7 +9389,7 @@ QPushButton:pressed {
                                   <string> A.Pump B</string>
                                  </property>
                                  <property name="icon">
-                                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                    <normaloff>:/newPrefix/pump.png</normaloff>:/newPrefix/pump.png</iconset>
                                  </property>
                                  <property name="iconSize">
@@ -9465,7 +9432,7 @@ QPushButton:pressed {
                                   <string> A.Pump C</string>
                                  </property>
                                  <property name="icon">
-                                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                    <normaloff>:/newPrefix/pump.png</normaloff>:/newPrefix/pump.png</iconset>
                                  </property>
                                  <property name="iconSize">
@@ -9684,7 +9651,7 @@ QPushButton:pressed {
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/broom.png</normaloff>:/newPrefix/broom.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -9727,7 +9694,7 @@ QPushButton:pressed {
                                   <string> O.Pump A</string>
                                  </property>
                                  <property name="icon">
-                                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                    <normaloff>:/newPrefix/gas-pump-alt.png</normaloff>:/newPrefix/gas-pump-alt.png</iconset>
                                  </property>
                                  <property name="iconSize">
@@ -9770,7 +9737,7 @@ QPushButton:pressed {
                                   <string> O.Pump B</string>
                                  </property>
                                  <property name="icon">
-                                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                    <normaloff>:/newPrefix/gas-pump-alt.png</normaloff>:/newPrefix/gas-pump-alt.png</iconset>
                                  </property>
                                  <property name="iconSize">
@@ -9813,7 +9780,7 @@ QPushButton:pressed {
                                   <string> O.Pump C</string>
                                  </property>
                                  <property name="icon">
-                                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                    <normaloff>:/newPrefix/gas-pump-alt.png</normaloff>:/newPrefix/gas-pump-alt.png</iconset>
                                  </property>
                                  <property name="iconSize">
@@ -9960,11 +9927,14 @@ QSpinBox:focus {
                               </property>
                               <property name="font">
                                <font>
-                                <pointsize>18</pointsize>
+                                <pointsize>22</pointsize>
                                 <weight>75</weight>
                                 <italic>false</italic>
                                 <bold>true</bold>
                                </font>
+                              </property>
+                              <property name="styleSheet">
+                               <string notr="true">color: rgb(0, 0, 0);</string>
                               </property>
                               <property name="text">
                                <string>Name</string>
@@ -10195,11 +10165,14 @@ QSpinBox:focus {
                                  </property>
                                  <property name="font">
                                   <font>
-                                   <pointsize>18</pointsize>
+                                   <pointsize>22</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
                                   </font>
+                                 </property>
+                                 <property name="styleSheet">
+                                  <string notr="true">color: rgb(0, 0, 0);</string>
                                  </property>
                                  <property name="text">
                                   <string>T0</string>
@@ -11293,7 +11266,7 @@ QSpinBox
                                  </property>
                                  <property name="font">
                                   <font>
-                                   <pointsize>18</pointsize>
+                                   <pointsize>22</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -12734,7 +12707,7 @@ QSpinBox
                                  </property>
                                  <property name="font">
                                   <font>
-                                   <pointsize>18</pointsize>
+                                   <pointsize>22</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -14175,7 +14148,7 @@ QSpinBox
                                  </property>
                                  <property name="font">
                                   <font>
-                                   <pointsize>18</pointsize>
+                                   <pointsize>22</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -15620,7 +15593,7 @@ QPushButton:checked {
                         <property name="font">
                          <font>
                           <family>Segoe UI</family>
-                          <pointsize>16</pointsize>
+                          <pointsize>18</pointsize>
                           <weight>75</weight>
                           <bold>true</bold>
                          </font>
@@ -15632,7 +15605,7 @@ QPushButton:checked {
                          <string> Heating T0</string>
                         </property>
                         <property name="icon">
-                         <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                         <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                           <normaloff>:/newPrefix/heat.png</normaloff>:/newPrefix/heat.png</iconset>
                         </property>
                         <property name="iconSize">
@@ -15657,7 +15630,7 @@ QPushButton:checked {
                         <property name="font">
                          <font>
                           <family>Segoe UI</family>
-                          <pointsize>16</pointsize>
+                          <pointsize>18</pointsize>
                           <weight>75</weight>
                           <bold>true</bold>
                          </font>
@@ -15710,7 +15683,7 @@ QPushButton:pressed {
                  <item>
                   <widget class="QStackedWidget" name="stackedWidget_3">
                    <property name="currentIndex">
-                    <number>1</number>
+                    <number>0</number>
                    </property>
                    <widget class="QWidget" name="connection_page">
                     <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -15836,10 +15809,12 @@ QGroupBox::title {
 }
 
 QLabel {
+	color: black;
 	border: none;
 }
 
 QSpinBox {
+	color: black;
     border: 1px solid #D1D5DB;
     border-radius: 6px;
     padding: 8px 12px;
@@ -15851,6 +15826,7 @@ QSpinBox:focus {
 }
 
 QLineEdit {
+	color: black;
     border: 1px solid #D1D5DB;
     border-radius: 6px;
     padding: 8px 12px;
@@ -15967,6 +15943,9 @@ QLineEdit:focus {
                                 <property name="buttonSymbols">
                                  <enum>QAbstractSpinBox::NoButtons</enum>
                                 </property>
+                                <property name="specialValueText">
+                                 <string notr="true"/>
+                                </property>
                                 <property name="value">
                                  <number>1</number>
                                 </property>
@@ -16016,7 +15995,7 @@ QLineEdit:focus {
                                  </font>
                                 </property>
                                 <property name="placeholderText">
-                                 <string>Enter IP address: 172.16.100.///</string>
+                                 <string notr="true">Enter IP address: 172.16.100.///</string>
                                 </property>
                                </widget>
                               </item>
@@ -16112,7 +16091,7 @@ padding-right: 3px;</string>
                                      <string>Connected</string>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16164,7 +16143,7 @@ padding-right: 3px;</string>
                                      <string>Disconnected</string>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16252,7 +16231,7 @@ QPushButton:hover {
                                     <string> Save Data</string>
                                    </property>
                                    <property name="icon">
-                                    <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                    <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                      <normaloff>:/newPrefix/folder-upload.png</normaloff>:/newPrefix/folder-upload.png</iconset>
                                    </property>
                                    <property name="iconSize">
@@ -16283,7 +16262,7 @@ QPushButton:hover {
                                     <string> Clear Data</string>
                                    </property>
                                    <property name="icon">
-                                    <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                    <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                      <normaloff>:/newPrefix/data-cleaning.png</normaloff>:/newPrefix/data-cleaning.png</iconset>
                                    </property>
                                    <property name="iconSize">
@@ -16504,7 +16483,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16554,7 +16533,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16620,7 +16599,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16670,7 +16649,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16738,7 +16717,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16788,7 +16767,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16856,7 +16835,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16906,7 +16885,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -16974,7 +16953,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17024,7 +17003,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17106,7 +17085,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17156,7 +17135,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17224,7 +17203,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17274,7 +17253,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17342,7 +17321,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17392,7 +17371,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17632,7 +17611,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17682,7 +17661,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17750,7 +17729,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17800,7 +17779,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17868,7 +17847,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17918,7 +17897,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -17986,7 +17965,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18036,7 +18015,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18104,7 +18083,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18154,7 +18133,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18222,7 +18201,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18272,7 +18251,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18340,7 +18319,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18390,7 +18369,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18458,7 +18437,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18508,7 +18487,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18590,7 +18569,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18640,7 +18619,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18722,7 +18701,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -18772,7 +18751,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19022,7 +19001,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19072,7 +19051,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19140,7 +19119,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19190,7 +19169,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19258,7 +19237,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19308,7 +19287,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19376,7 +19355,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19426,7 +19405,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19494,7 +19473,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button.png</normaloff>:/newPrefix/record-button.png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -19544,7 +19523,7 @@ border-radius: 20px;</string>
                                      <string/>
                                     </property>
                                     <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                     <iconset resource="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc">
                                       <normaloff>:/newPrefix/record-button (1).png</normaloff>:/newPrefix/record-button (1).png</iconset>
                                     </property>
                                     <property name="iconSize">
@@ -20935,8 +20914,8 @@ QPushButton:pressed {
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../Pictures/QT_Icon/Icon.qrc"/>
-  <include location="../../Simple_PySide_Base-master/Simple_PySide_Base-master/files.qrc"/>
+  <include location="../../../Users/Admin/Pictures/QT_Icon/Icon.qrc"/>
+  <include location="../Simple_PySide_Base-master/Simple_PySide_Base-master/files.qrc"/>
  </resources>
  <connections/>
  <buttongroups>

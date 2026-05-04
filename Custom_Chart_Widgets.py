@@ -108,38 +108,49 @@ class CustomChartWidget(QWidget):
         pg.setConfigOptions(antialias=True, useOpenGL=True)
 
         # ── Title (QLabel nằm ngoài plot) ─────────────────────────────────────
-        font_title = QFont(self._font_family, self._font_size_lg)
-        font_title.setWeight(QFont.Weight.Bold)
+        # font_title = QFont(self._font_family, self._font_size_lg)
+        # font_title.setWeight(QFont.Weight.Bold)
 
-        self._lbl_title = QLabel(self.title)
-        self._lbl_title.setFont(font_title)
-        self._lbl_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self._lbl_title.setContentsMargins(0, 4, 0, 0)
+        # self._lbl_title = QLabel(self.title)
+        # self._lbl_title.setFont(font_title)
+        # self._lbl_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # self._lbl_title.setContentsMargins(0, 4, 0, 0)
+
+        # if self.setting:
+        font_btn = QFont(self._font_family, self._font_size_lg)
+        font_btn.setWeight(QFont.Weight.Bold)
+        self.btn_setting = QPushButton(self.title)
+        # self.btn_setting.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.btn_setting.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_setting.setFont(font_btn)
+        # self.btn_setting.setStyleSheet("""
+        #     QPushButton {
+        #         background: white;
+        #         border: 2px solid #CBD5E1;
+        #         border-radius: 6px;
+        #         color: black;
+        #     }
+        #     QPushButton:hover {
+        #         background: #F0F9FF; 
+        #     }
+        # """)
+        
+        self.btn_setting.setStyleSheet("""
+            QPushButton {
+                background: white;
+                border: none;
+                color: black;
+            }
+            QPushButton:hover {
+                background: #F0F9FF; 
+            }
+        """)
 
         title_row = QHBoxLayout()
         title_row.setContentsMargins(0, 0, 0, 0)
         title_row.addStretch()
-        title_row.addWidget(self._lbl_title)
+        title_row.addWidget(self.btn_setting)
         title_row.addStretch()
-        if self.setting:
-            font_btn = QFont(self._font_family, FONT_SIZE_MD)
-            font_btn.setWeight(QFont.Weight.Bold)
-            self.btn_setting = QPushButton("⚙ Setting")
-            self.btn_setting.setFixedHeight(50)
-            self.btn_setting.setCursor(Qt.CursorShape.PointingHandCursor)
-            self.btn_setting.setFont(font_btn)
-            self.btn_setting.setStyleSheet("""
-                QPushButton {
-                    background: white;
-                    border: 2px solid #CBD5E1;
-                    border-radius: 6px;
-                    color: black;
-                }
-                QPushButton:hover {
-                    background: #F0F9FF; 
-                }
-            """)
-            title_row.addWidget(self.btn_setting)
 
         self._root.addLayout(title_row)
         # ── Legend (QHBoxLayout nằm ngoài plot, trái → phải) ──────────────────

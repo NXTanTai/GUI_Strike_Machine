@@ -269,6 +269,12 @@ class StrikeMachine(QMainWindow):
 
         self.timer_stacked_pressure_page = QTimer()
         self.all_timer.append(self.timer_stacked_pressure_page)
+        
+        self.date_time_timer = QTimer(self)
+        self.all_timer.append(self.date_time_timer)
+        self.date_time_timer.timeout.connect(self.update_clock)
+        self.date_time_timer.start(1000)
+        self.update_clock()
 
     def _init_group_object(self):
         # self.pressure_state_obj = []
@@ -721,7 +727,10 @@ class StrikeMachine(QMainWindow):
                     widget.setValue(float(value))
             finally:
                 widget.blockSignals(False)
-
+                
+    def update_clock(self):
+        self.ui.date_displ.setDateTime(QDateTime.currentDateTime())
+        
     def update_all_charts(self):
         temp_values = [230,
                     222.5 + random.uniform(-0.5, 2)]
