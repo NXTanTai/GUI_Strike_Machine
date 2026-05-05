@@ -17,9 +17,9 @@ import logging.handlers
 import sqlite3
 import socket
 import atexit
-import snap7
-import snap7.util as util
 import struct
+import snap7
+from snap7.util import set_bool, get_real, get_dint, get_int, get_bool, get_string
 from dataclasses import dataclass
 from PySide6.QtCore import (Qt, QTimer, QMutex, 
                             QSettings, QDateTime, QCoreApplication,
@@ -50,39 +50,175 @@ os.environ["QT_FONT_DPI"] = "96"
 
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
-        base_path = sys._MEIPASS
+        base_path = sys._MEIPASS #type: ignore
     else:
         base_path = os.path.abspath(os.path.dirname(__file__))
     
     return os.path.join(base_path, relative_path)
-
 @dataclass
 class DBField:
-    offset: int      # byte offset trong DB
-    size: int        # 4 = REAL (float), 2 = INT, 1 = BYTE
-    data_type: str   # 'REAL', 'INT'
+    offset: int
+    size: int
+    data_type: str  # 'REAL', 'DINT', 'INT', 'BOOL', 'STRING'
 
-# Map từng SV theo offset trong DB layout của PLC
-DB_SV_MAP = {
-    # Row         offset  size  type
-    "pressure":   DBField(0,    4,  "REAL"),   # A=0,  B=40, C=80
-    "temp":       DBField(4,    4,  "REAL"),
-    "front_temp": DBField(8,    4,  "REAL"),
-    "mid_temp":   DBField(12,   4,  "REAL"),
-    "end_temp":   DBField(16,   4,  "REAL"),
-    "gas_fill":   DBField(20,   4,  "REAL"),
-    "gas_hold":   DBField(24,   4,  "REAL"),
-    "gas_bleed":  DBField(28,   4,  "REAL"),
-    "refuel_start": DBField(32, 4,  "REAL"),
-    "refuel_end":   DBField(36, 4,  "REAL"),
-    # Mỗi channel A/B/C cách nhau 40 bytes
+
+# ─── Full DB Map (từ bảng địa chỉ) ───────────────────────────────────
+DB_MAP = {
+    # Bit Input
+    "START":                  DBField(0,   1, "BOOL"),
+    "STOP":                   DBField(0,   1, "BOOL"),
+    "T0_StartHeat":           DBField(0,   1, "BOOL"),
+    "T0_StopHeat":            DBField(0,   1, "BOOL"),
+    "P1_StartHeat":           DBField(0,   1, "BOOL"),
+    "P1_StartPressure":       DBField(0,   1, "BOOL"),
+    "P1_StartOil":            DBField(0,   1, "BOOL"),
+    "P1_BitCountTimes":       DBField(0,   1, "BOOL"),
+    "P2_StartHeat":           DBField(1,   1, "BOOL"),
+    "P2_StartPressure":       DBField(1,   1, "BOOL"),
+    "P2_StartOil":            DBField(1,   1, "BOOL"),
+    "P2_BitCountTimes":       DBField(1,   1, "BOOL"),
+    "P3_StartHeat":           DBField(1,   1, "BOOL"),
+    "P3_StartPressure":       DBField(1,   1, "BOOL"),
+    "P3_StartOil":            DBField(1,   1, "BOOL"),
+    "P3_BitCountTimes":       DBField(1,   1, "BOOL"),
+
+    # Input - T0
+    "T0_TemperatureSetting":  DBField(2,   4, "REAL"),
+    "T0_TempLimitHIGH":       DBField(6,   4, "REAL"),
+    "T0_TempLimitLOW":        DBField(10,  4, "REAL"),
+    "T0_TempOffset":          DBField(14,  4, "REAL"),
+
+    # Input - P1
+    "P1_TemperatureSetting":  DBField(18,  4, "REAL"),
+    "P1_TempLimitHIGH":       DBField(22,  4, "REAL"),
+    "P1_TempLimitLOW":        DBField(26,  4, "REAL"),
+    "P1_Temp1Offset":         DBField(30,  4, "REAL"),
+    "P1_Temp2Offset":         DBField(34,  4, "REAL"),
+    "P1_Temp3Offset":         DBField(38,  4, "REAL"),
+    "P1_PressureSetting":     DBField(42,  4, "REAL"),
+    "P1_PressureHoseOffset":  DBField(46,  4, "REAL"),
+    "P1_PressureITVOffset":   DBField(50,  4, "REAL"),
+    "P1_AirFillingTime":      DBField(54,  4, "DINT"),
+    "P1_AirHoldingTime":      DBField(58,  4, "DINT"),
+    "P1_AirReleaseTime":      DBField(62,  4, "DINT"),
+    "P1_OilStartTime":        DBField(66,  4, "DINT"),
+    "P1_OilEndTime":          DBField(70,  4, "DINT"),
+    "P1_CountTimes":          DBField(74,  2, "INT"),
+
+    # Input - P2
+    "P2_TemperatureSetting":  DBField(76,  4, "REAL"),
+    "P2_TempLimitHIGH":       DBField(80,  4, "REAL"),
+    "P2_TempLimitLOW":        DBField(84,  4, "REAL"),
+    "P2_Temp1Offset":         DBField(88,  4, "REAL"),
+    "P2_Temp2Offset":         DBField(92,  4, "REAL"),
+    "P2_Temp3Offset":         DBField(96,  4, "REAL"),
+    "P2_PressureSetting":     DBField(100, 4, "REAL"),
+    "P2_PressureHoseOffset":  DBField(104, 4, "REAL"),
+    "P2_PressureITVOffset":   DBField(108, 4, "REAL"),
+    "P2_AirFillingTime":      DBField(112, 4, "DINT"),
+    "P2_AirHoldingTime":      DBField(116, 4, "DINT"),
+    "P2_AirReleaseTime":      DBField(120, 4, "DINT"),
+    "P2_OilStartTime":        DBField(124, 4, "DINT"),
+    "P2_OilEndTime":          DBField(128, 4, "DINT"),
+    "P2_CountTimes":          DBField(132, 2, "INT"),
+
+    # Input - P3
+    "P3_TemperatureSetting":  DBField(134, 4, "REAL"),
+    "P3_TempLimitHIGH":       DBField(138, 4, "REAL"),
+    "P3_TempLimitLOW":        DBField(142, 4, "REAL"),
+    "P3_Temp1Offset":         DBField(146, 4, "REAL"),
+    "P3_Temp2Offset":         DBField(150, 4, "REAL"),
+    "P3_Temp3Offset":         DBField(154, 4, "REAL"),
+    "P3_PressureSetting":     DBField(158, 4, "REAL"),
+    "P3_PressureHoseOffset":  DBField(162, 4, "REAL"),
+    "P3_PressureITVOffset":   DBField(166, 4, "REAL"),
+    "P3_AirFillingTime":      DBField(170, 4, "DINT"),
+    "P3_AirHoldingTime":      DBField(174, 4, "DINT"),
+    "P3_AirReleaseTime":      DBField(178, 4, "DINT"),
+    "P3_OilStartTime":        DBField(182, 4, "DINT"),
+    "P3_OilEndTime":          DBField(186, 4, "DINT"),
+    "P3_CountTimes":          DBField(190, 2, "INT"),
+
+    # Bit Output
+    "Bit_Alarm":              DBField(192, 1, "BOOL"),
+
+    # Output
+    "T0_CurrentTemp":         DBField(194, 4, "REAL"),
+    "P1_CurrentTemp1":        DBField(198, 4, "REAL"),
+    "P1_CurrentTemp2":        DBField(202, 4, "REAL"),
+    "P1_CurrentTemp3":        DBField(206, 4, "REAL"),
+    "P1_CurrentPressureHose": DBField(210, 4, "REAL"),
+    "P1_CurrentPressureITV":  DBField(214, 4, "REAL"),
+    "P1_AirFillingTime_Out":  DBField(218, 4, "DINT"),
+    "P1_AirHoldingTime_Out":  DBField(222, 4, "DINT"),
+    "P1_AirReleaseTime_Out":  DBField(226, 4, "DINT"),
+    "P1_OilStartTime_Out":    DBField(230, 4, "DINT"),
+    "P1_OilEndTime_Out":      DBField(234, 4, "DINT"),
+    "P1_NumberTestTimes":     DBField(238, 2, "INT"),
+    "P2_CurrentTemp1":        DBField(240, 4, "REAL"),
+    "P2_CurrentTemp2":        DBField(244, 4, "REAL"),
+    "P2_CurrentTemp3":        DBField(248, 4, "REAL"),
+    "P2_CurrentPressureHose": DBField(252, 4, "REAL"),
+    "P2_CurrentPressureITV":  DBField(256, 4, "REAL"),
+    "P2_AirFillingTime_Out":  DBField(260, 4, "DINT"),
+    "P2_AirHoldingTime_Out":  DBField(264, 4, "DINT"),
+    "P2_AirReleaseTime_Out":  DBField(268, 4, "DINT"),
+    "P2_OilStartTime_Out":    DBField(272, 4, "DINT"),
+    "P2_OilEndTime_Out":      DBField(276, 4, "DINT"),
+    "P2_NumberTestTimes":     DBField(280, 2, "INT"),
+    "P3_CurrentTemp1":        DBField(282, 4, "REAL"),
+    "P3_CurrentTemp2":        DBField(286, 4, "REAL"),
+    "P3_CurrentTemp3":        DBField(290, 4, "REAL"),
+    "P3_CurrentPressureHose": DBField(294, 4, "REAL"),
+    "P3_CurrentPressureITV":  DBField(298, 4, "REAL"),
+    "P3_AirFillingTime_Out":  DBField(302, 4, "DINT"),
+    "P3_AirHoldingTime_Out":  DBField(306, 4, "DINT"),
+    "P3_AirReleaseTime_Out":  DBField(310, 4, "DINT"),
+    "P3_OilStartTime_Out":    DBField(314, 4, "DINT"),
+    "P3_OilEndTime_Out":      DBField(318, 4, "DINT"),
+    "P3_NumberTestTimes":     DBField(322, 2, "INT"),
+    "Alarm_Info":             DBField(324, 256, "STRING"),
 }
 
-CHANNEL_OFFSET = {
-    "A": 0,
-    "B": 40,
-    "C": 80,
+# Bool cần byte + bit index riêng
+BOOL_BIT_INDEX = {
+    "START":            (0, 0), "STOP":             (0, 1),
+    "T0_StartHeat":     (0, 2), "T0_StopHeat":      (0, 3),
+    "P1_StartHeat":     (0, 4), "P1_StartPressure": (0, 5),
+    "P1_StartOil":      (0, 6), "P1_BitCountTimes": (0, 7),
+    "P2_StartHeat":     (1, 0), "P2_StartPressure": (1, 1),
+    "P2_StartOil":      (1, 2), "P2_BitCountTimes": (1, 3),
+    "P3_StartHeat":     (1, 4), "P3_StartPressure": (1, 5),
+    "P3_StartOil":      (1, 6), "P3_BitCountTimes": (1, 7),
+    "Bit_Alarm":        (192, 0),
 }
+
+# Chỉ các field được phép WRITE từ Python (Input section)
+WRITABLE_FIELDS = {
+    "T0_TemperatureSetting", "T0_TempLimitHIGH", "T0_TempLimitLOW", "T0_TempOffset",
+    "P1_TemperatureSetting", "P1_TempLimitHIGH", "P1_TempLimitLOW",
+    "P1_Temp1Offset", "P1_Temp2Offset", "P1_Temp3Offset",
+    "P1_PressureSetting", "P1_PressureHoseOffset", "P1_PressureITVOffset",
+    "P1_AirFillingTime", "P1_AirHoldingTime", "P1_AirReleaseTime",
+    "P1_OilStartTime", "P1_OilEndTime", "P1_CountTimes",
+    "P2_TemperatureSetting", "P2_TempLimitHIGH", "P2_TempLimitLOW",
+    "P2_Temp1Offset", "P2_Temp2Offset", "P2_Temp3Offset",
+    "P2_PressureSetting", "P2_PressureHoseOffset", "P2_PressureITVOffset",
+    "P2_AirFillingTime", "P2_AirHoldingTime", "P2_AirReleaseTime",
+    "P2_OilStartTime", "P2_OilEndTime", "P2_CountTimes",
+    "P3_TemperatureSetting", "P3_TempLimitHIGH", "P3_TempLimitLOW",
+    "P3_Temp1Offset", "P3_Temp2Offset", "P3_Temp3Offset",
+    "P3_PressureSetting", "P3_PressureHoseOffset", "P3_PressureITVOffset",
+    "P3_AirFillingTime", "P3_AirHoldingTime", "P3_AirReleaseTime",
+    "P3_OilStartTime", "P3_OilEndTime", "P3_CountTimes",
+    # Bit inputs (lệnh điều khiển)
+    "START", "STOP",
+    "T0_StartHeat", "T0_StopHeat",
+    "P1_StartHeat", "P1_StartPressure", "P1_StartOil", "P1_BitCountTimes",
+    "P2_StartHeat", "P2_StartPressure", "P2_StartOil", "P2_BitCountTimes",
+    "P3_StartHeat", "P3_StartPressure", "P3_StartOil", "P3_BitCountTimes",
+}
+
 
 class PLCWriter:
     def __init__(self, ip: str, rack: int = 0, slot: int = 1, db_number: int = 1):
@@ -91,7 +227,7 @@ class PLCWriter:
         self.rack = rack
         self.slot = slot
         self.db_number = db_number
-        self.db_size = 120  # 3 channel x 40 bytes
+        self.db_size = 580  # String[254] kết thúc ~578
 
     def connect(self):
         self.client.connect(self.ip, self.rack, self.slot)
@@ -99,35 +235,290 @@ class PLCWriter:
     def disconnect(self):
         self.client.disconnect()
 
-    def _pack_real(self, value: float) -> bytes:
-        return struct.pack(">f", value)  # Big-endian float (S7 format)
+    def is_connected(self) -> bool:
+        return self.client.get_connected()
 
-    def write_all_sv(self, sv_data: dict):
+    # ── Pack helpers ──────────────────────────────────────────────────
+    @staticmethod
+    def _pack_real(value: float) -> bytes:
+        return struct.pack(">f", value)
+
+    @staticmethod
+    def _pack_dint(value: int) -> bytes:
+        return struct.pack(">i", value)
+
+    @staticmethod
+    def _pack_int(value: int) -> bytes:
+        return struct.pack(">h", value)
+
+    # ── Write đơn lẻ 1 field (read-modify-write) ─────────────────────
+    def write_field(self, field_name: str, value) -> bool:
         """
-        sv_data = {
-            "A": {
-                "pressure": 3.5,
-                "temp": 0.0,
-                "front_temp": 0.0,
-                ...
-            },
-            "B": { ... },
-            "C": { ... },
+        Ghi 1 field bất kỳ. An toàn vì dùng read-modify-write.
+        Trả về True nếu thành công.
+        """
+        if field_name not in WRITABLE_FIELDS:
+            raise ValueError(f"'{field_name}' không nằm trong danh sách WRITABLE_FIELDS")
+
+        field = DB_MAP[field_name]
+
+        if field.data_type == "BOOL":
+            byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
+            # Đọc byte hiện tại để không mất bit khác
+            raw = self.client.db_read(self.db_number, byte_idx, 1)
+            set_bool(raw, 0, bit_idx, bool(value))
+            self.client.db_write(self.db_number, byte_idx, raw)
+
+        else:
+            if field.data_type == "REAL":
+                packed = self._pack_real(float(value))
+            elif field.data_type == "DINT":
+                packed = self._pack_dint(int(value))
+            elif field.data_type == "INT":
+                packed = self._pack_int(int(value))
+            else:
+                raise TypeError(f"Không hỗ trợ write type: {field.data_type}")
+
+            self.client.db_write(self.db_number, field.offset, bytearray(packed))
+
+        return True
+
+    # ── Write nhiều field cùng lúc (batch) ───────────────────────────
+    def write_fields(self, data: dict) -> dict:
+        """
+        Ghi nhiều field một lúc. Read toàn DB → patch → write lại.
+
+        data = {
+            "P1_TemperatureSetting": 180.0,
+            "P1_AirFillingTime": 5000,
+            "P1_CountTimes": 10,
+            "P1_StartHeat": True,
+            ...
+        }
+        Trả về dict {field_name: success/error}
+        """
+        # Validate trước
+        invalid = [k for k in data if k not in WRITABLE_FIELDS]
+        if invalid:
+            raise ValueError(f"Các field không được phép write: {invalid}")
+
+        # Đọc toàn bộ DB hiện tại để patch an toàn
+        raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
+        results = {}
+
+        for field_name, value in data.items():
+            try:
+                field = DB_MAP[field_name]
+
+                if field.data_type == "BOOL":
+                    byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
+                    set_bool(raw, byte_idx, bit_idx, bool(value))
+
+                elif field.data_type == "REAL":
+                    packed = self._pack_real(float(value))
+                    raw[field.offset:field.offset + 4] = packed
+
+                elif field.data_type == "DINT":
+                    packed = self._pack_dint(int(value))
+                    raw[field.offset:field.offset + 4] = packed
+
+                elif field.data_type == "INT":
+                    packed = self._pack_int(int(value))
+                    raw[field.offset:field.offset + 2] = packed
+
+                results[field_name] = "ok"
+
+            except Exception as e:
+                results[field_name] = f"error: {e}"
+
+        # Chỉ write 1 lần duy nhất
+        self.client.db_write(self.db_number, 0, raw)
+        return results
+
+    # ── Write theo Station (T0 / P1 / P2 / P3) ───────────────────────
+    def write_station(self, station: str, params: dict) -> dict:
+        """
+        Ghi toàn bộ setting cho 1 station.
+
+        station = "T0" | "P1" | "P2" | "P3"
+        params  = {
+            "TemperatureSetting": 180.0,
+            "TempLimitHIGH": 190.0,
+            ...
         }
         """
-        # Tạo buffer toàn bộ DB
-        buffer = bytearray(self.db_size)
+        prefixed = {f"{station}_{k}": v for k, v in params.items()}
+        return self.write_fields(prefixed)
 
-        for channel, fields in sv_data.items():
-            ch_offset = CHANNEL_OFFSET[channel]
-            for field_name, value in fields.items():
-                field = DB_SV_MAP[field_name]
-                offset = ch_offset + field.offset
-                packed = self._pack_real(float(value))
-                buffer[offset:offset + field.size] = packed
+    # ── Context manager support ───────────────────────────────────────
+    def __enter__(self):
+        self.connect()
+        return self
 
-        # Ghi 1 lần duy nhất
-        self.client.db_write(self.db_number, 0, buffer)
+    def __exit__(self, *args):
+        self.disconnect()
+
+class PLCReader:
+    def __init__(self, ip: str, rack: int = 0, slot: int = 1, db_number: int = 1):
+        self.client = snap7.client.Client()
+        self.ip = ip
+        self.rack = rack
+        self.slot = slot
+        self.db_number = db_number
+        self.db_size = 580
+
+    def connect(self):
+        self.client.connect(self.ip, self.rack, self.slot)
+
+    def disconnect(self):
+        self.client.disconnect()
+
+    def is_connected(self) -> bool:
+        return self.client.get_connected()
+
+    @staticmethod
+    def _parse_field(raw: bytearray, field: DBField, field_name: str = None):
+        if field.data_type == "REAL":
+            return get_real(raw, field.offset)
+        elif field.data_type == "DINT":
+            return get_dint(raw, field.offset)
+        elif field.data_type == "INT":
+            return get_int(raw, field.offset)
+        elif field.data_type == "BOOL":
+            byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
+            return get_bool(raw, byte_idx, bit_idx)
+        elif field.data_type == "STRING":
+            return get_string(raw, field.offset)
+        else:
+            raise TypeError(f"Không hỗ trợ đọc type: {field.data_type}")
+
+    # ── Read toàn bộ DB 1 lần ────────────────────────────────────────
+    def read_all(self) -> dict:
+        """
+        Đọc toàn bộ DB, trả về dict đầy đủ tất cả fields.
+        """
+        raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
+        result = {}
+        for field_name, field in DB_MAP.items():
+            try:
+                result[field_name] = self._parse_field(raw, field, field_name)
+            except Exception as e:
+                result[field_name] = f"error: {e}"
+        return result
+
+    # ── Read 1 field đơn lẻ ──────────────────────────────────────────
+    def read_field(self, field_name: str):
+        """
+        Đọc 1 field theo tên.
+        Chỉ đọc đúng số byte cần thiết → nhanh hơn read_all.
+        """
+        if field_name not in DB_MAP:
+            raise KeyError(f"'{field_name}' không tồn tại trong DB_MAP")
+
+        field = DB_MAP[field_name]
+
+        if field.data_type == "BOOL":
+            byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
+            raw = bytearray(self.client.db_read(self.db_number, byte_idx, 1))
+            # Tạo bytearray tạm để _parse_field không bị lệch offset
+            temp = bytearray(byte_idx + 1)
+            temp[byte_idx] = raw[0]
+            return get_bool(temp, byte_idx, bit_idx)
+
+        elif field.data_type == "STRING":
+            # String cần đọc từ offset đến hết
+            raw = bytearray(self.client.db_read(self.db_number, field.offset, field.size))
+            temp = bytearray(field.offset + field.size)
+            temp[field.offset:field.offset + field.size] = raw
+            return get_string(temp, field.offset)
+
+        else:
+            raw = bytearray(self.client.db_read(self.db_number, field.offset, field.size))
+            temp = bytearray(field.offset + field.size)
+            temp[field.offset:field.offset + field.size] = raw
+            return self._parse_field(temp, field, field_name)
+
+    # ── Read nhiều field cùng lúc ─────────────────────────────────────
+    def read_fields(self, field_names: list) -> dict:
+        """
+        Đọc nhiều field chỉ định. Đọc DB 1 lần duy nhất.
+
+        field_names = ["P1_CurrentTemp1", "P1_CurrentPressureHose", "Bit_Alarm"]
+        """
+        invalid = [f for f in field_names if f not in DB_MAP]
+        if invalid:
+            raise KeyError(f"Các field không tồn tại: {invalid}")
+
+        raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
+        return {
+            name: self._parse_field(raw, DB_MAP[name], name)
+            for name in field_names
+        }
+
+    # ── Read theo Station ─────────────────────────────────────────────
+    def read_station(self, station: str) -> dict:
+        """
+        Đọc toàn bộ field của 1 station.
+        station = "T0" | "P1" | "P2" | "P3"
+
+        Trả về dict đã bỏ prefix, ví dụ:
+        {"CurrentTemp1": 175.3, "CurrentPressureHose": 4.2, ...}
+        """
+        valid_stations = {"T0", "P1", "P2", "P3"}
+        if station not in valid_stations:
+            raise ValueError(f"Station phải là một trong: {valid_stations}")
+
+        raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
+        prefix = f"{station}_"
+        return {
+            name[len(prefix):]: self._parse_field(raw, field, name)
+            for name, field in DB_MAP.items()
+            if name.startswith(prefix)
+        }
+
+    # ── Read chỉ Output (sensor readings) ────────────────────────────
+    def read_outputs(self) -> dict:
+        """
+        Chỉ đọc vùng Output (offset 194~322) + Alarm.
+        Dùng cho vòng lặp realtime chart — đọc ít byte nhất có thể.
+        """
+        OUTPUT_START = 192   # Bit_Alarm
+        OUTPUT_SIZE  = 134   # đến hết P3_NumberTestTimes (322+2)
+
+        raw_slice = bytearray(
+            self.client.db_read(self.db_number, OUTPUT_START, OUTPUT_SIZE)
+        )
+        # Pad để offset gốc trong DB_MAP vẫn đúng
+        raw = bytearray(OUTPUT_START) + raw_slice
+
+        output_fields = [
+            "Bit_Alarm",
+            "T0_CurrentTemp",
+            "P1_CurrentTemp1", "P1_CurrentTemp2", "P1_CurrentTemp3",
+            "P1_CurrentPressureHose", "P1_CurrentPressureITV",
+            "P1_AirFillingTime_Out", "P1_AirHoldingTime_Out", "P1_AirReleaseTime_Out",
+            "P1_OilStartTime_Out", "P1_OilEndTime_Out", "P1_NumberTestTimes",
+            "P2_CurrentTemp1", "P2_CurrentTemp2", "P2_CurrentTemp3",
+            "P2_CurrentPressureHose", "P2_CurrentPressureITV",
+            "P2_AirFillingTime_Out", "P2_AirHoldingTime_Out", "P2_AirReleaseTime_Out",
+            "P2_OilStartTime_Out", "P2_OilEndTime_Out", "P2_NumberTestTimes",
+            "P3_CurrentTemp1", "P3_CurrentTemp2", "P3_CurrentTemp3",
+            "P3_CurrentPressureHose", "P3_CurrentPressureITV",
+            "P3_AirFillingTime_Out", "P3_AirHoldingTime_Out", "P3_AirReleaseTime_Out",
+            "P3_OilStartTime_Out", "P3_OilEndTime_Out", "P3_NumberTestTimes",
+        ]
+        return {
+            name: self._parse_field(raw, DB_MAP[name], name)
+            for name in output_fields
+        }
+
+    # ── Context manager ───────────────────────────────────────────────
+    def __enter__(self):
+        self.connect()
+        return self
+
+    def __exit__(self, *args):
+        self.disconnect()
 
 class StrikeMachine(QMainWindow):
 

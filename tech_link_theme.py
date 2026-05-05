@@ -7380,19 +7380,25 @@ class Ui_MainWindow(object):
         self.db_data_size_input.setMaximum(1024)
         self.db_data_size_input.setValue(128)
 
-        self.gridLayout_4.addWidget(self.db_data_size_input, 2, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.db_data_size_input, 3, 2, 1, 1)
 
         self.slot_label_8 = QLabel(self.connection_group)
         self.slot_label_8.setObjectName(u"slot_label_8")
         self.slot_label_8.setFont(font21)
 
-        self.gridLayout_4.addWidget(self.slot_label_8, 3, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.slot_label_8, 4, 0, 1, 1)
 
         self.slot_label_2 = QLabel(self.connection_group)
         self.slot_label_2.setObjectName(u"slot_label_2")
         self.slot_label_2.setFont(font21)
 
-        self.gridLayout_4.addWidget(self.slot_label_2, 1, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.slot_label_2, 2, 0, 1, 1)
+
+        self.slot_label_7 = QLabel(self.connection_group)
+        self.slot_label_7.setObjectName(u"slot_label_7")
+        self.slot_label_7.setFont(font21)
+
+        self.gridLayout_4.addWidget(self.slot_label_7, 3, 0, 1, 1)
 
         self.db_number_input = QSpinBox(self.connection_group)
         self.db_number_input.setObjectName(u"db_number_input")
@@ -7404,28 +7410,7 @@ class Ui_MainWindow(object):
         self.db_number_input.setSpecialValueText(u"")
         self.db_number_input.setValue(1)
 
-        self.gridLayout_4.addWidget(self.db_number_input, 1, 1, 1, 1)
-
-        self.slot_label_7 = QLabel(self.connection_group)
-        self.slot_label_7.setObjectName(u"slot_label_7")
-        self.slot_label_7.setFont(font21)
-
-        self.gridLayout_4.addWidget(self.slot_label_7, 2, 0, 1, 1)
-
-        self.plc_ip_address = QLabel(self.connection_group)
-        self.plc_ip_address.setObjectName(u"plc_ip_address")
-        self.plc_ip_address.setFont(font21)
-
-        self.gridLayout_4.addWidget(self.plc_ip_address, 0, 0, 1, 1)
-
-        self.plc_ip_address_edit = QLineEdit(self.connection_group)
-        self.plc_ip_address_edit.setObjectName(u"plc_ip_address_edit")
-        sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
-        self.plc_ip_address_edit.setSizePolicy(sizePolicy)
-        self.plc_ip_address_edit.setFont(font21)
-        self.plc_ip_address_edit.setPlaceholderText(u"Enter IP address: 172.16.100.///")
-
-        self.gridLayout_4.addWidget(self.plc_ip_address_edit, 0, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.db_number_input, 2, 2, 1, 1)
 
         self.interupt_time_input = QSpinBox(self.connection_group)
         self.interupt_time_input.setObjectName(u"interupt_time_input")
@@ -7437,9 +7422,36 @@ class Ui_MainWindow(object):
         self.interupt_time_input.setMaximum(10000)
         self.interupt_time_input.setValue(250)
 
-        self.gridLayout_4.addWidget(self.interupt_time_input, 3, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.interupt_time_input, 4, 2, 1, 1)
 
-        self.sys_state_stacked_wid_40 = QStackedWidget(self.connection_group)
+        self.plc_ip_address = QLabel(self.connection_group)
+        self.plc_ip_address.setObjectName(u"plc_ip_address")
+        self.plc_ip_address.setFont(font21)
+
+        self.gridLayout_4.addWidget(self.plc_ip_address, 1, 0, 1, 1)
+
+        self.plc_ip_address_edit = QLineEdit(self.connection_group)
+        self.plc_ip_address_edit.setObjectName(u"plc_ip_address_edit")
+        sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
+        self.plc_ip_address_edit.setSizePolicy(sizePolicy)
+        self.plc_ip_address_edit.setFont(font21)
+        self.plc_ip_address_edit.setPlaceholderText(u"Enter IP address: 172.16.100.///")
+
+        self.gridLayout_4.addWidget(self.plc_ip_address_edit, 1, 2, 1, 1)
+
+        self.plc_ip_address_2 = QLabel(self.connection_group)
+        self.plc_ip_address_2.setObjectName(u"plc_ip_address_2")
+        self.plc_ip_address_2.setFont(font21)
+
+        self.gridLayout_4.addWidget(self.plc_ip_address_2, 0, 0, 1, 1)
+
+        self.widget_28 = QWidget(self.connection_group)
+        self.widget_28.setObjectName(u"widget_28")
+        self.horizontalLayout_31 = QHBoxLayout(self.widget_28)
+        self.horizontalLayout_31.setSpacing(10)
+        self.horizontalLayout_31.setObjectName(u"horizontalLayout_31")
+        self.horizontalLayout_31.setContentsMargins(0, 0, 0, 0)
+        self.sys_state_stacked_wid_40 = QStackedWidget(self.widget_28)
         self.sys_state_stacked_wid_40.setObjectName(u"sys_state_stacked_wid_40")
         sizePolicy.setHeightForWidth(self.sys_state_stacked_wid_40.sizePolicy().hasHeightForWidth())
         self.sys_state_stacked_wid_40.setSizePolicy(sizePolicy)
@@ -7457,7 +7469,7 @@ class Ui_MainWindow(object):
         self.pushButton_4.setObjectName(u"pushButton_4")
         sizePolicy.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
         self.pushButton_4.setSizePolicy(sizePolicy)
-        self.pushButton_4.setFont(font6)
+        self.pushButton_4.setFont(font7)
         self.pushButton_4.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: #10B981; \n"
@@ -7477,10 +7489,7 @@ class Ui_MainWindow(object):
         self.pushButton_21.setObjectName(u"pushButton_21")
         sizePolicy.setHeightForWidth(self.pushButton_21.sizePolicy().hasHeightForWidth())
         self.pushButton_21.setSizePolicy(sizePolicy)
-        font22 = QFont()
-        font22.setPointSize(12)
-        font22.setBold(True)
-        self.pushButton_21.setFont(font22)
+        self.pushButton_21.setFont(font7)
         self.pushButton_21.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: #F90A0A; \n"
@@ -7492,14 +7501,54 @@ class Ui_MainWindow(object):
 
         self.sys_state_stacked_wid_40.addWidget(self.error_light_32)
 
-        self.gridLayout_4.addWidget(self.sys_state_stacked_wid_40, 0, 2, 1, 1)
+        self.horizontalLayout_31.addWidget(self.sys_state_stacked_wid_40)
+
+        self.rb_connect = QPushButton(self.widget_28)
+        self.rb_connect.setObjectName(u"rb_connect")
+        sizePolicy.setHeightForWidth(self.rb_connect.sizePolicy().hasHeightForWidth())
+        self.rb_connect.setSizePolicy(sizePolicy)
+        self.rb_connect.setFont(font7)
+        self.rb_connect.setStyleSheet(u"QPushButton {\n"
+"    background-color: #10B981;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #059669;\n"
+"}")
+
+        self.horizontalLayout_31.addWidget(self.rb_connect)
+
+        self.dis_rb = QPushButton(self.widget_28)
+        self.dis_rb.setObjectName(u"dis_rb")
+        sizePolicy.setHeightForWidth(self.dis_rb.sizePolicy().hasHeightForWidth())
+        self.dis_rb.setSizePolicy(sizePolicy)
+        self.dis_rb.setFont(font7)
+        self.dis_rb.setStyleSheet(u"QPushButton {\n"
+"    background-color: #EF4444;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 12px 24px;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #DC2626;\n"
+"}")
+
+        self.horizontalLayout_31.addWidget(self.dis_rb)
+
+        self.horizontalLayout_31.setStretch(0, 2)
+        self.horizontalLayout_31.setStretch(1, 1)
+
+        self.gridLayout_4.addWidget(self.widget_28, 0, 2, 1, 1)
 
         self.gridLayout_4.setRowStretch(0, 1)
         self.gridLayout_4.setRowStretch(1, 1)
         self.gridLayout_4.setRowStretch(2, 1)
         self.gridLayout_4.setRowStretch(3, 1)
-        self.gridLayout_4.setColumnStretch(1, 1)
-        self.gridLayout_4.setColumnStretch(2, 1)
+        self.gridLayout_4.setRowStretch(4, 1)
 
         self.verticalLayout_9.addWidget(self.connection_group)
 
@@ -7871,10 +7920,10 @@ class Ui_MainWindow(object):
 
         self.di_name_1 = QLabel(self.i_o_group_1)
         self.di_name_1.setObjectName(u"di_name_1")
-        font23 = QFont()
-        font23.setPointSize(20)
-        font23.setBold(True)
-        self.di_name_1.setFont(font23)
+        font22 = QFont()
+        font22.setPointSize(20)
+        font22.setBold(True)
+        self.di_name_1.setFont(font22)
 
         self.gridLayout_7.addWidget(self.di_name_1, 0, 0, 1, 1)
 
@@ -8018,43 +8067,43 @@ class Ui_MainWindow(object):
 
         self.di_name_2 = QLabel(self.i_o_group_1)
         self.di_name_2.setObjectName(u"di_name_2")
-        self.di_name_2.setFont(font23)
+        self.di_name_2.setFont(font22)
 
         self.gridLayout_7.addWidget(self.di_name_2, 1, 0, 1, 1)
 
         self.di_name_3 = QLabel(self.i_o_group_1)
         self.di_name_3.setObjectName(u"di_name_3")
-        self.di_name_3.setFont(font23)
+        self.di_name_3.setFont(font22)
 
         self.gridLayout_7.addWidget(self.di_name_3, 2, 0, 1, 1)
 
         self.di_name_4 = QLabel(self.i_o_group_1)
         self.di_name_4.setObjectName(u"di_name_4")
-        self.di_name_4.setFont(font23)
+        self.di_name_4.setFont(font22)
 
         self.gridLayout_7.addWidget(self.di_name_4, 3, 0, 1, 1)
 
         self.di_name_5 = QLabel(self.i_o_group_1)
         self.di_name_5.setObjectName(u"di_name_5")
-        self.di_name_5.setFont(font23)
+        self.di_name_5.setFont(font22)
 
         self.gridLayout_7.addWidget(self.di_name_5, 4, 0, 1, 1)
 
         self.di_name_6 = QLabel(self.i_o_group_1)
         self.di_name_6.setObjectName(u"di_name_6")
-        self.di_name_6.setFont(font23)
+        self.di_name_6.setFont(font22)
 
         self.gridLayout_7.addWidget(self.di_name_6, 5, 0, 1, 1)
 
         self.di_name_7 = QLabel(self.i_o_group_1)
         self.di_name_7.setObjectName(u"di_name_7")
-        self.di_name_7.setFont(font23)
+        self.di_name_7.setFont(font22)
 
         self.gridLayout_7.addWidget(self.di_name_7, 6, 0, 1, 1)
 
         self.di_name_8 = QLabel(self.i_o_group_1)
         self.di_name_8.setObjectName(u"di_name_8")
-        self.di_name_8.setFont(font23)
+        self.di_name_8.setFont(font22)
 
         self.gridLayout_7.addWidget(self.di_name_8, 7, 0, 1, 1)
 
@@ -8479,7 +8528,7 @@ class Ui_MainWindow(object):
 
         self.dq_name_1 = QLabel(self.i_o_group_2)
         self.dq_name_1.setObjectName(u"dq_name_1")
-        self.dq_name_1.setFont(font23)
+        self.dq_name_1.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_1, 0, 0, 1, 1)
 
@@ -8531,7 +8580,7 @@ class Ui_MainWindow(object):
 
         self.dq_name_2 = QLabel(self.i_o_group_2)
         self.dq_name_2.setObjectName(u"dq_name_2")
-        self.dq_name_2.setFont(font23)
+        self.dq_name_2.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_2, 0, 2, 1, 1)
 
@@ -8583,79 +8632,79 @@ class Ui_MainWindow(object):
 
         self.dq_name_3 = QLabel(self.i_o_group_2)
         self.dq_name_3.setObjectName(u"dq_name_3")
-        self.dq_name_3.setFont(font23)
+        self.dq_name_3.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_3, 1, 0, 1, 1)
 
         self.dq_name_4 = QLabel(self.i_o_group_2)
         self.dq_name_4.setObjectName(u"dq_name_4")
-        self.dq_name_4.setFont(font23)
+        self.dq_name_4.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_4, 1, 2, 1, 1)
 
         self.dq_name_6 = QLabel(self.i_o_group_2)
         self.dq_name_6.setObjectName(u"dq_name_6")
-        self.dq_name_6.setFont(font23)
+        self.dq_name_6.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_6, 2, 2, 1, 1)
 
         self.dq_name_5 = QLabel(self.i_o_group_2)
         self.dq_name_5.setObjectName(u"dq_name_5")
-        self.dq_name_5.setFont(font23)
+        self.dq_name_5.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_5, 2, 0, 1, 1)
 
         self.dq_name_7 = QLabel(self.i_o_group_2)
         self.dq_name_7.setObjectName(u"dq_name_7")
-        self.dq_name_7.setFont(font23)
+        self.dq_name_7.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_7, 3, 0, 1, 1)
 
         self.dq_name_8 = QLabel(self.i_o_group_2)
         self.dq_name_8.setObjectName(u"dq_name_8")
-        self.dq_name_8.setFont(font23)
+        self.dq_name_8.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_8, 3, 2, 1, 1)
 
         self.dq_name_9 = QLabel(self.i_o_group_2)
         self.dq_name_9.setObjectName(u"dq_name_9")
-        self.dq_name_9.setFont(font23)
+        self.dq_name_9.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_9, 4, 0, 1, 1)
 
         self.dq_name_10 = QLabel(self.i_o_group_2)
         self.dq_name_10.setObjectName(u"dq_name_10")
-        self.dq_name_10.setFont(font23)
+        self.dq_name_10.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_10, 4, 2, 1, 1)
 
         self.dq_name_11 = QLabel(self.i_o_group_2)
         self.dq_name_11.setObjectName(u"dq_name_11")
-        self.dq_name_11.setFont(font23)
+        self.dq_name_11.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_11, 5, 0, 1, 1)
 
         self.dq_name_13 = QLabel(self.i_o_group_2)
         self.dq_name_13.setObjectName(u"dq_name_13")
-        self.dq_name_13.setFont(font23)
+        self.dq_name_13.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_13, 6, 0, 1, 1)
 
         self.dq_name_12 = QLabel(self.i_o_group_2)
         self.dq_name_12.setObjectName(u"dq_name_12")
-        self.dq_name_12.setFont(font23)
+        self.dq_name_12.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_12, 5, 2, 1, 1)
 
         self.dq_name_14 = QLabel(self.i_o_group_2)
         self.dq_name_14.setObjectName(u"dq_name_14")
-        self.dq_name_14.setFont(font23)
+        self.dq_name_14.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_14, 6, 2, 1, 1)
 
         self.dq_name_15 = QLabel(self.i_o_group_2)
         self.dq_name_15.setObjectName(u"dq_name_15")
-        self.dq_name_15.setFont(font23)
+        self.dq_name_15.setFont(font22)
 
         self.gridLayout_6.addWidget(self.dq_name_15, 7, 0, 1, 1)
 
@@ -8958,7 +9007,7 @@ class Ui_MainWindow(object):
 
         self.ai_name_1 = QLabel(self.i_o_group_3)
         self.ai_name_1.setObjectName(u"ai_name_1")
-        self.ai_name_1.setFont(font23)
+        self.ai_name_1.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_1, 0, 0, 1, 1)
 
@@ -8980,91 +9029,91 @@ class Ui_MainWindow(object):
 
         self.ai_name_15 = QLabel(self.i_o_group_3)
         self.ai_name_15.setObjectName(u"ai_name_15")
-        self.ai_name_15.setFont(font23)
+        self.ai_name_15.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_15, 7, 2, 1, 1)
 
         self.ai_name_14 = QLabel(self.i_o_group_3)
         self.ai_name_14.setObjectName(u"ai_name_14")
-        self.ai_name_14.setFont(font23)
+        self.ai_name_14.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_14, 6, 2, 1, 1)
 
         self.ai_name_12 = QLabel(self.i_o_group_3)
         self.ai_name_12.setObjectName(u"ai_name_12")
-        self.ai_name_12.setFont(font23)
+        self.ai_name_12.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_12, 7, 0, 1, 1)
 
         self.ai_name_13 = QLabel(self.i_o_group_3)
         self.ai_name_13.setObjectName(u"ai_name_13")
-        self.ai_name_13.setFont(font23)
+        self.ai_name_13.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_13, 9, 0, 1, 1)
 
         self.ai_name_16 = QLabel(self.i_o_group_3)
         self.ai_name_16.setObjectName(u"ai_name_16")
-        self.ai_name_16.setFont(font23)
+        self.ai_name_16.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_16, 9, 2, 1, 1)
 
         self.ai_name_4 = QLabel(self.i_o_group_3)
         self.ai_name_4.setObjectName(u"ai_name_4")
-        self.ai_name_4.setFont(font23)
+        self.ai_name_4.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_4, 1, 2, 1, 1)
 
         self.ai_name_3 = QLabel(self.i_o_group_3)
         self.ai_name_3.setObjectName(u"ai_name_3")
-        self.ai_name_3.setFont(font23)
+        self.ai_name_3.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_3, 1, 0, 1, 1)
 
         self.ai_name_5 = QLabel(self.i_o_group_3)
         self.ai_name_5.setObjectName(u"ai_name_5")
-        self.ai_name_5.setFont(font23)
+        self.ai_name_5.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_5, 2, 0, 1, 1)
 
         self.ai_name_2 = QLabel(self.i_o_group_3)
         self.ai_name_2.setObjectName(u"ai_name_2")
-        self.ai_name_2.setFont(font23)
+        self.ai_name_2.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_2, 0, 2, 1, 1)
 
         self.ai_name_6 = QLabel(self.i_o_group_3)
         self.ai_name_6.setObjectName(u"ai_name_6")
-        self.ai_name_6.setFont(font23)
+        self.ai_name_6.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_6, 2, 2, 1, 1)
 
         self.ai_name_7 = QLabel(self.i_o_group_3)
         self.ai_name_7.setObjectName(u"ai_name_7")
-        self.ai_name_7.setFont(font23)
+        self.ai_name_7.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_7, 3, 0, 1, 1)
 
         self.ai_name_8 = QLabel(self.i_o_group_3)
         self.ai_name_8.setObjectName(u"ai_name_8")
-        self.ai_name_8.setFont(font23)
+        self.ai_name_8.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_8, 3, 2, 1, 1)
 
         self.ai_name_9 = QLabel(self.i_o_group_3)
         self.ai_name_9.setObjectName(u"ai_name_9")
-        self.ai_name_9.setFont(font23)
+        self.ai_name_9.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_9, 4, 0, 1, 1)
 
         self.ai_name_10 = QLabel(self.i_o_group_3)
         self.ai_name_10.setObjectName(u"ai_name_10")
-        self.ai_name_10.setFont(font23)
+        self.ai_name_10.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_10, 4, 2, 1, 1)
 
         self.ai_name_11 = QLabel(self.i_o_group_3)
         self.ai_name_11.setObjectName(u"ai_name_11")
-        self.ai_name_11.setFont(font23)
+        self.ai_name_11.setFont(font22)
 
         self.gridLayout_5.addWidget(self.ai_name_11, 6, 0, 1, 1)
 
@@ -9410,8 +9459,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_60.addWidget(self.lineEdit)
 
         self.list_history = QTableWidget(self.stacked_list_report)
-        if (self.list_history.columnCount() < 7):
-            self.list_history.setColumnCount(7)
+        if (self.list_history.columnCount() < 8):
+            self.list_history.setColumnCount(8)
         __qtablewidgetitem = QTableWidgetItem()
         self.list_history.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
@@ -9426,44 +9475,46 @@ class Ui_MainWindow(object):
         self.list_history.setHorizontalHeaderItem(5, __qtablewidgetitem5)
         __qtablewidgetitem6 = QTableWidgetItem()
         self.list_history.setHorizontalHeaderItem(6, __qtablewidgetitem6)
+        __qtablewidgetitem7 = QTableWidgetItem()
+        self.list_history.setHorizontalHeaderItem(7, __qtablewidgetitem7)
         if (self.list_history.rowCount() < 17):
             self.list_history.setRowCount(17)
-        __qtablewidgetitem7 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(0, __qtablewidgetitem7)
         __qtablewidgetitem8 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(1, __qtablewidgetitem8)
+        self.list_history.setVerticalHeaderItem(0, __qtablewidgetitem8)
         __qtablewidgetitem9 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(2, __qtablewidgetitem9)
+        self.list_history.setVerticalHeaderItem(1, __qtablewidgetitem9)
         __qtablewidgetitem10 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(3, __qtablewidgetitem10)
+        self.list_history.setVerticalHeaderItem(2, __qtablewidgetitem10)
         __qtablewidgetitem11 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(4, __qtablewidgetitem11)
+        self.list_history.setVerticalHeaderItem(3, __qtablewidgetitem11)
         __qtablewidgetitem12 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(5, __qtablewidgetitem12)
+        self.list_history.setVerticalHeaderItem(4, __qtablewidgetitem12)
         __qtablewidgetitem13 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(6, __qtablewidgetitem13)
+        self.list_history.setVerticalHeaderItem(5, __qtablewidgetitem13)
         __qtablewidgetitem14 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(7, __qtablewidgetitem14)
+        self.list_history.setVerticalHeaderItem(6, __qtablewidgetitem14)
         __qtablewidgetitem15 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(8, __qtablewidgetitem15)
+        self.list_history.setVerticalHeaderItem(7, __qtablewidgetitem15)
         __qtablewidgetitem16 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(9, __qtablewidgetitem16)
+        self.list_history.setVerticalHeaderItem(8, __qtablewidgetitem16)
         __qtablewidgetitem17 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(10, __qtablewidgetitem17)
+        self.list_history.setVerticalHeaderItem(9, __qtablewidgetitem17)
         __qtablewidgetitem18 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(11, __qtablewidgetitem18)
+        self.list_history.setVerticalHeaderItem(10, __qtablewidgetitem18)
         __qtablewidgetitem19 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(12, __qtablewidgetitem19)
+        self.list_history.setVerticalHeaderItem(11, __qtablewidgetitem19)
         __qtablewidgetitem20 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(13, __qtablewidgetitem20)
+        self.list_history.setVerticalHeaderItem(12, __qtablewidgetitem20)
         __qtablewidgetitem21 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(14, __qtablewidgetitem21)
+        self.list_history.setVerticalHeaderItem(13, __qtablewidgetitem21)
         __qtablewidgetitem22 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(15, __qtablewidgetitem22)
+        self.list_history.setVerticalHeaderItem(14, __qtablewidgetitem22)
         __qtablewidgetitem23 = QTableWidgetItem()
-        self.list_history.setVerticalHeaderItem(16, __qtablewidgetitem23)
+        self.list_history.setVerticalHeaderItem(15, __qtablewidgetitem23)
         __qtablewidgetitem24 = QTableWidgetItem()
-        self.list_history.setItem(0, 0, __qtablewidgetitem24)
+        self.list_history.setVerticalHeaderItem(16, __qtablewidgetitem24)
+        __qtablewidgetitem25 = QTableWidgetItem()
+        self.list_history.setItem(0, 0, __qtablewidgetitem25)
         self.list_history.setObjectName(u"list_history")
         self.list_history.setStyleSheet(u"QTableWidget {\n"
 "    background-color: #ffffff; border: 1px solid #BFC8D3; border-radius: 8px;\n"
@@ -9574,9 +9625,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(1)
+        self.stackedWidget_2.setCurrentIndex(2)
         self.sys_state_stacked_wid_39.setCurrentIndex(2)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_2.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_3.setCurrentIndex(0)
@@ -9616,7 +9667,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_c_6.setCurrentIndex(0)
         self.stacked_cel_fah_temp_c_7.setCurrentIndex(0)
         self.stackedWidget_3.setCurrentIndex(0)
-        self.sys_state_stacked_wid_40.setCurrentIndex(1)
+        self.sys_state_stacked_wid_40.setCurrentIndex(0)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
         self.i_o_group_1_switch_5.setCurrentIndex(0)
         self.i_o_group_1_switch_6.setCurrentIndex(0)
@@ -9995,10 +10046,13 @@ class Ui_MainWindow(object):
         self.slot_label_8.setText(QCoreApplication.translate("MainWindow", u"Interupt Time:", None))
         self.slot_label_2.setText(QCoreApplication.translate("MainWindow", u"DB:", None))
         self.slot_label_7.setText(QCoreApplication.translate("MainWindow", u"Size Data:", None))
-        self.plc_ip_address.setText(QCoreApplication.translate("MainWindow", u"IP address:", None))
         self.interupt_time_input.setSuffix(QCoreApplication.translate("MainWindow", u" ms ~ 10000 ms", None))
+        self.plc_ip_address.setText(QCoreApplication.translate("MainWindow", u"IP address:", None))
+        self.plc_ip_address_2.setText(QCoreApplication.translate("MainWindow", u"Connection:", None))
         self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"Connected", None))
         self.pushButton_21.setText(QCoreApplication.translate("MainWindow", u"Disconnected", None))
+        self.rb_connect.setText(QCoreApplication.translate("MainWindow", u"\U0001f50c Connect", None))
+        self.dis_rb.setText(QCoreApplication.translate("MainWindow", u"\u26d3\ufe0f\u200d Disconnect", None))
         self.new_data_btn_2.setText(QCoreApplication.translate("MainWindow", u" Save Data", None))
         self.clear_data_btn_2.setText(QCoreApplication.translate("MainWindow", u" Clear Data", None))
         self.i_o_group_1.setTitle(QCoreApplication.translate("MainWindow", u"DI", None))
@@ -10097,49 +10151,51 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem1 = self.list_history.horizontalHeaderItem(1)
         ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Name.", None))
         ___qtablewidgetitem2 = self.list_history.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"T0.", None))
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Pressure.", None))
         ___qtablewidgetitem3 = self.list_history.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Front.", None))
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Average.", None))
         ___qtablewidgetitem4 = self.list_history.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Middle.", None))
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Front.", None))
         ___qtablewidgetitem5 = self.list_history.horizontalHeaderItem(5)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"End.", None))
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Middle.", None))
         ___qtablewidgetitem6 = self.list_history.horizontalHeaderItem(6)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Date.", None))
-        ___qtablewidgetitem7 = self.list_history.verticalHeaderItem(0)
-        ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"1", None))
-        ___qtablewidgetitem8 = self.list_history.verticalHeaderItem(1)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"2", None))
-        ___qtablewidgetitem9 = self.list_history.verticalHeaderItem(2)
-        ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"3", None))
-        ___qtablewidgetitem10 = self.list_history.verticalHeaderItem(3)
-        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"4", None))
-        ___qtablewidgetitem11 = self.list_history.verticalHeaderItem(4)
-        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"5", None))
-        ___qtablewidgetitem12 = self.list_history.verticalHeaderItem(5)
-        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"6", None))
-        ___qtablewidgetitem13 = self.list_history.verticalHeaderItem(6)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"7", None))
-        ___qtablewidgetitem14 = self.list_history.verticalHeaderItem(7)
-        ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"8", None))
-        ___qtablewidgetitem15 = self.list_history.verticalHeaderItem(8)
-        ___qtablewidgetitem15.setText(QCoreApplication.translate("MainWindow", u"9", None))
-        ___qtablewidgetitem16 = self.list_history.verticalHeaderItem(9)
-        ___qtablewidgetitem16.setText(QCoreApplication.translate("MainWindow", u"10", None))
-        ___qtablewidgetitem17 = self.list_history.verticalHeaderItem(10)
-        ___qtablewidgetitem17.setText(QCoreApplication.translate("MainWindow", u"11", None))
-        ___qtablewidgetitem18 = self.list_history.verticalHeaderItem(11)
-        ___qtablewidgetitem18.setText(QCoreApplication.translate("MainWindow", u"12", None))
-        ___qtablewidgetitem19 = self.list_history.verticalHeaderItem(12)
-        ___qtablewidgetitem19.setText(QCoreApplication.translate("MainWindow", u"13", None))
-        ___qtablewidgetitem20 = self.list_history.verticalHeaderItem(13)
-        ___qtablewidgetitem20.setText(QCoreApplication.translate("MainWindow", u"14", None))
-        ___qtablewidgetitem21 = self.list_history.verticalHeaderItem(14)
-        ___qtablewidgetitem21.setText(QCoreApplication.translate("MainWindow", u"15", None))
-        ___qtablewidgetitem22 = self.list_history.verticalHeaderItem(15)
-        ___qtablewidgetitem22.setText(QCoreApplication.translate("MainWindow", u"16", None))
-        ___qtablewidgetitem23 = self.list_history.verticalHeaderItem(16)
-        ___qtablewidgetitem23.setText(QCoreApplication.translate("MainWindow", u"17", None))
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"End.", None))
+        ___qtablewidgetitem7 = self.list_history.horizontalHeaderItem(7)
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"Date.", None))
+        ___qtablewidgetitem8 = self.list_history.verticalHeaderItem(0)
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"1", None))
+        ___qtablewidgetitem9 = self.list_history.verticalHeaderItem(1)
+        ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"2", None))
+        ___qtablewidgetitem10 = self.list_history.verticalHeaderItem(2)
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"3", None))
+        ___qtablewidgetitem11 = self.list_history.verticalHeaderItem(3)
+        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"4", None))
+        ___qtablewidgetitem12 = self.list_history.verticalHeaderItem(4)
+        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"5", None))
+        ___qtablewidgetitem13 = self.list_history.verticalHeaderItem(5)
+        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"6", None))
+        ___qtablewidgetitem14 = self.list_history.verticalHeaderItem(6)
+        ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"7", None))
+        ___qtablewidgetitem15 = self.list_history.verticalHeaderItem(7)
+        ___qtablewidgetitem15.setText(QCoreApplication.translate("MainWindow", u"8", None))
+        ___qtablewidgetitem16 = self.list_history.verticalHeaderItem(8)
+        ___qtablewidgetitem16.setText(QCoreApplication.translate("MainWindow", u"9", None))
+        ___qtablewidgetitem17 = self.list_history.verticalHeaderItem(9)
+        ___qtablewidgetitem17.setText(QCoreApplication.translate("MainWindow", u"10", None))
+        ___qtablewidgetitem18 = self.list_history.verticalHeaderItem(10)
+        ___qtablewidgetitem18.setText(QCoreApplication.translate("MainWindow", u"11", None))
+        ___qtablewidgetitem19 = self.list_history.verticalHeaderItem(11)
+        ___qtablewidgetitem19.setText(QCoreApplication.translate("MainWindow", u"12", None))
+        ___qtablewidgetitem20 = self.list_history.verticalHeaderItem(12)
+        ___qtablewidgetitem20.setText(QCoreApplication.translate("MainWindow", u"13", None))
+        ___qtablewidgetitem21 = self.list_history.verticalHeaderItem(13)
+        ___qtablewidgetitem21.setText(QCoreApplication.translate("MainWindow", u"14", None))
+        ___qtablewidgetitem22 = self.list_history.verticalHeaderItem(14)
+        ___qtablewidgetitem22.setText(QCoreApplication.translate("MainWindow", u"15", None))
+        ___qtablewidgetitem23 = self.list_history.verticalHeaderItem(15)
+        ___qtablewidgetitem23.setText(QCoreApplication.translate("MainWindow", u"16", None))
+        ___qtablewidgetitem24 = self.list_history.verticalHeaderItem(16)
+        ___qtablewidgetitem24.setText(QCoreApplication.translate("MainWindow", u"17", None))
 
         __sortingEnabled = self.list_history.isSortingEnabled()
         self.list_history.setSortingEnabled(False)
