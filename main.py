@@ -44,7 +44,8 @@ from spline_chart import SplineChartWidget
 from Custom_Chart_Widgets import CustomChartWidget
 from System_Data import syss
 from Data_Simulator import DataSimulator
-from query_plc_thread import PLCWorker, PLCState
+from query_plc_thread import PLCRead, PLCState
+from write_plc_thread import PLCWrite, PLCState
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
@@ -58,307 +59,307 @@ def resource_path(relative_path):
     
     return os.path.join(base_path, relative_path)
 
-class PLCWriter:
-    def __init__(self, ip: str, rack: int = 0, slot: int = 1, db_number: int = 1):
-        self.client = snap7.client.Client()
-        self.ip = ip
-        self.rack = rack
-        self.slot = slot
-        self.db_number = db_number
-        self.db_size = 580  # String[254] kết thúc ~578
+# class PLCWriter:
+#     def __init__(self, ip: str, rack: int = 0, slot: int = 1, db_number: int = 1):
+#         self.client = snap7.client.Client()
+#         self.ip = ip
+#         self.rack = rack
+#         self.slot = slot
+#         self.db_number = db_number
+#         self.db_size = 580  # String[254] kết thúc ~578
 
-    def connect(self):
-        self.client.connect(self.ip, self.rack, self.slot)
+#     def connect(self):
+#         self.client.connect(self.ip, self.rack, self.slot)
 
-    def disconnect(self):
-        self.client.disconnect()
+#     def disconnect(self):
+#         self.client.disconnect()
 
-    def is_connected(self) -> bool:
-        return self.client.get_connected()
+#     def is_connected(self) -> bool:
+#         return self.client.get_connected()
 
-    # ── Pack helpers ──────────────────────────────────────────────────
-    @staticmethod
-    def _pack_real(value: float) -> bytes:
-        return struct.pack(">f", value)
+#     # ── Pack helpers ──────────────────────────────────────────────────
+#     @staticmethod
+#     def _pack_real(value: float) -> bytes:
+#         return struct.pack(">f", value)
 
-    @staticmethod
-    def _pack_dint(value: int) -> bytes:
-        return struct.pack(">i", value)
+#     @staticmethod
+#     def _pack_dint(value: int) -> bytes:
+#         return struct.pack(">i", value)
 
-    @staticmethod
-    def _pack_int(value: int) -> bytes:
-        return struct.pack(">h", value)
+#     @staticmethod
+#     def _pack_int(value: int) -> bytes:
+#         return struct.pack(">h", value)
 
-    # ── Write đơn lẻ 1 field (read-modify-write) ─────────────────────
-    def write_field(self, field_name: str, value) -> bool:
-        """
-        Ghi 1 field bất kỳ. An toàn vì dùng read-modify-write.
-        Trả về True nếu thành công.
-        """
-        if field_name not in WRITABLE_FIELDS:
-            raise ValueError(f"'{field_name}' không nằm trong danh sách WRITABLE_FIELDS")
+#     # ── Write đơn lẻ 1 field (read-modify-write) ─────────────────────
+#     def write_field(self, field_name: str, value) -> bool:
+#         """
+#         Ghi 1 field bất kỳ. An toàn vì dùng read-modify-write.
+#         Trả về True nếu thành công.
+#         """
+#         if field_name not in WRITABLE_FIELDS:
+#             raise ValueError(f"'{field_name}' không nằm trong danh sách WRITABLE_FIELDS")
 
-        field = DB_MAP[field_name]
+#         field = DB_MAP[field_name]
 
-        if field.data_type == "BOOL":
-            byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
-            # Đọc byte hiện tại để không mất bit khác
-            raw = self.client.db_read(self.db_number, byte_idx, 1)
-            set_bool(raw, 0, bit_idx, bool(value))
-            self.client.db_write(self.db_number, byte_idx, raw)
+#         if field.data_type == "BOOL":
+#             byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
+#             # Đọc byte hiện tại để không mất bit khác
+#             raw = self.client.db_read(self.db_number, byte_idx, 1)
+#             set_bool(raw, 0, bit_idx, bool(value))
+#             self.client.db_write(self.db_number, byte_idx, raw)
 
-        else:
-            if field.data_type == "REAL":
-                packed = self._pack_real(float(value))
-            elif field.data_type == "DINT":
-                packed = self._pack_dint(int(value))
-            elif field.data_type == "INT":
-                packed = self._pack_int(int(value))
-            else:
-                raise TypeError(f"Không hỗ trợ write type: {field.data_type}")
+#         else:
+#             if field.data_type == "REAL":
+#                 packed = self._pack_real(float(value))
+#             elif field.data_type == "DINT":
+#                 packed = self._pack_dint(int(value))
+#             elif field.data_type == "INT":
+#                 packed = self._pack_int(int(value))
+#             else:
+#                 raise TypeError(f"Không hỗ trợ write type: {field.data_type}")
 
-            self.client.db_write(self.db_number, field.offset, bytearray(packed))
+#             self.client.db_write(self.db_number, field.offset, bytearray(packed))
 
-        return True
+#         return True
 
-    # ── Write nhiều field cùng lúc (batch) ───────────────────────────
-    def write_fields(self, data: dict) -> dict:
-        """
-        Ghi nhiều field một lúc. Read toàn DB → patch → write lại.
+#     # ── Write nhiều field cùng lúc (batch) ───────────────────────────
+#     def write_fields(self, data: dict) -> dict:
+#         """
+#         Ghi nhiều field một lúc. Read toàn DB → patch → write lại.
 
-        data = {
-            "P1_TemperatureSetting": 180.0,
-            "P1_AirFillingTime": 5000,
-            "P1_CountTimes": 10,
-            "P1_StartHeat": True,
-            ...
-        }
-        Trả về dict {field_name: success/error}
-        """
-        # Validate trước
-        invalid = [k for k in data if k not in WRITABLE_FIELDS]
-        if invalid:
-            raise ValueError(f"Các field không được phép write: {invalid}")
+#         data = {
+#             "P1_TemperatureSetting": 180.0,
+#             "P1_AirFillingTime": 5000,
+#             "P1_CountTimes": 10,
+#             "P1_StartHeat": True,
+#             ...
+#         }
+#         Trả về dict {field_name: success/error}
+#         """
+#         # Validate trước
+#         invalid = [k for k in data if k not in WRITABLE_FIELDS]
+#         if invalid:
+#             raise ValueError(f"Các field không được phép write: {invalid}")
 
-        # Đọc toàn bộ DB hiện tại để patch an toàn
-        raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
-        results = {}
+#         # Đọc toàn bộ DB hiện tại để patch an toàn
+#         raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
+#         results = {}
 
-        for field_name, value in data.items():
-            try:
-                field = DB_MAP[field_name]
+#         for field_name, value in data.items():
+#             try:
+#                 field = DB_MAP[field_name]
 
-                if field.data_type == "BOOL":
-                    byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
-                    set_bool(raw, byte_idx, bit_idx, bool(value))
+#                 if field.data_type == "BOOL":
+#                     byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
+#                     set_bool(raw, byte_idx, bit_idx, bool(value))
 
-                elif field.data_type == "REAL":
-                    packed = self._pack_real(float(value))
-                    raw[field.offset:field.offset + 4] = packed
+#                 elif field.data_type == "REAL":
+#                     packed = self._pack_real(float(value))
+#                     raw[field.offset:field.offset + 4] = packed
 
-                elif field.data_type == "DINT":
-                    packed = self._pack_dint(int(value))
-                    raw[field.offset:field.offset + 4] = packed
+#                 elif field.data_type == "DINT":
+#                     packed = self._pack_dint(int(value))
+#                     raw[field.offset:field.offset + 4] = packed
 
-                elif field.data_type == "INT":
-                    packed = self._pack_int(int(value))
-                    raw[field.offset:field.offset + 2] = packed
+#                 elif field.data_type == "INT":
+#                     packed = self._pack_int(int(value))
+#                     raw[field.offset:field.offset + 2] = packed
 
-                results[field_name] = "ok"
+#                 results[field_name] = "ok"
 
-            except Exception as e:
-                results[field_name] = f"error: {e}"
+#             except Exception as e:
+#                 results[field_name] = f"error: {e}"
 
-        # Chỉ write 1 lần duy nhất
-        self.client.db_write(self.db_number, 0, raw)
-        return results
+#         # Chỉ write 1 lần duy nhất
+#         self.client.db_write(self.db_number, 0, raw)
+#         return results
 
-    # ── Write theo Station (T0 / P1 / P2 / P3) ───────────────────────
-    def write_station(self, station: str, params: dict) -> dict:
-        """
-        Ghi toàn bộ setting cho 1 station.
+#     # ── Write theo Station (T0 / P1 / P2 / P3) ───────────────────────
+#     def write_station(self, station: str, params: dict) -> dict:
+#         """
+#         Ghi toàn bộ setting cho 1 station.
 
-        station = "T0" | "P1" | "P2" | "P3"
-        params  = {
-            "TemperatureSetting": 180.0,
-            "TempLimitHIGH": 190.0,
-            ...
-        }
-        """
-        prefixed = {f"{station}_{k}": v for k, v in params.items()}
-        return self.write_fields(prefixed)
+#         station = "T0" | "P1" | "P2" | "P3"
+#         params  = {
+#             "TemperatureSetting": 180.0,
+#             "TempLimitHIGH": 190.0,
+#             ...
+#         }
+#         """
+#         prefixed = {f"{station}_{k}": v for k, v in params.items()}
+#         return self.write_fields(prefixed)
 
-    # ── Context manager support ───────────────────────────────────────
-    def __enter__(self):
-        self.connect()
-        return self
+#     # ── Context manager support ───────────────────────────────────────
+#     def __enter__(self):
+#         self.connect()
+#         return self
 
-    def __exit__(self, *args):
-        self.disconnect()
+#     def __exit__(self, *args):
+#         self.disconnect()
 
-class PLCReader:
-    def __init__(self, ip: str, rack: int = 0, slot: int = 1, db_number: int = 1):
-        self.client = snap7.client.Client()
-        self.ip = ip
-        self.rack = rack
-        self.slot = slot
-        self.db_number = db_number
-        self.db_size = 580
+# class PLCReader:
+#     def __init__(self, ip: str, rack: int = 0, slot: int = 1, db_number: int = 1):
+#         self.client = snap7.client.Client()
+#         self.ip = ip
+#         self.rack = rack
+#         self.slot = slot
+#         self.db_number = db_number
+#         self.db_size = 580
 
-    def connect(self):
-        self.client.connect(self.ip, self.rack, self.slot)
+#     def connect(self):
+#         self.client.connect(self.ip, self.rack, self.slot)
 
-    def disconnect(self):
-        self.client.disconnect()
+#     def disconnect(self):
+#         self.client.disconnect()
 
-    def is_connected(self) -> bool:
-        return self.client.get_connected()
+#     def is_connected(self) -> bool:
+#         return self.client.get_connected()
 
-    @staticmethod
-    def _parse_field(raw: bytearray, field: DBField, field_name: str | None = None):
-        if field.data_type == "REAL":
-            return get_real(raw, field.offset)
-        elif field.data_type == "DINT":
-            return get_dint(raw, field.offset)
-        elif field.data_type == "INT":
-            return get_int(raw, field.offset)
-        elif field.data_type == "BOOL":
-            if field_name is None:
-                raise ValueError("field_name is required for BOOL fields")
-            byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
-            return get_bool(raw, byte_idx, bit_idx)
-        elif field.data_type == "STRING":
-            return get_string(raw, field.offset)
-        else:
-            raise TypeError(f"Không hỗ trợ đọc type: {field.data_type}")
+#     @staticmethod
+#     def _parse_field(raw: bytearray, field: DBField, field_name: str | None = None):
+#         if field.data_type == "REAL":
+#             return get_real(raw, field.offset)
+#         elif field.data_type == "DINT":
+#             return get_dint(raw, field.offset)
+#         elif field.data_type == "INT":
+#             return get_int(raw, field.offset)
+#         elif field.data_type == "BOOL":
+#             if field_name is None:
+#                 raise ValueError("field_name is required for BOOL fields")
+#             byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
+#             return get_bool(raw, byte_idx, bit_idx)
+#         elif field.data_type == "STRING":
+#             return get_string(raw, field.offset)
+#         else:
+#             raise TypeError(f"Không hỗ trợ đọc type: {field.data_type}")
 
-    # ── Read toàn bộ DB 1 lần ────────────────────────────────────────
-    def read_all(self) -> dict:
-        """
-        Đọc toàn bộ DB, trả về dict đầy đủ tất cả fields.
-        """
-        raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
-        result = {}
-        for field_name, field in DB_MAP.items():
-            try:
-                result[field_name] = self._parse_field(raw, field, field_name)
-            except Exception as e:
-                result[field_name] = f"error: {e}"
-        return result
+#     # ── Read toàn bộ DB 1 lần ────────────────────────────────────────
+#     def read_all(self) -> dict:
+#         """
+#         Đọc toàn bộ DB, trả về dict đầy đủ tất cả fields.
+#         """
+#         raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
+#         result = {}
+#         for field_name, field in DB_MAP.items():
+#             try:
+#                 result[field_name] = self._parse_field(raw, field, field_name)
+#             except Exception as e:
+#                 result[field_name] = f"error: {e}"
+#         return result
 
-    # ── Read 1 field đơn lẻ ──────────────────────────────────────────
-    def read_field(self, field_name: str):
-        """
-        Đọc 1 field theo tên.
-        Chỉ đọc đúng số byte cần thiết → nhanh hơn read_all.
-        """
-        if field_name not in DB_MAP:
-            raise KeyError(f"'{field_name}' không tồn tại trong DB_MAP")
+#     # ── Read 1 field đơn lẻ ──────────────────────────────────────────
+#     def read_field(self, field_name: str):
+#         """
+#         Đọc 1 field theo tên.
+#         Chỉ đọc đúng số byte cần thiết → nhanh hơn read_all.
+#         """
+#         if field_name not in DB_MAP:
+#             raise KeyError(f"'{field_name}' không tồn tại trong DB_MAP")
 
-        field = DB_MAP[field_name]
+#         field = DB_MAP[field_name]
 
-        if field.data_type == "BOOL":
-            byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
-            raw = bytearray(self.client.db_read(self.db_number, byte_idx, 1))
-            # Tạo bytearray tạm để _parse_field không bị lệch offset
-            temp = bytearray(byte_idx + 1)
-            temp[byte_idx] = raw[0]
-            return get_bool(temp, byte_idx, bit_idx)
+#         if field.data_type == "BOOL":
+#             byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
+#             raw = bytearray(self.client.db_read(self.db_number, byte_idx, 1))
+#             # Tạo bytearray tạm để _parse_field không bị lệch offset
+#             temp = bytearray(byte_idx + 1)
+#             temp[byte_idx] = raw[0]
+#             return get_bool(temp, byte_idx, bit_idx)
 
-        elif field.data_type == "STRING":
-            # String cần đọc từ offset đến hết
-            raw = bytearray(self.client.db_read(self.db_number, field.offset, field.size))
-            temp = bytearray(field.offset + field.size)
-            temp[field.offset:field.offset + field.size] = raw
-            return get_string(temp, field.offset)
+#         elif field.data_type == "STRING":
+#             # String cần đọc từ offset đến hết
+#             raw = bytearray(self.client.db_read(self.db_number, field.offset, field.size))
+#             temp = bytearray(field.offset + field.size)
+#             temp[field.offset:field.offset + field.size] = raw
+#             return get_string(temp, field.offset)
 
-        else:
-            raw = bytearray(self.client.db_read(self.db_number, field.offset, field.size))
-            temp = bytearray(field.offset + field.size)
-            temp[field.offset:field.offset + field.size] = raw
-            return self._parse_field(temp, field, field_name)
+#         else:
+#             raw = bytearray(self.client.db_read(self.db_number, field.offset, field.size))
+#             temp = bytearray(field.offset + field.size)
+#             temp[field.offset:field.offset + field.size] = raw
+#             return self._parse_field(temp, field, field_name)
 
-    # ── Read nhiều field cùng lúc ─────────────────────────────────────
-    def read_fields(self, field_names: list) -> dict:
-        """
-        Đọc nhiều field chỉ định. Đọc DB 1 lần duy nhất.
+#     # ── Read nhiều field cùng lúc ─────────────────────────────────────
+#     def read_fields(self, field_names: list) -> dict:
+#         """
+#         Đọc nhiều field chỉ định. Đọc DB 1 lần duy nhất.
 
-        field_names = ["P1_CurrentTemp1", "P1_CurrentPressureHose", "Bit_Alarm"]
-        """
-        invalid = [f for f in field_names if f not in DB_MAP]
-        if invalid:
-            raise KeyError(f"Các field không tồn tại: {invalid}")
+#         field_names = ["P1_CurrentTemp1", "P1_CurrentPressureHose", "Bit_Alarm"]
+#         """
+#         invalid = [f for f in field_names if f not in DB_MAP]
+#         if invalid:
+#             raise KeyError(f"Các field không tồn tại: {invalid}")
 
-        raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
-        return {
-            name: self._parse_field(raw, DB_MAP[name], name)
-            for name in field_names
-        }
+#         raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
+#         return {
+#             name: self._parse_field(raw, DB_MAP[name], name)
+#             for name in field_names
+#         }
 
-    # ── Read theo Station ─────────────────────────────────────────────
-    def read_station(self, station: str) -> dict:
-        """
-        Đọc toàn bộ field của 1 station.
-        station = "T0" | "P1" | "P2" | "P3"
+#     # ── Read theo Station ─────────────────────────────────────────────
+#     def read_station(self, station: str) -> dict:
+#         """
+#         Đọc toàn bộ field của 1 station.
+#         station = "T0" | "P1" | "P2" | "P3"
 
-        Trả về dict đã bỏ prefix, ví dụ:
-        {"CurrentTemp1": 175.3, "CurrentPressureHose": 4.2, ...}
-        """
-        valid_stations = {"T0", "P1", "P2", "P3"}
-        if station not in valid_stations:
-            raise ValueError(f"Station phải là một trong: {valid_stations}")
+#         Trả về dict đã bỏ prefix, ví dụ:
+#         {"CurrentTemp1": 175.3, "CurrentPressureHose": 4.2, ...}
+#         """
+#         valid_stations = {"T0", "P1", "P2", "P3"}
+#         if station not in valid_stations:
+#             raise ValueError(f"Station phải là một trong: {valid_stations}")
 
-        raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
-        prefix = f"{station}_"
-        return {
-            name[len(prefix):]: self._parse_field(raw, field, name)
-            for name, field in DB_MAP.items()
-            if name.startswith(prefix)
-        }
+#         raw = bytearray(self.client.db_read(self.db_number, 0, self.db_size))
+#         prefix = f"{station}_"
+#         return {
+#             name[len(prefix):]: self._parse_field(raw, field, name)
+#             for name, field in DB_MAP.items()
+#             if name.startswith(prefix)
+#         }
 
-    # ── Read chỉ Output (sensor readings) ────────────────────────────
-    def read_outputs(self) -> dict:
-        """
-        Chỉ đọc vùng Output (offset 194~322) + Alarm.
-        Dùng cho vòng lặp realtime chart — đọc ít byte nhất có thể.
-        """
-        OUTPUT_START = 192   # Bit_Alarm
-        OUTPUT_SIZE  = 134   # đến hết P3_NumberTestTimes (322+2)
+#     # ── Read chỉ Output (sensor readings) ────────────────────────────
+#     def read_outputs(self) -> dict:
+#         """
+#         Chỉ đọc vùng Output (offset 194~322) + Alarm.
+#         Dùng cho vòng lặp realtime chart — đọc ít byte nhất có thể.
+#         """
+#         OUTPUT_START = 192   # Bit_Alarm
+#         OUTPUT_SIZE  = 134   # đến hết P3_NumberTestTimes (322+2)
 
-        raw_slice = bytearray(
-            self.client.db_read(self.db_number, OUTPUT_START, OUTPUT_SIZE)
-        )
-        # Pad để offset gốc trong DB_MAP vẫn đúng
-        raw = bytearray(OUTPUT_START) + raw_slice
+#         raw_slice = bytearray(
+#             self.client.db_read(self.db_number, OUTPUT_START, OUTPUT_SIZE)
+#         )
+#         # Pad để offset gốc trong DB_MAP vẫn đúng
+#         raw = bytearray(OUTPUT_START) + raw_slice
 
-        output_fields = [
-            "Bit_Alarm",
-            "T0_CurrentTemp",
-            "P1_CurrentTemp1", "P1_CurrentTemp2", "P1_CurrentTemp3",
-            "P1_CurrentPressureHose", "P1_CurrentPressureITV",
-            "P1_AirFillingTime_Out", "P1_AirHoldingTime_Out", "P1_AirReleaseTime_Out",
-            "P1_OilStartTime_Out", "P1_OilEndTime_Out", "P1_NumberTestTimes",
-            "P2_CurrentTemp1", "P2_CurrentTemp2", "P2_CurrentTemp3",
-            "P2_CurrentPressureHose", "P2_CurrentPressureITV",
-            "P2_AirFillingTime_Out", "P2_AirHoldingTime_Out", "P2_AirReleaseTime_Out",
-            "P2_OilStartTime_Out", "P2_OilEndTime_Out", "P2_NumberTestTimes",
-            "P3_CurrentTemp1", "P3_CurrentTemp2", "P3_CurrentTemp3",
-            "P3_CurrentPressureHose", "P3_CurrentPressureITV",
-            "P3_AirFillingTime_Out", "P3_AirHoldingTime_Out", "P3_AirReleaseTime_Out",
-            "P3_OilStartTime_Out", "P3_OilEndTime_Out", "P3_NumberTestTimes",
-        ]
-        return {
-            name: self._parse_field(raw, DB_MAP[name], name)
-            for name in output_fields
-        }
+#         output_fields = [
+#             "Bit_Alarm",
+#             "T0_CurrentTemp",
+#             "P1_CurrentTemp1", "P1_CurrentTemp2", "P1_CurrentTemp3",
+#             "P1_CurrentPressureHose", "P1_CurrentPressureITV",
+#             "P1_AirFillingTime_Out", "P1_AirHoldingTime_Out", "P1_AirReleaseTime_Out",
+#             "P1_OilStartTime_Out", "P1_OilEndTime_Out", "P1_NumberTestTimes",
+#             "P2_CurrentTemp1", "P2_CurrentTemp2", "P2_CurrentTemp3",
+#             "P2_CurrentPressureHose", "P2_CurrentPressureITV",
+#             "P2_AirFillingTime_Out", "P2_AirHoldingTime_Out", "P2_AirReleaseTime_Out",
+#             "P2_OilStartTime_Out", "P2_OilEndTime_Out", "P2_NumberTestTimes",
+#             "P3_CurrentTemp1", "P3_CurrentTemp2", "P3_CurrentTemp3",
+#             "P3_CurrentPressureHose", "P3_CurrentPressureITV",
+#             "P3_AirFillingTime_Out", "P3_AirHoldingTime_Out", "P3_AirReleaseTime_Out",
+#             "P3_OilStartTime_Out", "P3_OilEndTime_Out", "P3_NumberTestTimes",
+#         ]
+#         return {
+#             name: self._parse_field(raw, DB_MAP[name], name)
+#             for name in output_fields
+#         }
 
-    # ── Context manager ───────────────────────────────────────────────
-    def __enter__(self):
-        self.connect()
-        return self
+#     # ── Context manager ───────────────────────────────────────────────
+#     def __enter__(self):
+#         self.connect()
+#         return self
 
-    def __exit__(self, *args):
-        self.disconnect()
+#     def __exit__(self, *args):
+#         self.disconnect()
 
 class StrikeMachine(QMainWindow):
 
@@ -382,14 +383,14 @@ class StrikeMachine(QMainWindow):
 
     def _init_app_data(self):
         self.plc_clients = [
-                            syss.plc_client_1, 
-                            syss.plc_client_2, 
-                            syss.plc_client_3, 
-                            syss.plc_client_4, 
-                            syss.plc_client_5, 
-                            syss.plc_client_6
-                            ]
-        
+            syss.plc_client_1, 
+            syss.plc_client_2, 
+            syss.plc_client_3, 
+            syss.plc_client_4, 
+            syss.plc_client_5, 
+            syss.plc_client_6
+        ]
+
         self.thread_dict = {}
 
         # Group A
@@ -769,7 +770,7 @@ class StrikeMachine(QMainWindow):
     def _setup_plc_thread(self):
         """Thiết lập Thread và Worker cho PLC"""
         self.plc_thread = QThread()
-        self.plc_worker = PLCWorker(
+        self.plc_worker = PLCRead(
             ip="192.168.0.1", 
             db_number=1, 
             interval_ms=500
@@ -896,13 +897,12 @@ class StrikeMachine(QMainWindow):
         self.temp_pv_obj[0].setValue(self.for_display_temp(pv_avg))
         
         group_a_values = [self.ui.pressure_sv_a_2.value(),
+                            self.for_display_temp(list_group_a_recv[0]),
+                            self.for_display_temp(list_group_a_recv[1]),
                             self.for_display_temp(list_group_a_recv[2]),
-                            self.for_display_temp(list_group_a_recv[3]),
-                            self.for_display_temp(list_group_a_recv[4]),
-                            list_group_a_recv[0]]
+                            list_group_a_recv[3]]
         self.chart_pressure_a.append_data(group_a_values)
-
-        # Gán toàn bộ giá trị từ list_group_a_recv vào self.group_a_pv_dict (theo thứ tự key)
+        
         pv_keys = list(self.group_a_pv_dict.keys())
         for i, key in enumerate(pv_keys):
             if i < len(list_group_a_recv):
@@ -910,10 +910,10 @@ class StrikeMachine(QMainWindow):
         self.temp_pv_obj[1].setValue(self.for_display_temp(list_group_a_recv[1]))
 
         group_b_values = [self.ui.pressure_sv_b_2.value(),
+                        self.for_display_temp(list_group_b_recv[0]),
+                        self.for_display_temp(list_group_b_recv[1]),
                         self.for_display_temp(list_group_b_recv[2]),
-                        self.for_display_temp(list_group_b_recv[3]),
-                        self.for_display_temp(list_group_b_recv[4]),
-                        list_group_b_recv[0]
+                        list_group_b_recv[3]
                         ]
         self.chart_pressure_b.append_data(group_b_values)
 
@@ -925,10 +925,10 @@ class StrikeMachine(QMainWindow):
 
 
         group_c_values = [self.ui.pressure_sv_c_2.value(),
+                        self.for_display_temp(list_group_c_recv[0]),
+                        self.for_display_temp(list_group_c_recv[1]),
                         self.for_display_temp(list_group_c_recv[2]),
-                        self.for_display_temp(list_group_c_recv[3]),
-                        self.for_display_temp(list_group_c_recv[4]),
-                        list_group_c_recv[0]]
+                        list_group_c_recv[3]]
         self.chart_pressure_c.append_data(group_c_values)
 
         pv_keys_c = list(self.group_c_pv_dict.keys())
