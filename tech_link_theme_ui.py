@@ -453,6 +453,7 @@ class Ui_MainWindow(object):
         self.temp_press_page = QWidget()
         self.temp_press_page.setObjectName(u"temp_press_page")
         self.verticalLayout_12 = QVBoxLayout(self.temp_press_page)
+        self.verticalLayout_12.setSpacing(5)
         self.verticalLayout_12.setObjectName(u"verticalLayout_12")
         self.verticalLayout_12.setContentsMargins(0, 0, 0, 0)
         self.pressure_page_header = QWidget(self.temp_press_page)
@@ -4159,8 +4160,8 @@ class Ui_MainWindow(object):
         self.cycle_a_displ.setAlignment(Qt.AlignCenter)
         self.cycle_a_displ.setReadOnly(True)
         self.cycle_a_displ.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.cycle_a_displ.setMaximum(999999)
-        self.cycle_a_displ.setValue(999999)
+        self.cycle_a_displ.setMaximum(9999999)
+        self.cycle_a_displ.setValue(0)
 
         self.horizontalLayout_12.addWidget(self.cycle_a_displ)
 
@@ -4310,8 +4311,8 @@ class Ui_MainWindow(object):
         self.cycle_b_displ.setAlignment(Qt.AlignCenter)
         self.cycle_b_displ.setReadOnly(True)
         self.cycle_b_displ.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.cycle_b_displ.setMaximum(999999)
-        self.cycle_b_displ.setValue(999999)
+        self.cycle_b_displ.setMaximum(9999999)
+        self.cycle_b_displ.setValue(0)
         self.cycle_b_displ.setDisplayIntegerBase(10)
 
         self.horizontalLayout_13.addWidget(self.cycle_b_displ)
@@ -4458,8 +4459,8 @@ class Ui_MainWindow(object):
         self.cycle_c_displ.setAlignment(Qt.AlignCenter)
         self.cycle_c_displ.setReadOnly(True)
         self.cycle_c_displ.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.cycle_c_displ.setMaximum(999999)
-        self.cycle_c_displ.setValue(999999)
+        self.cycle_c_displ.setMaximum(9999999)
+        self.cycle_c_displ.setValue(0)
         self.cycle_c_displ.setDisplayIntegerBase(10)
 
         self.horizontalLayout_11.addWidget(self.cycle_c_displ)
@@ -9625,9 +9626,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(2)
+        self.stackedWidget_2.setCurrentIndex(1)
         self.sys_state_stacked_wid_39.setCurrentIndex(2)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_2.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_3.setCurrentIndex(0)

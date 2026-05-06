@@ -19,12 +19,13 @@ import socket
 import atexit
 import struct
 import snap7
+import plc_data as db_data
 from snap7.util import set_bool, get_real, get_dint, get_int, get_bool, get_string
 from dataclasses import dataclass
 from PySide6.QtCore import (Qt, QTimer, QMutex, 
                             QSettings, QDateTime, QCoreApplication,
                             QEvent, QUrl, QSharedMemory, 
-                            QSystemSemaphore, QThread, QTranslator)
+                            QSystemSemaphore, QThread, QTranslator, Slot)
 from PySide6.QtGui import QPalette, QColor, QPainter, QFont, QGuiApplication
 from PySide6.QtWidgets import (
     QWidget, QGridLayout, QFormLayout, QPushButton, QHBoxLayout, QVBoxLayout, QHeaderView, 
@@ -43,6 +44,7 @@ from spline_chart import SplineChartWidget
 from Custom_Chart_Widgets import CustomChartWidget
 from System_Data import syss
 from Data_Simulator import DataSimulator
+from query_plc_thread import PLCWorker, PLCState
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
@@ -55,170 +57,6 @@ def resource_path(relative_path):
         base_path = os.path.abspath(os.path.dirname(__file__))
     
     return os.path.join(base_path, relative_path)
-@dataclass
-class DBField:
-    offset: int
-    size: int
-    data_type: str  # 'REAL', 'DINT', 'INT', 'BOOL', 'STRING'
-
-
-# ─── Full DB Map (từ bảng địa chỉ) ───────────────────────────────────
-DB_MAP = {
-    # Bit Input
-    "START":                  DBField(0,   1, "BOOL"),
-    "STOP":                   DBField(0,   1, "BOOL"),
-    "T0_StartHeat":           DBField(0,   1, "BOOL"),
-    "T0_StopHeat":            DBField(0,   1, "BOOL"),
-    "P1_StartHeat":           DBField(0,   1, "BOOL"),
-    "P1_StartPressure":       DBField(0,   1, "BOOL"),
-    "P1_StartOil":            DBField(0,   1, "BOOL"),
-    "P1_BitCountTimes":       DBField(0,   1, "BOOL"),
-    "P2_StartHeat":           DBField(1,   1, "BOOL"),
-    "P2_StartPressure":       DBField(1,   1, "BOOL"),
-    "P2_StartOil":            DBField(1,   1, "BOOL"),
-    "P2_BitCountTimes":       DBField(1,   1, "BOOL"),
-    "P3_StartHeat":           DBField(1,   1, "BOOL"),
-    "P3_StartPressure":       DBField(1,   1, "BOOL"),
-    "P3_StartOil":            DBField(1,   1, "BOOL"),
-    "P3_BitCountTimes":       DBField(1,   1, "BOOL"),
-
-    # Input - T0
-    "T0_TemperatureSetting":  DBField(2,   4, "REAL"),
-    "T0_TempLimitHIGH":       DBField(6,   4, "REAL"),
-    "T0_TempLimitLOW":        DBField(10,  4, "REAL"),
-    "T0_TempOffset":          DBField(14,  4, "REAL"),
-
-    # Input - P1
-    "P1_TemperatureSetting":  DBField(18,  4, "REAL"),
-    "P1_TempLimitHIGH":       DBField(22,  4, "REAL"),
-    "P1_TempLimitLOW":        DBField(26,  4, "REAL"),
-    "P1_Temp1Offset":         DBField(30,  4, "REAL"),
-    "P1_Temp2Offset":         DBField(34,  4, "REAL"),
-    "P1_Temp3Offset":         DBField(38,  4, "REAL"),
-    "P1_PressureSetting":     DBField(42,  4, "REAL"),
-    "P1_PressureHoseOffset":  DBField(46,  4, "REAL"),
-    "P1_PressureITVOffset":   DBField(50,  4, "REAL"),
-    "P1_AirFillingTime":      DBField(54,  4, "DINT"),
-    "P1_AirHoldingTime":      DBField(58,  4, "DINT"),
-    "P1_AirReleaseTime":      DBField(62,  4, "DINT"),
-    "P1_OilStartTime":        DBField(66,  4, "DINT"),
-    "P1_OilEndTime":          DBField(70,  4, "DINT"),
-    "P1_CountTimes":          DBField(74,  2, "INT"),
-
-    # Input - P2
-    "P2_TemperatureSetting":  DBField(76,  4, "REAL"),
-    "P2_TempLimitHIGH":       DBField(80,  4, "REAL"),
-    "P2_TempLimitLOW":        DBField(84,  4, "REAL"),
-    "P2_Temp1Offset":         DBField(88,  4, "REAL"),
-    "P2_Temp2Offset":         DBField(92,  4, "REAL"),
-    "P2_Temp3Offset":         DBField(96,  4, "REAL"),
-    "P2_PressureSetting":     DBField(100, 4, "REAL"),
-    "P2_PressureHoseOffset":  DBField(104, 4, "REAL"),
-    "P2_PressureITVOffset":   DBField(108, 4, "REAL"),
-    "P2_AirFillingTime":      DBField(112, 4, "DINT"),
-    "P2_AirHoldingTime":      DBField(116, 4, "DINT"),
-    "P2_AirReleaseTime":      DBField(120, 4, "DINT"),
-    "P2_OilStartTime":        DBField(124, 4, "DINT"),
-    "P2_OilEndTime":          DBField(128, 4, "DINT"),
-    "P2_CountTimes":          DBField(132, 2, "INT"),
-
-    # Input - P3
-    "P3_TemperatureSetting":  DBField(134, 4, "REAL"),
-    "P3_TempLimitHIGH":       DBField(138, 4, "REAL"),
-    "P3_TempLimitLOW":        DBField(142, 4, "REAL"),
-    "P3_Temp1Offset":         DBField(146, 4, "REAL"),
-    "P3_Temp2Offset":         DBField(150, 4, "REAL"),
-    "P3_Temp3Offset":         DBField(154, 4, "REAL"),
-    "P3_PressureSetting":     DBField(158, 4, "REAL"),
-    "P3_PressureHoseOffset":  DBField(162, 4, "REAL"),
-    "P3_PressureITVOffset":   DBField(166, 4, "REAL"),
-    "P3_AirFillingTime":      DBField(170, 4, "DINT"),
-    "P3_AirHoldingTime":      DBField(174, 4, "DINT"),
-    "P3_AirReleaseTime":      DBField(178, 4, "DINT"),
-    "P3_OilStartTime":        DBField(182, 4, "DINT"),
-    "P3_OilEndTime":          DBField(186, 4, "DINT"),
-    "P3_CountTimes":          DBField(190, 2, "INT"),
-
-    # Bit Output
-    "Bit_Alarm":              DBField(192, 1, "BOOL"),
-
-    # Output
-    "T0_CurrentTemp":         DBField(194, 4, "REAL"),
-    "P1_CurrentTemp1":        DBField(198, 4, "REAL"),
-    "P1_CurrentTemp2":        DBField(202, 4, "REAL"),
-    "P1_CurrentTemp3":        DBField(206, 4, "REAL"),
-    "P1_CurrentPressureHose": DBField(210, 4, "REAL"),
-    "P1_CurrentPressureITV":  DBField(214, 4, "REAL"),
-    "P1_AirFillingTime_Out":  DBField(218, 4, "DINT"),
-    "P1_AirHoldingTime_Out":  DBField(222, 4, "DINT"),
-    "P1_AirReleaseTime_Out":  DBField(226, 4, "DINT"),
-    "P1_OilStartTime_Out":    DBField(230, 4, "DINT"),
-    "P1_OilEndTime_Out":      DBField(234, 4, "DINT"),
-    "P1_NumberTestTimes":     DBField(238, 2, "INT"),
-    "P2_CurrentTemp1":        DBField(240, 4, "REAL"),
-    "P2_CurrentTemp2":        DBField(244, 4, "REAL"),
-    "P2_CurrentTemp3":        DBField(248, 4, "REAL"),
-    "P2_CurrentPressureHose": DBField(252, 4, "REAL"),
-    "P2_CurrentPressureITV":  DBField(256, 4, "REAL"),
-    "P2_AirFillingTime_Out":  DBField(260, 4, "DINT"),
-    "P2_AirHoldingTime_Out":  DBField(264, 4, "DINT"),
-    "P2_AirReleaseTime_Out":  DBField(268, 4, "DINT"),
-    "P2_OilStartTime_Out":    DBField(272, 4, "DINT"),
-    "P2_OilEndTime_Out":      DBField(276, 4, "DINT"),
-    "P2_NumberTestTimes":     DBField(280, 2, "INT"),
-    "P3_CurrentTemp1":        DBField(282, 4, "REAL"),
-    "P3_CurrentTemp2":        DBField(286, 4, "REAL"),
-    "P3_CurrentTemp3":        DBField(290, 4, "REAL"),
-    "P3_CurrentPressureHose": DBField(294, 4, "REAL"),
-    "P3_CurrentPressureITV":  DBField(298, 4, "REAL"),
-    "P3_AirFillingTime_Out":  DBField(302, 4, "DINT"),
-    "P3_AirHoldingTime_Out":  DBField(306, 4, "DINT"),
-    "P3_AirReleaseTime_Out":  DBField(310, 4, "DINT"),
-    "P3_OilStartTime_Out":    DBField(314, 4, "DINT"),
-    "P3_OilEndTime_Out":      DBField(318, 4, "DINT"),
-    "P3_NumberTestTimes":     DBField(322, 2, "INT"),
-    "Alarm_Info":             DBField(324, 256, "STRING"),
-}
-
-# Bool cần byte + bit index riêng
-BOOL_BIT_INDEX = {
-    "START":            (0, 0), "STOP":             (0, 1),
-    "T0_StartHeat":     (0, 2), "T0_StopHeat":      (0, 3),
-    "P1_StartHeat":     (0, 4), "P1_StartPressure": (0, 5),
-    "P1_StartOil":      (0, 6), "P1_BitCountTimes": (0, 7),
-    "P2_StartHeat":     (1, 0), "P2_StartPressure": (1, 1),
-    "P2_StartOil":      (1, 2), "P2_BitCountTimes": (1, 3),
-    "P3_StartHeat":     (1, 4), "P3_StartPressure": (1, 5),
-    "P3_StartOil":      (1, 6), "P3_BitCountTimes": (1, 7),
-    "Bit_Alarm":        (192, 0),
-}
-
-# Chỉ các field được phép WRITE từ Python (Input section)
-WRITABLE_FIELDS = {
-    "T0_TemperatureSetting", "T0_TempLimitHIGH", "T0_TempLimitLOW", "T0_TempOffset",
-    "P1_TemperatureSetting", "P1_TempLimitHIGH", "P1_TempLimitLOW",
-    "P1_Temp1Offset", "P1_Temp2Offset", "P1_Temp3Offset",
-    "P1_PressureSetting", "P1_PressureHoseOffset", "P1_PressureITVOffset",
-    "P1_AirFillingTime", "P1_AirHoldingTime", "P1_AirReleaseTime",
-    "P1_OilStartTime", "P1_OilEndTime", "P1_CountTimes",
-    "P2_TemperatureSetting", "P2_TempLimitHIGH", "P2_TempLimitLOW",
-    "P2_Temp1Offset", "P2_Temp2Offset", "P2_Temp3Offset",
-    "P2_PressureSetting", "P2_PressureHoseOffset", "P2_PressureITVOffset",
-    "P2_AirFillingTime", "P2_AirHoldingTime", "P2_AirReleaseTime",
-    "P2_OilStartTime", "P2_OilEndTime", "P2_CountTimes",
-    "P3_TemperatureSetting", "P3_TempLimitHIGH", "P3_TempLimitLOW",
-    "P3_Temp1Offset", "P3_Temp2Offset", "P3_Temp3Offset",
-    "P3_PressureSetting", "P3_PressureHoseOffset", "P3_PressureITVOffset",
-    "P3_AirFillingTime", "P3_AirHoldingTime", "P3_AirReleaseTime",
-    "P3_OilStartTime", "P3_OilEndTime", "P3_CountTimes",
-    # Bit inputs (lệnh điều khiển)
-    "START", "STOP",
-    "T0_StartHeat", "T0_StopHeat",
-    "P1_StartHeat", "P1_StartPressure", "P1_StartOil", "P1_BitCountTimes",
-    "P2_StartHeat", "P2_StartPressure", "P2_StartOil", "P2_BitCountTimes",
-    "P3_StartHeat", "P3_StartPressure", "P3_StartOil", "P3_BitCountTimes",
-}
-
 
 class PLCWriter:
     def __init__(self, ip: str, rack: int = 0, slot: int = 1, db_number: int = 1):
@@ -377,7 +215,7 @@ class PLCReader:
         return self.client.get_connected()
 
     @staticmethod
-    def _parse_field(raw: bytearray, field: DBField, field_name: str = None):
+    def _parse_field(raw: bytearray, field: DBField, field_name: str | None = None):
         if field.data_type == "REAL":
             return get_real(raw, field.offset)
         elif field.data_type == "DINT":
@@ -385,6 +223,8 @@ class PLCReader:
         elif field.data_type == "INT":
             return get_int(raw, field.offset)
         elif field.data_type == "BOOL":
+            if field_name is None:
+                raise ValueError("field_name is required for BOOL fields")
             byte_idx, bit_idx = BOOL_BIT_INDEX[field_name]
             return get_bool(raw, byte_idx, bit_idx)
         elif field.data_type == "STRING":
@@ -552,105 +392,109 @@ class StrikeMachine(QMainWindow):
         
         self.thread_dict = {}
 
-        self.group_a_dict = {
+        # Group A
+        self.group_a_pv_dict = {
+            "Front PV Temp A": 0.0,
+            "Middle PV Temp A": 0.0,
+            "Back PV Temp A": 0.0,
+            "Pressure PV A": 0.0,
+            "Pressure ITV A": 0.0,
+            "Filling Time PV A": 0,
+            "G.Holding Time PV A": 0,
+            "Bleeding Time PV A": 0,
+            "Refueling Start PV A": 0,
+            "Refueling End PV A": 0,
+            "Number Test Times A": 0,
+        }
+        self.group_a_sv_dict = {
             "Refueling Start SV A": 10.0,
             "Refueling End SV A": 20.0,
             "Filling Time SV A": 5.0,
             "G.Holding Time SV A": 3.0,
             "Bleeding Time SV A": 12.0,
-            "Pressure PV A": 30.0,
             "Pressure SV A": 45.0,
-
-            "Air Inlet High Alm A": 240.0,
-            "Air Inlet PV Temp A": 0.0,
-            "Air Inlet Low Alm A": 200.0,
-            "Air Inlet SV Temp A": 0.0,
-            "Air Inlet Offset A": 0.0,
-
             "Front High Alm A": 240.0,
-            "Front PV Temp A": 0.0,
             "Front Low Alm A": 200.0,
             "Front SV Temp A": 0.0,
             "Front Offset A": 0.0,
-
             "Middle High Alm A": 240.0,
-            "Middle PV Temp A": 0.0,
             "Middle Low Alm A": 200.0,
             "Middle SV Temp A": 0.0,
             "Middle Offset A": 0.0,
-
             "Back High Alm A": 243.0,
-            "Back PV Temp A": 0.0,
             "Back Low Alm A": 203.0,
             "Back SV Temp A": 0.0,
             "Back Offset A": 0.0
         }
-        self.group_b_dict = {
+
+        # Group B
+        self.group_b_pv_dict = {
+            "Front PV Temp B": 0.0,
+            "Middle PV Temp B": 0.0,
+            "Back PV Temp B": 0.0,
+            "Pressure PV B": 0.0,
+            "Pressure ITV B": 0.0,
+            "Filling Time PV B": 0,
+            "G.Holding Time PV B": 0,
+            "Bleeding Time PV B": 0,
+            "Refueling Start PV B": 0,
+            "Refueling End PV B": 0,
+            "Number Test Times B": 0
+        }
+        self.group_b_sv_dict = {
             "Refueling Start B": 0.0,
             "Refueling End B": 0.0,
             "Filling Time B": 0.0,
             "G.Holding Time B": 0.0,
             "Bleeding Time B": 0.0,
-            "Pressure PV B": 0.0,
             "Pressure SV B": 0.0,
-
-            "Air Inlet High Alm B": 0.0,
-            "Air Inlet PV Temp B": 0.0,
-            "Air Inlet Low Alm B": 0.0,
-            "Air Inlet SV Temp B": 0.0,
-            "Air Inlet Offset B": 0.0,
-
             "Front High Alm B": 0.0,
-            "Front PV Temp B": 0.0,
             "Front Low Alm B": 0.0,
             "Front SV Temp B": 0.0,
             "Front Offset B": 0.0,
-
             "Middle High Alm B": 0.0,
-            "Middle PV Temp B": 0.0,
             "Middle Low Alm B": 0.0,
             "Middle SV Temp B": 0.0,
             "Middle Offset B": 0.0,
-
             "Back High Alm B": 0.0,
-            "Back PV Temp B": 0.0,
             "Back Low Alm B": 0.0,
             "Back SV Temp B": 0.0,
             "Back Offset B": 0.0
         }
-        self.group_c_dict = {
+
+        # Group C
+        self.group_c_pv_dict = {
+            "Front PV Temp C": 0.0,
+            "Middle PV Temp C": 0.0,
+            "Back PV Temp C": 0.0,
+            "Pressure PV C": 0.0,
+            "Pressure ITV C": 0.0,
+            "Filling Time PV C": 0,
+            "G.Holding Time PV C": 0,
+            "Bleeding Time PV C": 0,
+            "Refueling Start PV C": 0,
+            "Refueling End PV C": 0,
+            "Number Test Times C": 0,
+        }
+        self.group_c_sv_dict = {
             "Refueling Start C": 0.0,
             "Refueling End C": 0.0,
             "Filling Time C": 0.0,
             "G.Holding Time C": 0.0,
             "Bleeding Time C": 0.0,
-            "Pressure PV C": 0.0,
             "Pressure SV C": 0.0,
-
-            "Air Inlet High Alm C": 0.0,
-            "Air Inlet PV Temp C": 0.0,
-            "Air Inlet Low Alm C": 0.0,
-            "Air Inlet SV Temp C": 0.0,
-            "Air Inlet Offset C": 0.0,
-
             "Front High Alm C": 0.0,
-            "Front PV Temp C": 0.0,
             "Front Low Alm C": 0.0,
             "Front SV Temp C": 0.0,
             "Front Offset C": 0.0,
-
             "Middle High Alm C": 0.0,
-            "Middle PV Temp C": 0.0,
             "Middle Low Alm C": 0.0,
             "Middle SV Temp C": 0.0,
             "Middle Offset C": 0.0,
-
             "Back High Alm C": 0.0,
-            "Back PV Temp C": 0.0,
             "Back Low Alm C": 0.0,
             "Back SV Temp C": 0.0,
             "Back Offset C": 0.0
-
         }
 
         self.default_temp_room = 25.0
@@ -921,6 +765,179 @@ class StrikeMachine(QMainWindow):
         except Exception as e:
             return False
         return True
+    
+    def _setup_plc_thread(self):
+        """Thiết lập Thread và Worker cho PLC"""
+        self.plc_thread = QThread()
+        self.plc_worker = PLCWorker(
+            ip="192.168.0.1", 
+            db_number=1, 
+            interval_ms=500
+        )
+        
+        # Chuyển worker sang thread riêng
+        self.plc_worker.moveToThread(self.plc_thread)
+
+        # === KẾT NỐI SIGNAL ===
+        self.plc_thread.started.connect(self.plc_worker.start)        # ← start() thay vì start_polling()
+
+        self.plc_worker.data_received.connect(self._on_data)
+        self.plc_worker.write_done.connect(self._on_write_done)
+        self.plc_worker.state_changed.connect(self._on_state_changed)
+        self.plc_worker.error.connect(self._on_error)
+
+        # Nếu bạn vẫn muốn dùng Signal từ UI để ghi
+        self.sig_write_field.connect(self.plc_worker.write)           # ← Đổi thành write()
+        # self.sig_write_fields.connect(...)                          # Nếu cần batch thì giữ hoặc bỏ
+
+        # Khởi động thread
+        self.plc_thread.start()
+
+    @Slot(dict)
+    def on_plc_data_received(self, data: dict):
+        """Đây là nơi nhận toàn bộ dữ liệu từ PLC"""
+        
+        # Cách an toàn nhất (dùng .get() để tránh lỗi nếu key không tồn tại)
+        try:
+            t0_data_list = [
+                data.get('T0_CurrentTemp', 0.0)
+            ]
+            p1_data_list = [
+                data.get('P1_CurrentTemp1', 0.0),
+                data.get('P1_CurrentTemp2', 0.0),
+                data.get('P1_CurrentTemp3', 0.0),
+                data.get('P1_CurrentPressureHose', 0.0),
+                data.get('P1_CurrentPressureITV', 0.0),
+                data.get('P1_AirFillingTime_Out', 0),
+                data.get('P1_AirHoldingTime_Out', 0),
+                data.get('P1_AirReleaseTime_Out', 0),
+                data.get('P1_OilStartTime_Out', 0),
+                data.get('P1_OilEndTime_Out', 0),
+                data.get('P1_NumberTestTimes', 0)
+            ]
+            p2_data_list = [
+                data.get('P2_CurrentTemp1', 0.0),
+                data.get('P2_CurrentTemp2', 0.0),
+                data.get('P2_CurrentTemp3', 0.0),
+                data.get('P2_CurrentPressureHose', 0.0),
+                data.get('P2_CurrentPressureITV', 0.0),
+                data.get('P2_AirFillingTime_Out', 0),
+                data.get('P2_AirHoldingTime_Out', 0),
+                data.get('P2_AirReleaseTime_Out', 0),
+                data.get('P2_OilStartTime_Out', 0),
+                data.get('P2_OilEndTime_Out', 0),
+                data.get('P2_NumberTestTimes', 0)
+            ]
+            p3_data_list = [
+                data.get('P3_CurrentTemp1', 0.0),
+                data.get('P3_CurrentTemp2', 0.0),
+                data.get('P3_CurrentTemp3', 0.0),
+                data.get('P3_CurrentPressureHose', 0.0),
+                data.get('P3_CurrentPressureITV', 0.0),
+                data.get('P3_AirFillingTime_Out', 0),
+                data.get('P3_AirHoldingTime_Out', 0),
+                data.get('P3_AirReleaseTime_Out', 0),
+                data.get('P3_OilStartTime_Out', 0),
+                data.get('P3_OilEndTime_Out', 0),
+                data.get('P3_NumberTestTimes', 0)
+            ]
+            alarm = data.get('Bit_Alarm', False)
+            alarm_info = data.get('Alarm_Info', "")
+
+            self._data_filter(t0_data_list, p1_data_list, p2_data_list, p3_data_list)
+
+        except Exception as e:
+            print("Lỗi khi xử lý dữ liệu PLC:", e)
+
+    def _data_group_filter(self, list_group_a_recv, list_group_b_recv, list_group_c_recv):
+        if not isinstance(list_group_a_recv, list) and not isinstance(list_group_b_recv, list) and not isinstance(list_group_c_recv, list):
+            return
+        pv_avg = (list_group_a_recv[0] + list_group_b_recv[1] + list_group_c_recv[1]) / 3
+        temp_values = [((self.ui.pressure_sv_a_2.value() + self.ui.pressure_sv_b_2.value() + self.ui.pressure_sv_c_2.value())/3),
+                    self.for_display_temp(pv_avg)]
+        self.chart_temp.append_data(temp_values)
+        self.temp_pv_obj[0].setValue(self.for_display_temp(pv_avg))
+        
+        group_a_values = [self.ui.pressure_sv_a_2.value(),
+                            self.for_display_temp(list_group_a_recv[2]),
+                            self.for_display_temp(list_group_a_recv[3]),
+                            self.for_display_temp(list_group_a_recv[4]),
+                            list_group_a_recv[0]]
+        self.chart_pressure_a.append_data(group_a_values)
+
+        self.temp_pv_obj[1].setValue(self.for_display_temp(list_group_a_recv[1]))
+
+        group_b_values = [self.ui.pressure_sv_b_2.value(),
+                        self.for_display_temp(list_group_b_recv[2]),
+                        self.for_display_temp(list_group_b_recv[3]),
+                        self.for_display_temp(list_group_b_recv[4]),
+                        list_group_b_recv[0]
+                        ]
+        self.chart_pressure_b.append_data(group_b_values)
+        self.temp_pv_obj[2].setValue(self.for_display_temp(list_group_b_recv[1]))
+
+        group_c_values = [self.ui.pressure_sv_c_2.value(),
+                        self.for_display_temp(list_group_c_recv[2]),
+                        self.for_display_temp(list_group_c_recv[3]),
+                        self.for_display_temp(list_group_c_recv[4]),
+                        list_group_c_recv[0]]
+        self.chart_pressure_c.append_data(group_c_values)
+        self.temp_pv_obj[3].setValue(self.for_display_temp(list_group_c_recv[1]))
+
+        self.timer_stacked_pressure_page.singleShot(0, lambda: self._set_pv_data(list_group_a_recv, list_group_b_recv, list_group_c_recv))
+
+    def _data_filter(self, list_group_0_recv, list_group_a_recv, list_group_b_recv, list_group_c_recv):
+        if not isinstance(list_group_a_recv, list) and not isinstance(list_group_b_recv, list) and not isinstance(list_group_c_recv, list):
+            return
+        pv_avg = list_group_0_recv[0]
+        temp_values = [((self.ui.pressure_sv_a_2.value() + self.ui.pressure_sv_b_2.value() + self.ui.pressure_sv_c_2.value())/3),
+                    self.for_display_temp(pv_avg)]
+        self.chart_temp.append_data(temp_values)
+        self.temp_pv_obj[0].setValue(self.for_display_temp(pv_avg))
+        
+        group_a_values = [self.ui.pressure_sv_a_2.value(),
+                            self.for_display_temp(list_group_a_recv[2]),
+                            self.for_display_temp(list_group_a_recv[3]),
+                            self.for_display_temp(list_group_a_recv[4]),
+                            list_group_a_recv[0]]
+        self.chart_pressure_a.append_data(group_a_values)
+
+        # Gán toàn bộ giá trị từ list_group_a_recv vào self.group_a_pv_dict (theo thứ tự key)
+        pv_keys = list(self.group_a_pv_dict.keys())
+        for i, key in enumerate(pv_keys):
+            if i < len(list_group_a_recv):
+                self.group_a_pv_dict[key] = list_group_a_recv[i]
+        self.temp_pv_obj[1].setValue(self.for_display_temp(list_group_a_recv[1]))
+
+        group_b_values = [self.ui.pressure_sv_b_2.value(),
+                        self.for_display_temp(list_group_b_recv[2]),
+                        self.for_display_temp(list_group_b_recv[3]),
+                        self.for_display_temp(list_group_b_recv[4]),
+                        list_group_b_recv[0]
+                        ]
+        self.chart_pressure_b.append_data(group_b_values)
+
+        pv_keys_b = list(self.group_b_pv_dict.keys())
+        for i, key in enumerate(pv_keys_b):
+            if i < len(list_group_b_recv):
+                self.group_b_pv_dict[key] = list_group_b_recv[i]
+        self.temp_pv_obj[2].setValue(self.for_display_temp(list_group_b_recv[1]))
+
+
+        group_c_values = [self.ui.pressure_sv_c_2.value(),
+                        self.for_display_temp(list_group_c_recv[2]),
+                        self.for_display_temp(list_group_c_recv[3]),
+                        self.for_display_temp(list_group_c_recv[4]),
+                        list_group_c_recv[0]]
+        self.chart_pressure_c.append_data(group_c_values)
+
+        pv_keys_c = list(self.group_c_pv_dict.keys())
+        for i, key in enumerate(pv_keys_c):
+            if i < len(list_group_c_recv):
+                self.group_c_pv_dict[key] = list_group_c_recv[i]
+        self.temp_pv_obj[3].setValue(self.for_display_temp(list_group_c_recv[1]))
+
+        self.timer_stacked_pressure_page.singleShot(0, lambda: self._set_pv_data(list_group_a_recv, list_group_b_recv, list_group_c_recv))
 
     def on_heat_btn_clicked(self, channel: str, checked: bool):
         simulator = self.thread_dict.get("data_simulator")
@@ -961,60 +978,6 @@ class StrikeMachine(QMainWindow):
             self.pressure_c_sv_obj[1].value(),
         ]
         simulator.update_sv(pressure_sv, temp_sv)
-
-    def _data_group_filter(self, list_group_a_recv, list_group_b_recv, list_group_c_recv):
-        if not isinstance(list_group_a_recv, list) and not isinstance(list_group_b_recv, list) and not isinstance(list_group_c_recv, list):
-            return
-        pv_avg = (list_group_a_recv[1] + list_group_b_recv[1] + list_group_c_recv[1]) / 3
-        temp_values = [((self.ui.pressure_sv_a_2.value() + self.ui.pressure_sv_b_2.value() + self.ui.pressure_sv_c_2.value())/3),
-                    self.for_display_temp(pv_avg)]
-        self.chart_temp.append_data(temp_values)
-        self.temp_pv_obj[0].setValue(self.for_display_temp(pv_avg))
-        
-        group_a_values = [self.ui.pressure_sv_a_2.value(),
-                            self.for_display_temp(list_group_a_recv[2]),
-                            self.for_display_temp(list_group_a_recv[3]),
-                            self.for_display_temp(list_group_a_recv[4]),
-                            list_group_a_recv[0]]
-        self.chart_pressure_a.append_data(group_a_values)
-
-        self.group_a_dict["Air Inlet PV Temp A"] = list_group_a_recv[0]
-        self.group_a_dict["Front PV Temp A"]     = list_group_a_recv[1]
-        self.group_a_dict["Middle PV Temp A"]    = list_group_a_recv[2]
-        self.group_a_dict["End PV Temp A"]       = list_group_a_recv[3]
-        self.group_a_dict["Pressure PV A"]       = list_group_a_recv[4]
-        self.temp_pv_obj[1].setValue(self.for_display_temp(list_group_a_recv[1]))
-
-        group_b_values = [self.ui.pressure_sv_b_2.value(),
-                        self.for_display_temp(list_group_b_recv[2]),
-                        self.for_display_temp(list_group_b_recv[3]),
-                        self.for_display_temp(list_group_b_recv[4]),
-                        list_group_b_recv[0]
-                        ]
-        self.chart_pressure_b.append_data(group_b_values)
-
-        self.group_b_dict["Air Inlet PV Temp B"] = list_group_b_recv[0]
-        self.group_b_dict["Front PV Temp B"]     = list_group_b_recv[1]
-        self.group_b_dict["Middle PV Temp B"]    = list_group_b_recv[2]
-        self.group_b_dict["End PV Temp B"]       = list_group_b_recv[3]
-        self.group_b_dict["Pressure PV B"]       = list_group_b_recv[4]
-        self.temp_pv_obj[2].setValue(self.for_display_temp(list_group_b_recv[1]))
-
-        group_c_values = [self.ui.pressure_sv_c_2.value(),
-                        self.for_display_temp(list_group_c_recv[2]),
-                        self.for_display_temp(list_group_c_recv[3]),
-                        self.for_display_temp(list_group_c_recv[4]),
-                        list_group_c_recv[0]]
-        self.chart_pressure_c.append_data(group_c_values)
-
-        self.group_c_dict["Air Inlet PV Temp C"] = list_group_c_recv[0]
-        self.group_c_dict["Front PV Temp C"]     = list_group_c_recv[1]
-        self.group_c_dict["Middle PV Temp C"]    = list_group_c_recv[2]
-        self.group_c_dict["End PV Temp C"]       = list_group_c_recv[3]
-        self.group_c_dict["Pressure PV C"]       = list_group_c_recv[4]
-        self.temp_pv_obj[3].setValue(self.for_display_temp(list_group_c_recv[1]))
-
-        self.timer_stacked_pressure_page.singleShot(0, lambda: self._set_pv_data(list_group_a_recv, list_group_b_recv, list_group_c_recv))
 
     def on_write_sv_clicked(self):
         sv_data = {

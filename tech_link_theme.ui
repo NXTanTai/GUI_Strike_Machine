@@ -686,7 +686,7 @@ QPushButton:checked {
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>2</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
@@ -854,6 +854,9 @@ QPushButton:checked {
              </widget>
              <widget class="QWidget" name="temp_press_page">
               <layout class="QVBoxLayout" name="verticalLayout_12">
+               <property name="spacing">
+                <number>5</number>
+               </property>
                <property name="leftMargin">
                 <number>0</number>
                </property>
@@ -1388,7 +1391,7 @@ QPushButton:hover {
 }</string>
                  </property>
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>1</number>
                  </property>
                  <widget class="QWidget" name="pressure_page">
                   <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -8907,10 +8910,10 @@ padding-left: 10px;</string>
                                         <string>A Cycle: </string>
                                        </property>
                                        <property name="maximum">
-                                        <number>999999</number>
+                                        <number>9999999</number>
                                        </property>
                                        <property name="value">
-                                        <number>999999</number>
+                                        <number>0</number>
                                        </property>
                                       </widget>
                                      </item>
@@ -9255,10 +9258,10 @@ padding-left: 10px;</string>
                                         <string>B Cycle: </string>
                                        </property>
                                        <property name="maximum">
-                                        <number>999999</number>
+                                        <number>9999999</number>
                                        </property>
                                        <property name="value">
-                                        <number>999999</number>
+                                        <number>0</number>
                                        </property>
                                        <property name="displayIntegerBase">
                                         <number>10</number>
@@ -9603,10 +9606,10 @@ padding-left: 10px;</string>
                                         <string>C Cycle: </string>
                                        </property>
                                        <property name="maximum">
-                                        <number>999999</number>
+                                        <number>9999999</number>
                                        </property>
                                        <property name="value">
-                                        <number>999999</number>
+                                        <number>0</number>
                                        </property>
                                        <property name="displayIntegerBase">
                                         <number>10</number>
@@ -15840,7 +15843,7 @@ QLineEdit:focus {
                              <property name="title">
                               <string>Connection Settings</string>
                              </property>
-                             <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1,1,1,1" columnstretch="0,0,0,0">
+                             <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1,1,1,1" columnstretch="0,0,0">
                               <property name="leftMargin">
                                <number>20</number>
                               </property>
