@@ -2,7 +2,7 @@
 # pyside6-rcc Icon.qrc -o Icon_rc.py
 
 # pyinstaller --onefile --name="Packing Demo" --icon=icons\Download_Icons\robotic-arm.ico --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" main.py
-# pyinstaller --onefile --noconsole --name="Packing App" --icon=icons\Download_Icons\robotic-arm.ico --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" main.py
+# pyinstaller --onefile --name="Testing App" --add-binary "lib\snap7.dll;." main.py
 
 import sys
 import random
@@ -788,7 +788,7 @@ class StrikeMachine(QMainWindow):
         self.plc_worker.error.connect(self._on_error)
 
         # Nếu bạn vẫn muốn dùng Signal từ UI để ghi
-        self.sig_write_field.connect(self.plc_worker.write)           # ← Đổi thành write()
+        # self.sig_write_field.connect(self.plc_worker.write)           # ← Đổi thành write()
         # self.sig_write_fields.connect(...)                          # Nếu cần batch thì giữ hoặc bỏ
 
         # Khởi động thread

@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1300</width>
-    <height>900</height>
+    <width>1280</width>
+    <height>1024</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,8 +25,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>1300</width>
-    <height>1050</height>
+    <width>1280</width>
+    <height>1024</height>
    </size>
   </property>
   <property name="font">
@@ -91,8 +91,8 @@ QComboBox QAbstractItemView {
    </property>
    <property name="maximumSize">
     <size>
-     <width>1300</width>
-     <height>1050</height>
+     <width>1280</width>
+     <height>1024</height>
     </size>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,5">
