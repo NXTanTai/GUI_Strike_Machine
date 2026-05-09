@@ -44,8 +44,8 @@ from spline_chart import SplineChartWidget
 from Custom_Chart_Widgets import CustomChartWidget
 from System_Data import syss
 from Data_Simulator import DataSimulator
-from query_plc_thread import PLCRead, PLCState
-from write_plc_thread import PLCWrite, PLCState
+from query_plc_thread_V2 import PLCRead
+from write_plc_thread_V2 import PLCWrite
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
@@ -503,6 +503,9 @@ class StrikeMachine(QMainWindow):
     def _init_timer(self):
         self.all_timer = []
 
+        self.timer_alarm = QTimer()
+        self.all_timer.append(self.timer_alarm)
+
         self.timer_stacked_pressure_page = QTimer()
         self.all_timer.append(self.timer_stacked_pressure_page)
         
@@ -655,6 +658,10 @@ class StrikeMachine(QMainWindow):
             self.ui.stacked_cel_fah_temp_c_7
         ]
 
+        self.io_group_1_switch_obj = tuple(
+            getattr(self.ui, f"i_o_group_1_switch_{i}") for i in range(1, 9)
+        )
+
     def _create_charts(self):
         font = QFont("Segoe UI", 17)
         font.setWeight(QFont.Weight.Bold)
@@ -693,6 +700,9 @@ class StrikeMachine(QMainWindow):
         self.ui.heat_btn_b.clicked.connect(lambda checked: self.on_heat_btn_clicked("B", checked))
         self.ui.heat_btn_c.clicked.connect(lambda checked: self.on_heat_btn_clicked("C", checked))
         
+        self.ui.start_btn.clicked.connect(self.start_stop_btn)
+        self.ui.stop_btn.clicked.connect(self.start_stop_btn)
+
         # self.ui.vacuum_btn_a.clicked.connect(self.)
         # self.ui.vacuum_btn_b.clicked.connect(self.)
         # self.ui.vacuum_btn_c.clicked.connect(self.)
@@ -767,54 +777,95 @@ class StrikeMachine(QMainWindow):
             return False
         return True
     
-    def _setup_plc_thread(self):
-        """Thiết lập Thread và Worker cho PLC"""
-        self.plc_thread = QThread()
-        self.plc_worker = PLCRead(
-            ip="192.168.0.1", 
-            db_number=1, 
-            interval_ms=500
-        )
-        
-        # Chuyển worker sang thread riêng
-        self.plc_worker.moveToThread(self.plc_thread)
+    def _setup_read_plc_thread(self):
+        try:
+            self.plc_read_thread = QThread()
+            self.plc_worker = PLCRead(
+                ip="192.168.0.1", 
+                db_number=1, 
+                poll_ms=500
+            )
+            self.plc_worker.moveToThread(self.plc_read_thread)
+            self.plc_read_thread.started.connect(self.plc_worker.run)
+            self.plc_worker.data_ready.connect(self.on_plc_data_received)
+            self.plc_worker.error.connect(self.on_error)
+            self.plc_worker.connected.connect(self.on_connected)
+            self.plc_worker.disconnected.connect(self.on_disconnected)
 
-        # === KẾT NỐI SIGNAL ===
-        self.plc_thread.started.connect(self.plc_worker.start)        # ← start() thay vì start_polling()
+            self.plc_read_thread.start()
+        except Exception as e:
+            print("Lỗi khi khởi tạo PLC thread:", e)
+            return False
+        return True
 
-        self.plc_worker.data_received.connect(self._on_data)
-        self.plc_worker.write_done.connect(self._on_write_done)
-        self.plc_worker.state_changed.connect(self._on_state_changed)
-        self.plc_worker.error.connect(self._on_error)
-
-        # Nếu bạn vẫn muốn dùng Signal từ UI để ghi
-        # self.sig_write_field.connect(self.plc_worker.write)           # ← Đổi thành write()
-        # self.sig_write_fields.connect(...)                          # Nếu cần batch thì giữ hoặc bỏ
-
-        # Khởi động thread
-        self.plc_thread.start()
+    def _setup_write_plc_thread(self):
+        try:
+            self.plc_writer_thread = QThread()
+            self.plc_writer = PLCWrite(ip="192.168.1.10", db_number=1, write_gap_ms=500)
+            self.plc_writer.moveToThread(self.plc_writer_thread)
+            self.plc_writer_thread.started.connect(self.plc_writer.run)
+            self.plc_writer.connected.connect(self._on_plc_connected)
+            self.plc_writer.disconnected.connect(self._on_plc_disconnected)
+            self.plc_writer.write_done.connect(self._on_write_done)
+            self.plc_writer.error.connect(self._on_error)
+            self.plc_writer_thread.start()
+        except Exception as e:
+            print("Lỗi khi khởi tạo PLC thread:", e)
+            return False
+        return True
 
     @Slot(dict)
     def on_plc_data_received(self, data: dict):
         """Đây là nơi nhận toàn bộ dữ liệu từ PLC"""
-        
         # Cách an toàn nhất (dùng .get() để tránh lỗi nếu key không tồn tại)
         try:
+            input_data_list = [
+                data.get('START', False),
+                data.get('STOP', False),
+                data.get('T0_Start Heat', False),
+                data.get('T0_StopHeat', False),
+                data.get('P1_Start Heat', False),
+                data.get('P1_Start Pressure', False),
+                data.get('P1_Start Oil', False),
+                data.get('P1_BitCountTimes', False),
+                data.get('P2_Start Heat', False),
+                data.get('P2_Start Pressure', False),
+                data.get('P2_Start Oil', False),
+                data.get('P2_BitCountTimes', False),
+                data.get('P3_Start Heat', False),
+                data.get('P3_Start Pressure', False),
+                data.get('P3_Start Oil', False),
+                data.get('P3_BitCountTimes', False)
+            ]
+            self._input_data_filter(input_data_list)
+
+            t0_gui_list = [
+                self.ui.t0_pv
+            ]
             t0_data_list = [
-                data.get('T0_CurrentTemp', 0.0)
+                data.get('T0_CurrentTemp', t0_gui_list[0].value)
+            ]
+            self._t0_data_filter(t0_data_list)
+
+            p1_gui_list = [
+                getattr(self.ui, f"pressure_sv_a_{i}") for i in range(1, 11)
             ]
             p1_data_list = [
-                data.get('P1_CurrentTemp1', 0.0),
-                data.get('P1_CurrentTemp2', 0.0),
-                data.get('P1_CurrentTemp3', 0.0),
-                data.get('P1_CurrentPressureHose', 0.0),
+                data.get('P1_CurrentTemp1', p1_gui_list[1].value),
+                data.get('P1_CurrentTemp2', p1_gui_list[2].value),
+                data.get('P1_CurrentTemp3', p1_gui_list[3].value),
+                data.get('P1_CurrentPressureHose', p1_gui_list[4].value),
                 data.get('P1_CurrentPressureITV', 0.0),
                 data.get('P1_AirFillingTime_Out', 0),
                 data.get('P1_AirHoldingTime_Out', 0),
                 data.get('P1_AirReleaseTime_Out', 0),
                 data.get('P1_OilStartTime_Out', 0),
-                data.get('P1_OilEndTime_Out', 0),
-                data.get('P1_NumberTestTimes', 0)
+                data.get('P1_OilEndTime_Out', 0)
+            ]
+            self._group_a_data_filter(p1_data_list)
+
+            p2_gui_list = [
+                getattr(self.ui, f"pressure_sv_b_{i}") for i in range(1, 11)
             ]
             p2_data_list = [
                 data.get('P2_CurrentTemp1', 0.0),
@@ -826,10 +877,63 @@ class StrikeMachine(QMainWindow):
                 data.get('P2_AirHoldingTime_Out', 0),
                 data.get('P2_AirReleaseTime_Out', 0),
                 data.get('P2_OilStartTime_Out', 0),
-                data.get('P2_OilEndTime_Out', 0),
-                data.get('P2_NumberTestTimes', 0)
+                data.get('P2_OilEndTime_Out', 0)
+            ]
+            self._group_b_data_filter(p2_data_list)
+
+            p3_gui_list = [
+                getattr(self.ui, f"pressure_sv_c_{i}") for i in range(1, 11)
             ]
             p3_data_list = [
+                data.get('P3_CurrentTemp1', 0.0),
+                data.get('P3_CurrentTemp2', 0.0),
+                data.get('P3_CurrentTemp3', 0.0),
+                data.get('P3_CurrentPressureHose', 0.0),
+                data.get('P3_CurrentPressureITV', 0.0),
+                data.get('P3_AirFillingTime_Out', 0),
+                data.get('P3_AirHoldingTime_Out', 0),
+                data.get('P3_AirReleaseTime_Out', 0),
+                data.get('P3_OilStartTime_Out', 0),
+                data.get('P3_OilEndTime_Out', 0)
+            ]
+            self._group_c_data_filter(p3_data_list)
+
+            group_cycle_data_list = [
+                data.get('P1_NumberTestTimes', 0),
+                data.get('P2_NumberTestTimes', 0),
+                data.get('P3_NumberTestTimes', 0)
+            ]
+            self._set_cycle_time_unit(group_cycle_data_list)
+
+            t0_widget_item_list = [
+                self.ui.t0_pv,
+                self.ui.t0_sv,
+                self.ui.t0_h_alm_value,
+                self.ui.t0_l_alm_value,
+                self.ui.t0_offset_value
+            ]
+            t0_widget_data_list = [
+                data.get('T0_Current Temp', 0.0),
+                data.get('P3_CurrentPressureHose', 0.0),
+                data.get('P3_CurrentPressureITV', 0.0),
+                data.get('P3_AirFillingTime_Out', 0),
+                data.get('P3_AirHoldingTime_Out', 0),
+                data.get('P3_AirReleaseTime_Out', 0),
+                data.get('P3_OilStartTime_Out', 0),
+                data.get('P3_OilEndTime_Out', 0),
+                data.get('P3_NumberTestTimes', 0)
+            ]
+
+            at_widget_item_list = [
+                self.ui.at_pv,
+                self.ui.at_sv,
+                self.ui.at_h_alm_value,
+                self.ui.at_l_alm_value,
+                self.ui.at_t1_offset_value,
+                self.ui.at_t2_offset_value,
+                self.ui.at_t3_offset_value
+            ]
+            at_widget_data_list = [
                 data.get('P3_CurrentTemp1', 0.0),
                 data.get('P3_CurrentTemp2', 0.0),
                 data.get('P3_CurrentTemp3', 0.0),
@@ -842,10 +946,50 @@ class StrikeMachine(QMainWindow):
                 data.get('P3_OilEndTime_Out', 0),
                 data.get('P3_NumberTestTimes', 0)
             ]
-            alarm = data.get('Bit_Alarm', False)
-            alarm_info = data.get('Alarm_Info', "")
 
-            self._data_filter(t0_data_list, p1_data_list, p2_data_list, p3_data_list)
+            bt_widget_item_list = [
+                self.ui.t0_pv
+            ]
+            bt_widget_data_list = [
+                data.get('P3_CurrentTemp1', 0.0),
+                data.get('P3_CurrentTemp2', 0.0),
+                data.get('P3_CurrentTemp3', 0.0),
+                data.get('P3_CurrentPressureHose', 0.0),
+                data.get('P3_CurrentPressureITV', 0.0),
+                data.get('P3_AirFillingTime_Out', 0),
+                data.get('P3_AirHoldingTime_Out', 0),
+                data.get('P3_AirReleaseTime_Out', 0),
+                data.get('P3_OilStartTime_Out', 0),
+                data.get('P3_OilEndTime_Out', 0),
+                data.get('P3_NumberTestTimes', 0)
+            ]
+
+            ct_widget_item_list = [
+                self.ui.t0_pv,
+                self.ui.t0_sv,
+                self.ui.t0_h_alm_value,
+                self.ui.t0_l_alm_value,
+                self.ui.ct_t1_offset_value,
+                self.ui.ct_t2_offset_value,
+                self.ui.ct_t3_offset_value
+            ]
+            ct_widget_data_list = [
+                (data.get('P3_CurrentTemp1', 0.0) + data.get('P3_CurrentTemp2', 0.0) + data.get('P3_CurrentTemp3', 0.0)),
+                data.get('P3_CurrentPressureHose', 0.0),
+                data.get('P3_CurrentPressureITV', 0.0),
+                data.get('P3_AirFillingTime_Out', 0),
+                data.get('P3_AirHoldingTime_Out', 0),
+                data.get('P3_AirReleaseTime_Out', 0),
+                data.get('P3_OilStartTime_Out', 0),
+                data.get('P3_OilEndTime_Out', 0),
+                data.get('P3_NumberTestTimes', 0)
+            ]
+
+            alarm_data_list = [
+                data.get('Bit_Alarm', False),
+                data.get('Alarm_Info', "")
+            ]
+            self._alarm_data_filter(alarm_data_list)
 
         except Exception as e:
             print("Lỗi khi xử lý dữ liệu PLC:", e)
@@ -887,6 +1031,54 @@ class StrikeMachine(QMainWindow):
 
         self.timer_stacked_pressure_page.singleShot(0, lambda: self._set_pv_data(list_group_a_recv, list_group_b_recv, list_group_c_recv))
 
+    def _input_data_filter(self, list_input_recv):
+        for obj, value in zip(self.io_group_1_switch_obj, list_input_recv):
+            obj.setCurrentIndex(value)
+
+    def _t0_data_filter(self, list_group_t0_recv):
+        pv_avg = list_group_t0_recv[0]
+        temp_values = [((self.ui.pressure_sv_a_2.value() + self.ui.pressure_sv_b_2.value() + self.ui.pressure_sv_c_2.value())/3),
+                    self.for_display_temp(pv_avg)]
+        self.chart_temp.append_data(temp_values)
+        self.temp_pv_obj[0].setValue(self.for_display_temp(pv_avg))
+
+    def _group_a_data_filter(self, list_group_a_recv):
+        group_a_values = [self.ui.pressure_sv_a_2.value(),
+                            self.for_display_temp(list_group_a_recv[0]),
+                            self.for_display_temp(list_group_a_recv[1]),
+                            self.for_display_temp(list_group_a_recv[2]),
+                            list_group_a_recv[3]]
+        self.chart_pressure_a.append_data(group_a_values)
+        self.temp_pv_obj[1].setValue(self.for_display_temp(list_group_a_recv[1]))
+
+    def _group_b_data_filter(self, list_group_b_recv):
+        group_b_values = [self.ui.pressure_sv_b_2.value(),
+                        self.for_display_temp(list_group_b_recv[0]),
+                        self.for_display_temp(list_group_b_recv[1]),
+                        self.for_display_temp(list_group_b_recv[2]),
+                        list_group_b_recv[3]
+                        ]
+        self.chart_pressure_b.append_data(group_b_values)
+        self.temp_pv_obj[2].setValue(self.for_display_temp(list_group_b_recv[1]))
+      
+    def _group_c_data_filter(self, list_group_c_recv):
+        group_c_values = [self.ui.pressure_sv_c_2.value(),
+                        self.for_display_temp(list_group_c_recv[0]),
+                        self.for_display_temp(list_group_c_recv[1]),
+                        self.for_display_temp(list_group_c_recv[2]),
+                        list_group_c_recv[3]]
+        self.chart_pressure_c.append_data(group_c_values)
+        self.temp_pv_obj[3].setValue(self.for_display_temp(list_group_c_recv[1]))
+
+    def _set_cycle_time_unit(self, list_value):
+        self.ui.cycle_a_displ.setPrefix(f"A Cycle: {list_value[0]} - ")
+        self.ui.cycle_b_displ.setPrefix(f"B Cycle: {list_value[1]} - ")
+        self.ui.cycle_c_displ.setPrefix(f"C Cycle: {list_value[2]} - ")
+
+    def _alarm_data_filter(self, alarm_recv):
+        if alarm_recv[0]:
+            print(alarm_recv[1])
+
     def _data_filter(self, list_group_0_recv, list_group_a_recv, list_group_b_recv, list_group_c_recv):
         if not isinstance(list_group_a_recv, list) and not isinstance(list_group_b_recv, list) and not isinstance(list_group_c_recv, list):
             return
@@ -907,7 +1099,6 @@ class StrikeMachine(QMainWindow):
         for i, key in enumerate(pv_keys):
             if i < len(list_group_a_recv):
                 self.group_a_pv_dict[key] = list_group_a_recv[i]
-        self.temp_pv_obj[1].setValue(self.for_display_temp(list_group_a_recv[1]))
 
         group_b_values = [self.ui.pressure_sv_b_2.value(),
                         self.for_display_temp(list_group_b_recv[0]),
@@ -921,7 +1112,6 @@ class StrikeMachine(QMainWindow):
         for i, key in enumerate(pv_keys_b):
             if i < len(list_group_b_recv):
                 self.group_b_pv_dict[key] = list_group_b_recv[i]
-        self.temp_pv_obj[2].setValue(self.for_display_temp(list_group_b_recv[1]))
 
 
         group_c_values = [self.ui.pressure_sv_c_2.value(),
@@ -935,8 +1125,8 @@ class StrikeMachine(QMainWindow):
         for i, key in enumerate(pv_keys_c):
             if i < len(list_group_c_recv):
                 self.group_c_pv_dict[key] = list_group_c_recv[i]
-        self.temp_pv_obj[3].setValue(self.for_display_temp(list_group_c_recv[1]))
-
+        
+        # self.timer_alarm.singleShot(0, lambda: self._update_alarm_state(list_group_a_recv, list_group_b_recv, list_group_c_recv))
         self.timer_stacked_pressure_page.singleShot(0, lambda: self._set_pv_data(list_group_a_recv, list_group_b_recv, list_group_c_recv))
 
     def on_heat_btn_clicked(self, channel: str, checked: bool):
@@ -945,7 +1135,6 @@ class StrikeMachine(QMainWindow):
             return
 
         if checked:
-            # Lấy SV hiện tại từ UI
             if   channel == "A":
                 pressure_sv = self.pressure_a_sv_obj[4].value() 
                 temp_sv     = self.pressure_a_sv_obj[0].value() if self.pressure_a_sv_obj[0].value() > self.default_temp_room else self.default_temp_room
@@ -959,6 +1148,25 @@ class StrikeMachine(QMainWindow):
             simulator.set_channel_active(channel, pressure_sv, temp_sv)
         else:
             simulator.set_channel_active(channel, 0.0, self.default_temp_room)  # Reset về mặc định
+
+    def heating_btn(self, channel: str, checked: bool):
+        if checked:
+            if channel == "A":
+                self.pressure_a_sv_obj[4].value() 
+
+            if channel == "B":
+                self.pressure_a_sv_obj[4].value() 
+
+            if channel == "C":
+                self.pressure_a_sv_obj[4].value() 
+
+    def start_stop_btn(self):
+        if self.ui.start_stop_stacked.currentIndex() == 0:
+
+            self.ui.start_stop_stacked.setCurrentIndex(1)
+        elif self.ui.start_stop_stacked.currentIndex() == 1:
+
+            self.ui.start_stop_stacked.setCurrentIndex(0)
 
     def update_simulator_sv(self):
         """Gọi hàm này mỗi khi SV thay đổi trên UI"""
@@ -1044,13 +1252,14 @@ class StrikeMachine(QMainWindow):
             self.pressure_a_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_a_sv_obj[i].value()))
             self.pressure_b_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_b_sv_obj[i].value()))
             self.pressure_c_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_c_sv_obj[i].value()))
-
+            
     def _set_chart_unit(self):
         if self.current_unit == 0:
             self.chart_temp.set_y_label("°C")
             self.chart_pressure_a.set_y_label("°C")
             self.chart_pressure_b.set_y_label("°C")
             self.chart_pressure_c.set_y_label("°C")
+
         elif self.current_unit == 1:
             self.chart_temp.set_y_label("°F")
             self.chart_pressure_a.set_y_label("°F")
@@ -1061,6 +1270,8 @@ class StrikeMachine(QMainWindow):
         if self.current_unit == 1:
             return celsius * 9/5 + 32
         return celsius
+
+    # def _update_alarm_state(self, )
 
     def convert_cel_fah(self, temp):
         if self.current_unit == 1:
@@ -1084,32 +1295,6 @@ class StrikeMachine(QMainWindow):
                 
     def update_clock(self):
         self.ui.date_displ.setDateTime(QDateTime.currentDateTime())
-        
-    def update_all_charts(self):
-        temp_values = [230,
-                    222.5 + random.uniform(-0.5, 2)]
-        self.chart_temp.append_data(temp_values)
-
-        pressure_values = [250,
-                        220 + random.uniform(-1, 2),
-                         110 + random.uniform(-1, 2),
-                         60 + random.uniform(-1, 2),
-                         25 + random.uniform(-1, 1)]
-        self.chart_pressure_a.append_data(pressure_values)
-
-        voltage_values = [250,
-                        220 + random.uniform(-1, 2),
-                         110 + random.uniform(-1, 2),
-                         60 + random.uniform(-1, 2),
-                         25 + random.uniform(-1, 1)]
-        self.chart_pressure_b.append_data(voltage_values)
-
-        speed_values = [250,
-                        220 + random.uniform(-1, 2),
-                         110 + random.uniform(-1, 2),
-                         60 + random.uniform(-1, 2),
-                         25 + random.uniform(-1, 1)]
-        self.chart_pressure_c.append_data(speed_values)
 
     def closeEvent(self, event):
         """Dừng tất cả timer khi đóng cửa sổ"""

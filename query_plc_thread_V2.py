@@ -24,7 +24,7 @@ Usage (main / UI thread):
 
 import struct
 import logging
-from typing import Any
+from typing import Any, Optional
 
 import snap7
 from snap7.error import S7Error
@@ -53,7 +53,6 @@ def _get_string(data: bytes, offset: int) -> str:
     act_len = data[offset + 1]
     raw = data[offset + 2: offset + 2 + act_len]
     return raw.decode("utf-8", errors="replace")
-
 
 # ─────────────────────────────────────────────────────────────
 #  DB layout definition
@@ -176,14 +175,14 @@ DB_LAYOUT: list[tuple[str, str, int, Any]] = [
 ]
 
 # Total bytes to read: String at 324 + 2-byte header + 254 max chars = 580
-DB_TOTAL_BYTES = 580
+DB_TOTAL_BYTES = 584
 
 
 # ─────────────────────────────────────────────────────────────
-#  PLCWorker
+#  PLCRead
 # ─────────────────────────────────────────────────────────────
 
-class PLCWorker(QObject):
+class PLCRead(QObject):
     """
     Reads a Siemens S7 DB block periodically and emits parsed data.
 
@@ -207,7 +206,7 @@ class PLCWorker(QObject):
         slot: int       = 1,
         db_number: int  = 1,
         poll_ms: int    = 500,       # polling interval in milliseconds
-        parent: QObject = None,
+        parent: Optional[QObject] = None,
     ):
         super().__init__(parent)
         self._ip         = ip
