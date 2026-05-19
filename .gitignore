@@ -1,0 +1,29 @@
+dist/Testing App.exe
+build/Testing App/xref-Testing App.html
+build/Testing App/warn-Testing App.txt
+build/Testing App/Testing App.pkg
+build/Testing App/PYZ-00.toc
+build/Testing App/PYZ-00.pyz
+build/Testing App/PKG-00.toc
+build/Testing App/localpycs/struct.pyc
+build/Testing App/localpycs/pyimod04_pywin32.pyc
+build/Testing App/localpycs/pyimod03_ctypes.pyc
+build/Testing App/localpycs/pyimod02_importers.pyc
+build/Testing App/localpycs/pyimod01_archive.pyc
+build/Testing App/EXE-00.toc
+build/Testing App/base_library.zip
+build/Testing App/Analysis-00.toc
+build/Packing App/xref-Packing App.html
+build/Packing App/warn-Packing App.txt
+build/Packing App/PYZ-00.toc
+build/Packing App/PYZ-00.pyz
+build/Packing App/PKG-00.toc
+build/Packing App/Packing App.pkg
+build/Packing App/localpycs/struct.pyc
+build/Packing App/localpycs/pyimod04_pywin32.pyc
+build/Packing App/localpycs/pyimod03_ctypes.pyc
+build/Packing App/localpycs/pyimod02_importers.pyc
+build/Packing App/localpycs/pyimod01_archive.pyc
+build/Packing App/EXE-00.toc
+build/Packing App/base_library.zip
+build/Packing App/Analysis-00.toc

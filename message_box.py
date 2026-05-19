@@ -7,6 +7,11 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
 from PySide6.QtCore import Qt, QTimer, QPropertyAnimation, QEasingCurve, QRect, QPropertyAnimation
 from PySide6.QtGui import QFont, QPixmap, QPainter, QColor, QLinearGradient, QPalette
 
+FONT_FAMILY  = "Segoe UI"
+FONT_SIZE_LG = 16
+FONT_SIZE_MD = 16
+FONT_SIZE_SM = 13
+
 class LightThemeMessageBox(QDialog):
     """
     Custom message box with modern design matching the main window style.
@@ -38,7 +43,8 @@ class LightThemeMessageBox(QDialog):
         super().__init__(parent)
         self.result_value = False
         self.msg_type = msg_type
-        
+        self._font_family  = FONT_FAMILY
+        self._font_size_lg = FONT_SIZE_LG
         self.setWindowTitle(title)
         self.setModal(True)
         self.setMinimumWidth(450)
@@ -60,6 +66,10 @@ class LightThemeMessageBox(QDialog):
         self.fade_in_animation()
     
     def setup_ui(self, title, message, buttons):
+
+        font_label = QFont(self._font_family, self._font_size_lg)
+        font_label.setWeight(QFont.Weight.Bold)
+
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
@@ -78,6 +88,7 @@ class LightThemeMessageBox(QDialog):
         header_layout.setContentsMargins(20, 15, 20, 15)
         
         icon_label = QLabel(self.get_icon())
+        icon_label.setFont(font_label)
         icon_label.setStyleSheet(f"""
             font-size: 28px;
             border: none;
@@ -130,7 +141,8 @@ class LightThemeMessageBox(QDialog):
         content_layout = QVBoxLayout(content_frame)
         content_layout.setContentsMargins(20, 20, 20, 20)
         
-        message_label = QLabel(message)
+        message_label = QLabel(message)        
+        message_label.setFont(font_label)
         message_label.setWordWrap(True)
         message_label.setStyleSheet("""
             QLabel {
@@ -173,7 +185,11 @@ class LightThemeMessageBox(QDialog):
     
     def create_button(self, text):
         """Create styled button"""
+        font_btn = QFont(self._font_family, FONT_SIZE_SM)
+        font_btn.setWeight(QFont.Weight.Bold)
+
         button = QPushButton(text)
+        button.setFont(font_btn)
         button.setMinimumWidth(100)
         
         if text in ["OK", "Yes", "Save", "Apply"]:
@@ -191,8 +207,6 @@ class LightThemeMessageBox(QDialog):
                     border: none;
                     padding: 10px 24px;
                     border-radius: 8px;
-                    font-size: 14px;
-                    font-weight: 500;
                 }
                 QPushButton:hover {
                     background-color: #0968A3;
@@ -209,8 +223,6 @@ class LightThemeMessageBox(QDialog):
                     border: 1px solid #0B7EC8;
                     padding: 10px 24px;
                     border-radius: 8px;
-                    font-size: 14px;
-                    font-weight: 500;
                 }
                 QPushButton:hover {
                     background-color: #F0F9FF;

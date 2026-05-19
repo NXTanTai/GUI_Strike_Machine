@@ -14,11 +14,7 @@
                 "height": "parent"
             },
             "toggleButton": {
-                "buttonName": "open_side_menu_btn",
-                "icons": {
-                    "whenMenuIsCollapsed": ":/newPrefix/align-justify.png",
-                    "whenMenuIsExpanded": ":/newPrefix/align-justify.png"
-                }
+                "buttonName": "open_side_menu_btn"
             },
             "menuTransitionAnimation": {
                 "animationDuration": 500,

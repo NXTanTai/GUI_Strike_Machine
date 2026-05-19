@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="iconss">
+    <file>align-justify.png</file>
+  </qresource>
+</RCC>

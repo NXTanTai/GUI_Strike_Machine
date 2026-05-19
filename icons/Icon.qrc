@@ -1,0 +1,137 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>rotate-reverse-white.png</file>
+    <file>chart-line-up-down_blue.png</file>
+    <file>404 (1).png</file>
+    <file>404.png</file>
+    <file>rotate-reverse.png</file>
+    <file>chart-line-up-down.png</file>
+    <file>language-exchange.png</file>
+    <file>Image_20260416155332_127_10.png</file>
+    <file>s7_1200_oven_pressure.png</file>
+    <file>record-button (1).png</file>
+    <file>record-button (2).png</file>
+    <file>record-button.png</file>
+    <file>broom.png</file>
+    <file>gas-pump-alt.png</file>
+    <file>pump.png</file>
+    <file>heat.png</file>
+    <file>filters(1).png</file>
+    <file>age-restriction-twenty-one (1).png</file>
+    <file>age-restriction-twenty-one.png</file>
+    <file>temperature-high.png</file>
+    <file>filter_blue.png</file>
+    <file>oven_blue.png</file>
+    <file>data-cleaning.png</file>
+    <file>folder-upload.png</file>
+    <file>arrow-alt-circle-left_blue.png</file>
+    <file>arrow-alt-circle-right_blue.png</file>
+    <file>sort.png</file>
+    <file>sort-alt.png</file>
+    <file>arrow-alt-circle-left.png</file>
+    <file>arrow-alt-circle-right.png</file>
+    <file>align-justify.png</file>
+    <file>oven.png</file>
+    <file>filter.png</file>
+    <file>flame.png</file>
+    <file>settings (1).png</file>
+    <file>settings (1).png</file>
+    <file>settings.png</file>
+    <file>settings.png</file>
+    <file>stats (1).png</file>
+    <file>stats.png</file>
+    <file>home_off.png</file>
+    <file>home.png</file>
+    <file>digital.png</file>
+    <file>Logo_Cty_2.png</file>
+    <file>line-width.png</file>
+    <file>duration-alt.png</file>
+    <file>box-loading.png</file>
+    <file>conveyor-belt.png</file>
+    <file>box-remove.png</file>
+    <file>box-circle-check.png</file>
+    <file>file-import.png</file>
+    <file>it-alt.png</file>
+    <file>clear-alt.png</file>
+    <file>disk.png</file>
+    <file>eraser_hover.png</file>
+    <file>disk_hover.png</file>
+    <file>disk_normal.png</file>
+    <file>eraser_normal.png</file>
+    <file>eraser.png</file>
+    <file>arrows-move.svg</file>
+    <file>paper-plane-hover.png</file>
+    <file>paper-plane-normal.png</file>
+    <file>paper-plane-pressed.png</file>
+    <file>square-terminal-hover.png</file>
+    <file>arrow-circle-right-hover.png</file>
+    <file>refresh-hover.png</file>
+    <file>refresh-normal.png</file>
+    <file>refresh-pressed.png</file>
+    <file>square-terminal-pressed.png</file>
+    <file>arrow-circle-right-pressed.png</file>
+    <file>square-terminal (1).png</file>
+    <file>square-terminal.png</file>
+    <file>arrow-circle-right-white.png</file>
+    <file>arrow-circle-right.png</file>
+    <file>lock_wht_trans.png</file>
+    <file>arrow-circle-right-white.png</file>
+    <file>lock (1).png</file>
+    <file>lock (2).png</file>
+    <file>lock_blk.png</file>
+    <file>lock_wht.png</file>
+    <file>clamp.png</file>
+    <file>refresh_bg_gray.png</file>
+    <file>refresh_bg_black.png</file>
+    <file>refresh_bg_white.png</file>
+    <file>refresh_black.png</file>
+    <file>refresh_white.png</file>
+    <file>refresh.png</file>
+    <file>link-alt.png</file>
+    <file>search.png</file>
+    <file>link-slash-alt (1).png</file>
+    <file>link-slash-alt.png</file>
+    <file>link-alt.png</file>
+    <file>multimedia_linked_communications_hyperlink_utensils_tools_link_icon_266201.png</file>
+    <file>arrow-right-circle.svg</file>
+    <file>arrow-right-circle-fill.svg</file>
+    <file>account_avatar_face_man_people_profile_user_icon_123197.png</file>
+    <file>arrow_rotate_clockwise_filled_icon_202575.png</file>
+    <file>arrow_rotate_counterclockwise_filled_icon_202574.png</file>
+    <file>automation_icon-icons.com_70310.png</file>
+    <file>avatar_user_profile_icon_250156.png</file>
+    <file>boss_edit.png</file>
+    <file>Box.PNG</file>
+    <file>clockwise-circular-arrow_icon-icons.com_73057.png</file>
+    <file>congty.PNG</file>
+    <file>counterclockwise-circular-arrow_icon-icons.com_73057.png</file>
+    <file>disk_cable_flash_usb_pendrive_icon_261938.png</file>
+    <file>electronics_mechanical_robotics_arm_robot_icon_261984.png</file>
+    <file>group_layer_layers_icon_195089.png</file>
+    <file>growth_increase_business_laptop_chart_bar_icon_261939.png</file>
+    <file>ic_account_circle_128_28129.png</file>
+    <file>Icon.qrc</file>
+    <file>Layer.PNG</file>
+    <file>layer_icon_264857.png</file>
+    <file>Line.PNG</file>
+    <file>line_height_icon_151230.png</file>
+    <file>Linesss.png</file>
+    <file>locate_gps_navigation_pin_point_location_icon-icons.com_59906 (1).png</file>
+    <file>locate_gps_navigation_pin_point_location_icon-icons.com_59906.png</file>
+    <file>Logo Cty.png</file>
+    <file>manufacturing_belt_production_conveyor_icon_261969.png</file>
+    <file>page_seo_web_website_browser_search_find_information_file_data_icon_230035.png</file>
+    <file>Pallet.PNG</file>
+    <file>Point.PNG</file>
+    <file>preferences_options_settings_setting_icon_250764.png</file>
+    <file>Product_Size.PNG</file>
+    <file>Robot.PNG</file>
+    <file>robotic_arm_robot_technology_tech_icon_233201.png</file>
+    <file>robotic_arm_robot_technology_tech_icon_233261.png</file>
+    <file>robotic_robotics_arm_hand_robot_icon_261985.png</file>
+    <file>robotics_robotic_arm_robots_industry_robot_icon_262279.icns</file>
+    <file>speed_speedometer_3150.png</file>
+    <file>winston_churchill_avatar_icon_263198.png</file>
+    <file>world_news_spread_boardcast_information_icon_143329.png</file>
+  </qresource>
+</RCC>

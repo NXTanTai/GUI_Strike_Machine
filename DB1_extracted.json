@@ -1,0 +1,693 @@
+{
+  "db_name": "DB1",
+  "variables": {
+    "START": {
+      "stt": "1",
+      "name": "START",
+      "type": "Bool",
+      "address": "0",
+      "value": "0",
+      "comment": "Bit_Input"
+    },
+    "STOP": {
+      "stt": "2",
+      "name": "STOP",
+      "type": "Bool",
+      "address": "0.1",
+      "value": "0.1",
+      "comment": ""
+    },
+    "T0_Start Heat": {
+      "stt": "3",
+      "name": "T0_Start Heat",
+      "type": "Bool",
+      "address": "0.2",
+      "value": "0.2",
+      "comment": ""
+    },
+    "T0_StopHeat": {
+      "stt": "4",
+      "name": "T0_StopHeat",
+      "type": "Bool",
+      "address": "0.3",
+      "value": "0.3",
+      "comment": ""
+    },
+    "P1_Start Heat": {
+      "stt": "5",
+      "name": "P1_Start Heat",
+      "type": "Bool",
+      "address": "0.4",
+      "value": "0.4",
+      "comment": ""
+    },
+    "P1_Start Pressure": {
+      "stt": "6",
+      "name": "P1_Start Pressure",
+      "type": "Bool",
+      "address": "0.5",
+      "value": "0.5",
+      "comment": ""
+    },
+    "P1_Start Oil": {
+      "stt": "7",
+      "name": "P1_Start Oil",
+      "type": "Bool",
+      "address": "0.6",
+      "value": "0.6",
+      "comment": ""
+    },
+    "P1_BitCountTimes": {
+      "stt": "8",
+      "name": "P1_BitCountTimes",
+      "type": "Bool",
+      "address": "0.7",
+      "value": "0.7",
+      "comment": ""
+    },
+    "P2_Start Heat": {
+      "stt": "9",
+      "name": "P2_Start Heat",
+      "type": "Bool",
+      "address": "1",
+      "value": "1",
+      "comment": ""
+    },
+    "P2_Start Pressure": {
+      "stt": "10",
+      "name": "P2_Start Pressure",
+      "type": "Bool",
+      "address": "1.1",
+      "value": "1.1",
+      "comment": ""
+    },
+    "P2_Start Oil": {
+      "stt": "11",
+      "name": "P2_Start Oil",
+      "type": "Bool",
+      "address": "1.2",
+      "value": "1.2",
+      "comment": ""
+    },
+    "P2_BitCountTimes": {
+      "stt": "12",
+      "name": "P2_BitCountTimes",
+      "type": "Bool",
+      "address": "1.3",
+      "value": "1.3",
+      "comment": ""
+    },
+    "P3_Start Heat": {
+      "stt": "13",
+      "name": "P3_Start Heat",
+      "type": "Bool",
+      "address": "1.4",
+      "value": "1.4",
+      "comment": ""
+    },
+    "P3_Start Pressure": {
+      "stt": "14",
+      "name": "P3_Start Pressure",
+      "type": "Bool",
+      "address": "1.5",
+      "value": "1.5",
+      "comment": ""
+    },
+    "P3_Start Oil": {
+      "stt": "15",
+      "name": "P3_Start Oil",
+      "type": "Bool",
+      "address": "1.6",
+      "value": "1.6",
+      "comment": ""
+    },
+    "P3_BitCountTimes": {
+      "stt": "16",
+      "name": "P3_BitCountTimes",
+      "type": "Bool",
+      "address": "1.7",
+      "value": "1.7",
+      "comment": ""
+    },
+    "T0_TemperatureSetting": {
+      "stt": "17",
+      "name": "T0_TemperatureSetting",
+      "type": "Real",
+      "address": "2",
+      "value": "2",
+      "comment": "Input"
+    },
+    "T0_TempLimitHIGH": {
+      "stt": "18",
+      "name": "T0_TempLimitHIGH",
+      "type": "Real",
+      "address": "6",
+      "value": "6",
+      "comment": ""
+    },
+    "T0_TempLimitLOW": {
+      "stt": "19",
+      "name": "T0_TempLimitLOW",
+      "type": "Real",
+      "address": "10",
+      "value": "10",
+      "comment": ""
+    },
+    "T0_TempOffset": {
+      "stt": "20",
+      "name": "T0_TempOffset",
+      "type": "Real",
+      "address": "14",
+      "value": "14",
+      "comment": ""
+    },
+    "P1_TemperatureSetting": {
+      "stt": "21",
+      "name": "P1_TemperatureSetting",
+      "type": "Real",
+      "address": "18",
+      "value": "18",
+      "comment": ""
+    },
+    "P1_TempLimitHIGH": {
+      "stt": "22",
+      "name": "P1_TempLimitHIGH",
+      "type": "Real",
+      "address": "22",
+      "value": "22",
+      "comment": ""
+    },
+    "P1_TempLimitLOW": {
+      "stt": "23",
+      "name": "P1_TempLimitLOW",
+      "type": "Real",
+      "address": "26",
+      "value": "26",
+      "comment": ""
+    },
+    "P1_Temp1Offset": {
+      "stt": "24",
+      "name": "P1_Temp1Offset",
+      "type": "Real",
+      "address": "30",
+      "value": "30",
+      "comment": ""
+    },
+    "P1_Temp2Offset": {
+      "stt": "25",
+      "name": "P1_Temp2Offset",
+      "type": "Real",
+      "address": "34",
+      "value": "34",
+      "comment": ""
+    },
+    "P1_Temp3Offset": {
+      "stt": "26",
+      "name": "P1_Temp3Offset",
+      "type": "Real",
+      "address": "38",
+      "value": "38",
+      "comment": ""
+    },
+    "P1_PressureSetting": {
+      "stt": "27",
+      "name": "P1_PressureSetting",
+      "type": "Real",
+      "address": "42",
+      "value": "42",
+      "comment": ""
+    },
+    "P1_PressureHoseOffset": {
+      "stt": "28",
+      "name": "P1_PressureHoseOffset",
+      "type": "Real",
+      "address": "46",
+      "value": "46",
+      "comment": ""
+    },
+    "P1_PressureITVOffset": {
+      "stt": "29",
+      "name": "P1_PressureITVOffset",
+      "type": "Real",
+      "address": "50",
+      "value": "50",
+      "comment": ""
+    },
+    "P1_Air FillingTime": {
+      "stt": "73",
+      "name": "P1_Air FillingTime",
+      "type": "DInt",
+      "address": "218",
+      "value": "218",
+      "comment": ""
+    },
+    "P1_Air HoldingTime": {
+      "stt": "74",
+      "name": "P1_Air HoldingTime",
+      "type": "DInt",
+      "address": "222",
+      "value": "222",
+      "comment": ""
+    },
+    "P1_Air ReleaseTime": {
+      "stt": "75",
+      "name": "P1_Air ReleaseTime",
+      "type": "DInt",
+      "address": "226",
+      "value": "226",
+      "comment": ""
+    },
+    "P1_Oil Start Time": {
+      "stt": "76",
+      "name": "P1_Oil Start Time",
+      "type": "DInt",
+      "address": "230",
+      "value": "230",
+      "comment": ""
+    },
+    "P1_Oil End Time": {
+      "stt": "77",
+      "name": "P1_Oil End Time",
+      "type": "DInt",
+      "address": "234",
+      "value": "234",
+      "comment": ""
+    },
+    "P1_CountTimes": {
+      "stt": "35",
+      "name": "P1_CountTimes",
+      "type": "Int",
+      "address": "74",
+      "value": "74",
+      "comment": ""
+    },
+    "P2_TemperatureSetting": {
+      "stt": "36",
+      "name": "P2_TemperatureSetting",
+      "type": "Real",
+      "address": "76",
+      "value": "76",
+      "comment": ""
+    },
+    "P2_TempLimitHIGH": {
+      "stt": "37",
+      "name": "P2_TempLimitHIGH",
+      "type": "Real",
+      "address": "80",
+      "value": "80",
+      "comment": ""
+    },
+    "P2_TempLimitLOW": {
+      "stt": "38",
+      "name": "P2_TempLimitLOW",
+      "type": "Real",
+      "address": "84",
+      "value": "84",
+      "comment": ""
+    },
+    "P2_Temp1Offset": {
+      "stt": "39",
+      "name": "P2_Temp1Offset",
+      "type": "Real",
+      "address": "88",
+      "value": "88",
+      "comment": ""
+    },
+    "P2_Temp2Offset": {
+      "stt": "40",
+      "name": "P2_Temp2Offset",
+      "type": "Real",
+      "address": "92",
+      "value": "92",
+      "comment": ""
+    },
+    "P2_Temp3Offset": {
+      "stt": "41",
+      "name": "P2_Temp3Offset",
+      "type": "Real",
+      "address": "96",
+      "value": "96",
+      "comment": ""
+    },
+    "P2_PressureSetting": {
+      "stt": "42",
+      "name": "P2_PressureSetting",
+      "type": "Real",
+      "address": "100",
+      "value": "100",
+      "comment": ""
+    },
+    "P2_PressureHoseOffset": {
+      "stt": "43",
+      "name": "P2_PressureHoseOffset",
+      "type": "Real",
+      "address": "104",
+      "value": "104",
+      "comment": ""
+    },
+    "P2_PressureITVOffset": {
+      "stt": "44",
+      "name": "P2_PressureITVOffset",
+      "type": "Real",
+      "address": "108",
+      "value": "108",
+      "comment": ""
+    },
+    "P2_Air FillingTime": {
+      "stt": "84",
+      "name": "P2_Air FillingTime",
+      "type": "DInt",
+      "address": "260",
+      "value": "260",
+      "comment": ""
+    },
+    "P2_Air HoldingTime": {
+      "stt": "85",
+      "name": "P2_Air HoldingTime",
+      "type": "DInt",
+      "address": "264",
+      "value": "264",
+      "comment": ""
+    },
+    "P2_Air ReleaseTime": {
+      "stt": "86",
+      "name": "P2_Air ReleaseTime",
+      "type": "DInt",
+      "address": "268",
+      "value": "268",
+      "comment": ""
+    },
+    "P2_Oil Start Time": {
+      "stt": "87",
+      "name": "P2_Oil Start Time",
+      "type": "DInt",
+      "address": "272",
+      "value": "272",
+      "comment": ""
+    },
+    "P2_Oil End Time": {
+      "stt": "88",
+      "name": "P2_Oil End Time",
+      "type": "DInt",
+      "address": "276",
+      "value": "276",
+      "comment": ""
+    },
+    "P2_CountTimes": {
+      "stt": "50",
+      "name": "P2_CountTimes",
+      "type": "Int",
+      "address": "132",
+      "value": "132",
+      "comment": ""
+    },
+    "P3_TemperatureSetting": {
+      "stt": "51",
+      "name": "P3_TemperatureSetting",
+      "type": "Real",
+      "address": "134",
+      "value": "134",
+      "comment": ""
+    },
+    "P3_TempLimitHIGH": {
+      "stt": "52",
+      "name": "P3_TempLimitHIGH",
+      "type": "Real",
+      "address": "138",
+      "value": "138",
+      "comment": ""
+    },
+    "P3_TempLimitLOW": {
+      "stt": "53",
+      "name": "P3_TempLimitLOW",
+      "type": "Real",
+      "address": "142",
+      "value": "142",
+      "comment": ""
+    },
+    "P3_Temp1Offset": {
+      "stt": "54",
+      "name": "P3_Temp1Offset",
+      "type": "Real",
+      "address": "146",
+      "value": "146",
+      "comment": ""
+    },
+    "P3_Temp2Offset": {
+      "stt": "55",
+      "name": "P3_Temp2Offset",
+      "type": "Real",
+      "address": "150",
+      "value": "150",
+      "comment": ""
+    },
+    "P3_Temp3Offset": {
+      "stt": "56",
+      "name": "P3_Temp3Offset",
+      "type": "Real",
+      "address": "154",
+      "value": "154",
+      "comment": ""
+    },
+    "P3_PressureSetting": {
+      "stt": "57",
+      "name": "P3_PressureSetting",
+      "type": "Real",
+      "address": "158",
+      "value": "158",
+      "comment": ""
+    },
+    "P3_PressureHoseOffset": {
+      "stt": "58",
+      "name": "P3_PressureHoseOffset",
+      "type": "Real",
+      "address": "162",
+      "value": "162",
+      "comment": ""
+    },
+    "P3_PressureITVOffset": {
+      "stt": "59",
+      "name": "P3_PressureITVOffset",
+      "type": "Real",
+      "address": "166",
+      "value": "166",
+      "comment": ""
+    },
+    "P3_Air FillingTime": {
+      "stt": "95",
+      "name": "P3_Air FillingTime",
+      "type": "DInt",
+      "address": "302",
+      "value": "302",
+      "comment": ""
+    },
+    "P3_Air HoldingTime": {
+      "stt": "96",
+      "name": "P3_Air HoldingTime",
+      "type": "DInt",
+      "address": "306",
+      "value": "306",
+      "comment": ""
+    },
+    "P3_Air ReleaseTime": {
+      "stt": "97",
+      "name": "P3_Air ReleaseTime",
+      "type": "DInt",
+      "address": "310",
+      "value": "310",
+      "comment": ""
+    },
+    "P3_Oil Start Time": {
+      "stt": "98",
+      "name": "P3_Oil Start Time",
+      "type": "DInt",
+      "address": "314",
+      "value": "314",
+      "comment": ""
+    },
+    "P3_Oil End Time": {
+      "stt": "99",
+      "name": "P3_Oil End Time",
+      "type": "DInt",
+      "address": "318",
+      "value": "318",
+      "comment": ""
+    },
+    "P3_CountTimes": {
+      "stt": "65",
+      "name": "P3_CountTimes",
+      "type": "Int",
+      "address": "190",
+      "value": "190",
+      "comment": ""
+    },
+    "Bit_Alarm": {
+      "stt": "66",
+      "name": "Bit_Alarm",
+      "type": "Bool",
+      "address": "192",
+      "value": "192",
+      "comment": "Bit_Output"
+    },
+    "T0_Current Temp": {
+      "stt": "67",
+      "name": "T0_Current Temp",
+      "type": "Real",
+      "address": "194",
+      "value": "194",
+      "comment": "Output"
+    },
+    "P1_Current Temp1": {
+      "stt": "68",
+      "name": "P1_Current Temp1",
+      "type": "Real",
+      "address": "198",
+      "value": "198",
+      "comment": ""
+    },
+    "P1_Current Temp2": {
+      "stt": "69",
+      "name": "P1_Current Temp2",
+      "type": "Real",
+      "address": "202",
+      "value": "202",
+      "comment": ""
+    },
+    "P1_Current Temp3": {
+      "stt": "70",
+      "name": "P1_Current Temp3",
+      "type": "Real",
+      "address": "206",
+      "value": "206",
+      "comment": ""
+    },
+    "P1_Current PressureHose": {
+      "stt": "71",
+      "name": "P1_Current PressureHose",
+      "type": "Real",
+      "address": "210",
+      "value": "210",
+      "comment": ""
+    },
+    "P1_Current PressureITV": {
+      "stt": "72",
+      "name": "P1_Current PressureITV",
+      "type": "Real",
+      "address": "214",
+      "value": "214",
+      "comment": ""
+    },
+    "P1_Number Test Times": {
+      "stt": "78",
+      "name": "P1_Number Test Times",
+      "type": "Int",
+      "address": "238",
+      "value": "238",
+      "comment": ""
+    },
+    "P2_Current Temp1": {
+      "stt": "79",
+      "name": "P2_Current Temp1",
+      "type": "Real",
+      "address": "240",
+      "value": "240",
+      "comment": ""
+    },
+    "P2_Current Temp2": {
+      "stt": "80",
+      "name": "P2_Current Temp2",
+      "type": "Real",
+      "address": "244",
+      "value": "244",
+      "comment": ""
+    },
+    "P2_Current Temp3": {
+      "stt": "81",
+      "name": "P2_Current Temp3",
+      "type": "Real",
+      "address": "248",
+      "value": "248",
+      "comment": ""
+    },
+    "P2_Current PressureHose": {
+      "stt": "82",
+      "name": "P2_Current PressureHose",
+      "type": "Real",
+      "address": "252",
+      "value": "252",
+      "comment": ""
+    },
+    "P2_Current PressureITV": {
+      "stt": "83",
+      "name": "P2_Current PressureITV",
+      "type": "Real",
+      "address": "256",
+      "value": "256",
+      "comment": ""
+    },
+    "P2_Number Test Times": {
+      "stt": "89",
+      "name": "P2_Number Test Times",
+      "type": "Int",
+      "address": "280",
+      "value": "280",
+      "comment": ""
+    },
+    "P3_Current Temp1": {
+      "stt": "90",
+      "name": "P3_Current Temp1",
+      "type": "Real",
+      "address": "282",
+      "value": "282",
+      "comment": ""
+    },
+    "P3_Current Temp2": {
+      "stt": "91",
+      "name": "P3_Current Temp2",
+      "type": "Real",
+      "address": "286",
+      "value": "286",
+      "comment": ""
+    },
+    "P3_Current Temp3": {
+      "stt": "92",
+      "name": "P3_Current Temp3",
+      "type": "Real",
+      "address": "290",
+      "value": "290",
+      "comment": ""
+    },
+    "P3_Current PressureHose": {
+      "stt": "93",
+      "name": "P3_Current PressureHose",
+      "type": "Real",
+      "address": "294",
+      "value": "294",
+      "comment": ""
+    },
+    "P3_Current PressureITV": {
+      "stt": "94",
+      "name": "P3_Current PressureITV",
+      "type": "Real",
+      "address": "298",
+      "value": "298",
+      "comment": ""
+    },
+    "P3_Number Test Times": {
+      "stt": "100",
+      "name": "P3_Number Test Times",
+      "type": "Int",
+      "address": "322",
+      "value": "322",
+      "comment": ""
+    },
+    "Alarm_Info": {
+      "stt": "101",
+      "name": "Alarm_Info",
+      "type": "String",
+      "address": "324",
+      "value": "324",
+      "comment": ""
+    }
+  }
+}
