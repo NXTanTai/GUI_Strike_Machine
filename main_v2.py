@@ -12,6 +12,7 @@ import pandas as pd
 import logging
 import logging.handlers
 import atexit
+from openpyxl import Workbook
 from PySide6.QtCore import (Qt, QTimer, QObject,
                             QSettings, QDateTime, 
                             QEvent, QSharedMemory,
@@ -43,6 +44,10 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
 os.environ["QT_FONT_DPI"] = "96"
 
+BASE_DIR = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent
+
+settings_path = str(BASE_DIR / "settings.ini")
+
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
@@ -69,7 +74,11 @@ class StrikeMachine(QMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.settings = QSettings("TechLink", "STKMApp")
+        self.app_settings = QSettings(
+            settings_path,
+            QSettings.Format.IniFormat
+        )
+        print("INIT SETTINGS:", self.app_settings.format())
         self._find_stk_mch_folder()
         self._init_logger()
         self.ui = Ui_MainWindow()
@@ -91,34 +100,50 @@ class StrikeMachine(QMainWindow):
         self.ui.home_page_btn.click()
 
     def _find_stk_mch_folder(self):
-        default_path = str(self.settings.value("stk_mch_folder", "C:\\", type=str))
-        stk_mch_folder = Path(default_path) / "SM_PRD"
+        print("CURRENT SETTINGS:", self.app_settings.format())
+        stk_mch_folder = Path(
+            self.app_settings.value(
+                "stk_mch_folder",
+                "C:\\SM_PRD",
+                type=str
+            )
+        )
 
+        print("Loaded:", stk_mch_folder)
+
+        # Nếu folder chưa tồn tại
         if not stk_mch_folder.is_dir():
-            response = ltmessage.question(self, "Warning", "Data Folder not found! Create a new one?")
 
-            if response == ltmessage.Yes:
-                # Cho người dùng chọn nơi tạo thư mục SM_PRD
-                parent_folder = QFileDialog.getExistingDirectory(
-                    self,
-                    "Select a Path for SM_PRD folder",
-                    str(Path(default_path)),
-                    QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks #type: ignore
-                )
-                if parent_folder:
-                    stk_mch_folder = Path(parent_folder) / "SM_PRD"
-                    stk_mch_folder.mkdir(parents=True, exist_ok=True)
-                    # Lưu đường dẫn vào QSettings
-                    self.settings.setValue("stk_mch_folder", str(stk_mch_folder.parent))
-                else:
-                    return None
-            else:
+            response = ltmessage.question(
+                self,
+                "Warning",
+                "Data Folder not found! Create a new one?"
+            )
+
+            if response != ltmessage.Yes:
                 return None
-    
-        if not stk_mch_folder.exists():
-            stk_mch_folder.mkdir(parents=True, exist_ok=True)
-    
-        # Lưu đường dẫn vào thuộc tính của lớp
+
+            parent_folder = QFileDialog.getExistingDirectory(
+                self,
+                "Select a Path for SM_PRD folder",
+                str(stk_mch_folder.parent),
+                QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks # type: ignore
+            )
+
+            if not parent_folder:
+                return None
+
+            stk_mch_folder = Path(parent_folder) / "SM_PRD"
+
+            stk_mch_folder.mkdir(
+                parents=True,
+                exist_ok=True
+            )
+
+        # ALWAYS SAVE
+        self.app_settings.setValue("stk_mch_folder", str(stk_mch_folder))
+        self.app_settings.sync()
+
         self.stk_mch_folder = stk_mch_folder
 
     def _init_db_layout_and_size(self):
@@ -1257,25 +1282,31 @@ class StrikeMachine(QMainWindow):
         pv_press = [self.ui.pressure_sv_a_1.value()]
         self.chart_temp.append_data(temp_values, pv_press)
         
-        group_a_values = [self.ui.pressure_sv_a_1.value(),
+        group_a_values = [
                             self.for_display_temp(list_group_a_recv[2]),
                             self.for_display_temp(list_group_a_recv[3]),
                             self.for_display_temp(list_group_a_recv[4])]
-        group_a_press_values = [list_group_a_recv[0]]
+        group_a_press_values = [self.ui.pressure_sv_a_5.value(),
+                                list_group_a_recv[0]
+                                ]
         self.chart_pressure_a.append_data(group_a_values, group_a_press_values)
 
-        group_b_values = [self.ui.pressure_sv_b_1.value(),
+        group_b_values = [
                         self.for_display_temp(list_group_b_recv[2]),
                         self.for_display_temp(list_group_b_recv[3]),
                         self.for_display_temp(list_group_b_recv[4])]
-        group_b_press_values = [list_group_b_recv[0]]
+        group_b_press_values = [
+            self.ui.pressure_sv_b_5.value(),
+            list_group_b_recv[0]]
         self.chart_pressure_b.append_data(group_b_values, group_b_press_values)
 
-        group_c_values = [self.ui.pressure_sv_c_1.value(),
+        group_c_values = [
                         self.for_display_temp(list_group_c_recv[2]),
                         self.for_display_temp(list_group_c_recv[3]),
                         self.for_display_temp(list_group_c_recv[4])]
-        group_c_press_values = [list_group_c_recv[0]]
+        group_c_press_values = [
+            self.ui.pressure_sv_c_5.value(),
+            list_group_c_recv[0]]
         self.chart_pressure_c.append_data(group_c_values, group_c_press_values)
 
     # def _data_group_filter(self, list_group_a_recv, list_group_b_recv, list_group_c_recv):

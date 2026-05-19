@@ -4,7 +4,7 @@ from typing import Any, Optional
 from queue import Queue
 
 import snap7
-from snap7.error import S7Error
+from snap7.error import *
 from snap7.type import Area
 from snap7.util import set_bool, set_real, set_dint, set_int, set_string
 

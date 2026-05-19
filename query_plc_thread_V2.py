@@ -3,7 +3,7 @@ import logging
 from typing import Any, Optional
 
 import snap7
-from snap7.error import S7Error
+from snap7.error import *
 
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 

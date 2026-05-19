@@ -13,10 +13,9 @@ TEMP_COLORS     = ["#43A047", "#FB8C00", "#E53935"]
 PRESSURE_COLORS = ["#1E88E5", "#8E24AA", "#00ACC1"]
 
 FONT_FAMILY  = "Segoe UI"
-FONT_SIZE_LG = 16
-FONT_SIZE_MD = 16
+FONT_SIZE_LG = 14
+FONT_SIZE_MD = 14
 FONT_SIZE_SM = 13
-
 
 class _FixedTickDateAxis(pg.DateAxisItem):
     """DateAxisItem với tick cố định mỗi tick_spacing giây."""
@@ -115,12 +114,25 @@ class CustomChartWidget(QWidget):
     def _setup_chart(self):
         pg.setConfigOptions(antialias=True, useOpenGL=True)
 
-        # ── Title / Setting button ────────────────────────────────────────────
+        self._create_title()
+        self._create_legend()
+        self._create_plot_widget()
+        self._create_axes()
+        self._create_pressure_viewbox()
+        self._create_temp_curves()
+        self._create_pressure_curves()
+        self._create_end_labels()
+
+        self._root.addWidget(self.plot)
+
+    def _create_title(self):
         font_btn = QFont(self._font_family, self._font_size_lg)
         font_btn.setWeight(QFont.Weight.Bold)
+
         self.btn_setting = QPushButton(self.title)
         self.btn_setting.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn_setting.setFont(font_btn)
+
         self.btn_setting.setStyleSheet("""
             QPushButton {
                 background: white;
@@ -131,159 +143,337 @@ class CustomChartWidget(QWidget):
                 background: #F0F9FF;
             }
         """)
+
         title_row = QHBoxLayout()
         title_row.setContentsMargins(0, 0, 0, 0)
+
         title_row.addStretch()
         title_row.addWidget(self.btn_setting)
         title_row.addStretch()
+
         self._root.addLayout(title_row)
 
-        # ── Legend bar ────────────────────────────────────────────────────────
+    def _create_legend(self):
         legend_bar = QHBoxLayout()
         legend_bar.setContentsMargins(8, 0, 8, 2)
         legend_bar.setSpacing(16)
+
         legend_bar.addStretch()
 
-        self._legend_temp: list[QLabel]     = []
-        self._legend_pressure: list[QLabel] = []
+        self._legend_temp = []
+        self._legend_pressure = []
+
         font_legend = QFont(self._font_family, FONT_SIZE_SM)
         font_legend.setWeight(QFont.Weight.Bold)
 
-        temp_names     = ["T1", "T2", "T3"]
+        temp_names = ["T1", "T2", "T3"]
         pressure_names = ["P1", "P2", "P3"]
 
         for i in range(self.num_temp):
-            color = TEMP_COLORS[i]
-            dot   = QFrame(); dot.setFixedSize(14, 4)
-            dot.setStyleSheet(f"background: {color}; border-radius: 2px;")
-            lbl = QLabel(temp_names[i]); lbl.setFont(font_legend)
-            self._legend_temp.append(lbl)
-            row = QHBoxLayout(); row.setContentsMargins(0,0,0,0); row.setSpacing(4)
-            row.addWidget(dot); row.addWidget(lbl)
-            w = QWidget(); w.setLayout(row)
-            legend_bar.addWidget(w)
+            widget = self._build_temp_legend(
+                temp_names[i],
+                TEMP_COLORS[i],
+                font_legend
+            )
+            legend_bar.addWidget(widget)
 
-        # Separator giữa 2 nhóm
-        sep = QFrame(); sep.setFixedSize(1, 14)
+        sep = QFrame()
+        sep.setFixedSize(1, 14)
         sep.setStyleSheet("background: #CBD5E1;")
+
         legend_bar.addWidget(sep)
 
         for i in range(self.num_pressure):
-            color = PRESSURE_COLORS[i]
-            # Dùng gradient nét đứt để phân biệt pressure
-            dot = QFrame(); dot.setFixedSize(14, 4)
-            dot.setStyleSheet(
-                f"background: qlineargradient(x1:0,y1:0,x2:1,y2:0,"
-                f"stop:0 {color}, stop:0.4 {color},"
-                f"stop:0.5 transparent, stop:0.9 transparent, stop:1 {color});"
-                f"border-radius: 1px;"
+            widget = self._build_pressure_legend(
+                pressure_names[i],
+                PRESSURE_COLORS[i],
+                font_legend
             )
-            lbl = QLabel(pressure_names[i]); lbl.setFont(font_legend)
-            self._legend_pressure.append(lbl)
-            row = QHBoxLayout(); row.setContentsMargins(0,0,0,0); row.setSpacing(4)
-            row.addWidget(dot); row.addWidget(lbl)
-            w = QWidget(); w.setLayout(row)
-            legend_bar.addWidget(w)
+            legend_bar.addWidget(widget)
 
         legend_bar.addStretch()
+
         self._root.addLayout(legend_bar)
 
-        # ── PlotWidget (ViewBox chính — nhiệt độ) ─────────────────────────────
-        self.plot = pg.PlotWidget()
-        self.plot.setBackground(None)
-        self.plot.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        self.plot.showGrid(x=True, y=True, alpha=0.1)
-        self.plot.setYRange(*self.temp_range)
-        self.plot.plotItem.getViewBox().setDefaultPadding(0)
+    def _build_temp_legend(self, text, color, font):
+        dot = QFrame()
+        dot.setFixedSize(14, 4)
+        dot.setStyleSheet(
+            f"background: {color}; border-radius: 2px;"
+        )
 
-        font_tick  = QFont(self._font_family, FONT_SIZE_SM)
+        lbl = QLabel(text)
+        lbl.setFont(font)
+
+        self._legend_temp.append(lbl)
+
+        row = QHBoxLayout()
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(4)
+
+        row.addWidget(dot)
+        row.addWidget(lbl)
+
+        w = QWidget()
+        w.setLayout(row)
+
+        return w
+
+    def _build_pressure_legend(self, text, color, font):
+        dot = QFrame()
+        dot.setFixedSize(14, 4)
+
+        dot.setStyleSheet(
+            f"""
+            background: qlineargradient(
+                x1:0,y1:0,x2:1,y2:0,
+                stop:0 {color},
+                stop:0.4 {color},
+                stop:0.5 transparent,
+                stop:0.9 transparent,
+                stop:1 {color}
+            );
+            border-radius: 1px;
+            """
+        )
+
+        lbl = QLabel(text)
+        lbl.setFont(font)
+
+        self._legend_pressure.append(lbl)
+
+        row = QHBoxLayout()
+        row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(4)
+
+        row.addWidget(dot)
+        row.addWidget(lbl)
+
+        w = QWidget()
+        w.setLayout(row)
+
+        return w
+
+    def _create_plot_widget(self):
+        self.plot = pg.PlotWidget()
+
+        self.plot.setBackground(None)
+
+        self.plot.setAttribute(
+            Qt.WidgetAttribute.WA_TranslucentBackground
+        )
+
+        self.plot.showGrid(x=True, y=True, alpha=0.1)
+
+        self.plot.setYRange(*self.temp_range)
+
+        self.plot.plotItem.getViewBox().setDefaultPadding(0)
+        self.plot.plotItem.layout.setContentsMargins(0, 0, 0, 0)
+        self.plot.plotItem.layout.setHorizontalSpacing(0)
+        
+    def _create_axes(self):
+        font_tick = QFont(self._font_family, FONT_SIZE_SM)
+
         axis_style = {
-            "color"      : "black",
+            "color": "black",
             "font-family": self._font_family,
-            "font-size"  : f"{FONT_SIZE_MD}pt",
+            "font-size": f"{FONT_SIZE_MD}pt",
+            "font-weight": 500,
         }
 
-        for axis_name in ("bottom", "left"):
+        for axis_name in ("bottom", "left", "right"):
             ax = self.plot.getAxis(axis_name)
+
             ax.setTickFont(font_tick)
             ax.setTextPen(pg.mkPen("#94A3B8"))
             ax.setPen(pg.mkPen("#334155"))
+
         self.plot.setLabel("left", self.temp_label, **axis_style)
-        self.plot.getAxis("left").label.setRotation(0)
 
-        # Trục X thời gian
-        date_axis = _FixedTickDateAxis(orientation="bottom", tick_spacing=10)
+        # self.plot.getAxis("left").label.setRotation(0)
+
+        date_axis = _FixedTickDateAxis(
+            orientation="bottom",
+            tick_spacing=15
+        )
+
         date_axis.setTickFont(font_tick)
-        self.plot.setAxisItems({"bottom": date_axis})
-        self.plot.getAxis("bottom").setLabel("Time", **axis_style)
 
-        # ── ViewBox phụ — áp suất ─────────────────────────────────────────────
+        self.plot.setAxisItems({
+            "bottom": date_axis
+        })
+
+        self.plot.getAxis("bottom").setLabel(
+            "Time",
+            **axis_style
+        )
+        
+    def _create_pressure_viewbox(self):
+        font_tick = QFont(self._font_family, FONT_SIZE_SM)
+
+        # Create secondary ViewBox
         self._vb_pressure = pg.ViewBox()
+
         self._vb_pressure.setDefaultPadding(0)
-        self._vb_pressure.setYRange(*self.pressure_range)
-        self.plot.plotItem.scene().addItem(self._vb_pressure)
 
-        # Trục phải — setWidth đủ lớn để label không bị che bởi end-of-line text
-        self._axis_right = pg.AxisItem(orientation="right")
-        self._axis_right.setTickFont(font_tick)
-        self._axis_right.setTextPen(pg.mkPen("#94A3B8"))
-        self._axis_right.setPen(pg.mkPen("#334155"))
-        self._axis_right.setWidth(90)          # ← chỗ cho " P1: 9.99 bar "
-        self.plot.plotItem.layout.addItem(self._axis_right, 2, 3)
-        self._axis_right.linkToView(self._vb_pressure)
-        self.plot.setLabel("right", self.pressure_label, **axis_style)
+        self._vb_pressure.setYRange(
+            *self.pressure_range
+        )
 
-        # Sync kích thước ViewBox phụ với chính
-        self.plot.plotItem.getViewBox().sigResized.connect(self._sync_pressure_vb)
+        # Add overlay ViewBox
+        self.plot.scene().addItem(
+            self._vb_pressure
+        )
 
-        # ── Curves nhiệt độ ────────────────────────────────────────────────────
-        self._temp_curves: list[pg.PlotDataItem] = []
+        # Enable right axis
+        self.plot.showAxis("right")
+
+        axis_right = self.plot.getAxis("right")
+
+        axis_right.setTickFont(font_tick)
+
+        axis_right.setTextPen(
+            pg.mkPen("#94A3B8")
+        )
+
+        axis_right.setPen(
+            pg.mkPen("#334155")
+        )
+
+        # axis_right.setWidth(55)
+
+        # Link axis to pressure ViewBox
+        axis_right.linkToView(
+            self._vb_pressure
+        )
+
+        # Right axis label
+        axis_style = {
+            "color": "black",
+            "font-family": self._font_family,
+            "font-size": f"{FONT_SIZE_MD}pt",
+            "font-weight": 500,
+        }
+
+        self.plot.setLabel(
+            "right",
+            self.pressure_label,
+            **axis_style
+        )
+
+        # Share X-axis
+        self._vb_pressure.setXLink(
+            self.plot
+        )
+
+        # Resize sync
+        self.plot.getViewBox().sigResized.connect(
+            self._sync_pressure_vb
+        )
+        
+    def _create_temp_curves(self):
+        self._temp_curves = []
+
         for i in range(self.num_temp):
-            pen   = pg.mkPen(color=TEMP_COLORS[i], width=2)
+            pen = pg.mkPen(
+                color=TEMP_COLORS[i],
+                width=2
+            )
+
             curve = self.plot.plot(pen=pen)
+
             self._temp_curves.append(curve)
+            
+    def _create_pressure_curves(self):
+        self._pressure_curves = []
 
-        # ── Curves áp suất (gắn vào ViewBox phụ) ─────────────────────────────
-        self._pressure_curves: list[pg.PlotDataItem] = []
         for i in range(self.num_pressure):
-            pen   = pg.mkPen(color=PRESSURE_COLORS[i], width=2,
-                             style=Qt.PenStyle.DashLine)
+            pen = pg.mkPen(
+                color=PRESSURE_COLORS[i],
+                width=2,
+                style=Qt.PenStyle.DashLine
+            )
+
             curve = pg.PlotDataItem(pen=pen)
+
             self._vb_pressure.addItem(curve)
+
             self._pressure_curves.append(curve)
+            
+    def _create_end_labels(self):
+        self._create_temp_labels()
+        self._create_pressure_labels()
+        
+    def _create_temp_labels(self):
+        self._temp_labels = []
 
-        self._root.addWidget(self.plot)
-
-        # ── End-of-line TextItems ─────────────────────────────────────────────
-        # Temp labels gắn vào ViewBox chính (toạ độ °C)
-        self._temp_labels: list[pg.TextItem] = []
         for i in range(self.num_temp):
-            item = pg.TextItem(text="", color=TEMP_COLORS[i], anchor=(0, 0.5))
-            item.setFont(QFont(self._font_family, FONT_SIZE_SM, QFont.Weight.Bold))
-            item.fill   = pg.mkBrush(255, 255, 255, 200)
-            item.border = pg.mkPen(TEMP_COLORS[i], width=1)
+            item = pg.TextItem(
+                text="",
+                color=TEMP_COLORS[i],
+                anchor=(1, 1),
+                border=None
+            )
+
+            item.setFont(
+                QFont(
+                    self._font_family,
+                    FONT_SIZE_SM,
+                    QFont.Weight.Bold
+                )
+            )
+            # item.setZValue(100)
+            # item.fill = pg.mkBrush(255, 255, 255, 200)
+            item.fill = pg.mkBrush(0, 0, 0, 0)
+
+            # item.border = pg.mkPen(
+            #     TEMP_COLORS[i],
+            #     width=1
+            # )
+
             item.hide()
+
             self.plot.addItem(item)
+
             self._temp_labels.append(item)
 
-        # Pressure labels gắn vào ViewBox phụ (toạ độ bar)
-        self._pressure_labels: list[pg.TextItem] = []
+    def _create_pressure_labels(self):
+        self._pressure_labels = []
+
         for i in range(self.num_pressure):
-            item = pg.TextItem(text="", color=PRESSURE_COLORS[i], anchor=(0, 0.5))
-            item.setFont(QFont(self._font_family, FONT_SIZE_SM, QFont.Weight.Bold))
-            item.fill   = pg.mkBrush(255, 255, 255, 200)
-            item.border = pg.mkPen(PRESSURE_COLORS[i], width=1)
+            item = pg.TextItem(
+                text="",
+                color=PRESSURE_COLORS[i],
+                anchor=(1, 1),
+                border=None
+            )
+
+            item.setFont(
+                QFont(
+                    self._font_family,
+                    FONT_SIZE_SM,
+                    QFont.Weight.Bold
+                )
+            )
+            # item.setZValue(100)
+            # item.fill = pg.mkBrush(255, 255, 255, 200)
+            item.fill = pg.mkBrush(0, 0, 0, 0)
+
+            # item.border = pg.mkPen(
+            #     PRESSURE_COLORS[i],
+            #     width=1
+            # )
+
             item.hide()
+
             self._vb_pressure.addItem(item)
+
             self._pressure_labels.append(item)
 
     # ── Sync ViewBox phụ ──────────────────────────────────────────────────────
     def _sync_pressure_vb(self):
         self._vb_pressure.setGeometry(
-            self.plot.plotItem.getViewBox().sceneBoundingRect()
-        )
-        self._vb_pressure.linkedViewChanged(
-            self.plot.plotItem.getViewBox(), self._vb_pressure.XAxis
+            self.plot.getViewBox().sceneBoundingRect()
         )
 
     # ── Timer trục X ─────────────────────────────────────────────────────────
@@ -294,11 +484,24 @@ class CustomChartWidget(QWidget):
         self._update_axis()
 
     def _update_axis(self):
-        now       = time.time()
-        right_pad = self.max_seconds * 0.04   # ~2.4s padding để label không bị cắt
-        x_min, x_max = now - self.max_seconds, now + right_pad
-        self.plot.setXRange(x_min, x_max, padding=0)
-        self._vb_pressure.setXRange(x_min, x_max, padding=0)
+        now = time.time()
+
+        right_pad = self.max_seconds * 0.01
+
+        x_min = now - self.max_seconds
+        x_max = now + right_pad
+
+        self.plot.setXRange(
+            x_min,
+            x_max,
+            padding=0
+        )
+
+        self._vb_pressure.setXRange(
+            x_min,
+            x_max,
+            padding=0
+        )
 
     # ── Cập nhật end-of-line labels ───────────────────────────────────────────
     def _update_end_labels(self):
@@ -306,18 +509,18 @@ class CustomChartWidget(QWidget):
             if not self._tx[i]:
                 self._temp_labels[i].hide(); continue
             lx, ly = self._tx[i][-1], self._ty[i][-1]
-            name   = self._legend_temp[i].text()
-            self._temp_labels[i].setText(f" {name}: {ly:.1f}°C ")
-            self._temp_labels[i].setPos(lx + 0.3, ly)
+            # name   = self._legend_temp[i].text()
+            self._temp_labels[i].setText(f"{ly:.1f}°C ")
+            self._temp_labels[i].setPos(lx - 0.1, ly)
             self._temp_labels[i].show()
 
         for i in range(self.num_pressure):
             if not self._px[i]:
                 self._pressure_labels[i].hide(); continue
             lx, ly = self._px[i][-1], self._py[i][-1]
-            name   = self._legend_pressure[i].text()
-            self._pressure_labels[i].setText(f" {name}: {ly:.2f} bar ")
-            self._pressure_labels[i].setPos(lx + 0.3, ly)
+            # name   = self._legend_pressure[i].text()
+            self._pressure_labels[i].setText(f"{ly:.2f} bar ")
+            self._pressure_labels[i].setPos(lx - 0.1, ly)
             self._pressure_labels[i].show()
 
     # ── Public API ─────────────────────────────────────────────────────────────
