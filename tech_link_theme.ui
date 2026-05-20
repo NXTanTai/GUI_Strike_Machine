@@ -619,7 +619,7 @@ image: url(:/newPrefix/align-justify.png);</string>
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>2</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
