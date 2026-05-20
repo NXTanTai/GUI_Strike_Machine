@@ -15665,7 +15665,7 @@ QPushButton:checked {
                  <item>
                   <widget class="QStackedWidget" name="stackedWidget_3">
                    <property name="currentIndex">
-                    <number>0</number>
+                    <number>1</number>
                    </property>
                    <widget class="QWidget" name="connection_page">
                     <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -17523,7 +17523,7 @@ border-radius: 20px;</string>
 }</string>
                                 </property>
                                 <property name="currentIndex">
-                                 <number>0</number>
+                                 <number>1</number>
                                 </property>
                                 <widget class="QWidget" name="off_light_1">
                                  <layout class="QHBoxLayout" name="horizontalLayout_471">
