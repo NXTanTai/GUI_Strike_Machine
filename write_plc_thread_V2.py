@@ -316,7 +316,7 @@ class PLCWrite(QObject):
             result = self._client.write_multi_vars(items)
             if result == 0:
                 self.write_done.emit("multi_vars")
-                logger.info(f"write_multi_vars OK: {len(items)} items")
+                logger.info(f"write_multi_vars OK: {len(items)} items: {items}")
             else:
                 self.error.emit(f"write_multi_vars returned: {result}")
         except Exception as exc:

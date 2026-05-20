@@ -619,12 +619,21 @@ image: url(:/newPrefix/align-justify.png);</string>
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>1</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
-               <string notr="true">QWidget{
-	background-color: white;
+               <string notr="true">QFrame {	
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #bfe2f7
+            );
+	border-radius: 20px;
+}
+QFrame:hover {	
+	border: 1px solid rgb(0, 170, 255);
 }</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -643,7 +652,7 @@ image: url(:/newPrefix/align-justify.png);</string>
                <item>
                 <layout class="QGridLayout" name="gridLayout_2">
                  <property name="spacing">
-                  <number>5</number>
+                  <number>10</number>
                  </property>
                  <item row="0" column="1">
                   <widget class="QFrame" name="card_frame_7">
@@ -750,7 +759,7 @@ image: url(:/newPrefix/align-justify.png);</string>
                  <item row="0" column="0">
                   <widget class="QFrame" name="card_frame_6">
                    <property name="styleSheet">
-                    <string notr="true">color: black;</string>
+                    <string notr="true"/>
                    </property>
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
@@ -2395,7 +2404,12 @@ QSpinBox
                                <string notr="true">QLabel{
 	border-left: none;
 	color: rgb(97, 97, 97);
-background-color: #e3e6ee;
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );
 }
 QWidget{
 	border-left: none;
@@ -7393,7 +7407,12 @@ QSpinBox
                                <string notr="true">QLabel{
 	border-left: none;
 	color: rgb(97, 97, 97);
-background-color: #e3e6ee;
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );
 }
 QWidget{
 	border-left: none;
@@ -8282,7 +8301,12 @@ QSpinBox
                                <string notr="true">QLabel{
 	border-left: none;
 	color: rgb(97, 97, 97);
-background-color: #e3e6ee;
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );
 }
 QWidget{
 	border-left: none;
@@ -9976,6 +10000,25 @@ QPushButton:checked {
                               </item>
                              </layout>
                             </item>
+                            <item row="0" column="0">
+                             <widget class="QLabel" name="code_display">
+                              <property name="font">
+                               <font>
+                                <family>MS Shell Dlg 2</family>
+                                <pointsize>19</pointsize>
+                                <weight>75</weight>
+                                <italic>false</italic>
+                                <bold>true</bold>
+                               </font>
+                              </property>
+                              <property name="text">
+                               <string/>
+                              </property>
+                              <property name="alignment">
+                               <set>Qt::AlignCenter</set>
+                              </property>
+                             </widget>
+                            </item>
                            </layout>
                           </widget>
                          </item>
@@ -10168,7 +10211,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -10360,7 +10403,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -10552,7 +10595,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -10744,7 +10787,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -10914,7 +10957,13 @@ QSpinBox
                             </font>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: #e3e6ee;</string>
+                            <string notr="true">
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );</string>
                            </property>
                            <property name="text">
                             <string>PV:</string>
@@ -10936,7 +10985,13 @@ QSpinBox
                             </font>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: #e3e6ee;</string>
+                            <string notr="true">
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );</string>
                            </property>
                            <property name="text">
                             <string>SV:</string>
@@ -10958,7 +11013,13 @@ QSpinBox
                             </font>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: #e3e6ee;</string>
+                            <string notr="true">
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );</string>
                            </property>
                            <property name="text">
                             <string>H.Alm Value:</string>
@@ -10980,7 +11041,13 @@ QSpinBox
                             </font>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: #e3e6ee;</string>
+                            <string notr="true">
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );</string>
                            </property>
                            <property name="text">
                             <string>L.Alm Value:</string>
@@ -11051,7 +11118,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -11243,7 +11310,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -11505,7 +11572,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -11697,7 +11764,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -11889,7 +11956,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -12081,7 +12148,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -12273,7 +12340,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -12465,7 +12532,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -12768,7 +12835,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -12960,7 +13027,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -13152,7 +13219,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -13344,7 +13411,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -13536,7 +13603,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -13728,7 +13795,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -13920,7 +13987,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -14063,7 +14130,13 @@ QSpinBox
                             </font>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: #e3e6ee;</string>
+                            <string notr="true">
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );</string>
                            </property>
                            <property name="text">
                             <string>Offset Mid:</string>
@@ -14134,7 +14207,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -14178,7 +14251,7 @@ QSpinBox
                             <item>
                              <widget class="QStackedWidget" name="stacked_cel_fah_temp_t0_5">
                               <property name="currentIndex">
-                               <number>0</number>
+                               <number>1</number>
                               </property>
                               <widget class="QWidget" name="celsius_t0_5">
                                <layout class="QHBoxLayout" name="horizontalLayout_464">
@@ -14326,7 +14399,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -14518,7 +14591,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -14710,7 +14783,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -14902,7 +14975,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -15094,7 +15167,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -15286,7 +15359,7 @@ QSpinBox
                                  <property name="font">
                                   <font>
                                    <family>Segoe UI</family>
-                                   <pointsize>21</pointsize>
+                                   <pointsize>25</pointsize>
                                    <weight>75</weight>
                                    <italic>false</italic>
                                    <bold>true</bold>
@@ -15429,7 +15502,13 @@ QSpinBox
                             </font>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: #e3e6ee;</string>
+                            <string notr="true">
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );</string>
                            </property>
                            <property name="text">
                             <string>Offset Front:</string>
@@ -15451,7 +15530,13 @@ QSpinBox
                             </font>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: #e3e6ee;</string>
+                            <string notr="true">
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #e3e6ee
+            );</string>
                            </property>
                            <property name="text">
                             <string>Offset End:</string>
@@ -16097,7 +16182,7 @@ QPushButton:hover {
 }</string>
                                        </property>
                                        <property name="text">
-                                        <string>Communicating</string>
+                                        <string>Online</string>
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
@@ -16149,7 +16234,7 @@ color: #F90A0A;
 padding-right: 3px;</string>
                                        </property>
                                        <property name="text">
-                                        <string>No Signal</string>
+                                        <string>Offline</string>
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
@@ -16360,7 +16445,7 @@ color: #10B981;
 padding-right: 3px;</string>
                                        </property>
                                        <property name="text">
-                                        <string>Communicating</string>
+                                        <string>Online</string>
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
@@ -16418,7 +16503,7 @@ QPushButton:hover {
 }</string>
                                        </property>
                                        <property name="text">
-                                        <string>No Signal</string>
+                                        <string>Offline</string>
                                        </property>
                                        <property name="icon">
                                         <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
@@ -19831,7 +19916,7 @@ QPushButton:disabled {
                       </property>
                       <property name="icon">
                        <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                        <normaloff>:/Icons/stats (1).png</normaloff>:/Icons/stats (1).png</iconset>
+                        <normaloff>:/Icons/xlsx-file-format.png</normaloff>:/Icons/xlsx-file-format.png</iconset>
                       </property>
                       <property name="iconSize">
                        <size>

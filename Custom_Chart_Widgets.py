@@ -4,13 +4,13 @@ from collections import deque
 import time
 import pyqtgraph as pg
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QFrame
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QLinearGradient, QColor, QPalette, QBrush
 from PySide6.QtCore import Qt, QTimer
 
 # Temp series: xanh lá / cam / đỏ
-TEMP_COLORS     = ["#43A047", "#FB8C00", "#E53935"]
+TEMP_COLORS     = ["#E53935", "#4C1083" , "#FB8C00", "#F72668"]
 # Pressure series: xanh dương / tím / cyan  (dùng nét đứt để phân biệt)
-PRESSURE_COLORS = ["#1E88E5", "#8E24AA", "#00ACC1"]
+PRESSURE_COLORS = ["#8E24AA", "#1E88E5", "#00ACC1"]
 
 FONT_FAMILY  = "Segoe UI"
 FONT_SIZE_LG = 14
@@ -42,7 +42,15 @@ class _FixedTickDateAxis(pg.DateAxisItem):
                 result.append("")
         return result
 
+class FixedAxis(pg.AxisItem):
 
+    def tickStrings(self, values, scale, spacing):
+
+        return [
+            f"{value:.2f}"
+            for value in values
+        ]
+    
 class CustomChartWidget(QWidget):
     """
     Real-time chart — dual Y-axis:
@@ -70,8 +78,8 @@ class CustomChartWidget(QWidget):
         num_pressure: int       = 1,
         temp_label: str         = "Temperature (°C)",
         pressure_label: str     = "Pressure (bar)",
-        temp_range: tuple       = (0, 200),
-        pressure_range: tuple   = (0, 10),
+        temp_range: tuple[float, float] = (0, 200),
+        pressure_range: tuple[float, float] = (0, 10),
         max_seconds: int        = 60,
         chart_font: QFont | None = None,
         parent=None,
@@ -86,6 +94,7 @@ class CustomChartWidget(QWidget):
         self.pressure_range = pressure_range
         self.max_seconds    = max_seconds
         self._sim_timer     = None
+        self._temp_unit = "°C"
 
         if chart_font:
             self._font_family  = chart_font.family()
@@ -100,6 +109,12 @@ class CustomChartWidget(QWidget):
         self._px: list[deque] = [deque() for _ in range(self.num_pressure)]
         self._py: list[deque] = [deque() for _ in range(self.num_pressure)]
 
+        # ── Legend toggle state ───────────────────────────────────────────────
+        # None  = hiển thị tất cả
+        # ("t", i) = chỉ hiện temp[i]
+        # ("p", i) = chỉ hiện pressure[i]
+        self._solo: tuple | None = None
+
         self._setup_ui()
         self._setup_chart()
         self._start_axis_timer()
@@ -112,15 +127,25 @@ class CustomChartWidget(QWidget):
 
     # ── Build chart ───────────────────────────────────────────────────────────
     def _setup_chart(self):
-        pg.setConfigOptions(antialias=True, useOpenGL=True)
+        pg.setConfigOptions(
+            antialias=True,
+            useOpenGL=False
+        )
 
         self._create_title()
         self._create_legend()
         self._create_plot_widget()
         self._create_axes()
-        self._create_pressure_viewbox()
+
+        # ===== Only create pressure system if needed =====
+        if self.num_pressure > 0:
+            self._create_pressure_viewbox()
+
         self._create_temp_curves()
-        self._create_pressure_curves()
+
+        if self.num_pressure > 0:
+            self._create_pressure_curves()
+
         self._create_end_labels()
 
         self._root.addWidget(self.plot)
@@ -135,7 +160,6 @@ class CustomChartWidget(QWidget):
 
         self.btn_setting.setStyleSheet("""
             QPushButton {
-                background: white;
                 border: none;
                 color: black;
             }
@@ -162,40 +186,51 @@ class CustomChartWidget(QWidget):
 
         self._legend_temp = []
         self._legend_pressure = []
+        self._legend_temp_widgets = []
+        self._legend_pressure_widgets = []
 
         font_legend = QFont(self._font_family, FONT_SIZE_SM)
         font_legend.setWeight(QFont.Weight.Bold)
 
-        temp_names = ["T1", "T2", "T3"]
-        pressure_names = ["P1", "P2", "P3"]
+        temp_names = ["SV","T1", "T2", "T3"]
+        pressure_names = ["Pressure SV", "Pressure", "P3"]
 
         for i in range(self.num_temp):
             widget = self._build_temp_legend(
                 temp_names[i],
                 TEMP_COLORS[i],
-                font_legend
+                font_legend,
+                i
             )
             legend_bar.addWidget(widget)
+            self._legend_temp_widgets.append(widget)
 
-        sep = QFrame()
-        sep.setFixedSize(1, 14)
-        sep.setStyleSheet("background: #CBD5E1;")
+        if self.num_temp > 0 and self.num_pressure > 0:
+            sep = QFrame()
 
-        legend_bar.addWidget(sep)
+            sep.setFixedSize(1, 14)
 
-        for i in range(self.num_pressure):
-            widget = self._build_pressure_legend(
-                pressure_names[i],
-                PRESSURE_COLORS[i],
-                font_legend
+            sep.setStyleSheet(
+                "background: #CBD5E1;"
             )
-            legend_bar.addWidget(widget)
+
+            legend_bar.addWidget(sep)
+
+            for i in range(self.num_pressure):
+                widget = self._build_pressure_legend(
+                    pressure_names[i],
+                    PRESSURE_COLORS[i],
+                    font_legend,
+                    i
+                )
+                legend_bar.addWidget(widget)
+                self._legend_pressure_widgets.append(widget)
 
         legend_bar.addStretch()
 
         self._root.addLayout(legend_bar)
 
-    def _build_temp_legend(self, text, color, font):
+    def _build_temp_legend(self, text, color, font, index):
         dot = QFrame()
         dot.setFixedSize(14, 4)
         dot.setStyleSheet(
@@ -203,6 +238,7 @@ class CustomChartWidget(QWidget):
         )
 
         lbl = QLabel(text)
+        lbl.setStyleSheet("background: transparent;")
         lbl.setFont(font)
 
         self._legend_temp.append(lbl)
@@ -216,10 +252,18 @@ class CustomChartWidget(QWidget):
 
         w = QWidget()
         w.setLayout(row)
+        w.setCursor(Qt.CursorShape.PointingHandCursor)
+        w.setToolTip(f"Click để chỉ hiện {text} / click lại để hiện tất cả")
+
+        # Store index for closure
+        _i = index
+        def on_click(event, i=_i):
+            self._on_legend_click("t", i)
+        w.mousePressEvent = on_click
 
         return w
 
-    def _build_pressure_legend(self, text, color, font):
+    def _build_pressure_legend(self, text, color, font, index):
         dot = QFrame()
         dot.setFixedSize(14, 4)
 
@@ -238,6 +282,7 @@ class CustomChartWidget(QWidget):
         )
 
         lbl = QLabel(text)
+        lbl.setStyleSheet("background: transparent;")
         lbl.setFont(font)
 
         self._legend_pressure.append(lbl)
@@ -251,8 +296,62 @@ class CustomChartWidget(QWidget):
 
         w = QWidget()
         w.setLayout(row)
+        w.setCursor(Qt.CursorShape.PointingHandCursor)
+        w.setToolTip(f"Click để chỉ hiện {text} / click lại để hiện tất cả")
+
+        _i = index
+        def on_click(event, i=_i):
+            self._on_legend_click("p", i)
+        w.mousePressEvent = on_click
 
         return w
+
+    # ── Legend toggle logic ────────────────────────────────────────────────────
+    def _on_legend_click(self, kind: str, index: int):
+        """
+        Click vào legend:
+          - Nếu đang hiện tất cả  → solo series được click
+          - Nếu đang solo series này → trả về hiện tất cả
+          - Nếu đang solo series khác → chuyển sang solo series mới
+        """
+        if self._solo == (kind, index):
+            # Click lại cùng series → hiện tất cả
+            self._solo = None
+        else:
+            self._solo = (kind, index)
+
+        self._apply_visibility()
+
+    def _apply_visibility(self):
+        """Áp dụng trạng thái solo/all lên curves, labels, và legend widgets."""
+        solo = self._solo
+
+        for i in range(self.num_temp):
+            visible = (solo is None) or (solo == ("t", i))
+            self._temp_curves[i].setVisible(visible)
+            if not visible:
+                self._temp_labels[i].hide()
+            # Làm mờ legend widget nếu bị ẩn
+            self._set_legend_dim(self._legend_temp_widgets[i], not visible)
+
+        for i in range(self.num_pressure):
+            visible = (solo is None) or (solo == ("p", i))
+            self._pressure_curves[i].setVisible(visible)
+            if not visible:
+                self._pressure_labels[i].hide()
+            self._set_legend_dim(self._legend_pressure_widgets[i], not visible)
+
+    def _set_legend_dim(self, widget: QWidget, dimmed: bool):
+        """Làm mờ widget legend khi series bị ẩn."""
+        widget.setProperty("dimmed", dimmed)
+        widget.setStyleSheet(
+            "opacity: 0.3;" if dimmed else ""
+        )
+        # QWidget không hỗ trợ CSS opacity trực tiếp — dùng setGraphicsEffect
+        from PySide6.QtWidgets import QGraphicsOpacityEffect
+        effect = QGraphicsOpacityEffect(widget)
+        effect.setOpacity(0.25 if dimmed else 1.0)
+        widget.setGraphicsEffect(effect)
 
     def _create_plot_widget(self):
         self.plot = pg.PlotWidget()
@@ -266,7 +365,11 @@ class CustomChartWidget(QWidget):
         self.plot.showGrid(x=True, y=True, alpha=0.1)
 
         self.plot.setYRange(*self.temp_range)
-
+        self.plot.disableAutoRange()
+        self.plot.setMouseEnabled(
+            x=True,
+            y=False
+        )
         self.plot.plotItem.getViewBox().setDefaultPadding(0)
         self.plot.plotItem.layout.setContentsMargins(0, 0, 0, 0)
         self.plot.plotItem.layout.setHorizontalSpacing(0)
@@ -290,8 +393,6 @@ class CustomChartWidget(QWidget):
 
         self.plot.setLabel("left", self.temp_label, **axis_style)
 
-        # self.plot.getAxis("left").label.setRotation(0)
-
         date_axis = _FixedTickDateAxis(
             orientation="bottom",
             tick_spacing=15
@@ -309,26 +410,40 @@ class CustomChartWidget(QWidget):
         )
         
     def _create_pressure_viewbox(self):
+
         font_tick = QFont(self._font_family, FONT_SIZE_SM)
 
-        # Create secondary ViewBox
         self._vb_pressure = pg.ViewBox()
 
         self._vb_pressure.setDefaultPadding(0)
+
+        self._vb_pressure.disableAutoRange()
 
         self._vb_pressure.setYRange(
             *self.pressure_range
         )
 
-        # Add overlay ViewBox
         self.plot.scene().addItem(
             self._vb_pressure
         )
 
-        # Enable right axis
-        self.plot.showAxis("right")
+        old_axis = self.plot.getAxis("right")
 
-        axis_right = self.plot.getAxis("right")
+        self.plot.plotItem.layout.removeItem(old_axis)
+
+        old_axis.hide()
+
+        axis_right = FixedAxis(
+            orientation="right"
+        )
+
+        self.plot.plotItem.axes["right"]["item"] = axis_right
+
+        self.plot.plotItem.layout.addItem(
+            axis_right,
+            2,
+            3
+        )
 
         axis_right.setTickFont(font_tick)
 
@@ -340,14 +455,14 @@ class CustomChartWidget(QWidget):
             pg.mkPen("#334155")
         )
 
-        # axis_right.setWidth(55)
+        axis_right.setWidth(55)
 
-        # Link axis to pressure ViewBox
+        axis_right.enableAutoSIPrefix(False)
+
         axis_right.linkToView(
             self._vb_pressure
         )
 
-        # Right axis label
         axis_style = {
             "color": "black",
             "font-family": self._font_family,
@@ -355,22 +470,24 @@ class CustomChartWidget(QWidget):
             "font-weight": 500,
         }
 
-        self.plot.setLabel(
-            "right",
+        axis_right.setLabel(
             self.pressure_label,
             **axis_style
         )
 
-        # Share X-axis
-        self._vb_pressure.setXLink(
-            self.plot
+        self._vb_pressure.setMouseEnabled(
+            x=False,
+            y=False
         )
 
-        # Resize sync
         self.plot.getViewBox().sigResized.connect(
-            self._sync_pressure_vb
+            self._sync_views
         )
-        
+
+        self.plot.getViewBox().sigRangeChanged.connect(
+            self._sync_views
+        )
+            
     def _create_temp_curves(self):
         self._temp_curves = []
 
@@ -383,7 +500,7 @@ class CustomChartWidget(QWidget):
             curve = self.plot.plot(pen=pen)
 
             self._temp_curves.append(curve)
-            
+        
     def _create_pressure_curves(self):
         self._pressure_curves = []
 
@@ -402,16 +519,18 @@ class CustomChartWidget(QWidget):
             
     def _create_end_labels(self):
         self._create_temp_labels()
-        self._create_pressure_labels()
+        if self.num_pressure > 0:
+            self._create_pressure_labels()
         
     def _create_temp_labels(self):
         self._temp_labels = []
 
         for i in range(self.num_temp):
+            
             item = pg.TextItem(
                 text="",
                 color=TEMP_COLORS[i],
-                anchor=(1, 1),
+                anchor=(0, 0.5),
                 border=None
             )
 
@@ -422,14 +541,7 @@ class CustomChartWidget(QWidget):
                     QFont.Weight.Bold
                 )
             )
-            # item.setZValue(100)
-            # item.fill = pg.mkBrush(255, 255, 255, 200)
             item.fill = pg.mkBrush(0, 0, 0, 0)
-
-            # item.border = pg.mkPen(
-            #     TEMP_COLORS[i],
-            #     width=1
-            # )
 
             item.hide()
 
@@ -441,10 +553,11 @@ class CustomChartWidget(QWidget):
         self._pressure_labels = []
 
         for i in range(self.num_pressure):
+            
             item = pg.TextItem(
                 text="",
                 color=PRESSURE_COLORS[i],
-                anchor=(1, 1),
+                anchor=(0, 0.5),
                 border=None
             )
 
@@ -455,14 +568,7 @@ class CustomChartWidget(QWidget):
                     QFont.Weight.Bold
                 )
             )
-            # item.setZValue(100)
-            # item.fill = pg.mkBrush(255, 255, 255, 200)
             item.fill = pg.mkBrush(0, 0, 0, 0)
-
-            # item.border = pg.mkPen(
-            #     PRESSURE_COLORS[i],
-            #     width=1
-            # )
 
             item.hide()
 
@@ -476,6 +582,14 @@ class CustomChartWidget(QWidget):
             self.plot.getViewBox().sceneBoundingRect()
         )
 
+    def _sync_views(self):
+
+        main_vb = self.plot.getViewBox()
+
+        self._vb_pressure.setGeometry(
+            main_vb.sceneBoundingRect()
+        )
+
     # ── Timer trục X ─────────────────────────────────────────────────────────
     def _start_axis_timer(self):
         self._axis_timer = QTimer(self)
@@ -484,9 +598,10 @@ class CustomChartWidget(QWidget):
         self._update_axis()
 
     def _update_axis(self):
+
         now = time.time()
 
-        right_pad = self.max_seconds * 0.01
+        right_pad = self.max_seconds * 0.2
 
         x_min = now - self.max_seconds
         x_max = now + right_pad
@@ -497,47 +612,99 @@ class CustomChartWidget(QWidget):
             padding=0
         )
 
-        self._vb_pressure.setXRange(
-            x_min,
-            x_max,
-            padding=0
-        )
+        if self.num_pressure > 0:
+            self._vb_pressure.setRange(
+                xRange=(x_min, x_max),
+                padding=0
+            )
+
+    def _update_y_ranges(self):
+
+        # ===== Temperature =====
+        temp_values = []
+
+        for arr in self._ty:
+            temp_values.extend(arr)
+
+        if temp_values:
+
+            t_max = max(temp_values)
+
+            top_pad = max(t_max * 0.1, 1)
+            bottom_pad = max(t_max * 0.03, 2)
+
+            self.plot.setRange(
+                yRange=(-bottom_pad, t_max + top_pad),
+                padding=0
+            )
+        # ===== Pressure =====
+        if self.num_pressure > 0:
+            pressure_values = []
+
+            for arr in self._py:
+                pressure_values.extend(arr)
+
+            if pressure_values:
+
+                p_max = max(pressure_values)
+
+                top_pad = max(p_max * 0.25, 1)
+                bottom_pad = -0.1
+
+                self._vb_pressure.setYRange(
+                    bottom_pad, 
+                    p_max + top_pad,
+                    padding=0
+                )
 
     # ── Cập nhật end-of-line labels ───────────────────────────────────────────
     def _update_end_labels(self):
+        solo = self._solo
+
         for i in range(self.num_temp):
-            if not self._tx[i]:
-                self._temp_labels[i].hide(); continue
+            visible = (solo is None) or (solo == ("t", i))
+            if not self._tx[i] or not visible:
+                self._temp_labels[i].hide()
+                continue
             lx, ly = self._tx[i][-1], self._ty[i][-1]
-            # name   = self._legend_temp[i].text()
-            self._temp_labels[i].setText(f"{ly:.1f}°C ")
+            self._temp_labels[i].setText(f"{ly:.1f}{self._temp_unit} ")
             self._temp_labels[i].setPos(lx - 0.1, ly)
             self._temp_labels[i].show()
 
         for i in range(self.num_pressure):
-            if not self._px[i]:
-                self._pressure_labels[i].hide(); continue
+            visible = (solo is None) or (solo == ("p", i))
+            if not self._px[i] or not visible:
+                self._pressure_labels[i].hide()
+                continue
             lx, ly = self._px[i][-1], self._py[i][-1]
-            # name   = self._legend_pressure[i].text()
             self._pressure_labels[i].setText(f"{ly:.2f} bar ")
             self._pressure_labels[i].setPos(lx - 0.1, ly)
             self._pressure_labels[i].show()
 
     # ── Public API ─────────────────────────────────────────────────────────────
-    def append_data(self, temp_values: List[float], pressure_values: List[float]):
-        """
-        Thêm dữ liệu mới vào chart.
+    def append_data(
+        self,
+        temp_values: List[float],
+        pressure_values: List[float] | None = None
+        ):
 
-        Parameters
-        ----------
-        temp_values     : list độ dài num_temp     — giá trị °C
-        pressure_values : list độ dài num_pressure — giá trị bar
-        """
+        if pressure_values is None:
+            pressure_values = []
+
         if len(temp_values) != self.num_temp:
-            print(f"[{self.title}] Cần {self.num_temp} giá trị nhiệt độ, nhận {len(temp_values)}")
+            print(
+                f"[{self.title}] "
+                f"Cần {self.num_temp} giá trị nhiệt độ, "
+                f"nhận {len(temp_values)}"
+            )
             return
+
         if len(pressure_values) != self.num_pressure:
-            print(f"[{self.title}] Cần {self.num_pressure} giá trị áp suất, nhận {len(pressure_values)}")
+            print(
+                f"[{self.title}] "
+                f"Cần {self.num_pressure} giá trị áp suất, "
+                f"nhận {len(pressure_values)}"
+            )
             return
 
         now    = time.time()
@@ -555,6 +722,7 @@ class CustomChartWidget(QWidget):
                 self._px[i].popleft(); self._py[i].popleft()
             self._pressure_curves[i].setData(list(self._px[i]), list(self._py[i]))
 
+        self._update_y_ranges()
         self._update_end_labels()
 
     def set_temp_series_name(self, index: int, name: str):
@@ -572,8 +740,25 @@ class CustomChartWidget(QWidget):
         self.plot.setYRange(y_min, y_max)
 
     def set_pressure_range(self, y_min: float, y_max: float):
+
         self.pressure_range = (y_min, y_max)
-        self._vb_pressure.setYRange(y_min, y_max)
+
+        if self.num_pressure > 0:
+            self._vb_pressure.setYRange(
+                y_min,
+                y_max
+            )
+
+    def set_temp_label(self, label: str, unit: str = "°C"):
+        axis_style = {
+            "color": "black",
+            "font-family": self._font_family,
+            "font-size": f"{FONT_SIZE_MD}pt",
+            "font-weight": 500,
+        }
+        self.plot.setLabel("left", label, **axis_style)
+        self.temp_label = label
+        self._temp_unit = unit
 
     def clear(self):
         """Xoá toàn bộ dữ liệu."""
@@ -581,10 +766,11 @@ class CustomChartWidget(QWidget):
             self._tx[i].clear(); self._ty[i].clear()
             self._temp_curves[i].setData([], [])
             self._temp_labels[i].hide()
-        for i in range(self.num_pressure):
-            self._px[i].clear(); self._py[i].clear()
-            self._pressure_curves[i].setData([], [])
-            self._pressure_labels[i].hide()
+        if self.num_pressure > 0:
+            for i in range(self.num_pressure):
+                self._px[i].clear(); self._py[i].clear()
+                self._pressure_curves[i].setData([], [])
+                self._pressure_labels[i].hide()
 
     # ── Simulation ─────────────────────────────────────────────────────────────
     def start_simulation(self, interval_ms: int = 500):

@@ -337,14 +337,23 @@ class Ui_MainWindow(object):
         self.stackedWidget_2.setObjectName(u"stackedWidget_2")
         self.menu_page = QWidget()
         self.menu_page.setObjectName(u"menu_page")
-        self.menu_page.setStyleSheet(u"QWidget{\n"
-"	background-color: white;\n"
+        self.menu_page.setStyleSheet(u"QFrame {	\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #bfe2f7\n"
+"            );\n"
+"	border-radius: 20px;\n"
+"}\n"
+"QFrame:hover {	\n"
+"	border: 1px solid rgb(0, 170, 255);\n"
 "}")
         self.verticalLayout_14 = QVBoxLayout(self.menu_page)
         self.verticalLayout_14.setObjectName(u"verticalLayout_14")
         self.verticalLayout_14.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_2 = QGridLayout()
-        self.gridLayout_2.setSpacing(5)
+        self.gridLayout_2.setSpacing(10)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.card_frame_7 = QFrame(self.menu_page)
         self.card_frame_7.setObjectName(u"card_frame_7")
@@ -399,7 +408,7 @@ class Ui_MainWindow(object):
 
         self.card_frame_6 = QFrame(self.menu_page)
         self.card_frame_6.setObjectName(u"card_frame_6")
-        self.card_frame_6.setStyleSheet(u"color: black;")
+        self.card_frame_6.setStyleSheet(u"")
         self.card_frame_6.setFrameShape(QFrame.NoFrame)
         self.verticalLayout_19 = QVBoxLayout(self.card_frame_6)
         self.verticalLayout_19.setSpacing(5)
@@ -1213,7 +1222,12 @@ class Ui_MainWindow(object):
         self.widget_11.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
-"background-color: #e3e6ee;\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
 "}\n"
 "QWidget{\n"
 "	border-left: none;\n"
@@ -3573,7 +3587,12 @@ class Ui_MainWindow(object):
         self.widget_27.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
-"background-color: #e3e6ee;\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
 "}\n"
 "QWidget{\n"
 "	border-left: none;\n"
@@ -3986,7 +4005,12 @@ class Ui_MainWindow(object):
         self.widget_7.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
-"background-color: #e3e6ee;\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
 "}\n"
 "QWidget{\n"
 "	border-left: none;\n"
@@ -4742,6 +4766,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addLayout(self.horizontalLayout_34, 7, 2, 1, 5)
 
+        self.code_display = QLabel(self.widget_6)
+        self.code_display.setObjectName(u"code_display")
+        self.code_display.setFont(font11)
+        self.code_display.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout.addWidget(self.code_display, 0, 0, 1, 1)
+
         self.gridLayout.setColumnStretch(2, 1)
         self.gridLayout.setColumnStretch(4, 1)
         self.gridLayout.setColumnStretch(6, 1)
@@ -4855,7 +4886,7 @@ class Ui_MainWindow(object):
         self.bt_l_alm_value.setSizePolicy(sizePolicy)
         font15 = QFont()
         font15.setFamilies([u"Segoe UI"])
-        font15.setPointSize(21)
+        font15.setPointSize(25)
         font15.setBold(True)
         font15.setItalic(False)
         self.bt_l_alm_value.setFont(font15)
@@ -5198,7 +5229,13 @@ class Ui_MainWindow(object):
         self.label_123 = QLabel(self.widget_77)
         self.label_123.setObjectName(u"label_123")
         self.label_123.setFont(font9)
-        self.label_123.setStyleSheet(u"background-color: #e3e6ee;")
+        self.label_123.setStyleSheet(u"\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );")
         self.label_123.setAlignment(Qt.AlignCenter)
 
         self.gridLayout_3.addWidget(self.label_123, 1, 1, 1, 1)
@@ -5206,7 +5243,13 @@ class Ui_MainWindow(object):
         self.label_124 = QLabel(self.widget_77)
         self.label_124.setObjectName(u"label_124")
         self.label_124.setFont(font9)
-        self.label_124.setStyleSheet(u"background-color: #e3e6ee;")
+        self.label_124.setStyleSheet(u"\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );")
         self.label_124.setAlignment(Qt.AlignCenter)
 
         self.gridLayout_3.addWidget(self.label_124, 2, 1, 1, 1)
@@ -5214,7 +5257,13 @@ class Ui_MainWindow(object):
         self.label_125 = QLabel(self.widget_77)
         self.label_125.setObjectName(u"label_125")
         self.label_125.setFont(font9)
-        self.label_125.setStyleSheet(u"background-color: #e3e6ee;")
+        self.label_125.setStyleSheet(u"\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );")
         self.label_125.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
         self.gridLayout_3.addWidget(self.label_125, 4, 1, 1, 1)
@@ -5222,7 +5271,13 @@ class Ui_MainWindow(object):
         self.label_126 = QLabel(self.widget_77)
         self.label_126.setObjectName(u"label_126")
         self.label_126.setFont(font9)
-        self.label_126.setStyleSheet(u"background-color: #e3e6ee;")
+        self.label_126.setStyleSheet(u"\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );")
         self.label_126.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
         self.gridLayout_3.addWidget(self.label_126, 5, 1, 1, 1)
@@ -6645,7 +6700,13 @@ class Ui_MainWindow(object):
         self.label_135 = QLabel(self.widget_77)
         self.label_135.setObjectName(u"label_135")
         self.label_135.setFont(font9)
-        self.label_135.setStyleSheet(u"background-color: #e3e6ee;")
+        self.label_135.setStyleSheet(u"\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );")
         self.label_135.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
         self.gridLayout_3.addWidget(self.label_135, 8, 1, 1, 1)
@@ -7262,7 +7323,13 @@ class Ui_MainWindow(object):
         self.label_133 = QLabel(self.widget_77)
         self.label_133.setObjectName(u"label_133")
         self.label_133.setFont(font9)
-        self.label_133.setStyleSheet(u"background-color: #e3e6ee;")
+        self.label_133.setStyleSheet(u"\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );")
         self.label_133.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
         self.gridLayout_3.addWidget(self.label_133, 7, 1, 1, 1)
@@ -7270,7 +7337,13 @@ class Ui_MainWindow(object):
         self.label_134 = QLabel(self.widget_77)
         self.label_134.setObjectName(u"label_134")
         self.label_134.setFont(font9)
-        self.label_134.setStyleSheet(u"background-color: #e3e6ee;")
+        self.label_134.setStyleSheet(u"\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );")
         self.label_134.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
         self.gridLayout_3.addWidget(self.label_134, 9, 1, 1, 1)
@@ -9277,7 +9350,7 @@ class Ui_MainWindow(object):
 "    color: #CBD5E1;\n"
 "}")
         icon23 = QIcon()
-        icon23.addFile(u":/Icons/stats (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon23.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.export_all_tables_to_excel_btn.setIcon(icon23)
         self.export_all_tables_to_excel_btn.setIconSize(QSize(55, 55))
 
@@ -9310,7 +9383,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(1)
+        self.stackedWidget_2.setCurrentIndex(2)
         self.sys_state_stacked_wid_39.setCurrentIndex(1)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
@@ -9345,7 +9418,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_a_2.setCurrentIndex(0)
         self.stacked_cel_fah_temp_c_4.setCurrentIndex(0)
         self.stacked_cel_fah_temp_c_7.setCurrentIndex(0)
-        self.stacked_cel_fah_temp_t0_5.setCurrentIndex(0)
+        self.stacked_cel_fah_temp_t0_5.setCurrentIndex(1)
         self.stacked_cel_fah_temp_t0_4.setCurrentIndex(0)
         self.stacked_cel_fah_temp_t0_1.setCurrentIndex(0)
         self.stacked_cel_fah_temp_t0_2.setCurrentIndex(0)
@@ -9574,6 +9647,7 @@ class Ui_MainWindow(object):
         self.heat_btn_a.setText(QCoreApplication.translate("MainWindow", u" Heating A", None))
         self.heat_btn_b.setText(QCoreApplication.translate("MainWindow", u" Heating B", None))
         self.heat_btn_c.setText(QCoreApplication.translate("MainWindow", u" Heating C", None))
+        self.code_display.setText("")
         self.bt_l_alm_value.setPrefix("")
         self.bt_l_alm_value.setSuffix("")
         self.label_342.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
@@ -9698,13 +9772,13 @@ class Ui_MainWindow(object):
         self.write_plc_label.setText(QCoreApplication.translate("MainWindow", u" PLC Write:", None))
         self.db_number.setText(QCoreApplication.translate("MainWindow", u" DB:", None))
         self.plc_ip_address_edit.setText("")
-        self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"Communicating", None))
-        self.pushButton_21.setText(QCoreApplication.translate("MainWindow", u"No Signal", None))
+        self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"Online", None))
+        self.pushButton_21.setText(QCoreApplication.translate("MainWindow", u"Offline", None))
         self.pushButton_24.setText(QCoreApplication.translate("MainWindow", u"Try Connecting...", None))
         self.read_time_input.setSuffix(QCoreApplication.translate("MainWindow", u" ms ~ 1000 ms", None))
         self.rb_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
-        self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"Communicating", None))
-        self.pushButton_23.setText(QCoreApplication.translate("MainWindow", u"No Signal", None))
+        self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"Online", None))
+        self.pushButton_23.setText(QCoreApplication.translate("MainWindow", u"Offline", None))
         self.pushButton_22.setText(QCoreApplication.translate("MainWindow", u"Try Connecting...", None))
         self.write_time_input.setSuffix(QCoreApplication.translate("MainWindow", u" ms ~ 1000 ms", None))
         self.rb_connect_3.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
