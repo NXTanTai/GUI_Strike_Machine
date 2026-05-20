@@ -924,7 +924,7 @@ class StrikeMachine(QMainWindow):
         elif index == 1:
             self.ui.stackedWidget.setCurrentIndex(0)
 
-    def _setup_plc_threads(self, state: Bool):
+    def _setup_plc_threads(self, state: bool):
         if not state:
             print("PLC Thread set Off")
             self.setup_simulate_threads()
@@ -1056,7 +1056,7 @@ class StrikeMachine(QMainWindow):
         try:
             p1_heat_state = bool(data.get('P1_Start_Heat', False))
             p1_pressure_state = bool(data.get('P1_Start_Pressure', False))
-            if p1_state or p1_pressure_state:
+            if p1_heat_state or p1_pressure_state:
                 t1_a = float(data.get('P1_Current_Temp1', 0.0))
                 t2_a = float(data.get('P1_Current_Temp2', 0.0))
                 t3_a = float(data.get('P1_Current_Temp3', 0.0))
@@ -1220,17 +1220,59 @@ class StrikeMachine(QMainWindow):
                 bool(data.get('P3_Start_Oil', False)),
                 bool(data.get('P3_BitCountTimes', False)),
             ])
+    
+        # ====================== P1 ======================
+        self._init_pressure_group_sv_obj([
+            float(data.get('P1_Current_Temp1', 0.0)),
+            float(data.get('P1_Current_Temp2', 0.0)),
+            float(data.get('P1_Current_Temp3', 0.0)),
+            float(data.get('P1_Current_PressureHose', 0.0)),
+            float(data.get('P1_Current_Air_FillingTime', 0)/1000),
+            float(data.get('P1_Current_Air_HoldingTime', 0)/1000),
+            float(data.get('P1_Current_Air_ReleaseTime', 0)/1000),
+            float(data.get('P1_Current_Oil_Start_Time', 0)/1000),
+            float(data.get('P1_Current_Oil_End_Time', 0)/1000)
+        ],
+        [
+            float(data.get('P2_Current_Temp1', 0.0)),
+            float(data.get('P2_Current_Temp2', 0.0)),
+            float(data.get('P2_Current_Temp3', 0.0)),
+            float(data.get('P2_Current_PressureHose', 0.0)),
+            float(data.get('P2_Current_Air_FillingTime', 0)/1000),
+            float(data.get('P2_Current_Air_HoldingTime', 0)/1000),
+            float(data.get('P2_Current_Air_ReleaseTime', 0)/1000),
+            float(data.get('P2_Current_Oil_Start_Time', 0)/1000),
+            float(data.get('P2_Current_Oil_End_Time', 0)/1000)
+        ],
+        [
+            float(data.get('P3_Current_Temp1', 0.0)),
+            float(data.get('P3_Current_Temp2', 0.0)),
+            float(data.get('P3_Current_Temp3', 0.0)),
+            float(data.get('P3_Current_PressureHose', 0.0)),
+            float(data.get('P3_Current_Air_FillingTime', 0)/1000),
+            float(data.get('P3_Current_Air_HoldingTime', 0)/1000),
+            float(data.get('P3_Current_Air_ReleaseTime', 0)/1000),
+            float(data.get('P3_Current_Oil_Start_Time', 0)/1000),
+            float(data.get('P3_Current_Oil_End_Time', 0)/1000)
+        ]                                
+        )
 
-    def _init_button_obj(self):
-        for i in range(1):
+        # ====================== P2 ======================
+        self._group_b_data_filter()
+
+        # ====================== P3 ======================
+        self._group_c_data_filter()
+
+    def _init_pressure_group_sv_obj(self, list_init_a, list_init_b, list_init_c):
+        for i in range(len(self.pressure_a_sv_obj)):
             self.pressure_a_sv_obj[i].blockSignals(True)
-            self.pressure_a_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_a_sv_obj[i].value()))
+            self.pressure_a_sv_obj[i].setValue(self.convert_cel_fah(list_init_a[i]))
             self.pressure_a_sv_obj[i].blockSignals(False)
             self.pressure_b_sv_obj[i].blockSignals(True)
-            self.pressure_b_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_b_sv_obj[i].value()))
+            self.pressure_b_sv_obj[i].setValue(self.convert_cel_fah(list_init_b[i]))
             self.pressure_b_sv_obj[i].blockSignals(False)
             self.pressure_c_sv_obj[i].blockSignals(True)
-            self.pressure_c_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_c_sv_obj[i].value()))
+            self.pressure_c_sv_obj[i].setValue(self.convert_cel_fah(list_init_c[i]))
             self.pressure_c_sv_obj[i].blockSignals(False)   
 
     def _init_sv_widget_pressure_obj(self):
