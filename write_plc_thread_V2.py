@@ -48,8 +48,8 @@ class PLCWrite(QObject):
     # Incoming signals (gọi từ main thread)
     write_bool   = Signal(str, bool)      # (tag_name, value)
     write_value   = Signal(str, object)      # (tag_name, value)
-    write_multi = Signal(dict)             # {tag_name: value, ...}
-    write_full_db  = Signal(dict)             # Ghi toàn bộ DB một lần
+    write_multi = Signal(object)             # {tag_name: value, ...}
+    write_full_db  = Signal(object)             # Ghi toàn bộ DB một lần
 
     # Outgoing signals
     write_done    = Signal(str)               # tag_name hoặc "full_db"
@@ -82,7 +82,7 @@ class PLCWrite(QObject):
         self._db_size     = db_size
         self._write_gap_ms = write_gap_ms
         self._retry_ms    = retry_ms
-        print("DB Layout:", db_layout)
+        # print("DB Layout:", db_layout)
         # Layout dict để tra cứu nhanh
         self._layout_dict: dict[str, tuple[str, int, Any]] = self._build_layout_dict()
 
@@ -186,13 +186,13 @@ class PLCWrite(QObject):
         self._queue.put(("value", name, value))
         print(f"Value Enqueued → {name} = {value}")
 
-    @Slot(list)
-    def _enqueue_multi(self, items: list):
+    @Slot(object)
+    def _enqueue_multi(self, items: object):
         self._queue.put(("multi_vars", items))
         print(f"Cmd Area recv: \n{items}")
 
     @Slot(dict)
-    def _enqueue_full_db(self, data: dict):
+    def _enqueue_full_db(self, data: object):
         self._queue.put(("full_db", data))
 
     # ── Drain Queue ─────────────────────────────────────────────────────────
@@ -208,7 +208,7 @@ class PLCWrite(QObject):
             if cmd_type == "bool":
                 self._write_bool(item[1], item[2])
 
-            if cmd_type == "value":
+            elif cmd_type == "value":
                 self._write_value(item[1], item[2])
 
             elif cmd_type == "multi_vars":
@@ -262,7 +262,10 @@ class PLCWrite(QObject):
 
     # ── Write Methods ───────────────────────────────────────────────────────
     def _write_bool(self, name: str, value: bool):
-        """Ghi BOOL riêng biệt"""
+        """
+        Ghi BOOL riêng biệt
+        Ví dụ: plc_write.write_bool.emit("Motor_Start", True)
+        """
         if not self._ensure_connected():
             return
 
@@ -285,7 +288,10 @@ class PLCWrite(QObject):
 
 
     def _write_value(self, name: str, value: Any):
-        """Ghi REAL, INT, DINT, STRING"""
+        """
+        Ghi REAL, INT, DINT, STRING
+        Ví dụ: plc_write.write_value.emit("Setpoint_Temp", 85.5)
+        """
         if not self._ensure_connected():
             return
 
@@ -310,6 +316,17 @@ class PLCWrite(QObject):
             self._handle_write_error(f"Write value [{name}]", exc)
 
     def _write_multi_vars(self, items: list):
+        """
+        Ghi nhiều var REAL, INT, DINT, STRING 1 lần, tối đa 20 var
+        Dùng get_item func để lấy key và địa chỉ
+        Ví dụ:
+        items = [
+            plc_write.get_item("Motor_Start", True),
+            plc_write.get_item("Setpoint_Temp", 85.5),
+            plc_write.get_item("Speed_RPM", 1500),
+        ]
+        plc_write.write_multi.emit(items)
+        """
         if not self._ensure_connected():
             return
         try:
@@ -323,6 +340,9 @@ class PLCWrite(QObject):
             self._handle_write_error("write_multi_vars", exc)
 
     def _write_full_db(self, data: dict):
+        """
+        Ghi toàn bộ DB 
+        """
         if not self._ensure_connected():
             return
         try:

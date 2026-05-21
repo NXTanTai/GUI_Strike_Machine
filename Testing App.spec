@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['main.py'],
+    ['main_v2.py'],
     pathex=[],
     binaries=[('lib\\snap7.dll', '.')],
     datas=[],

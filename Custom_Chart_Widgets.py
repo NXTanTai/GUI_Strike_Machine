@@ -117,7 +117,7 @@ class CustomChartWidget(QWidget):
 
         self._setup_ui()
         self._setup_chart()
-        self._start_axis_timer()
+        # self._start_axis_timer()
 
     # ── Root layout ───────────────────────────────────────────────────────────
     def _setup_ui(self):
@@ -128,8 +128,8 @@ class CustomChartWidget(QWidget):
     # ── Build chart ───────────────────────────────────────────────────────────
     def _setup_chart(self):
         pg.setConfigOptions(
-            antialias=True,
-            useOpenGL=False
+            antialias=False,
+            useOpenGL=True
         )
 
         self._create_title()
@@ -365,6 +365,7 @@ class CustomChartWidget(QWidget):
         self.plot.showGrid(x=True, y=True, alpha=0.1)
 
         self.plot.setYRange(*self.temp_range)
+        
         self.plot.disableAutoRange()
         self.plot.setMouseEnabled(
             x=True,
@@ -392,7 +393,7 @@ class CustomChartWidget(QWidget):
             ax.setPen(pg.mkPen("#334155"))
 
         self.plot.setLabel("left", self.temp_label, **axis_style)
-
+        
         date_axis = _FixedTickDateAxis(
             orientation="bottom",
             tick_spacing=15
@@ -408,6 +409,8 @@ class CustomChartWidget(QWidget):
             "Time",
             **axis_style
         )
+        self.plot.getAxis("left").setWidth(65)
+        self.plot.getAxis("bottom").setHeight(60)
         
     def _create_pressure_viewbox(self):
 
@@ -455,7 +458,7 @@ class CustomChartWidget(QWidget):
             pg.mkPen("#334155")
         )
 
-        axis_right.setWidth(55)
+        axis_right.setWidth(65)
 
         axis_right.enableAutoSIPrefix(False)
 
@@ -721,7 +724,7 @@ class CustomChartWidget(QWidget):
             while self._px[i] and self._px[i][0] < cutoff:
                 self._px[i].popleft(); self._py[i].popleft()
             self._pressure_curves[i].setData(list(self._px[i]), list(self._py[i]))
-
+        self._update_axis()
         self._update_y_ranges()
         self._update_end_labels()
 

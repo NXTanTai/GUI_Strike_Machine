@@ -36,7 +36,7 @@ def _get_string(data: bytes, offset: int) -> str:
 # ── PLCRead ─────────────────────────────────────────────────────────────────
 
 class PLCRead(QObject):
-    init_data     = Signal(dict)           # Dùng để trigger lấy data lần đầu sau khi connect thành công
+    init_data     = Signal()           # Dùng để trigger lấy data lần đầu sau khi connect thành công
     data_ready    = Signal(dict)
     error         = Signal(str)
     connected     = Signal(bool)
@@ -148,12 +148,7 @@ class PLCRead(QObject):
         if self._client and self._client.get_connected():
             if self._retry_timer and self._retry_timer.isActive():
                 self._retry_timer.stop()
-            try:
-                raw = self._client.db_read(self._db_number, 0, self._db_size)
-                result = self._parse(raw)
-                self.init_data(result)
-            except Exception:
-                pass
+            self.init_data.emit()
             self._poll_timer.start()
             print("Connected to PLC, started reading")
         else:

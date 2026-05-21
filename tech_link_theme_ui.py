@@ -158,6 +158,89 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addLayout(self.pc_inform_label)
 
+        self.horizontalLayout_10 = QHBoxLayout()
+        self.horizontalLayout_10.setSpacing(15)
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.pushButton_2 = QPushButton(self.header_frame)
+        self.language_btn_group = QButtonGroup(MainWindow)
+        self.language_btn_group.setObjectName(u"language_btn_group")
+        self.language_btn_group.addButton(self.pushButton_2)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+        sizePolicy.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
+        self.pushButton_2.setSizePolicy(sizePolicy)
+        self.pushButton_2.setStyleSheet(u"\n"
+"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"	border-radius: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,\n"
+"                    stop:0 #F8FAFC, stop:1 #E2E8F0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"	border: 2px solid #29A1D4;\n"
+"}\n"
+"QPushButton:checked{\n"
+"		background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
+"}")
+        icon1 = QIcon()
+        icon1.addFile(u":/Icons/us_flag.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_2.setIcon(icon1)
+        self.pushButton_2.setIconSize(QSize(100, 100))
+        self.pushButton_2.setCheckable(True)
+        self.pushButton_2.setChecked(True)
+
+        self.horizontalLayout_10.addWidget(self.pushButton_2)
+
+        self.pushButton_3 = QPushButton(self.header_frame)
+        self.language_btn_group.addButton(self.pushButton_3)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+        sizePolicy.setHeightForWidth(self.pushButton_3.sizePolicy().hasHeightForWidth())
+        self.pushButton_3.setSizePolicy(sizePolicy)
+        self.pushButton_3.setStyleSheet(u"\n"
+"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"	border-radius: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,\n"
+"                    stop:0 #F8FAFC, stop:1 #E2E8F0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"	border: 2px solid #29A1D4;\n"
+"}\n"
+"QPushButton:checked{\n"
+"		background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
+"}")
+        icon2 = QIcon()
+        icon2.addFile(u":/Icons/cn_flag.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_3.setIcon(icon2)
+        self.pushButton_3.setIconSize(QSize(100, 100))
+        self.pushButton_3.setCheckable(True)
+
+        self.horizontalLayout_10.addWidget(self.pushButton_3)
+
+
+        self.horizontalLayout.addLayout(self.horizontalLayout_10)
+
         self.date_displ = QDateTimeEdit(self.header_frame)
         self.date_displ.setObjectName(u"date_displ")
         sizePolicy.setHeightForWidth(self.date_displ.sizePolicy().hasHeightForWidth())
@@ -239,9 +322,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setSpacing(20)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.home_page_btn = QPushButton(self.left_side_menu_widget)
-        self.left_side_buttonGroup = QButtonGroup(MainWindow)
-        self.left_side_buttonGroup.setObjectName(u"left_side_buttonGroup")
-        self.left_side_buttonGroup.addButton(self.home_page_btn)
+        self.left_side_btn_group = QButtonGroup(MainWindow)
+        self.left_side_btn_group.setObjectName(u"left_side_btn_group")
+        self.left_side_btn_group.addButton(self.home_page_btn)
         self.home_page_btn.setObjectName(u"home_page_btn")
         sizePolicy.setHeightForWidth(self.home_page_btn.sizePolicy().hasHeightForWidth())
         self.home_page_btn.setSizePolicy(sizePolicy)
@@ -251,56 +334,56 @@ class Ui_MainWindow(object):
         font4.setBold(True)
         self.home_page_btn.setFont(font4)
         self.home_page_btn.setStyleSheet(u"")
-        icon1 = QIcon()
-        icon1.addFile(u":/Icons/home_off.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon1.addFile(u":/Icons/home.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.home_page_btn.setIcon(icon1)
+        icon3 = QIcon()
+        icon3.addFile(u":/Icons/home_off.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon3.addFile(u":/Icons/home.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.home_page_btn.setIcon(icon3)
         self.home_page_btn.setIconSize(QSize(30, 30))
         self.home_page_btn.setCheckable(True)
 
         self.verticalLayout_4.addWidget(self.home_page_btn)
 
         self.chart_page_btn = QPushButton(self.left_side_menu_widget)
-        self.left_side_buttonGroup.addButton(self.chart_page_btn)
+        self.left_side_btn_group.addButton(self.chart_page_btn)
         self.chart_page_btn.setObjectName(u"chart_page_btn")
         sizePolicy.setHeightForWidth(self.chart_page_btn.sizePolicy().hasHeightForWidth())
         self.chart_page_btn.setSizePolicy(sizePolicy)
         self.chart_page_btn.setFont(font4)
         self.chart_page_btn.setStyleSheet(u"")
-        icon2 = QIcon()
-        icon2.addFile(u":/Icons/chart-line-up-down.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon2.addFile(u":/Icons/chart-line-up-down_blue.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.chart_page_btn.setIcon(icon2)
+        icon4 = QIcon()
+        icon4.addFile(u":/Icons/chart-line-up-down.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon4.addFile(u":/Icons/chart-line-up-down_blue.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.chart_page_btn.setIcon(icon4)
         self.chart_page_btn.setIconSize(QSize(30, 30))
         self.chart_page_btn.setCheckable(True)
 
         self.verticalLayout_4.addWidget(self.chart_page_btn)
 
         self.device_page_btn = QPushButton(self.left_side_menu_widget)
-        self.left_side_buttonGroup.addButton(self.device_page_btn)
+        self.left_side_btn_group.addButton(self.device_page_btn)
         self.device_page_btn.setObjectName(u"device_page_btn")
         sizePolicy.setHeightForWidth(self.device_page_btn.sizePolicy().hasHeightForWidth())
         self.device_page_btn.setSizePolicy(sizePolicy)
         self.device_page_btn.setFont(font4)
-        icon3 = QIcon()
-        icon3.addFile(u":/Icons/settings.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon3.addFile(u":/Icons/settings (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.device_page_btn.setIcon(icon3)
+        icon5 = QIcon()
+        icon5.addFile(u":/Icons/settings.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon5.addFile(u":/Icons/settings (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.device_page_btn.setIcon(icon5)
         self.device_page_btn.setIconSize(QSize(35, 35))
         self.device_page_btn.setCheckable(True)
 
         self.verticalLayout_4.addWidget(self.device_page_btn)
 
         self.history_page_btn = QPushButton(self.left_side_menu_widget)
-        self.left_side_buttonGroup.addButton(self.history_page_btn)
+        self.left_side_btn_group.addButton(self.history_page_btn)
         self.history_page_btn.setObjectName(u"history_page_btn")
         sizePolicy.setHeightForWidth(self.history_page_btn.sizePolicy().hasHeightForWidth())
         self.history_page_btn.setSizePolicy(sizePolicy)
         self.history_page_btn.setFont(font4)
-        icon4 = QIcon()
-        icon4.addFile(u":/Icons/stats.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon4.addFile(u":/Icons/stats (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.history_page_btn.setIcon(icon4)
+        icon6 = QIcon()
+        icon6.addFile(u":/Icons/stats.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon6.addFile(u":/Icons/stats (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.history_page_btn.setIcon(icon6)
         self.history_page_btn.setIconSize(QSize(30, 30))
         self.history_page_btn.setCheckable(True)
 
@@ -449,61 +532,6 @@ class Ui_MainWindow(object):
         self.horizontalLayout_15.setSpacing(10)
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.horizontalLayout_15.setContentsMargins(10, 5, 10, 5)
-        self.sys_state_stacked_wid_39 = QStackedWidget(self.widget_63)
-        self.sys_state_stacked_wid_39.setObjectName(u"sys_state_stacked_wid_39")
-        sizePolicy.setHeightForWidth(self.sys_state_stacked_wid_39.sizePolicy().hasHeightForWidth())
-        self.sys_state_stacked_wid_39.setSizePolicy(sizePolicy)
-        self.sys_state_stacked_wid_39.setStyleSheet(u"")
-        self.running_light_52 = QWidget()
-        self.running_light_52.setObjectName(u"running_light_52")
-        self.horizontalLayout_439 = QHBoxLayout(self.running_light_52)
-        self.horizontalLayout_439.setObjectName(u"horizontalLayout_439")
-        self.horizontalLayout_439.setContentsMargins(0, 0, 0, 0)
-        self.start_light = QPushButton(self.running_light_52)
-        self.start_light.setObjectName(u"start_light")
-        sizePolicy.setHeightForWidth(self.start_light.sizePolicy().hasHeightForWidth())
-        self.start_light.setSizePolicy(sizePolicy)
-        font5 = QFont()
-        font5.setPointSize(22)
-        font5.setBold(True)
-        self.start_light.setFont(font5)
-        self.start_light.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
-        icon5 = QIcon()
-        icon5.addFile(u":/Icons/record-button.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.start_light.setIcon(icon5)
-        self.start_light.setIconSize(QSize(30, 30))
-
-        self.horizontalLayout_439.addWidget(self.start_light)
-
-        self.sys_state_stacked_wid_39.addWidget(self.running_light_52)
-        self.error_light_52 = QWidget()
-        self.error_light_52.setObjectName(u"error_light_52")
-        self.horizontalLayout_441 = QHBoxLayout(self.error_light_52)
-        self.horizontalLayout_441.setObjectName(u"horizontalLayout_441")
-        self.horizontalLayout_441.setContentsMargins(0, 0, 0, 0)
-        self.stop_light = QPushButton(self.error_light_52)
-        self.stop_light.setObjectName(u"stop_light")
-        sizePolicy.setHeightForWidth(self.stop_light.sizePolicy().hasHeightForWidth())
-        self.stop_light.setSizePolicy(sizePolicy)
-        self.stop_light.setFont(font5)
-        self.stop_light.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
-        icon6 = QIcon()
-        icon6.addFile(u":/Icons/record-button (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.stop_light.setIcon(icon6)
-        self.stop_light.setIconSize(QSize(30, 30))
-
-        self.horizontalLayout_441.addWidget(self.stop_light)
-
-        self.sys_state_stacked_wid_39.addWidget(self.error_light_52)
-
-        self.horizontalLayout_15.addWidget(self.sys_state_stacked_wid_39)
-
         self.widget_9 = QWidget(self.widget_63)
         self.widget_9.setObjectName(u"widget_9")
         self.widget_9.setMaximumSize(QSize(16777215, 100))
@@ -524,31 +552,14 @@ class Ui_MainWindow(object):
         self.horizontalLayout_29.setSpacing(10)
         self.horizontalLayout_29.setObjectName(u"horizontalLayout_29")
         self.horizontalLayout_29.setContentsMargins(0, 0, 0, 0)
-        self.previus_group_page_btn = QPushButton(self.widget_9)
-        self.previus_group_page_btn.setObjectName(u"previus_group_page_btn")
-        sizePolicy.setHeightForWidth(self.previus_group_page_btn.sizePolicy().hasHeightForWidth())
-        self.previus_group_page_btn.setSizePolicy(sizePolicy)
-        self.previus_group_page_btn.setMaximumSize(QSize(16777215, 150))
-        font6 = QFont()
-        font6.setBold(True)
-        self.previus_group_page_btn.setFont(font6)
-        self.previus_group_page_btn.setStyleSheet(u"QPushButton{\n"
-"	image: url(:/Icons/arrow-alt-circle-left.png);\n"
-"}\n"
-"QPushButton:pressed{\n"
-"	image: url(:/Icons/arrow-alt-circle-left_blue.png)\n"
-"}")
-        self.previus_group_page_btn.setIconSize(QSize(40, 40))
-        self.previus_group_page_btn.setCheckable(False)
-
-        self.horizontalLayout_29.addWidget(self.previus_group_page_btn)
-
         self.next_group_page_btn = QPushButton(self.widget_9)
         self.next_group_page_btn.setObjectName(u"next_group_page_btn")
         sizePolicy.setHeightForWidth(self.next_group_page_btn.sizePolicy().hasHeightForWidth())
         self.next_group_page_btn.setSizePolicy(sizePolicy)
         self.next_group_page_btn.setMaximumSize(QSize(16777215, 150))
-        self.next_group_page_btn.setFont(font6)
+        font5 = QFont()
+        font5.setBold(True)
+        self.next_group_page_btn.setFont(font5)
         self.next_group_page_btn.setStyleSheet(u"QPushButton{\n"
 "	image: url(:/Icons/arrow-alt-circle-right.png)\n"
 "}\n"
@@ -561,9 +572,63 @@ class Ui_MainWindow(object):
         self.horizontalLayout_29.addWidget(self.next_group_page_btn)
 
         self.horizontalLayout_29.setStretch(0, 1)
-        self.horizontalLayout_29.setStretch(1, 1)
 
         self.horizontalLayout_15.addWidget(self.widget_9)
+
+        self.sys_state_stacked_wid_39 = QStackedWidget(self.widget_63)
+        self.sys_state_stacked_wid_39.setObjectName(u"sys_state_stacked_wid_39")
+        sizePolicy.setHeightForWidth(self.sys_state_stacked_wid_39.sizePolicy().hasHeightForWidth())
+        self.sys_state_stacked_wid_39.setSizePolicy(sizePolicy)
+        self.sys_state_stacked_wid_39.setStyleSheet(u"")
+        self.running_light_52 = QWidget()
+        self.running_light_52.setObjectName(u"running_light_52")
+        self.horizontalLayout_439 = QHBoxLayout(self.running_light_52)
+        self.horizontalLayout_439.setObjectName(u"horizontalLayout_439")
+        self.horizontalLayout_439.setContentsMargins(0, 0, 0, 0)
+        self.start_light = QPushButton(self.running_light_52)
+        self.start_light.setObjectName(u"start_light")
+        sizePolicy.setHeightForWidth(self.start_light.sizePolicy().hasHeightForWidth())
+        self.start_light.setSizePolicy(sizePolicy)
+        font6 = QFont()
+        font6.setPointSize(22)
+        font6.setBold(True)
+        self.start_light.setFont(font6)
+        self.start_light.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 10px;\n"
+"color: #10B981; \n"
+"padding-right: 3px;")
+        icon7 = QIcon()
+        icon7.addFile(u":/Icons/record-button.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.start_light.setIcon(icon7)
+        self.start_light.setIconSize(QSize(30, 30))
+
+        self.horizontalLayout_439.addWidget(self.start_light)
+
+        self.sys_state_stacked_wid_39.addWidget(self.running_light_52)
+        self.error_light_52 = QWidget()
+        self.error_light_52.setObjectName(u"error_light_52")
+        self.horizontalLayout_441 = QHBoxLayout(self.error_light_52)
+        self.horizontalLayout_441.setObjectName(u"horizontalLayout_441")
+        self.horizontalLayout_441.setContentsMargins(0, 0, 0, 0)
+        self.stop_light = QPushButton(self.error_light_52)
+        self.stop_light.setObjectName(u"stop_light")
+        sizePolicy.setHeightForWidth(self.stop_light.sizePolicy().hasHeightForWidth())
+        self.stop_light.setSizePolicy(sizePolicy)
+        self.stop_light.setFont(font6)
+        self.stop_light.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 10px;\n"
+"color: #F90A0A; \n"
+"padding-right: 3px;")
+        icon8 = QIcon()
+        icon8.addFile(u":/Icons/record-button (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.stop_light.setIcon(icon8)
+        self.stop_light.setIconSize(QSize(30, 30))
+
+        self.horizontalLayout_441.addWidget(self.stop_light)
+
+        self.sys_state_stacked_wid_39.addWidget(self.error_light_52)
+
+        self.horizontalLayout_15.addWidget(self.sys_state_stacked_wid_39)
 
         self.temp_unit_selection_combox = QComboBox(self.widget_63)
         self.temp_unit_selection_combox.addItem("")
@@ -571,7 +636,7 @@ class Ui_MainWindow(object):
         self.temp_unit_selection_combox.setObjectName(u"temp_unit_selection_combox")
         sizePolicy1.setHeightForWidth(self.temp_unit_selection_combox.sizePolicy().hasHeightForWidth())
         self.temp_unit_selection_combox.setSizePolicy(sizePolicy1)
-        self.temp_unit_selection_combox.setFont(font5)
+        self.temp_unit_selection_combox.setFont(font6)
         self.temp_unit_selection_combox.setStyleSheet(u"\n"
 "    background-color: #F9FAFB;")
 
@@ -604,9 +669,9 @@ class Ui_MainWindow(object):
         font7.setPointSize(22)
         font7.setBold(True)
         self.clear_data_btn.setFont(font7)
-        icon7 = QIcon()
-        icon7.addFile(u":/Icons/data-cleaning.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_data_btn.setIcon(icon7)
+        icon9 = QIcon()
+        icon9.addFile(u":/Icons/data-cleaning.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_data_btn.setIcon(icon9)
         self.clear_data_btn.setIconSize(QSize(35, 35))
 
         self.horizontalLayout_9.addWidget(self.clear_data_btn)
@@ -616,9 +681,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.new_data_btn.sizePolicy().hasHeightForWidth())
         self.new_data_btn.setSizePolicy(sizePolicy)
         self.new_data_btn.setFont(font7)
-        icon8 = QIcon()
-        icon8.addFile(u":/Icons/folder-upload.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.new_data_btn.setIcon(icon8)
+        icon10 = QIcon()
+        icon10.addFile(u":/Icons/folder-upload.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.new_data_btn.setIcon(icon10)
         self.new_data_btn.setIconSize(QSize(35, 35))
 
         self.horizontalLayout_9.addWidget(self.new_data_btn)
@@ -2400,11 +2465,11 @@ class Ui_MainWindow(object):
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "}")
-        icon9 = QIcon()
-        icon9.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon9.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        icon9.addFile(u":/newPrefix/rotate-reverse-white.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
-        self.set_cycle_c_btn.setIcon(icon9)
+        icon11 = QIcon()
+        icon11.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon11.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        icon11.addFile(u":/newPrefix/rotate-reverse-white.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
+        self.set_cycle_c_btn.setIcon(icon11)
         self.set_cycle_c_btn.setIconSize(QSize(30, 30))
         self.set_cycle_c_btn.setCheckable(True)
 
@@ -2684,10 +2749,10 @@ class Ui_MainWindow(object):
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "}")
-        icon10 = QIcon()
-        icon10.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon10.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.set_cycle_b_btn.setIcon(icon10)
+        icon12 = QIcon()
+        icon12.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon12.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.set_cycle_b_btn.setIcon(icon12)
         self.set_cycle_b_btn.setIconSize(QSize(30, 30))
         self.set_cycle_b_btn.setCheckable(True)
 
@@ -2967,7 +3032,7 @@ class Ui_MainWindow(object):
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "}")
-        self.set_cycle_a_btn.setIcon(icon10)
+        self.set_cycle_a_btn.setIcon(icon12)
         self.set_cycle_a_btn.setIconSize(QSize(30, 30))
         self.set_cycle_a_btn.setCheckable(True)
 
@@ -4437,9 +4502,9 @@ class Ui_MainWindow(object):
 "	color: white;\n"
 "    background-color: #085A91;\n"
 "}")
-        icon11 = QIcon()
-        icon11.addFile(u":/Icons/play.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.start_btn.setIcon(icon11)
+        icon13 = QIcon()
+        icon13.addFile(u":/Icons/play.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.start_btn.setIcon(icon13)
         self.start_btn.setIconSize(QSize(45, 45))
         self.start_btn.setCheckable(True)
 
@@ -4472,9 +4537,9 @@ class Ui_MainWindow(object):
 "	color: white;\n"
 "    background-color: #085A91;\n"
 "}")
-        icon12 = QIcon()
-        icon12.addFile(u":/Icons/stop.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.stop_btn.setIcon(icon12)
+        icon14 = QIcon()
+        icon14.addFile(u":/Icons/stop.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.stop_btn.setIcon(icon14)
         self.stop_btn.setIconSize(QSize(35, 35))
         self.stop_btn.setCheckable(True)
 
@@ -4546,9 +4611,9 @@ class Ui_MainWindow(object):
         self.refuel_btn_a.setMaximumSize(QSize(16777215, 150))
         self.refuel_btn_a.setFont(font2)
         self.refuel_btn_a.setStyleSheet(u"")
-        icon13 = QIcon()
-        icon13.addFile(u":/Icons/gas-pump-alt.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.refuel_btn_a.setIcon(icon13)
+        icon15 = QIcon()
+        icon15.addFile(u":/Icons/gas-pump-alt.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.refuel_btn_a.setIcon(icon15)
         self.refuel_btn_a.setIconSize(QSize(35, 35))
         self.refuel_btn_a.setCheckable(True)
 
@@ -4561,7 +4626,7 @@ class Ui_MainWindow(object):
         self.refuel_btn_b.setMaximumSize(QSize(16777215, 150))
         self.refuel_btn_b.setFont(font2)
         self.refuel_btn_b.setStyleSheet(u"")
-        self.refuel_btn_b.setIcon(icon13)
+        self.refuel_btn_b.setIcon(icon15)
         self.refuel_btn_b.setIconSize(QSize(35, 35))
         self.refuel_btn_b.setCheckable(True)
 
@@ -4574,7 +4639,7 @@ class Ui_MainWindow(object):
         self.refuel_btn_c.setMaximumSize(QSize(16777215, 150))
         self.refuel_btn_c.setFont(font2)
         self.refuel_btn_c.setStyleSheet(u"")
-        self.refuel_btn_c.setIcon(icon13)
+        self.refuel_btn_c.setIcon(icon15)
         self.refuel_btn_c.setIconSize(QSize(35, 35))
         self.refuel_btn_c.setCheckable(True)
 
@@ -4631,9 +4696,9 @@ class Ui_MainWindow(object):
         self.vacuum_btn_a.setMaximumSize(QSize(16777215, 150))
         self.vacuum_btn_a.setFont(font2)
         self.vacuum_btn_a.setStyleSheet(u"")
-        icon14 = QIcon()
-        icon14.addFile(u":/Icons/pump.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.vacuum_btn_a.setIcon(icon14)
+        icon16 = QIcon()
+        icon16.addFile(u":/Icons/pump.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.vacuum_btn_a.setIcon(icon16)
         self.vacuum_btn_a.setIconSize(QSize(35, 35))
         self.vacuum_btn_a.setCheckable(True)
 
@@ -4646,7 +4711,7 @@ class Ui_MainWindow(object):
         self.vacuum_btn_b.setMaximumSize(QSize(16777215, 150))
         self.vacuum_btn_b.setFont(font2)
         self.vacuum_btn_b.setStyleSheet(u"")
-        self.vacuum_btn_b.setIcon(icon14)
+        self.vacuum_btn_b.setIcon(icon16)
         self.vacuum_btn_b.setIconSize(QSize(35, 35))
         self.vacuum_btn_b.setCheckable(True)
 
@@ -4659,7 +4724,7 @@ class Ui_MainWindow(object):
         self.vacuum_btn_c.setMaximumSize(QSize(16777215, 150))
         self.vacuum_btn_c.setFont(font2)
         self.vacuum_btn_c.setStyleSheet(u"")
-        self.vacuum_btn_c.setIcon(icon14)
+        self.vacuum_btn_c.setIcon(icon16)
         self.vacuum_btn_c.setIconSize(QSize(35, 35))
         self.vacuum_btn_c.setCheckable(True)
 
@@ -4716,9 +4781,9 @@ class Ui_MainWindow(object):
         self.heat_btn_a.setMaximumSize(QSize(16777215, 150))
         self.heat_btn_a.setFont(font2)
         self.heat_btn_a.setStyleSheet(u"")
-        icon15 = QIcon()
-        icon15.addFile(u":/Icons/heat.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.heat_btn_a.setIcon(icon15)
+        icon17 = QIcon()
+        icon17.addFile(u":/Icons/heat.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.heat_btn_a.setIcon(icon17)
         self.heat_btn_a.setIconSize(QSize(35, 35))
         self.heat_btn_a.setCheckable(True)
 
@@ -4731,7 +4796,7 @@ class Ui_MainWindow(object):
         self.heat_btn_b.setMaximumSize(QSize(16777215, 150))
         self.heat_btn_b.setFont(font2)
         self.heat_btn_b.setStyleSheet(u"")
-        self.heat_btn_b.setIcon(icon15)
+        self.heat_btn_b.setIcon(icon17)
         self.heat_btn_b.setIconSize(QSize(35, 35))
         self.heat_btn_b.setCheckable(True)
 
@@ -4744,7 +4809,7 @@ class Ui_MainWindow(object):
         self.heat_btn_c.setMaximumSize(QSize(16777215, 150))
         self.heat_btn_c.setFont(font2)
         self.heat_btn_c.setStyleSheet(u"")
-        self.heat_btn_c.setIcon(icon15)
+        self.heat_btn_c.setIcon(icon17)
         self.heat_btn_c.setIconSize(QSize(35, 35))
         self.heat_btn_c.setCheckable(True)
 
@@ -7383,7 +7448,7 @@ class Ui_MainWindow(object):
         self.heat_btn_t0.setMaximumSize(QSize(16777215, 150))
         self.heat_btn_t0.setFont(font13)
         self.heat_btn_t0.setStyleSheet(u"")
-        self.heat_btn_t0.setIcon(icon15)
+        self.heat_btn_t0.setIcon(icon17)
         self.heat_btn_t0.setIconSize(QSize(35, 35))
         self.heat_btn_t0.setCheckable(True)
 
@@ -7543,9 +7608,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon16 = QIcon()
-        icon16.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.ip_plc_address.setIcon(icon16)
+        icon18 = QIcon()
+        icon18.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.ip_plc_address.setIcon(icon18)
         self.ip_plc_address.setIconSize(QSize(55, 55))
         self.ip_plc_address.setCheckable(True)
 
@@ -7594,9 +7659,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon17 = QIcon()
-        icon17.addFile(u":/Icons/server-setting.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_number.setIcon(icon17)
+        icon19 = QIcon()
+        icon19.addFile(u":/Icons/server-setting.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.db_number.setIcon(icon19)
         self.db_number.setIconSize(QSize(55, 55))
         self.db_number.setCheckable(True)
 
@@ -7657,7 +7722,7 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	none;\n"
 "}")
-        self.pushButton_4.setIcon(icon5)
+        self.pushButton_4.setIcon(icon7)
         self.pushButton_4.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_328.addWidget(self.pushButton_4)
@@ -7677,7 +7742,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: #F90A0A; \n"
 "padding-right: 3px;")
-        self.pushButton_21.setIcon(icon6)
+        self.pushButton_21.setIcon(icon8)
         self.pushButton_21.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_339.addWidget(self.pushButton_21)
@@ -7697,9 +7762,9 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: orange; \n"
 "padding-right: 3px;")
-        icon18 = QIcon()
-        icon18.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_24.setIcon(icon18)
+        icon20 = QIcon()
+        icon20.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_24.setIcon(icon20)
         self.pushButton_24.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_7.addWidget(self.pushButton_24)
@@ -7768,7 +7833,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: #10B981; \n"
 "padding-right: 3px;")
-        self.pushButton_6.setIcon(icon5)
+        self.pushButton_6.setIcon(icon7)
         self.pushButton_6.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_473.addWidget(self.pushButton_6)
@@ -7794,7 +7859,7 @@ class Ui_MainWindow(object):
 "	border: 2px solid #E5E5E5; \n"
 "	border-radius: 10px;\n"
 "}")
-        self.pushButton_23.setIcon(icon6)
+        self.pushButton_23.setIcon(icon8)
         self.pushButton_23.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_474.addWidget(self.pushButton_23)
@@ -7814,7 +7879,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: orange; \n"
 "padding-right: 3px;")
-        self.pushButton_22.setIcon(icon18)
+        self.pushButton_22.setIcon(icon20)
         self.pushButton_22.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_8.addWidget(self.pushButton_22)
@@ -7869,9 +7934,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon19 = QIcon()
-        icon19.addFile(u":/Icons/security.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.write_plc_label_2.setIcon(icon19)
+        icon21 = QIcon()
+        icon21.addFile(u":/Icons/security.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.write_plc_label_2.setIcon(icon21)
         self.write_plc_label_2.setIconSize(QSize(55, 55))
         self.write_plc_label_2.setCheckable(True)
 
@@ -7888,9 +7953,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_file_path.setIcon(icon20)
+        icon22 = QIcon()
+        icon22.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.db_file_path.setIcon(icon22)
         self.db_file_path.setIconSize(QSize(55, 55))
         self.db_file_path.setCheckable(True)
 
@@ -8002,7 +8067,7 @@ class Ui_MainWindow(object):
         self.gridLayout_7 = QGridLayout(self.i_o_group_1)
         self.gridLayout_7.setSpacing(10)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.gridLayout_7.setContentsMargins(10, 20, 10, 10)
+        self.gridLayout_7.setContentsMargins(10, 15, 10, 10)
         self.i_o_group_1_switch_3 = QStackedWidget(self.i_o_group_1)
         self.i_o_group_1_switch_3.setObjectName(u"i_o_group_1_switch_3")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_3.sizePolicy().hasHeightForWidth())
@@ -8025,7 +8090,7 @@ class Ui_MainWindow(object):
         self.pushButton_59.setFont(font23)
         self.pushButton_59.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_59.setIcon(icon5)
+        self.pushButton_59.setIcon(icon8)
         self.pushButton_59.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_487.addWidget(self.pushButton_59)
@@ -8043,7 +8108,7 @@ class Ui_MainWindow(object):
         self.pushButton_58.setFont(font23)
         self.pushButton_58.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_58.setIcon(icon5)
+        self.pushButton_58.setIcon(icon7)
         self.pushButton_58.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_486.addWidget(self.pushButton_58)
@@ -8056,7 +8121,9 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_5.setObjectName(u"i_o_group_1_switch_5")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_5.sizePolicy().hasHeightForWidth())
         self.i_o_group_1_switch_5.setSizePolicy(sizePolicy)
-        self.i_o_group_1_switch_5.setStyleSheet(u"")
+        self.i_o_group_1_switch_5.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
         self.off_light_11 = QWidget()
         self.off_light_11.setObjectName(u"off_light_11")
         self.horizontalLayout_491 = QHBoxLayout(self.off_light_11)
@@ -8069,7 +8136,7 @@ class Ui_MainWindow(object):
         self.pushButton_63.setFont(font23)
         self.pushButton_63.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_63.setIcon(icon5)
+        self.pushButton_63.setIcon(icon8)
         self.pushButton_63.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_491.addWidget(self.pushButton_63)
@@ -8087,7 +8154,7 @@ class Ui_MainWindow(object):
         self.pushButton_62.setFont(font23)
         self.pushButton_62.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_62.setIcon(icon5)
+        self.pushButton_62.setIcon(icon7)
         self.pushButton_62.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_490.addWidget(self.pushButton_62)
@@ -8115,7 +8182,7 @@ class Ui_MainWindow(object):
         self.pushButton_65.setFont(font23)
         self.pushButton_65.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_65.setIcon(icon5)
+        self.pushButton_65.setIcon(icon8)
         self.pushButton_65.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_493.addWidget(self.pushButton_65)
@@ -8133,7 +8200,7 @@ class Ui_MainWindow(object):
         self.pushButton_64.setFont(font23)
         self.pushButton_64.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_64.setIcon(icon5)
+        self.pushButton_64.setIcon(icon7)
         self.pushButton_64.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_492.addWidget(self.pushButton_64)
@@ -8161,7 +8228,7 @@ class Ui_MainWindow(object):
         self.pushButton_67.setFont(font23)
         self.pushButton_67.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_67.setIcon(icon5)
+        self.pushButton_67.setIcon(icon8)
         self.pushButton_67.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_495.addWidget(self.pushButton_67)
@@ -8179,7 +8246,7 @@ class Ui_MainWindow(object):
         self.pushButton_66.setFont(font23)
         self.pushButton_66.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_66.setIcon(icon5)
+        self.pushButton_66.setIcon(icon7)
         self.pushButton_66.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_494.addWidget(self.pushButton_66)
@@ -8207,7 +8274,7 @@ class Ui_MainWindow(object):
         self.pushButton_57.setFont(font23)
         self.pushButton_57.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_57.setIcon(icon5)
+        self.pushButton_57.setIcon(icon8)
         self.pushButton_57.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_485.addWidget(self.pushButton_57)
@@ -8225,7 +8292,7 @@ class Ui_MainWindow(object):
         self.pushButton_56.setFont(font23)
         self.pushButton_56.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_56.setIcon(icon5)
+        self.pushButton_56.setIcon(icon7)
         self.pushButton_56.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_484.addWidget(self.pushButton_56)
@@ -8262,7 +8329,7 @@ class Ui_MainWindow(object):
         self.pushButton_43.setFont(font23)
         self.pushButton_43.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_43.setIcon(icon5)
+        self.pushButton_43.setIcon(icon8)
         self.pushButton_43.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_471.addWidget(self.pushButton_43)
@@ -8280,7 +8347,7 @@ class Ui_MainWindow(object):
         self.pushButton_42.setFont(font23)
         self.pushButton_42.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_42.setIcon(icon5)
+        self.pushButton_42.setIcon(icon7)
         self.pushButton_42.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_470.addWidget(self.pushButton_42)
@@ -8308,7 +8375,7 @@ class Ui_MainWindow(object):
         self.pushButton_61.setFont(font23)
         self.pushButton_61.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_61.setIcon(icon5)
+        self.pushButton_61.setIcon(icon8)
         self.pushButton_61.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_489.addWidget(self.pushButton_61)
@@ -8326,7 +8393,7 @@ class Ui_MainWindow(object):
         self.pushButton_60.setFont(font23)
         self.pushButton_60.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_60.setIcon(icon5)
+        self.pushButton_60.setIcon(icon7)
         self.pushButton_60.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_488.addWidget(self.pushButton_60)
@@ -8334,6 +8401,18 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_4.addWidget(self.on_light_10)
 
         self.gridLayout_7.addWidget(self.i_o_group_1_switch_4, 3, 1, 1, 1)
+
+        self.di_name_2 = QLabel(self.i_o_group_1)
+        self.di_name_2.setObjectName(u"di_name_2")
+        self.di_name_2.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_2, 1, 0, 1, 1)
+
+        self.di_name_3 = QLabel(self.i_o_group_1)
+        self.di_name_3.setObjectName(u"di_name_3")
+        self.di_name_3.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_3, 2, 0, 1, 1)
 
         self.i_o_group_1_switch_8 = QStackedWidget(self.i_o_group_1)
         self.i_o_group_1_switch_8.setObjectName(u"i_o_group_1_switch_8")
@@ -8354,7 +8433,7 @@ class Ui_MainWindow(object):
         self.pushButton_69.setFont(font23)
         self.pushButton_69.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_69.setIcon(icon5)
+        self.pushButton_69.setIcon(icon8)
         self.pushButton_69.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_497.addWidget(self.pushButton_69)
@@ -8372,7 +8451,7 @@ class Ui_MainWindow(object):
         self.pushButton_68.setFont(font23)
         self.pushButton_68.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 20px;")
-        self.pushButton_68.setIcon(icon5)
+        self.pushButton_68.setIcon(icon7)
         self.pushButton_68.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_496.addWidget(self.pushButton_68)
@@ -8380,18 +8459,6 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_8.addWidget(self.on_light_14)
 
         self.gridLayout_7.addWidget(self.i_o_group_1_switch_8, 7, 1, 1, 1)
-
-        self.di_name_2 = QLabel(self.i_o_group_1)
-        self.di_name_2.setObjectName(u"di_name_2")
-        self.di_name_2.setFont(font24)
-
-        self.gridLayout_7.addWidget(self.di_name_2, 1, 0, 1, 1)
-
-        self.di_name_3 = QLabel(self.i_o_group_1)
-        self.di_name_3.setObjectName(u"di_name_3")
-        self.di_name_3.setFont(font24)
-
-        self.gridLayout_7.addWidget(self.di_name_3, 2, 0, 1, 1)
 
         self.di_name_4 = QLabel(self.i_o_group_1)
         self.di_name_4.setObjectName(u"di_name_4")
@@ -8422,6 +8489,266 @@ class Ui_MainWindow(object):
         self.di_name_8.setFont(font24)
 
         self.gridLayout_7.addWidget(self.di_name_8, 7, 0, 1, 1)
+
+        self.di_name_11 = QLabel(self.i_o_group_1)
+        self.di_name_11.setObjectName(u"di_name_11")
+        self.di_name_11.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_11, 10, 0, 1, 1)
+
+        self.i_o_group_1_switch_11 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_11.setObjectName(u"i_o_group_1_switch_11")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_11.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_11.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_11.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.off_light_17 = QWidget()
+        self.off_light_17.setObjectName(u"off_light_17")
+        self.horizontalLayout_590 = QHBoxLayout(self.off_light_17)
+        self.horizontalLayout_590.setObjectName(u"horizontalLayout_590")
+        self.horizontalLayout_590.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_74 = QPushButton(self.off_light_17)
+        self.pushButton_74.setObjectName(u"pushButton_74")
+        sizePolicy.setHeightForWidth(self.pushButton_74.sizePolicy().hasHeightForWidth())
+        self.pushButton_74.setSizePolicy(sizePolicy)
+        self.pushButton_74.setFont(font23)
+        self.pushButton_74.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_74.setIcon(icon8)
+        self.pushButton_74.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_590.addWidget(self.pushButton_74)
+
+        self.i_o_group_1_switch_11.addWidget(self.off_light_17)
+        self.on_light_17 = QWidget()
+        self.on_light_17.setObjectName(u"on_light_17")
+        self.horizontalLayout_591 = QHBoxLayout(self.on_light_17)
+        self.horizontalLayout_591.setObjectName(u"horizontalLayout_591")
+        self.horizontalLayout_591.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_75 = QPushButton(self.on_light_17)
+        self.pushButton_75.setObjectName(u"pushButton_75")
+        sizePolicy.setHeightForWidth(self.pushButton_75.sizePolicy().hasHeightForWidth())
+        self.pushButton_75.setSizePolicy(sizePolicy)
+        self.pushButton_75.setFont(font23)
+        self.pushButton_75.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_75.setIcon(icon7)
+        self.pushButton_75.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_591.addWidget(self.pushButton_75)
+
+        self.i_o_group_1_switch_11.addWidget(self.on_light_17)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_11, 10, 1, 1, 1)
+
+        self.di_name_12 = QLabel(self.i_o_group_1)
+        self.di_name_12.setObjectName(u"di_name_12")
+        self.di_name_12.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_12, 11, 0, 1, 1)
+
+        self.di_name_9 = QLabel(self.i_o_group_1)
+        self.di_name_9.setObjectName(u"di_name_9")
+        self.di_name_9.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_9, 8, 0, 1, 1)
+
+        self.di_name_10 = QLabel(self.i_o_group_1)
+        self.di_name_10.setObjectName(u"di_name_10")
+        self.di_name_10.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_10, 9, 0, 1, 1)
+
+        self.i_o_group_1_switch_9 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_9.setObjectName(u"i_o_group_1_switch_9")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_9.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_9.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_9.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.off_light_15 = QWidget()
+        self.off_light_15.setObjectName(u"off_light_15")
+        self.horizontalLayout_586 = QHBoxLayout(self.off_light_15)
+        self.horizontalLayout_586.setObjectName(u"horizontalLayout_586")
+        self.horizontalLayout_586.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_70 = QPushButton(self.off_light_15)
+        self.pushButton_70.setObjectName(u"pushButton_70")
+        sizePolicy.setHeightForWidth(self.pushButton_70.sizePolicy().hasHeightForWidth())
+        self.pushButton_70.setSizePolicy(sizePolicy)
+        self.pushButton_70.setFont(font23)
+        self.pushButton_70.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_70.setIcon(icon8)
+        self.pushButton_70.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_586.addWidget(self.pushButton_70)
+
+        self.i_o_group_1_switch_9.addWidget(self.off_light_15)
+        self.on_light_15 = QWidget()
+        self.on_light_15.setObjectName(u"on_light_15")
+        self.horizontalLayout_587 = QHBoxLayout(self.on_light_15)
+        self.horizontalLayout_587.setObjectName(u"horizontalLayout_587")
+        self.horizontalLayout_587.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_71 = QPushButton(self.on_light_15)
+        self.pushButton_71.setObjectName(u"pushButton_71")
+        sizePolicy.setHeightForWidth(self.pushButton_71.sizePolicy().hasHeightForWidth())
+        self.pushButton_71.setSizePolicy(sizePolicy)
+        self.pushButton_71.setFont(font23)
+        self.pushButton_71.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_71.setIcon(icon7)
+        self.pushButton_71.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_587.addWidget(self.pushButton_71)
+
+        self.i_o_group_1_switch_9.addWidget(self.on_light_15)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_9, 8, 1, 1, 1)
+
+        self.i_o_group_1_switch_10 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_10.setObjectName(u"i_o_group_1_switch_10")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_10.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_10.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_10.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.off_light_16 = QWidget()
+        self.off_light_16.setObjectName(u"off_light_16")
+        self.horizontalLayout_588 = QHBoxLayout(self.off_light_16)
+        self.horizontalLayout_588.setObjectName(u"horizontalLayout_588")
+        self.horizontalLayout_588.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_72 = QPushButton(self.off_light_16)
+        self.pushButton_72.setObjectName(u"pushButton_72")
+        sizePolicy.setHeightForWidth(self.pushButton_72.sizePolicy().hasHeightForWidth())
+        self.pushButton_72.setSizePolicy(sizePolicy)
+        self.pushButton_72.setFont(font23)
+        self.pushButton_72.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_72.setIcon(icon8)
+        self.pushButton_72.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_588.addWidget(self.pushButton_72)
+
+        self.i_o_group_1_switch_10.addWidget(self.off_light_16)
+        self.on_light_16 = QWidget()
+        self.on_light_16.setObjectName(u"on_light_16")
+        self.horizontalLayout_589 = QHBoxLayout(self.on_light_16)
+        self.horizontalLayout_589.setObjectName(u"horizontalLayout_589")
+        self.horizontalLayout_589.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_73 = QPushButton(self.on_light_16)
+        self.pushButton_73.setObjectName(u"pushButton_73")
+        sizePolicy.setHeightForWidth(self.pushButton_73.sizePolicy().hasHeightForWidth())
+        self.pushButton_73.setSizePolicy(sizePolicy)
+        self.pushButton_73.setFont(font23)
+        self.pushButton_73.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_73.setIcon(icon7)
+        self.pushButton_73.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_589.addWidget(self.pushButton_73)
+
+        self.i_o_group_1_switch_10.addWidget(self.on_light_16)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_10, 9, 1, 1, 1)
+
+        self.di_name_13 = QLabel(self.i_o_group_1)
+        self.di_name_13.setObjectName(u"di_name_13")
+        self.di_name_13.setFont(font24)
+
+        self.gridLayout_7.addWidget(self.di_name_13, 12, 0, 1, 1)
+
+        self.i_o_group_1_switch_12 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_12.setObjectName(u"i_o_group_1_switch_12")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_12.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_12.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_12.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.off_light_18 = QWidget()
+        self.off_light_18.setObjectName(u"off_light_18")
+        self.horizontalLayout_592 = QHBoxLayout(self.off_light_18)
+        self.horizontalLayout_592.setObjectName(u"horizontalLayout_592")
+        self.horizontalLayout_592.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_76 = QPushButton(self.off_light_18)
+        self.pushButton_76.setObjectName(u"pushButton_76")
+        sizePolicy.setHeightForWidth(self.pushButton_76.sizePolicy().hasHeightForWidth())
+        self.pushButton_76.setSizePolicy(sizePolicy)
+        self.pushButton_76.setFont(font23)
+        self.pushButton_76.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_76.setIcon(icon8)
+        self.pushButton_76.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_592.addWidget(self.pushButton_76)
+
+        self.i_o_group_1_switch_12.addWidget(self.off_light_18)
+        self.on_light_18 = QWidget()
+        self.on_light_18.setObjectName(u"on_light_18")
+        self.horizontalLayout_593 = QHBoxLayout(self.on_light_18)
+        self.horizontalLayout_593.setObjectName(u"horizontalLayout_593")
+        self.horizontalLayout_593.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_77 = QPushButton(self.on_light_18)
+        self.pushButton_77.setObjectName(u"pushButton_77")
+        sizePolicy.setHeightForWidth(self.pushButton_77.sizePolicy().hasHeightForWidth())
+        self.pushButton_77.setSizePolicy(sizePolicy)
+        self.pushButton_77.setFont(font23)
+        self.pushButton_77.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_77.setIcon(icon7)
+        self.pushButton_77.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_593.addWidget(self.pushButton_77)
+
+        self.i_o_group_1_switch_12.addWidget(self.on_light_18)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_12, 11, 1, 1, 1)
+
+        self.i_o_group_1_switch_13 = QStackedWidget(self.i_o_group_1)
+        self.i_o_group_1_switch_13.setObjectName(u"i_o_group_1_switch_13")
+        sizePolicy.setHeightForWidth(self.i_o_group_1_switch_13.sizePolicy().hasHeightForWidth())
+        self.i_o_group_1_switch_13.setSizePolicy(sizePolicy)
+        self.i_o_group_1_switch_13.setStyleSheet(u"QWidget{\n"
+"	border: none;\n"
+"}")
+        self.off_light_19 = QWidget()
+        self.off_light_19.setObjectName(u"off_light_19")
+        self.horizontalLayout_594 = QHBoxLayout(self.off_light_19)
+        self.horizontalLayout_594.setObjectName(u"horizontalLayout_594")
+        self.horizontalLayout_594.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_78 = QPushButton(self.off_light_19)
+        self.pushButton_78.setObjectName(u"pushButton_78")
+        sizePolicy.setHeightForWidth(self.pushButton_78.sizePolicy().hasHeightForWidth())
+        self.pushButton_78.setSizePolicy(sizePolicy)
+        self.pushButton_78.setFont(font23)
+        self.pushButton_78.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_78.setIcon(icon8)
+        self.pushButton_78.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_594.addWidget(self.pushButton_78)
+
+        self.i_o_group_1_switch_13.addWidget(self.off_light_19)
+        self.on_light_19 = QWidget()
+        self.on_light_19.setObjectName(u"on_light_19")
+        self.horizontalLayout_595 = QHBoxLayout(self.on_light_19)
+        self.horizontalLayout_595.setObjectName(u"horizontalLayout_595")
+        self.horizontalLayout_595.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_79 = QPushButton(self.on_light_19)
+        self.pushButton_79.setObjectName(u"pushButton_79")
+        sizePolicy.setHeightForWidth(self.pushButton_79.sizePolicy().hasHeightForWidth())
+        self.pushButton_79.setSizePolicy(sizePolicy)
+        self.pushButton_79.setFont(font23)
+        self.pushButton_79.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 20px;")
+        self.pushButton_79.setIcon(icon7)
+        self.pushButton_79.setIconSize(QSize(45, 45))
+
+        self.horizontalLayout_595.addWidget(self.pushButton_79)
+
+        self.i_o_group_1_switch_13.addWidget(self.on_light_19)
+
+        self.gridLayout_7.addWidget(self.i_o_group_1_switch_13, 12, 1, 1, 1)
 
         self.gridLayout_7.setColumnStretch(1, 1)
 
@@ -8472,12 +8799,12 @@ class Ui_MainWindow(object):
         self.gridLayout_5 = QGridLayout(self.i_o_group_3)
         self.gridLayout_5.setSpacing(10)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.gridLayout_5.setContentsMargins(10, 20, 10, 10)
+        self.gridLayout_5.setContentsMargins(10, 15, 10, 10)
         self.t0_value = QDoubleSpinBox(self.i_o_group_3)
         self.t0_value.setObjectName(u"t0_value")
         sizePolicy.setHeightForWidth(self.t0_value.sizePolicy().hasHeightForWidth())
         self.t0_value.setSizePolicy(sizePolicy)
-        self.t0_value.setFont(font5)
+        self.t0_value.setFont(font6)
         self.t0_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8485,8 +8812,8 @@ class Ui_MainWindow(object):
         self.t0_value.setReadOnly(True)
         self.t0_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t0_value.setDecimals(1)
-        self.t0_value.setMinimum(-10.000000000000000)
-        self.t0_value.setMaximum(999.899999999999977)
+        self.t0_value.setMinimum(-9999.899999999999636)
+        self.t0_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t0_value, 0, 1, 1, 1)
 
@@ -8500,7 +8827,7 @@ class Ui_MainWindow(object):
         self.t1_1_value.setObjectName(u"t1_1_value")
         sizePolicy.setHeightForWidth(self.t1_1_value.sizePolicy().hasHeightForWidth())
         self.t1_1_value.setSizePolicy(sizePolicy)
-        self.t1_1_value.setFont(font5)
+        self.t1_1_value.setFont(font6)
         self.t1_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8508,8 +8835,8 @@ class Ui_MainWindow(object):
         self.t1_1_value.setReadOnly(True)
         self.t1_1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t1_1_value.setDecimals(1)
-        self.t1_1_value.setMinimum(-10.000000000000000)
-        self.t1_1_value.setMaximum(999.899999999999977)
+        self.t1_1_value.setMinimum(-9999.899999999999636)
+        self.t1_1_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t1_1_value, 0, 3, 1, 1)
 
@@ -8607,7 +8934,7 @@ class Ui_MainWindow(object):
         self.t1_2_value.setObjectName(u"t1_2_value")
         sizePolicy.setHeightForWidth(self.t1_2_value.sizePolicy().hasHeightForWidth())
         self.t1_2_value.setSizePolicy(sizePolicy)
-        self.t1_2_value.setFont(font5)
+        self.t1_2_value.setFont(font6)
         self.t1_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8615,8 +8942,8 @@ class Ui_MainWindow(object):
         self.t1_2_value.setReadOnly(True)
         self.t1_2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t1_2_value.setDecimals(1)
-        self.t1_2_value.setMinimum(-10.000000000000000)
-        self.t1_2_value.setMaximum(999.899999999999977)
+        self.t1_2_value.setMinimum(-9999.899999999999636)
+        self.t1_2_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t1_2_value, 1, 1, 1, 1)
 
@@ -8624,7 +8951,7 @@ class Ui_MainWindow(object):
         self.t1_3_value.setObjectName(u"t1_3_value")
         sizePolicy.setHeightForWidth(self.t1_3_value.sizePolicy().hasHeightForWidth())
         self.t1_3_value.setSizePolicy(sizePolicy)
-        self.t1_3_value.setFont(font5)
+        self.t1_3_value.setFont(font6)
         self.t1_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8632,8 +8959,8 @@ class Ui_MainWindow(object):
         self.t1_3_value.setReadOnly(True)
         self.t1_3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t1_3_value.setDecimals(1)
-        self.t1_3_value.setMinimum(-10.000000000000000)
-        self.t1_3_value.setMaximum(999.899999999999977)
+        self.t1_3_value.setMinimum(-9999.899999999999636)
+        self.t1_3_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t1_3_value, 1, 3, 1, 1)
 
@@ -8641,7 +8968,7 @@ class Ui_MainWindow(object):
         self.t2_1_value.setObjectName(u"t2_1_value")
         sizePolicy.setHeightForWidth(self.t2_1_value.sizePolicy().hasHeightForWidth())
         self.t2_1_value.setSizePolicy(sizePolicy)
-        self.t2_1_value.setFont(font5)
+        self.t2_1_value.setFont(font6)
         self.t2_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8649,8 +8976,8 @@ class Ui_MainWindow(object):
         self.t2_1_value.setReadOnly(True)
         self.t2_1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t2_1_value.setDecimals(1)
-        self.t2_1_value.setMinimum(-10.000000000000000)
-        self.t2_1_value.setMaximum(999.899999999999977)
+        self.t2_1_value.setMinimum(-9999.899999999999636)
+        self.t2_1_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t2_1_value, 2, 1, 1, 1)
 
@@ -8658,7 +8985,7 @@ class Ui_MainWindow(object):
         self.t2_2_value.setObjectName(u"t2_2_value")
         sizePolicy.setHeightForWidth(self.t2_2_value.sizePolicy().hasHeightForWidth())
         self.t2_2_value.setSizePolicy(sizePolicy)
-        self.t2_2_value.setFont(font5)
+        self.t2_2_value.setFont(font6)
         self.t2_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8666,8 +8993,8 @@ class Ui_MainWindow(object):
         self.t2_2_value.setReadOnly(True)
         self.t2_2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t2_2_value.setDecimals(1)
-        self.t2_2_value.setMinimum(-10.000000000000000)
-        self.t2_2_value.setMaximum(999.899999999999977)
+        self.t2_2_value.setMinimum(-9999.899999999999636)
+        self.t2_2_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t2_2_value, 2, 3, 1, 1)
 
@@ -8675,7 +9002,7 @@ class Ui_MainWindow(object):
         self.t2_3_value.setObjectName(u"t2_3_value")
         sizePolicy.setHeightForWidth(self.t2_3_value.sizePolicy().hasHeightForWidth())
         self.t2_3_value.setSizePolicy(sizePolicy)
-        self.t2_3_value.setFont(font5)
+        self.t2_3_value.setFont(font6)
         self.t2_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8683,8 +9010,8 @@ class Ui_MainWindow(object):
         self.t2_3_value.setReadOnly(True)
         self.t2_3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t2_3_value.setDecimals(1)
-        self.t2_3_value.setMinimum(-10.000000000000000)
-        self.t2_3_value.setMaximum(999.899999999999977)
+        self.t2_3_value.setMinimum(-9999.899999999999636)
+        self.t2_3_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t2_3_value, 3, 1, 1, 1)
 
@@ -8692,7 +9019,7 @@ class Ui_MainWindow(object):
         self.t3_1_value.setObjectName(u"t3_1_value")
         sizePolicy.setHeightForWidth(self.t3_1_value.sizePolicy().hasHeightForWidth())
         self.t3_1_value.setSizePolicy(sizePolicy)
-        self.t3_1_value.setFont(font5)
+        self.t3_1_value.setFont(font6)
         self.t3_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8700,8 +9027,8 @@ class Ui_MainWindow(object):
         self.t3_1_value.setReadOnly(True)
         self.t3_1_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t3_1_value.setDecimals(1)
-        self.t3_1_value.setMinimum(-10.000000000000000)
-        self.t3_1_value.setMaximum(999.899999999999977)
+        self.t3_1_value.setMinimum(-9999.899999999999636)
+        self.t3_1_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t3_1_value, 3, 3, 1, 1)
 
@@ -8709,7 +9036,7 @@ class Ui_MainWindow(object):
         self.t3_2_value.setObjectName(u"t3_2_value")
         sizePolicy.setHeightForWidth(self.t3_2_value.sizePolicy().hasHeightForWidth())
         self.t3_2_value.setSizePolicy(sizePolicy)
-        self.t3_2_value.setFont(font5)
+        self.t3_2_value.setFont(font6)
         self.t3_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8717,8 +9044,8 @@ class Ui_MainWindow(object):
         self.t3_2_value.setReadOnly(True)
         self.t3_2_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t3_2_value.setDecimals(1)
-        self.t3_2_value.setMinimum(-10.000000000000000)
-        self.t3_2_value.setMaximum(999.899999999999977)
+        self.t3_2_value.setMinimum(-9999.899999999999636)
+        self.t3_2_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t3_2_value, 4, 1, 1, 1)
 
@@ -8726,7 +9053,7 @@ class Ui_MainWindow(object):
         self.t3_3_value.setObjectName(u"t3_3_value")
         sizePolicy.setHeightForWidth(self.t3_3_value.sizePolicy().hasHeightForWidth())
         self.t3_3_value.setSizePolicy(sizePolicy)
-        self.t3_3_value.setFont(font5)
+        self.t3_3_value.setFont(font6)
         self.t3_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8734,8 +9061,8 @@ class Ui_MainWindow(object):
         self.t3_3_value.setReadOnly(True)
         self.t3_3_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t3_3_value.setDecimals(1)
-        self.t3_3_value.setMinimum(-10.000000000000000)
-        self.t3_3_value.setMaximum(999.899999999999977)
+        self.t3_3_value.setMinimum(-9999.899999999999636)
+        self.t3_3_value.setMaximum(9999.899999999999636)
 
         self.gridLayout_5.addWidget(self.t3_3_value, 4, 3, 1, 1)
 
@@ -8743,7 +9070,7 @@ class Ui_MainWindow(object):
         self.p1_value.setObjectName(u"p1_value")
         sizePolicy.setHeightForWidth(self.p1_value.sizePolicy().hasHeightForWidth())
         self.p1_value.setSizePolicy(sizePolicy)
-        self.p1_value.setFont(font5)
+        self.p1_value.setFont(font6)
         self.p1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8759,7 +9086,7 @@ class Ui_MainWindow(object):
         self.p2_value.setObjectName(u"p2_value")
         sizePolicy.setHeightForWidth(self.p2_value.sizePolicy().hasHeightForWidth())
         self.p2_value.setSizePolicy(sizePolicy)
-        self.p2_value.setFont(font5)
+        self.p2_value.setFont(font6)
         self.p2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8775,7 +9102,7 @@ class Ui_MainWindow(object):
         self.p3_value.setObjectName(u"p3_value")
         sizePolicy.setHeightForWidth(self.p3_value.sizePolicy().hasHeightForWidth())
         self.p3_value.setSizePolicy(sizePolicy)
-        self.p3_value.setFont(font5)
+        self.p3_value.setFont(font6)
         self.p3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8791,7 +9118,7 @@ class Ui_MainWindow(object):
         self.fp1_value.setObjectName(u"fp1_value")
         sizePolicy.setHeightForWidth(self.fp1_value.sizePolicy().hasHeightForWidth())
         self.fp1_value.setSizePolicy(sizePolicy)
-        self.fp1_value.setFont(font5)
+        self.fp1_value.setFont(font6)
         self.fp1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8807,7 +9134,7 @@ class Ui_MainWindow(object):
         self.fp2_value.setObjectName(u"fp2_value")
         sizePolicy.setHeightForWidth(self.fp2_value.sizePolicy().hasHeightForWidth())
         self.fp2_value.setSizePolicy(sizePolicy)
-        self.fp2_value.setFont(font5)
+        self.fp2_value.setFont(font6)
         self.fp2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8823,7 +9150,7 @@ class Ui_MainWindow(object):
         self.fp3_value.setObjectName(u"fp3_value")
         sizePolicy.setHeightForWidth(self.fp3_value.sizePolicy().hasHeightForWidth())
         self.fp3_value.setSizePolicy(sizePolicy)
-        self.fp3_value.setFont(font5)
+        self.fp3_value.setFont(font6)
         self.fp3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -8929,13 +9256,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_45.addWidget(self.widget_36)
 
-        self.reset_cycle_b_btn_3 = QPushButton(self.widget_13)
-        self.reset_cycle_b_btn_3.setObjectName(u"reset_cycle_b_btn_3")
-        sizePolicy.setHeightForWidth(self.reset_cycle_b_btn_3.sizePolicy().hasHeightForWidth())
-        self.reset_cycle_b_btn_3.setSizePolicy(sizePolicy)
-        self.reset_cycle_b_btn_3.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_b_btn_3.setFont(font13)
-        self.reset_cycle_b_btn_3.setStyleSheet(u"QPushButton {\n"
+        self.reset_cycle_b_btn = QPushButton(self.widget_13)
+        self.reset_cycle_b_btn.setObjectName(u"reset_cycle_b_btn")
+        sizePolicy.setHeightForWidth(self.reset_cycle_b_btn.sizePolicy().hasHeightForWidth())
+        self.reset_cycle_b_btn.setSizePolicy(sizePolicy)
+        self.reset_cycle_b_btn.setMinimumSize(QSize(75, 0))
+        self.reset_cycle_b_btn.setFont(font13)
+        self.reset_cycle_b_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "    border: 1px solid #0B7EC8;\n"
@@ -8947,12 +9274,12 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        icon21 = QIcon()
-        icon21.addFile(u":/newPrefix/rotate-reverse.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.reset_cycle_b_btn_3.setIcon(icon21)
-        self.reset_cycle_b_btn_3.setIconSize(QSize(35, 35))
+        icon23 = QIcon()
+        icon23.addFile(u":/Icons/broom.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.reset_cycle_b_btn.setIcon(icon23)
+        self.reset_cycle_b_btn.setIconSize(QSize(50, 50))
 
-        self.horizontalLayout_45.addWidget(self.reset_cycle_b_btn_3)
+        self.horizontalLayout_45.addWidget(self.reset_cycle_b_btn)
 
 
         self.gridLayout_8.addWidget(self.widget_13, 1, 0, 1, 1)
@@ -8999,13 +9326,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_42.addWidget(self.widget_35)
 
-        self.reset_cycle_a_btn_3 = QPushButton(self.widget_12)
-        self.reset_cycle_a_btn_3.setObjectName(u"reset_cycle_a_btn_3")
-        sizePolicy.setHeightForWidth(self.reset_cycle_a_btn_3.sizePolicy().hasHeightForWidth())
-        self.reset_cycle_a_btn_3.setSizePolicy(sizePolicy)
-        self.reset_cycle_a_btn_3.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_a_btn_3.setFont(font13)
-        self.reset_cycle_a_btn_3.setStyleSheet(u"QPushButton {\n"
+        self.reset_cycle_a_btn = QPushButton(self.widget_12)
+        self.reset_cycle_a_btn.setObjectName(u"reset_cycle_a_btn")
+        sizePolicy.setHeightForWidth(self.reset_cycle_a_btn.sizePolicy().hasHeightForWidth())
+        self.reset_cycle_a_btn.setSizePolicy(sizePolicy)
+        self.reset_cycle_a_btn.setMinimumSize(QSize(75, 0))
+        self.reset_cycle_a_btn.setFont(font13)
+        self.reset_cycle_a_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "    border: 1px solid #0B7EC8;\n"
@@ -9017,10 +9344,10 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        self.reset_cycle_a_btn_3.setIcon(icon21)
-        self.reset_cycle_a_btn_3.setIconSize(QSize(35, 35))
+        self.reset_cycle_a_btn.setIcon(icon23)
+        self.reset_cycle_a_btn.setIconSize(QSize(50, 50))
 
-        self.horizontalLayout_42.addWidget(self.reset_cycle_a_btn_3)
+        self.horizontalLayout_42.addWidget(self.reset_cycle_a_btn)
 
 
         self.gridLayout_8.addWidget(self.widget_12, 0, 0, 1, 1)
@@ -9067,13 +9394,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_47.addWidget(self.widget_37)
 
-        self.reset_cycle_c_btn_3 = QPushButton(self.widget_25)
-        self.reset_cycle_c_btn_3.setObjectName(u"reset_cycle_c_btn_3")
-        sizePolicy.setHeightForWidth(self.reset_cycle_c_btn_3.sizePolicy().hasHeightForWidth())
-        self.reset_cycle_c_btn_3.setSizePolicy(sizePolicy)
-        self.reset_cycle_c_btn_3.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_c_btn_3.setFont(font13)
-        self.reset_cycle_c_btn_3.setStyleSheet(u"QPushButton {\n"
+        self.reset_cycle_c_btn = QPushButton(self.widget_25)
+        self.reset_cycle_c_btn.setObjectName(u"reset_cycle_c_btn")
+        sizePolicy.setHeightForWidth(self.reset_cycle_c_btn.sizePolicy().hasHeightForWidth())
+        self.reset_cycle_c_btn.setSizePolicy(sizePolicy)
+        self.reset_cycle_c_btn.setMinimumSize(QSize(75, 0))
+        self.reset_cycle_c_btn.setFont(font13)
+        self.reset_cycle_c_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "    border: 1px solid #0B7EC8;\n"
@@ -9085,10 +9412,10 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        self.reset_cycle_c_btn_3.setIcon(icon21)
-        self.reset_cycle_c_btn_3.setIconSize(QSize(35, 35))
+        self.reset_cycle_c_btn.setIcon(icon23)
+        self.reset_cycle_c_btn.setIconSize(QSize(50, 50))
 
-        self.horizontalLayout_47.addWidget(self.reset_cycle_c_btn_3)
+        self.horizontalLayout_47.addWidget(self.reset_cycle_c_btn)
 
 
         self.gridLayout_8.addWidget(self.widget_25, 2, 0, 1, 1)
@@ -9203,9 +9530,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
         self.pushButton.setSizePolicy(sizePolicy)
         self.pushButton.setStyleSheet(u"padding: 5px;")
-        icon22 = QIcon()
-        icon22.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton.setIcon(icon22)
+        icon24 = QIcon()
+        icon24.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton.setIcon(icon24)
         self.pushButton.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_3.addWidget(self.pushButton)
@@ -9249,8 +9576,8 @@ class Ui_MainWindow(object):
         self.list_history.setHorizontalHeaderItem(6, __qtablewidgetitem6)
         __qtablewidgetitem7 = QTableWidgetItem()
         self.list_history.setHorizontalHeaderItem(7, __qtablewidgetitem7)
-        if (self.list_history.rowCount() < 17):
-            self.list_history.setRowCount(17)
+        if (self.list_history.rowCount() < 22):
+            self.list_history.setRowCount(22)
         __qtablewidgetitem8 = QTableWidgetItem()
         self.list_history.setVerticalHeaderItem(0, __qtablewidgetitem8)
         __qtablewidgetitem9 = QTableWidgetItem()
@@ -9286,8 +9613,22 @@ class Ui_MainWindow(object):
         __qtablewidgetitem24 = QTableWidgetItem()
         self.list_history.setVerticalHeaderItem(16, __qtablewidgetitem24)
         __qtablewidgetitem25 = QTableWidgetItem()
-        self.list_history.setItem(0, 0, __qtablewidgetitem25)
+        self.list_history.setVerticalHeaderItem(17, __qtablewidgetitem25)
+        __qtablewidgetitem26 = QTableWidgetItem()
+        self.list_history.setVerticalHeaderItem(18, __qtablewidgetitem26)
+        __qtablewidgetitem27 = QTableWidgetItem()
+        self.list_history.setVerticalHeaderItem(19, __qtablewidgetitem27)
+        __qtablewidgetitem28 = QTableWidgetItem()
+        self.list_history.setVerticalHeaderItem(20, __qtablewidgetitem28)
+        __qtablewidgetitem29 = QTableWidgetItem()
+        self.list_history.setVerticalHeaderItem(21, __qtablewidgetitem29)
+        __qtablewidgetitem30 = QTableWidgetItem()
+        self.list_history.setItem(0, 0, __qtablewidgetitem30)
         self.list_history.setObjectName(u"list_history")
+        font26 = QFont()
+        font26.setPointSize(13)
+        font26.setBold(True)
+        self.list_history.setFont(font26)
         self.list_history.setStyleSheet(u"QTableWidget {\n"
 "    background-color: #ffffff; border: 1px solid #BFC8D3; border-radius: 8px;\n"
 "    gridline-color: #BFC8D3; color: #334155;\n"
@@ -9328,10 +9669,10 @@ class Ui_MainWindow(object):
         self.export_all_tables_to_excel_btn.setObjectName(u"export_all_tables_to_excel_btn")
         sizePolicy.setHeightForWidth(self.export_all_tables_to_excel_btn.sizePolicy().hasHeightForWidth())
         self.export_all_tables_to_excel_btn.setSizePolicy(sizePolicy)
-        font26 = QFont()
-        font26.setPointSize(16)
-        font26.setBold(True)
-        self.export_all_tables_to_excel_btn.setFont(font26)
+        font27 = QFont()
+        font27.setPointSize(25)
+        font27.setBold(True)
+        self.export_all_tables_to_excel_btn.setFont(font27)
         self.export_all_tables_to_excel_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -9349,9 +9690,9 @@ class Ui_MainWindow(object):
 "    background-color: #94A3B8;\n"
 "    color: #CBD5E1;\n"
 "}")
-        icon23 = QIcon()
-        icon23.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.export_all_tables_to_excel_btn.setIcon(icon23)
+        icon25 = QIcon()
+        icon25.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.export_all_tables_to_excel_btn.setIcon(icon25)
         self.export_all_tables_to_excel_btn.setIconSize(QSize(55, 55))
 
         self.list_query_btn.addWidget(self.export_all_tables_to_excel_btn)
@@ -9383,7 +9724,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(2)
+        self.stackedWidget_2.setCurrentIndex(3)
         self.sys_state_stacked_wid_39.setCurrentIndex(1)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
@@ -9425,7 +9766,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_t0_3.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(0)
+        self.stackedWidget_3.setCurrentIndex(1)
         self.sys_state_stacked_wid_40.setCurrentIndex(2)
         self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
@@ -9436,6 +9777,11 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_1.setCurrentIndex(0)
         self.i_o_group_1_switch_4.setCurrentIndex(0)
         self.i_o_group_1_switch_8.setCurrentIndex(0)
+        self.i_o_group_1_switch_11.setCurrentIndex(0)
+        self.i_o_group_1_switch_9.setCurrentIndex(0)
+        self.i_o_group_1_switch_10.setCurrentIndex(0)
+        self.i_o_group_1_switch_12.setCurrentIndex(0)
+        self.i_o_group_1_switch_13.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -9446,16 +9792,17 @@ class Ui_MainWindow(object):
         self.label_2.setText("")
         self.company_name.setText(QCoreApplication.translate("MainWindow", u"TECH-LINK", None))
         self.error_display.setText("")
+        self.pushButton_2.setText("")
+        self.pushButton_3.setText("")
         self.date_displ.setDisplayFormat(QCoreApplication.translate("MainWindow", u"dd/MM/yyyy h:mm:ss AP", None))
         self.home_page_btn.setText(QCoreApplication.translate("MainWindow", u" Group", None))
         self.chart_page_btn.setText(QCoreApplication.translate("MainWindow", u" Chart", None))
         self.device_page_btn.setText(QCoreApplication.translate("MainWindow", u" Setting", None))
         self.history_page_btn.setText(QCoreApplication.translate("MainWindow", u" History", None))
         self.open_side_menu_btn.setText("")
+        self.next_group_page_btn.setText("")
         self.start_light.setText(QCoreApplication.translate("MainWindow", u"Running", None))
         self.stop_light.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
-        self.previus_group_page_btn.setText("")
-        self.next_group_page_btn.setText("")
         self.temp_unit_selection_combox.setItemText(0, QCoreApplication.translate("MainWindow", u"\u00b0C ", None))
         self.temp_unit_selection_combox.setItemText(1, QCoreApplication.translate("MainWindow", u"\u00b0F", None))
 
@@ -9796,20 +10143,35 @@ class Ui_MainWindow(object):
         self.pushButton_66.setText("")
         self.pushButton_57.setText("")
         self.pushButton_56.setText("")
-        self.di_name_1.setText(QCoreApplication.translate("MainWindow", u"START:", None))
+        self.di_name_1.setText(QCoreApplication.translate("MainWindow", u"T0 Heat:", None))
         self.pushButton_43.setText("")
         self.pushButton_42.setText("")
         self.pushButton_61.setText("")
         self.pushButton_60.setText("")
+        self.di_name_2.setText(QCoreApplication.translate("MainWindow", u"P1 Heat:", None))
+        self.di_name_3.setText(QCoreApplication.translate("MainWindow", u"P1 Press:", None))
         self.pushButton_69.setText("")
         self.pushButton_68.setText("")
-        self.di_name_2.setText(QCoreApplication.translate("MainWindow", u"STOP:", None))
-        self.di_name_3.setText(QCoreApplication.translate("MainWindow", u"KT0:", None))
-        self.di_name_4.setText(QCoreApplication.translate("MainWindow", u"KF1:", None))
-        self.di_name_5.setText(QCoreApplication.translate("MainWindow", u"KF2:", None))
-        self.di_name_6.setText(QCoreApplication.translate("MainWindow", u"KT1:", None))
-        self.di_name_7.setText(QCoreApplication.translate("MainWindow", u"KT2:", None))
-        self.di_name_8.setText(QCoreApplication.translate("MainWindow", u"KT3:", None))
+        self.di_name_4.setText(QCoreApplication.translate("MainWindow", u"P1 Oil:", None))
+        self.di_name_5.setText(QCoreApplication.translate("MainWindow", u"P1 Count:", None))
+        self.di_name_6.setText(QCoreApplication.translate("MainWindow", u"P2 Heat:", None))
+        self.di_name_7.setText(QCoreApplication.translate("MainWindow", u"P2 Press:", None))
+        self.di_name_8.setText(QCoreApplication.translate("MainWindow", u"P2 Oil:", None))
+        self.di_name_11.setText(QCoreApplication.translate("MainWindow", u"P3 Press:", None))
+        self.pushButton_74.setText("")
+        self.pushButton_75.setText("")
+        self.di_name_12.setText(QCoreApplication.translate("MainWindow", u"P3 Oil:", None))
+        self.di_name_9.setText(QCoreApplication.translate("MainWindow", u"P2 Count:", None))
+        self.di_name_10.setText(QCoreApplication.translate("MainWindow", u"P3 Heat:", None))
+        self.pushButton_70.setText("")
+        self.pushButton_71.setText("")
+        self.pushButton_72.setText("")
+        self.pushButton_73.setText("")
+        self.di_name_13.setText(QCoreApplication.translate("MainWindow", u"P3 Count:", None))
+        self.pushButton_76.setText("")
+        self.pushButton_77.setText("")
+        self.pushButton_78.setText("")
+        self.pushButton_79.setText("")
         self.i_o_group_3.setTitle(QCoreApplication.translate("MainWindow", u"AI", None))
         self.ai_name_1.setText(QCoreApplication.translate("MainWindow", u"T0:", None))
         self.ai_name_15.setText(QCoreApplication.translate("MainWindow", u"ITV-2:", None))
@@ -9830,13 +10192,13 @@ class Ui_MainWindow(object):
         self.i_o_group_2.setTitle(QCoreApplication.translate("MainWindow", u"Total Test Time", None))
         self.cycle_b_displ_3.setSuffix("")
         self.cycle_b_displ_3.setPrefix(QCoreApplication.translate("MainWindow", u"B: ", None))
-        self.reset_cycle_b_btn_3.setText("")
+        self.reset_cycle_b_btn.setText("")
         self.cycle_a_displ_3.setSuffix("")
         self.cycle_a_displ_3.setPrefix(QCoreApplication.translate("MainWindow", u"A: ", None))
-        self.reset_cycle_a_btn_3.setText("")
+        self.reset_cycle_a_btn.setText("")
         self.cycle_c_displ_3.setSuffix("")
         self.cycle_c_displ_3.setPrefix(QCoreApplication.translate("MainWindow", u"C: ", None))
-        self.reset_cycle_c_btn_3.setText("")
+        self.reset_cycle_c_btn.setText("")
         self.back_connection_page_btn.setText(QCoreApplication.translate("MainWindow", u"Connection Page", None))
         self.back_home_page_btn.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
         self.pushButton.setText("")
@@ -9891,6 +10253,16 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem23.setText(QCoreApplication.translate("MainWindow", u"16", None))
         ___qtablewidgetitem24 = self.list_history.verticalHeaderItem(16)
         ___qtablewidgetitem24.setText(QCoreApplication.translate("MainWindow", u"17", None))
+        ___qtablewidgetitem25 = self.list_history.verticalHeaderItem(17)
+        ___qtablewidgetitem25.setText(QCoreApplication.translate("MainWindow", u"18", None))
+        ___qtablewidgetitem26 = self.list_history.verticalHeaderItem(18)
+        ___qtablewidgetitem26.setText(QCoreApplication.translate("MainWindow", u"19", None))
+        ___qtablewidgetitem27 = self.list_history.verticalHeaderItem(19)
+        ___qtablewidgetitem27.setText(QCoreApplication.translate("MainWindow", u"20", None))
+        ___qtablewidgetitem28 = self.list_history.verticalHeaderItem(20)
+        ___qtablewidgetitem28.setText(QCoreApplication.translate("MainWindow", u"21", None))
+        ___qtablewidgetitem29 = self.list_history.verticalHeaderItem(21)
+        ___qtablewidgetitem29.setText(QCoreApplication.translate("MainWindow", u"22", None))
 
         __sortingEnabled = self.list_history.isSortingEnabled()
         self.list_history.setSortingEnabled(False)
