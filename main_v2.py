@@ -9,6 +9,7 @@ import sys
 import os
 import time 
 import pandas as pd
+import io
 import msoffcrypto
 import logging
 import logging.handlers
@@ -225,9 +226,6 @@ class StrikeMachine(QMainWindow):
     def _read_protected_excel(self, path, password: str, sheet_name='Sheet1'):
         """Đọc file Excel có password bảo vệ."""
         try:
-            import io
-            import msoffcrypto
-
             with open(path, 'rb') as f:
                 office_file = msoffcrypto.OfficeFile(f)
                 office_file.load_key(password=password)
@@ -758,13 +756,13 @@ class StrikeMachine(QMainWindow):
         self.ui.start_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.start_btn))
         self.ui.stop_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.stop_btn))
 
-        self.ui.heat_btn_a.toggled.connect(lambda checked: self.on_heat_btn_clicked("A", checked))
-        self.ui.heat_btn_b.toggled.connect(lambda checked: self.on_heat_btn_clicked("B", checked))
-        self.ui.heat_btn_c.toggled.connect(lambda checked: self.on_heat_btn_clicked("C", checked))
+        # self.ui.heat_btn_a.toggled.connect(lambda checked: self.on_heat_btn_clicked("A", checked))
+        # self.ui.heat_btn_b.toggled.connect(lambda checked: self.on_heat_btn_clicked("B", checked))
+        # self.ui.heat_btn_c.toggled.connect(lambda checked: self.on_heat_btn_clicked("C", checked))
 
-        # self.ui.heat_btn_a.toggled.connect(lambda checked: self.heating_btn("A", checked, self.ui.heat_btn_a))
-        # self.ui.heat_btn_b.toggled.connect(lambda checked: self.heating_btn("B", checked, self.ui.heat_btn_b))
-        # self.ui.heat_btn_c.toggled.connect(lambda checked: self.heating_btn("C", checked, self.ui.heat_btn_c))
+        self.ui.heat_btn_a.toggled.connect(lambda checked: self.heating_btn("A", checked, self.ui.heat_btn_a))
+        self.ui.heat_btn_b.toggled.connect(lambda checked: self.heating_btn("B", checked, self.ui.heat_btn_b))
+        self.ui.heat_btn_c.toggled.connect(lambda checked: self.heating_btn("C", checked, self.ui.heat_btn_c))
         self.ui.heat_btn_t0.toggled.connect(lambda checked: self.heating_btn("T0", checked, self.ui.heat_btn_t0))
 
         self.ui.vacuum_btn_a.toggled.connect(lambda checked: self.pumping_btn("A", checked, self.ui.vacuum_btn_a))
@@ -1112,12 +1110,12 @@ class StrikeMachine(QMainWindow):
                     float(data.get('P1_Air_HoldingTime', 0)/1000),
                     float(data.get('P1_Air_ReleaseTime', 0)/1000),
                     float(data.get('P1_PressureSetting', 0.00)),
-                    float(data.get('P1_TemperatureSetting', 0.0)),
-                    float(data.get('P1_TempLimitHIGH', 0.0)),
-                    float(data.get('P1_TempLimitLOW', 0.0)),
-                    float(data.get('P1_Temp1Offset', 0.0)),
-                    float(data.get('P1_Temp2Offset', 0.0)),
-                    float(data.get('P1_Temp3Offset', 0.0))
+                    self.for_display_temp(float(data.get('P1_TemperatureSetting', 0.0))),
+                    self.for_display_temp(float(data.get('P1_TempLimitHIGH', 0.0))),
+                    self.for_display_temp(float(data.get('P1_TempLimitLOW', 0.0))),
+                    self.for_display_temp(float(data.get('P1_Temp1Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P1_Temp2Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P1_Temp3Offset', 0.0)))
                 ],
                 [
                     int(data.get('P2_CountTimes', 0)),
@@ -1127,12 +1125,12 @@ class StrikeMachine(QMainWindow):
                     float(data.get('P2_Air_HoldingTime', 0)/1000),
                     float(data.get('P2_Air_ReleaseTime', 0)/1000),
                     float(data.get('P2_PressureSetting', 0.00)),
-                    float(data.get('P2_TemperatureSetting', 0.0)),
-                    float(data.get('P2_TempLimitHIGH', 0.0)),
-                    float(data.get('P2_TempLimitLOW', 0.0)),
-                    float(data.get('P2_Temp1Offset', 0.0)),
-                    float(data.get('P2_Temp2Offset', 0.0)),
-                    float(data.get('P2_Temp3Offset', 0.0))
+                    self.for_display_temp(float(data.get('P2_TemperatureSetting', 0.0))),
+                    self.for_display_temp(float(data.get('P2_TempLimitHIGH', 0.0))),
+                    self.for_display_temp(float(data.get('P2_TempLimitLOW', 0.0))),
+                    self.for_display_temp(float(data.get('P2_Temp1Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P2_Temp2Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P2_Temp3Offset', 0.0)))
                 ],
                 [
                     int(data.get('P3_CountTimes', 0)),
@@ -1143,36 +1141,37 @@ class StrikeMachine(QMainWindow):
                     float(data.get('P3_Air_ReleaseTime', 0)/1000),
                     float(data.get('P3_PressureSetting', 0.00)),
                     float(data.get('P3_TemperatureSetting', 0.0)),
-                    float(data.get('P3_TempLimitHIGH', 0.0)),
-                    float(data.get('P3_TempLimitLOW', 0.0)),
-                    float(data.get('P3_Temp1Offset', 0.0)),
-                    float(data.get('P3_Temp2Offset', 0.0)),
-                    float(data.get('P3_Temp3Offset', 0.0))
+                    self.for_display_temp(float(data.get('P3_TemperatureSetting', 0.0))),
+                    self.for_display_temp(float(data.get('P3_TempLimitHIGH', 0.0))),
+                    self.for_display_temp(float(data.get('P3_TempLimitLOW', 0.0))),
+                    self.for_display_temp(float(data.get('P3_Temp1Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P3_Temp2Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P3_Temp3Offset', 0.0)))
                 ],
                 [
-                    float(data.get('T0_TemperatureSetting', 0.0)),
-                    float(data.get('T0_TempLimitHIGH', 0.0)),
-                    float(data.get('T0_TempLimitLOW', 0.0)),
-                    float(data.get('T0_TempOffset', 0.0))
+                    self.for_display_temp(float(data.get('T0_TemperatureSetting', 0.0))),
+                    self.for_display_temp(float(data.get('T0_TempLimitHIGH', 0.0))),
+                    self.for_display_temp(float(data.get('T0_TempLimitLOW', 0.0))),
+                    self.for_display_temp(float(data.get('T0_TempOffset', 0.0)))
                 ])
                 print("Init Value Done")
                 
-                # self._init_button_obj([
-                #     bool(data.get('START', False)),
-                #     bool(data.get('STOP', False)),
-                #     bool(data.get('P1_Start_Heat', False)),
-                #     bool(data.get('P1_Start_Pressure', False)),
-                #     bool(data.get('P1_Start_Oil', False)),
-                #     bool(data.get('P1_BitCountTimes', False)),
-                #     bool(data.get('P2_Start_Heat', False)),
-                #     bool(data.get('P2_Start_Pressure', False)),
-                #     bool(data.get('P2_Start_Oil', False)),
-                #     bool(data.get('P2_BitCountTimes', False)),
-                #     bool(data.get('P3_Start_Heat', False)),
-                #     bool(data.get('P3_Start_Pressure', False)),
-                #     bool(data.get('P3_Start_Oil', False)),
-                #     bool(data.get('P3_BitCountTimes', False)),
-                # ])
+                self._init_button_obj([
+                    bool(data.get('START', False)),
+                    bool(data.get('STOP', False)),
+                    bool(data.get('P1_Start_Heat', False)),
+                    bool(data.get('P1_Start_Pressure', False)),
+                    bool(data.get('P1_Start_Oil', False)),
+                    bool(data.get('P1_BitCountTimes', False)),
+                    bool(data.get('P2_Start_Heat', False)),
+                    bool(data.get('P2_Start_Pressure', False)),
+                    bool(data.get('P2_Start_Oil', False)),
+                    bool(data.get('P2_BitCountTimes', False)),
+                    bool(data.get('P3_Start_Heat', False)),
+                    bool(data.get('P3_Start_Pressure', False)),
+                    bool(data.get('P3_Start_Oil', False)),
+                    bool(data.get('P3_BitCountTimes', False)),
+                ])
                 print("Init Button Done")
                 self.init_signal = False
 
