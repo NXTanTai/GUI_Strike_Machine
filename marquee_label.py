@@ -24,9 +24,17 @@ class MarqueeLabel(QLabel):
     def _update_scroll(self):
         if not self._text:
             return
+
         fm = self.fontMetrics()
         text_width = fm.horizontalAdvance(self._text)
-        if text_width > self.width():
+        widget_width = self.width()
+
+        if text_width > widget_width:
+            self._offset += 2                    # Tốc độ di chuyển (pixel mỗi lần)
+            if self._offset > text_width + 50:   # Reset khi chạy hết
+                self._offset = 0
+
+            self.update()                        # Vẽ lại
             self._timer.start(self._speed)
         else:
             self._timer.stop()

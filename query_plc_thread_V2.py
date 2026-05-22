@@ -12,8 +12,9 @@ logger = logging.getLogger(__name__)
 
 # ── Helpers ─────────────────────────────────────────────────────────────────
 def _get_bool(data: bytes, byte_idx: int, bit_idx: int) -> bool:
-    return bool(data[byte_idx] & (1 << (7 - bit_idx)))
-
+    if byte_idx >= len(data) or bit_idx < 0 or bit_idx > 7:
+        return False
+    return bool((data[byte_idx] >> bit_idx) & 1)
 
 def _get_real(data: bytes, offset: int) -> float:
     return struct.unpack_from(">f", data, offset)[0]
@@ -63,6 +64,7 @@ class PLCRead(QObject):
         self._slot      = slot
         self._db_number = db_number
         self._db_layout = db_layout
+        # print("DB Read Layout: ", self._db_layout)
         self._db_size   = db_size
         self._poll_ms   = poll_ms
         self._retry_ms  = retry_ms
@@ -78,8 +80,7 @@ class PLCRead(QObject):
     def run(self):
         """Gọi từ thread.started.connect()"""
         self._running = True
-
-        # Tạo timer sau khi moveToThread → đúng thread affinity
+        print("PLC Read init")
         self._poll_timer = QTimer(self)
         self._poll_timer.setInterval(self._poll_ms)
         self._poll_timer.timeout.connect(self._poll)
@@ -94,7 +95,6 @@ class PLCRead(QObject):
 
     @Slot()
     def stop(self):
-        """Gọi từ Main Thread (UI)"""
         self._running = False
         self._request_stop.emit()   # An toàn cross-thread
 
@@ -130,8 +130,8 @@ class PLCRead(QObject):
 
         self._disconnect_plc()
 
-        self.finished.emit()                    # Thông báo cho bên ngoài
-        QThread.currentThread().quit()          # Quit event loop của thread
+        self.finished.emit()
+        QThread.currentThread().quit()
 
     # ── Connection ──────────────────────────────────────────────────────────
 
@@ -213,6 +213,9 @@ class PLCRead(QObject):
             try:
                 if dtype == "BOOL":
                     result[name] = _get_bool(raw, offset, bit)
+                    # byte_val = raw[offset]
+                    # print(f"BOOL {name:20s} | Byte={offset} Bit={bit:1d} | "
+                    #   f"RawByte=0x{byte_val:02X} ({byte_val:08b}) → Value={result[name]}")
                 elif dtype == "REAL":
                     result[name] = _get_real(raw, offset)
                 elif dtype == "DINT":
