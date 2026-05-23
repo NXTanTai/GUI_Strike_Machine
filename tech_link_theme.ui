@@ -3,12 +3,18 @@
  <author>Nguyen Xuan Tan Tai</author>
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>1024</height>
+    <width>1172</width>
+    <height>960</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -42,7 +48,7 @@
     <normaloff>:/Icons/Logo_Cty_2.png</normaloff>:/Icons/Logo_Cty_2.png</iconset>
   </property>
   <property name="windowOpacity">
-   <double>2.000000000000000</double>
+   <double>1.000000000000000</double>
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
@@ -81,6 +87,9 @@ QComboBox QAbstractItemView {
     selection-color: black;
     padding: 4px;
 }</string>
+  </property>
+  <property name="animated">
+   <bool>true</bool>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::Rounded</enum>
@@ -288,8 +297,8 @@ QPushButton:checked{
            </property>
            <property name="iconSize">
             <size>
-             <width>100</width>
-             <height>100</height>
+             <width>85</width>
+             <height>85</height>
             </size>
            </property>
            <property name="checkable">
@@ -346,8 +355,8 @@ QPushButton:checked{
            </property>
            <property name="iconSize">
             <size>
-             <width>100</width>
-             <height>100</height>
+             <width>85</width>
+             <height>85</height>
             </size>
            </property>
            <property name="checkable">
@@ -371,7 +380,7 @@ QPushButton:checked{
          <property name="font">
           <font>
            <family>MS Shell Dlg 2</family>
-           <pointsize>22</pointsize>
+           <pointsize>20</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -463,6 +472,12 @@ background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
          </property>
          <item>
           <widget class="QCustomSlideMenu" name="left_side_menu_widget" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>175</width>
@@ -508,7 +523,7 @@ QPushButton:checked {
              <number>0</number>
             </property>
             <property name="topMargin">
-             <number>25</number>
+             <number>0</number>
             </property>
             <property name="rightMargin">
              <number>0</number>
@@ -1076,60 +1091,8 @@ QPushButton:pressed{
                         <string notr="true"/>
                        </property>
                        <property name="currentIndex">
-                        <number>1</number>
+                        <number>0</number>
                        </property>
-                       <widget class="QWidget" name="running_light_52">
-                        <layout class="QHBoxLayout" name="horizontalLayout_439">
-                         <property name="leftMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="topMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="rightMargin">
-                          <number>0</number>
-                         </property>
-                         <property name="bottomMargin">
-                          <number>0</number>
-                         </property>
-                         <item>
-                          <widget class="QPushButton" name="start_light">
-                           <property name="sizePolicy">
-                            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                             <horstretch>0</horstretch>
-                             <verstretch>0</verstretch>
-                            </sizepolicy>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>22</pointsize>
-                             <weight>75</weight>
-                             <bold>true</bold>
-                            </font>
-                           </property>
-                           <property name="styleSheet">
-                            <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 10px;
-color: #10B981; 
-padding-right: 3px;</string>
-                           </property>
-                           <property name="text">
-                            <string>Running</string>
-                           </property>
-                           <property name="icon">
-                            <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                             <normaloff>:/Icons/record-button.png</normaloff>:/Icons/record-button.png</iconset>
-                           </property>
-                           <property name="iconSize">
-                            <size>
-                             <width>30</width>
-                             <height>30</height>
-                            </size>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
                        <widget class="QWidget" name="error_light_52">
                         <layout class="QHBoxLayout" name="horizontalLayout_441">
                          <property name="leftMargin">
@@ -1171,6 +1134,58 @@ padding-right: 3px;</string>
                            <property name="icon">
                             <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
                              <normaloff>:/Icons/record-button (1).png</normaloff>:/Icons/record-button (1).png</iconset>
+                           </property>
+                           <property name="iconSize">
+                            <size>
+                             <width>30</width>
+                             <height>30</height>
+                            </size>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </widget>
+                       <widget class="QWidget" name="running_light_52">
+                        <layout class="QHBoxLayout" name="horizontalLayout_439">
+                         <property name="leftMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="rightMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
+                         <item>
+                          <widget class="QPushButton" name="start_light">
+                           <property name="sizePolicy">
+                            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                             <horstretch>0</horstretch>
+                             <verstretch>0</verstretch>
+                            </sizepolicy>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>22</pointsize>
+                             <weight>75</weight>
+                             <bold>true</bold>
+                            </font>
+                           </property>
+                           <property name="styleSheet">
+                            <string notr="true">border: 2px solid #E5E5E5; 
+border-radius: 10px;
+color: #10B981; 
+padding-right: 3px;</string>
+                           </property>
+                           <property name="text">
+                            <string>Running</string>
+                           </property>
+                           <property name="icon">
+                            <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                             <normaloff>:/Icons/record-button.png</normaloff>:/Icons/record-button.png</iconset>
                            </property>
                            <property name="iconSize">
                             <size>
@@ -20466,7 +20481,7 @@ QHeaderView::section {
     border-right: 1px solid #e2e8f0;
 }
 QHeaderView::section:last { border-right: none; }
-QScrollBar:vertical { background: #f8fafc; width: 8px; border-radius: 4px; }
+QScrollBar:vertical { background: #f8fafc; width: 20px; border-radius: 4px; }
 QScrollBar::handle:vertical { background: #cbd5e1; border-radius: 4px; min-height: 24px; }
 QScrollBar::handle:vertical:hover { background: #94a3b8; }
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
@@ -20477,6 +20492,12 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
                        </property>
                        <property name="sizeAdjustPolicy">
                         <enum>QAbstractScrollArea::AdjustToContents</enum>
+                       </property>
+                       <property name="autoScrollMargin">
+                        <number>25</number>
+                       </property>
+                       <property name="editTriggers">
+                        <set>QAbstractItemView::NoEditTriggers</set>
                        </property>
                        <attribute name="horizontalHeaderStretchLastSection">
                         <bool>true</bool>
@@ -20739,7 +20760,7 @@ QPushButton:disabled {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="left_side_btn_group"/>
   <buttongroup name="language_btn_group"/>
+  <buttongroup name="left_side_btn_group"/>
  </buttongroups>
 </ui>

@@ -108,8 +108,7 @@ class PLCWrite(QObject):
     @Slot()
     def run(self):
         self._running = True
-
-        self._request_stop.connect(self._do_stop, Qt.QueuedConnection) #type: ignore
+        print("PLC Write init")
 
         # Timer chính để ghi dữ liệu
         self._timer = QTimer(self)
@@ -127,6 +126,8 @@ class PLCWrite(QObject):
         self.write_multi.connect(self._enqueue_multi, Qt.QueuedConnection) #type: ignore
         self.write_full_db.connect(self._enqueue_full_db, Qt.QueuedConnection) #type: ignore
 
+        self._request_stop.connect(self._do_stop, Qt.QueuedConnection) #type: ignore
+        
         self._try_connect()
 
     @Slot()
