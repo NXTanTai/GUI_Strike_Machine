@@ -34,14 +34,14 @@ class Ui_MainWindow(object):
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setWindowModality(Qt.NonModal)
         MainWindow.setEnabled(True)
-        MainWindow.resize(1172, 960)
+        MainWindow.resize(1024, 900)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
         MainWindow.setMinimumSize(QSize(0, 0))
-        MainWindow.setMaximumSize(QSize(1920, 1080))
+        MainWindow.setMaximumSize(QSize(16777215, 16777215))
         font = QFont()
         font.setPointSize(8)
         MainWindow.setFont(font)
@@ -85,12 +85,12 @@ class Ui_MainWindow(object):
 "    selection-color: black;\n"
 "    padding: 4px;\n"
 "}")
-        MainWindow.setAnimated(False)
+        MainWindow.setAnimated(True)
         MainWindow.setTabShape(QTabWidget.Rounded)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setMinimumSize(QSize(1024, 900))
-        self.centralwidget.setMaximumSize(QSize(1920, 1080))
+        self.centralwidget.setMaximumSize(QSize(16777215, 16777215))
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setSpacing(2)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -512,6 +512,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.card_frame_6, 0, 0, 1, 1)
 
+        self.gridLayout_2.setRowStretch(0, 1)
+        self.gridLayout_2.setRowStretch(1, 1)
+        self.gridLayout_2.setColumnStretch(0, 1)
+        self.gridLayout_2.setColumnStretch(1, 1)
 
         self.verticalLayout_14.addLayout(self.gridLayout_2)
 
@@ -648,6 +652,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_15.addWidget(self.temp_unit_selection_combox)
 
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_15.addItem(self.horizontalSpacer_4)
+
         self.widget_56 = QWidget(self.widget_63)
         self.widget_56.setObjectName(u"widget_56")
         self.widget_56.setStyleSheet(u"QPushButton {\n"
@@ -716,7 +724,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_6 = QVBoxLayout(self.pressure_page)
         self.verticalLayout_6.setSpacing(10)
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.verticalLayout_6.setContentsMargins(0, 5, 0, 2)
+        self.verticalLayout_6.setContentsMargins(0, 0, 0, 2)
         self.stacked_pressure_page = QWidget(self.pressure_page)
         self.stacked_pressure_page.setObjectName(u"stacked_pressure_page")
         self.verticalLayout_10 = QVBoxLayout(self.stacked_pressure_page)
@@ -4844,9 +4852,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.code_display, 0, 0, 1, 1)
 
-        self.gridLayout.setColumnStretch(2, 1)
-        self.gridLayout.setColumnStretch(4, 1)
-        self.gridLayout.setColumnStretch(6, 1)
+        self.gridLayout.setColumnStretch(0, 1)
+        self.gridLayout.setColumnStretch(2, 2)
+        self.gridLayout.setColumnStretch(4, 2)
+        self.gridLayout.setColumnStretch(6, 2)
 
         self.verticalLayout_63.addWidget(self.widget_6)
 
@@ -4863,7 +4872,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_8 = QVBoxLayout(self.temperature_page)
         self.verticalLayout_8.setSpacing(10)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
-        self.verticalLayout_8.setContentsMargins(3, 5, 0, 3)
+        self.verticalLayout_8.setContentsMargins(0, 0, 0, 3)
         self.widget_temperature = QWidget(self.temperature_page)
         self.widget_temperature.setObjectName(u"widget_temperature")
         self.widget_temperature.setStyleSheet(u"background-color: white;\n"
@@ -9733,9 +9742,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(3)
+        self.stackedWidget_2.setCurrentIndex(1)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_2.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_3.setCurrentIndex(0)
@@ -9775,7 +9784,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_t0_3.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(1)
+        self.stackedWidget_3.setCurrentIndex(0)
         self.sys_state_stacked_wid_40.setCurrentIndex(2)
         self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
@@ -10057,7 +10066,7 @@ class Ui_MainWindow(object):
         self.bt_t2_offset_value.setSuffix("")
         self.label_346.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
         self.label_347.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.label_139.setText(QCoreApplication.translate("MainWindow", u"Temperature 0", None))
+        self.label_139.setText(QCoreApplication.translate("MainWindow", u"Temperature Oven", None))
         self.label_183.setText(QCoreApplication.translate("MainWindow", u"Temperature C", None))
         self.label_173.setText(QCoreApplication.translate("MainWindow", u"Temperature B", None))
         self.ct_sv.setPrefix("")

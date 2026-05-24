@@ -7,7 +7,7 @@ from typing import List
 
 import numpy as np
 import pyqtgraph as pg
-from PySide6.QtCore import Qt, QMutex, QMutexLocker, QTimer
+from PySide6.QtCore import Qt, QMutex, QMutexLocker, QTimer, Signal  
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QFrame,
@@ -51,13 +51,14 @@ class _CircBuf:
     đặt đủ lớn; buffer tự wrap-around khi đầy (oldest bị ghi đè).
     """
 
-    __slots__ = ("_buf", "_head", "_cap", "_filled")
+    __slots__ = ("_buf", "_head", "_cap", "_filled", "_out")
 
     def __init__(self, capacity: int) -> None:
         self._buf    = np.zeros(capacity, dtype=np.float64)
         self._head   = 0
         self._cap    = capacity
         self._filled = False
+        self._out = np.empty(capacity, dtype=np.float64)
 
     def append(self, val: float) -> None:
         """Ghi val vào slot hiện tại, O(1)."""
@@ -69,9 +70,12 @@ class _CircBuf:
 
     def get(self) -> np.ndarray:
         if self._filled:
-            return np.concatenate((self._buf[self._head:], self._buf[:self._head]))
+            n = self._cap - self._head
+            self._out[:n] = self._buf[self._head:]
+            self._out[n:self._cap] = self._buf[:self._head]
+            return self._out
         return self._buf[: self._head]
-
+    
     def last(self) -> float | None:
         """Giá trị mới nhất, hoặc None nếu chưa có data."""
         if self._head == 0 and not self._filled:
@@ -147,7 +151,8 @@ class CustomChartWidget(QWidget):
     chart_font       : QFont tuỳ chỉnh (None = dùng mặc định)
     parent           : Widget cha
     """
-
+    clicked = Signal()
+    
     def __init__(
         self,
         title: str                       = "Chart",
@@ -175,6 +180,8 @@ class CustomChartWidget(QWidget):
         self.max_seconds     = max_seconds
         self._temp_unit      = "°C"
         self._sim_timer: QTimer | None = None
+        self._last_temp_label_pos:     list[tuple[float, float] | None] = [None] * self.num_temp
+        self._last_pressure_label_pos: list[tuple[float, float] | None] = [None] * self.num_pressure
 
         if chart_font:
             self._font_family  = chart_font.family()
@@ -215,7 +222,11 @@ class CustomChartWidget(QWidget):
     # ══════════════════════════════════════════════════════════════════════════
     # UI setup
     # ══════════════════════════════════════════════════════════════════════════
-
+    def mouseDoubleClickEvent(self, event) -> None:
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.clicked.emit()
+        super().mouseDoubleClickEvent(event)
+        
     def _setup_ui(self) -> None:
         self._root = QVBoxLayout(self)
         self._root.setContentsMargins(4, 4, 4, 4)
@@ -345,7 +356,7 @@ class CustomChartWidget(QWidget):
         w = QWidget()
         w.setLayout(row)
         w.setCursor(Qt.CursorShape.PointingHandCursor)
-        w.setToolTip(f"Click để chỉ hiện {text} / click lại để hiện tất cả")
+        # w.setToolTip(f"Click để chỉ hiện {text} / click lại để hiện tất cả")
 
         def _on_click(_, k=kind, i=index):
             self._on_legend_click(k, i)
@@ -403,7 +414,7 @@ class CustomChartWidget(QWidget):
         self.plot.showGrid(x=True, y=True, alpha=0.1)
         self.plot.setYRange(*self.temp_range)
         self.plot.disableAutoRange()
-        self.plot.setMouseEnabled(x=True, y=False)
+        self.plot.setMouseEnabled(x=False, y=False)
         self.plot.plotItem.getViewBox().setDefaultPadding(0)
         self.plot.plotItem.layout.setContentsMargins(0, 0, 0, 0)
         self.plot.plotItem.layout.setHorizontalSpacing(0)
@@ -458,7 +469,7 @@ class CustomChartWidget(QWidget):
         self._vb_pressure.setDefaultPadding(0)
         self._vb_pressure.disableAutoRange()
         self._vb_pressure.setYRange(*self.pressure_range)
-        self._vb_pressure.setMouseEnabled(x=True, y=False)
+        self._vb_pressure.setMouseEnabled(x=False, y=False)
         self.plot.scene().addItem(self._vb_pressure)
 
         # Thay thế trục phải mặc định
@@ -491,7 +502,7 @@ class CustomChartWidget(QWidget):
         for i in range(self.num_temp):
             curve = pg.PlotCurveItem(
                 pen=pg.mkPen(color=TEMP_COLORS[i], width=2),
-                skipFiniteCheck=True,
+                skipFiniteCheck=True, clipToView=True,
             )
             self.plot.addItem(curve)
             self._temp_curves.append(curve)
@@ -503,6 +514,7 @@ class CustomChartWidget(QWidget):
             curve = pg.PlotCurveItem(
                 pen=pen,
                 skipFiniteCheck=True,
+                clipToView=True,
             )
             self._vb_pressure.addItem(curve)
             self._pressure_curves.append(curve)
@@ -541,7 +553,7 @@ class CustomChartWidget(QWidget):
         Lock mutex để đọc snapshot buffer, sau đó render ngoài lock.
         """
         # ── Snapshot buffer (lock ngắn nhất có thể) ───────────────────────────
-        if not self._mutex.tryLock():
+        if not self._mutex.tryLock(5):
             return  # render frame này bỏ qua, frame sau render bù
 
         try:
@@ -608,21 +620,27 @@ class CustomChartWidget(QWidget):
         for i in range(self.num_temp):
             if not self._vis_temp[i] or len(tx_snap[i]) == 0:
                 self._temp_labels[i].hide()
+                self._last_temp_label_pos[i] = None
                 continue
             lx = float(tx_snap[i][-1])
             ly = float(ty_snap[i][-1])
-            self._temp_labels[i].setText(f"{ly:.1f}{self._temp_unit} ")
-            self._temp_labels[i].setPos(lx - 0.1, ly)
+            if self._last_temp_label_pos[i] != (lx, ly):
+                self._temp_labels[i].setText(f"{ly:.1f}{self._temp_unit} ")
+                self._temp_labels[i].setPos(lx - 0.1, ly)
+                self._last_temp_label_pos[i] = (lx, ly)
             self._temp_labels[i].show()
 
         for i in range(self.num_pressure):
             if not self._vis_pressure[i] or len(px_snap[i]) == 0:
                 self._pressure_labels[i].hide()
+                self._last_pressure_label_pos[i] = None
                 continue
             lx = float(px_snap[i][-1])
             ly = float(py_snap[i][-1])
-            self._pressure_labels[i].setText(f"{ly:.2f} bar ")
-            self._pressure_labels[i].setPos(lx - 0.1, ly)
+            if self._last_pressure_label_pos[i] != (lx, ly):
+                self._pressure_labels[i].setText(f"{ly:.2f} bar ")
+                self._pressure_labels[i].setPos(lx - 0.1, ly)
+                self._last_pressure_label_pos[i] = (lx, ly)
             self._pressure_labels[i].show()
 
     # ══════════════════════════════════════════════════════════════════════════
@@ -726,6 +744,8 @@ class CustomChartWidget(QWidget):
         self._last_temp_ymax = None
         self._last_pres_ymax = None
         self._last_x_min     = None
+        self._last_temp_label_pos     = [None] * self.num_temp
+        self._last_pressure_label_pos = [None] * self.num_pressure
 
     # ══════════════════════════════════════════════════════════════════════════
     # Simulation (chỉ dùng để test)

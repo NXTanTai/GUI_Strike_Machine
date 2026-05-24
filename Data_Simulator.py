@@ -87,31 +87,28 @@ class DataSimulator(QThread):
             self.temp_c_t3 = self._approach(self.temp_c_t3, self.target_temp_c, noise=0.8)
 
             group_a_data = [
+                max(self.pressure_a, 0),
                 (self.temp_a_t1 + self.temp_a_t2 + self.temp_a_t3) / 3,
                 self.temp_a_t1,
                 self.temp_a_t2,
                 self.temp_a_t3,
-                max(self.pressure_a, 0)
             ]
 
             group_b_data = [
+                max(self.pressure_b, 0),
                 (self.temp_b_t1 + self.temp_b_t2 + self.temp_b_t3) / 3,
                 self.temp_b_t1,
                 self.temp_b_t2,
                 self.temp_b_t3,
-                max(self.pressure_b, 0)
             ]
 
             group_c_data = [
+                max(self.pressure_c, 0),
                 (self.temp_c_t1 + self.temp_c_t2 + self.temp_c_t3) / 3,
                 self.temp_c_t1,
                 self.temp_c_t2,
-                self.temp_c_t3,
-                max(self.pressure_c, 0)
+                self.temp_c_t3
             ]
 
             self.db_data_convert.emit(group_a_data, group_b_data, group_c_data)
 
-    def stop(self):
-        self.running = False
-        QThread.currentThread().quit()

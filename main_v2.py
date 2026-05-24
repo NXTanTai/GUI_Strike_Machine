@@ -19,13 +19,12 @@ from openpyxl import Workbook
 from PySide6.QtCore import (Qt, QTimer, QObject,
                             QSettings, QDateTime, 
                             QEvent, QSharedMemory,
-                            QSystemSemaphore, QThread, Slot)
+                            QSystemSemaphore, QThread, Slot, QRect, QPropertyAnimation, QEasingCurve)
 from PySide6.QtGui import (QFont, QMovie)
 from PySide6.QtWidgets import (QVBoxLayout, QHeaderView, QAbstractSpinBox, 
                                QLabel,QMainWindow, QApplication, QLineEdit,
                                 QFileDialog, QDialog, QTableWidget, QTableWidgetItem
 )
-
 from typing import List, Optional, Tuple, Dict, Any
 from pathlib import Path
 from datetime import datetime 
@@ -97,7 +96,7 @@ class StrikeMachine(QMainWindow):
         self._paint_pv_obj("#E53935")
         self._paint_sv_obj("#43A047")
         self._setup_btn_signals()
-        self._setup_plc_threads(True)
+        self._setup_plc_threads(False)
         self.current_unit = 0
         self.ui.home_page_btn.click()
 
@@ -707,11 +706,86 @@ class StrikeMachine(QMainWindow):
         self.ui.card_pressure_1.addWidget(self.chart_pressure_a)
         self.ui.card_pressure_2.addWidget(self.chart_pressure_b)
         self.ui.card_pressure_3.addWidget(self.chart_pressure_c)
+        self._chart_frames = [
+                self.ui.card_temperature.parentWidget(),   # frame chứa chart_temp
+                self.ui.card_pressure_1.parentWidget(),    # frame chứa chart_pressure_a
+                self.ui.card_pressure_2.parentWidget(),    # frame chứa chart_pressure_b
+                self.ui.card_pressure_3.parentWidget(),    # frame chứa chart_pressure_c
+            ]
 
-        QTimer.singleShot(25,  self.chart_pressure_a._render_timer.start)
-        QTimer.singleShot(50,  self.chart_pressure_b._render_timer.start)
-        QTimer.singleShot(75,  self.chart_pressure_c._render_timer.start)
+        charts = [self.chart_temp, self.chart_pressure_a,
+                self.chart_pressure_b, self.chart_pressure_c]
 
+        for idx, chart in enumerate(charts):
+            chart.clicked.connect(lambda i=idx: self._toggle_chart_frame(i))
+
+        self._maximized_chart_idx = -1
+        QTimer.singleShot(100, self._save_grid_rects)
+        self._chart_layouts = [
+            self.ui.card_temperature,
+            self.ui.card_pressure_1,
+            self.ui.card_pressure_2,
+            self.ui.card_pressure_3,
+        ]
+        # QTimer.singleShot(25,  self.chart_pressure_a._render_timer.start)
+        # QTimer.singleShot(50,  self.chart_pressure_b._render_timer.start)
+        # QTimer.singleShot(75,  self.chart_pressure_c._render_timer.start)
+        
+    def _save_grid_rects(self):
+        rects = [f.geometry() for f in self._chart_frames]
+        if all(r.width() > 0 and r.height() > 0 for r in rects):
+            self._grid_rects = rects
+            # print("Grid rects saved:", rects)  # xoá sau khi debug xong
+        else:
+            QTimer.singleShot(100, self._save_grid_rects)
+    
+    def _toggle_chart_frame(self, idx: int):
+        frames = self._chart_frames
+        charts = [self.chart_temp, self.chart_pressure_a,
+                self.chart_pressure_b, self.chart_pressure_c]
+        grid = self.ui.gridLayout_2
+
+        # idx → (row, col) trong grid 2x2
+        positions = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (1, 1)}
+        row, col = positions[idx]
+
+        if self._maximized_chart_idx == idx:
+            # ── Thu nhỏ ───────────────────────────────────────────────────────
+            self._maximized_chart_idx = -1
+
+            # Trả stretch về đều
+            grid.setRowStretch(0, 1)
+            grid.setRowStretch(1, 1)
+            grid.setColumnStretch(0, 1)
+            grid.setColumnStretch(1, 1)
+
+            # Hiện lại 3 frame còn lại
+            for i, f in enumerate(frames):
+                if i != idx:
+                    f.show()
+
+            # Bật lại render timer cho tất cả
+            for c in charts:
+                c._render_timer.start()
+
+        else:
+            # ── Phóng to ──────────────────────────────────────────────────────
+            self._maximized_chart_idx = idx
+
+            other_row = 1 if row == 0 else 0
+            other_col = 1 if col == 0 else 0
+
+            grid.setRowStretch(row,       100)
+            grid.setRowStretch(other_row, 0)
+            grid.setColumnStretch(col,       100)
+            grid.setColumnStretch(other_col, 0)
+
+            # Ẩn 3 frame còn lại + tắt render timer
+            for i, f in enumerate(frames):
+                if i != idx:
+                    f.hide()
+                    charts[i]._render_timer.stop()
+        
     ###########################################################################################
     #############################------ Button Function Setup ------###########################
     def _setup_btn_signals(self):
@@ -1150,55 +1224,58 @@ class StrikeMachine(QMainWindow):
                 ])
                 print("Init Value Done")
                 
-                # self._init_button_obj([
-                #     bool(data.get('START', False)),
-                #     bool(data.get('STOP', False)),
-                #     bool(data.get('P1_Start_Heat', False)),
-                #     bool(data.get('P1_Start_Pressure', False)),
-                #     bool(data.get('P1_Start_Oil', False)),
-                #     bool(data.get('P1_BitCountTimes', False)),
-                #     bool(data.get('P2_Start_Heat', False)),
-                #     bool(data.get('P2_Start_Pressure', False)),
-                #     bool(data.get('P2_Start_Oil', False)),
-                #     bool(data.get('P2_BitCountTimes', False)),
-                #     bool(data.get('P3_Start_Heat', False)),
-                #     bool(data.get('P3_Start_Pressure', False)),
-                #     bool(data.get('P3_Start_Oil', False)),
-                #     bool(data.get('P3_BitCountTimes', False)),
-                # ])
+                self._init_button_obj([
+                    bool(data.get('START', False)),
+                    bool(data.get('STOP', False)),
+                    bool(data.get('P1_Start_Heat', False)),
+                    bool(data.get('P1_Start_Pressure', False)),
+                    bool(data.get('P1_Start_Oil', False)),
+                    bool(data.get('P1_BitCountTimes', False)),
+                    bool(data.get('P2_Start_Heat', False)),
+                    bool(data.get('P2_Start_Pressure', False)),
+                    bool(data.get('P2_Start_Oil', False)),
+                    bool(data.get('P2_BitCountTimes', False)),
+                    bool(data.get('P3_Start_Heat', False)),
+                    bool(data.get('P3_Start_Pressure', False)),
+                    bool(data.get('P3_Start_Oil', False)),
+                    bool(data.get('P3_BitCountTimes', False)),
+                ])
                 print("Init Button Done")
                 self.init_signal = False
 
             now = _time.time()
             if now - self._last_history_time >= 5.0:
                 self._last_history_time = now
-                t1_a = float(data.get('P1_Current_Temp1', 0.0))
-                t2_a = float(data.get('P1_Current_Temp2', 0.0))
-                t3_a = float(data.get('P1_Current_Temp3', 0.0))
-                self.add_row_to_list_history(
-                    "Group A",
-                    float(data.get('P1_Current_PressureHose', 0.0)),
-                    (t1_a + t2_a + t3_a) / 3,
-                    t1_a, t2_a, t3_a
-                )
-                t1_b = float(data.get('P2_Current_Temp1', 0.0))
-                t2_b = float(data.get('P2_Current_Temp2', 0.0))
-                t3_b = float(data.get('P2_Current_Temp3', 0.0))
-                self.add_row_to_list_history(
-                    "Group B",
-                    float(data.get('P2_Current_PressureHose', 0.00)),
-                    (t1_b + t2_b + t3_b) / 3,
-                    t1_b, t2_b, t3_b
-                )
-                t1_c = float(data.get('P3_Current_Temp1', 0.0))
-                t2_c = float(data.get('P3_Current_Temp2', 0.0))
-                t3_c = float(data.get('P3_Current_Temp3', 0.0))
-                self.add_row_to_list_history(
-                    "Group C",
-                    float(data.get('P3_Current_PressureHose', 0.0)),
-                    (t1_c + t2_c + t3_c) / 3,
-                    t1_c, t2_c, t3_c
-                )
+                if bool(data.get('P1_Start_Heat', False)) or bool(data.get('P1_Start_Pressure', False)):
+                    t1_a = float(data.get('P1_Current_Temp1', 0.0))
+                    t2_a = float(data.get('P1_Current_Temp2', 0.0))
+                    t3_a = float(data.get('P1_Current_Temp3', 0.0))
+                    self.add_row_to_list_history(
+                        "Group A",
+                        float(data.get('P1_Current_PressureHose', 0.0)),
+                        (t1_a + t2_a + t3_a) / 3,
+                        t1_a, t2_a, t3_a
+                    )
+                if bool(data.get('P2_Start_Heat', False)) or bool(data.get('P2_Start_Pressure', False)):
+                    t1_b = float(data.get('P2_Current_Temp1', 0.0))
+                    t2_b = float(data.get('P2_Current_Temp2', 0.0))
+                    t3_b = float(data.get('P2_Current_Temp3', 0.0))
+                    self.add_row_to_list_history(
+                        "Group B",
+                        float(data.get('P2_Current_PressureHose', 0.00)),
+                        (t1_b + t2_b + t3_b) / 3,
+                        t1_b, t2_b, t3_b
+                    )
+                if bool(data.get('P3_Start_Heat', False)) or bool(data.get('P3_Start_Pressure', False)):
+                    t1_c = float(data.get('P3_Current_Temp1', 0.0))
+                    t2_c = float(data.get('P3_Current_Temp2', 0.0))
+                    t3_c = float(data.get('P3_Current_Temp3', 0.0))
+                    self.add_row_to_list_history(
+                        "Group C",
+                        float(data.get('P3_Current_PressureHose', 0.0)),
+                        (t1_c + t2_c + t3_c) / 3,
+                        t1_c, t2_c, t3_c
+                    )
 
             _t("t0_input_heat", lambda: self._t0_input_heat_filter([
                 bool(data.get('T0_Start_Heat', False)),
@@ -1322,56 +1399,56 @@ class StrikeMachine(QMainWindow):
         self.init_signal = True
         
     def _init_button_obj(self, list_bool):
-        
+        self.logger.info("[Main]-[_init_button_obj]: CHECKING PLC BOOL")
         if not list_bool[1]:
             self.ui.sys_state_stacked_wid_39.setCurrentIndex(0)
             if list_bool[0]:
-                # self.logger.info("[Main]-[_init_button_obj]: START BTN ON")
+                self.logger.info("[Main]-[_init_button_obj]: START BOOL: 1")
                 self.ui.sys_state_stacked_wid_39.setCurrentIndex(1)
                 self.ui.start_stop_stacked.setCurrentIndex(1)
 
         if not list_bool[3]:
             if list_bool[2]:
-                # self.logger.info("[Main]-[_init_button_obj]: HEAT T0 BTN ON")
+                self.logger.info("[Main]-[_init_button_obj]: HEAT T0 BOOL: 1")
                 self.ui.heat_btn_t0.click() if not self.ui.heat_btn_t0.isChecked() else None
 
         if list_bool[4]:
-            # self.logger.info("[Main]-[_init_button_obj]: HEAT A BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: HEAT A BOOL: 1")
             self.ui.heat_btn_a.click() if not self.ui.heat_btn_a.isChecked() else None
         if list_bool[5]:
-            # self.logger.info("[Main]-[_init_button_obj]: PRESSURE A BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: PRESSURE A BOOL: 1")
             self.ui.vacuum_btn_a.click() if not self.ui.vacuum_btn_a.isChecked() else None
         if list_bool[6]:
-            # self.logger.info("[Main]-[_init_button_obj]: OIL A BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: OIL A BOOL: 1")
             self.ui.refuel_btn_a.click() if not self.ui.refuel_btn_a.isChecked() else None
         if list_bool[7]:
-            # self.logger.info("[Main]-[_init_button_obj]: CYCLE A BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: CYCLE A BOOL: 1")
             self.ui.set_cycle_a_btn.click() if not self.ui.set_cycle_a_btn.isChecked() else None
 
         if list_bool[8]:
-            # self.logger.info("[Main]-[_init_button_obj]: HEAT B BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: HEAT B BOOL: 1")
             self.ui.heat_btn_b.click() if not self.ui.heat_btn_b.isChecked() else None
         if list_bool[9]:
-            # self.logger.info("[Main]-[_init_button_obj]: PRESSURE B BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: PRESSURE B BOOL: 1")
             self.ui.vacuum_btn_b.click() if not self.ui.vacuum_btn_b.isChecked() else None
         if list_bool[10]:
-            # self.logger.info("[Main]-[_init_button_obj]: OIL B BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: OIL B BOOL: 1")
             self.ui.refuel_btn_b.click() if not self.ui.refuel_btn_b.isChecked() else None
         if list_bool[11]:
-            # self.logger.info("[Main]-[_init_button_obj]: CYCLE B BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: CYCLE B BOOL: 1")
             self.ui.set_cycle_b_btn.click() if not self.ui.set_cycle_b_btn.isChecked() else None
 
         if list_bool[12]:
-            # self.logger.info("[Main]-[_init_button_obj]: HEAT C BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: HEAT C BOOL: 1")
             self.ui.heat_btn_c.click() if not self.ui.heat_btn_c.isChecked() else None
         if list_bool[13]:
-            # self.logger.info("[Main]-[_init_button_obj]: PRESSURE C BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: PRESSURE C BOOL: 1")
             self.ui.vacuum_btn_c.click() if not self.ui.vacuum_btn_c.isChecked() else None
         if list_bool[14]:
-            # self.logger.info("[Main]-[_init_button_obj]: OIL C BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: OIL C BOOL: 1")
             self.ui.refuel_btn_c.click() if not self.ui.refuel_btn_c.isChecked() else None
         if list_bool[15]:
-            # self.logger.info("[Main]-[_init_button_obj]: CYCLE C BTN ON")
+            self.logger.info("[Main]-[_init_button_obj]: CYCLE C BOOL: 1")
             self.ui.set_cycle_c_btn.click() if not self.ui.set_cycle_c_btn.isChecked() else None
 
     def _init_pressure_group_sv_obj(self, list_init_a, list_init_b, list_init_c, list_init_t0):
@@ -1427,32 +1504,29 @@ class StrikeMachine(QMainWindow):
         if not isinstance(list_group_a_recv, list) and not isinstance(list_group_b_recv, list) and not isinstance(list_group_c_recv, list):
             return
         pv_avg = (list_group_a_recv[1] + list_group_b_recv[1] + list_group_c_recv[1]) / 3
-        temp_values = [((self.ui.pressure_sv_a_1.value() + self.ui.pressure_sv_b_1.value() + self.ui.pressure_sv_c_1.value())/3),
+        temp_values = [self.ui.t0_sv.value(),
                     self.for_display_temp(pv_avg)]
         self.chart_temp.append_data(temp_values)
         
-        group_a_values = [
-                            self.for_display_temp(list_group_a_recv[1]),
+        group_a_values = [self.ui.pressure_sv_a_1.value(),
                             self.for_display_temp(list_group_a_recv[2]),
-                            self.for_display_temp(list_group_a_recv[3])]
-        group_a_press_values = [
-            self.ui.pressure_sv_a_5.value()]
+                            self.for_display_temp(list_group_a_recv[3]),
+                            self.for_display_temp(list_group_a_recv[4])]
+        group_a_press_values = [self.ui.pressure_sv_a_5.value(), list_group_a_recv[0]]
         self.chart_pressure_a.append_data(group_a_values, group_a_press_values)
 
-        group_b_values = [
-                            self.for_display_temp(list_group_b_recv[1]),
-                            self.for_display_temp(list_group_b_recv[2]),
-                            self.for_display_temp(list_group_b_recv[3])]
-        group_b_press_values = [
-            self.ui.pressure_sv_b_5.value()]
+        group_b_values = [self.ui.pressure_sv_b_1.value(),
+                        self.for_display_temp(list_group_b_recv[2]),
+                        self.for_display_temp(list_group_b_recv[3]),
+                        self.for_display_temp(list_group_b_recv[4])]
+        group_b_press_values = [self.ui.pressure_sv_b_5.value(), list_group_b_recv[0]]
         self.chart_pressure_b.append_data(group_b_values, group_b_press_values)
 
-        group_c_values = [
-                            self.for_display_temp(list_group_c_recv[1]),
-                            self.for_display_temp(list_group_c_recv[2]),
-                            self.for_display_temp(list_group_c_recv[3])]
-        group_c_press_values = [
-            self.ui.pressure_sv_c_5.value()]
+        group_c_values = [self.ui.pressure_sv_c_1.value(),
+                        self.for_display_temp(list_group_c_recv[2]),
+                        self.for_display_temp(list_group_c_recv[3]),
+                        self.for_display_temp(list_group_c_recv[4])]
+        group_c_press_values = [self.ui.pressure_sv_c_5.value(), list_group_c_recv[0]]
         self.chart_pressure_c.append_data(group_c_values, group_c_press_values)
 
     # def _data_group_filter(self, list_group_a_recv, list_group_b_recv, list_group_c_recv):
@@ -2381,7 +2455,12 @@ class StrikeMachine(QMainWindow):
 
         except Exception as e:
             ltmessage.error(self, "Error", f"Export failed:\n{e}")
-
+            
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if hasattr(self, '_maximized_chart_idx') and self._maximized_chart_idx == -1:
+            QTimer.singleShot(50, self._save_grid_rects)
+            
     def closeEvent(self, event):
         reply = ltmessage.question(
             self, "Exit Confirmation", "Are you sure you want to exit?"

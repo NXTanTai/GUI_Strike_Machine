@@ -597,7 +597,7 @@ class PasswordProtectedMixin:
  
         data = ModernLoginDialog.get_asking_data(
             parent=self.window(),
-            title=f"Access – PLC Data"
+            title="Access – PLC Data"
         )
         if data is None:
             return
