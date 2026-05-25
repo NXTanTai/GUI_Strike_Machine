@@ -1,9 +1,9 @@
 import struct
 import logging
+import threading
+import snap7
 from typing import Any, Optional
 from queue import Queue
-
-import snap7
 from snap7.error import *
 from snap7.type import Area
 from snap7.util import set_bool, set_real, set_dint, set_int, set_string
@@ -229,6 +229,9 @@ class PLCWrite(QObject):
             return
 
         self._connect_plc()
+        if not self._running:
+            self._disconnect_plc()
+            return
 
         if self._client and self._client.get_connected():
             if self._retry_timer and self._retry_timer.isActive():
@@ -240,13 +243,45 @@ class PLCWrite(QObject):
                 self._retry_timer.start()
 
     def _connect_plc(self):
-        try:
-            self._client = snap7.client.Client()
-            self._client.connect(self._ip, self._rack, self._slot)
-            print("Connected to PLC, started writing queue")
+        if not self._running:
+            return
+
+        result = {"client": None, "error": None}
+        done = threading.Event()
+
+        def _do_connect():
+            try:
+                c = snap7.client.Client()
+                c.connect(self._ip, self._rack, self._slot)
+                result["client"] = c
+            except Exception as exc:
+                result["error"] = exc
+            finally:
+                done.set()
+
+        t = threading.Thread(target=_do_connect, daemon=True)
+        t.start()
+
+        # ✅ Poll mỗi 100ms thay vì chờ cứng 3s
+        # → thoát ngay khi _running = False
+        while not done.wait(timeout=0.1):
+            if not self._running:
+                # Không cần disconnect vì connect chưa xong
+                return
+
+        if not self._running:
+            if result["client"]:
+                try:
+                    result["client"].disconnect()
+                except:
+                    pass
+            return
+
+        if result["client"]:
+            self._client = result["client"]
             self.connected.emit(True)
-        except Exception as exc:
-            msg = f"Connection failed: {exc}"
+        else:
+            msg = f"Connection failed: {result['error']}"
             logger.error(msg)
             self.error.emit(msg)
             self.connected.emit(False)

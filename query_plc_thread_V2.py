@@ -1,10 +1,9 @@
 import struct
 import logging
-from typing import Any, Optional
-
+import threading
 import snap7
+from typing import Any, Optional
 from snap7.error import *
-
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
 logger = logging.getLogger(__name__)
@@ -144,7 +143,9 @@ class PLCRead(QObject):
             return
 
         self._connect_plc()
-
+        if not self._running:
+            self._disconnect_plc()
+            return
         if self._client and self._client.get_connected():
             if self._retry_timer and self._retry_timer.isActive():
                 self._retry_timer.stop()
@@ -156,12 +157,41 @@ class PLCRead(QObject):
                 self._retry_timer.start()
 
     def _connect_plc(self):
-        try:
-            self._client = snap7.client.Client()
-            self._client.connect(self._ip, self._rack, self._slot)
+        if not self._running:
+            return
+
+        result = {"client": None, "error": None}
+        done = threading.Event()
+
+        def _do_connect():
+            try:
+                c = snap7.client.Client()
+                c.connect(self._ip, self._rack, self._slot)
+                result["client"] = c
+            except Exception as exc:
+                result["error"] = exc
+            finally:
+                done.set()
+
+        t = threading.Thread(target=_do_connect, daemon=True)
+        t.start()
+        while not done.wait(timeout=0.1):
+            if not self._running:
+                return
+
+        if not self._running:
+            if result["client"]:
+                try:
+                    result["client"].disconnect()
+                except:
+                    pass
+            return
+
+        if result["client"]:
+            self._client = result["client"]
             self.connected.emit(True)
-        except Exception as exc:        # Bắt rộng hơn một chút
-            msg = f"Connection failed: {exc}"
+        else:
+            msg = f"Connection failed: {result['error']}"
             logger.error(msg)
             self.error.emit(msg)
             self.connected.emit(False)

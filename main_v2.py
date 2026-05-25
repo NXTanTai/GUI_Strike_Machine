@@ -1,9 +1,12 @@
 # pyside6-uic tech_link_theme.ui -o tech_link_theme.py
 # pyside6-rcc Icon.qrc -o Icon_rc.py
 # pyside6-rcc icons.qrc -o icons_rc.py
+# pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_en.ts
+# pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_cn.ts
 
 # pyinstaller --onefile --name="Packing Demo" --icon=icons\Download_Icons\robotic-arm.ico --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" main.py
 # pyinstaller --onefile --name="Testing App" --add-binary "lib\snap7.dll;." main_v2.py
+# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "tech_link_theme_cn.qm;." --add-data "style.json;." main_v2.py
 
 import sys
 import os
@@ -19,7 +22,9 @@ from openpyxl import Workbook
 from PySide6.QtCore import (Qt, QTimer, QObject,
                             QSettings, QDateTime, 
                             QEvent, QSharedMemory,
-                            QSystemSemaphore, QThread, Slot, QRect, QPropertyAnimation, QEasingCurve)
+                            QSystemSemaphore, QThread, 
+                            Slot, QRect, QPropertyAnimation, 
+                            QEasingCurve, QTranslator, QLocale)
 from PySide6.QtGui import (QFont, QMovie)
 from PySide6.QtWidgets import (QVBoxLayout, QHeaderView, QAbstractSpinBox, 
                                QLabel,QMainWindow, QApplication, QLineEdit,
@@ -92,12 +97,15 @@ class StrikeMachine(QMainWindow):
         self._init_group_object()
         self._init_list_unit()
         self._create_charts()
+        self._init_table_list_history()
         self._setup_table()
         self._paint_pv_obj("#E53935")
         self._paint_sv_obj("#43A047")
         self._setup_btn_signals()
-        self._setup_plc_threads(False)
+        self._setup_plc_threads(True)
         self.current_unit = 0
+        self._translator = QTranslator()
+        self._current_lang = "en"
         self.ui.home_page_btn.click()
 
     def showEvent(self, event):# type: ignore
@@ -106,7 +114,6 @@ class StrikeMachine(QMainWindow):
     def _find_stk_mch_folder(self):
         # print("CURRENT SETTINGS:", self.app_settings.format())
         stk_mch_folder = Path(self.app_settings.value("stk_mch_folder", "C:\\SM_PRD", type=str))
-
         print("Loaded:", stk_mch_folder)
 
         # Nếu folder chưa tồn tại
@@ -308,12 +315,12 @@ class StrikeMachine(QMainWindow):
         lbl = QLabel(self)
         lbl.setStyleSheet("background: transparent;")
         gif_path = resource_path('gifs/Loading.gif')
-        print(f"[ProductionApp]-[_show_loading_dialog]: Trying to load gif from: {gif_path}")
-        print(f"[ProductionApp]-[_show_loading_dialog]: File exists: {os.path.exists(gif_path)}")
+        print(f"[Main]-[_show_loading_dialog]: Trying to load gif from: {gif_path}")
+        print(f"[Main]-[_show_loading_dialog]: File exists: {os.path.exists(gif_path)}")
 
         self.moviee = QMovie(gif_path)
         if not self.moviee.isValid():
-            print(f"[ProductionApp]-[_show_loading_dialog]: Failed to load Loading.gif from {gif_path}")
+            print(f"[Main]-[_show_loading_dialog]: Failed to load Loading.gif from {gif_path}")
             dialog.close()
             self._loading_dialog = None
             return
@@ -338,8 +345,10 @@ class StrikeMachine(QMainWindow):
             QApplication.instance().installEventFilter(self) # type: ignore
 
     def _init_app_data(self):
+        self._app = QApplication.instance()
         self._lastpos = None
         self._last_history_time = 0.0
+        self._last_export_time = 0
         self.db_dict: Optional[dict] = None
 
         self.user = False
@@ -796,6 +805,9 @@ class StrikeMachine(QMainWindow):
         self.ui.history_page_btn.clicked.connect(self.history_page_btn)
         # self.ui.backward_btn.clicked.connect(lambda: self.ui.home_page_btn.click())
 
+        self.ui.eng_language.clicked.connect(self.set_language_en)
+        self.ui.cn_language.clicked.connect(self.set_language_cn)
+
         self.ui.next_group_page_btn.clicked.connect(self.next_previous_pressure_page)
 
         self.ui.back_connection_page_btn.clicked.connect(lambda: self.ui.stackedWidget_3.setCurrentWidget(self.ui.connection_page))
@@ -930,6 +942,88 @@ class StrikeMachine(QMainWindow):
         for i in range(1, header.count()):
             header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
 
+    def _init_table_list_history(self):
+        """
+        Tải dữ liệu excel lên widget list_history sử dụng pandas.
+        """
+        if not self.ui.list_history:
+            self.logger.error("[Main]-[_init_table_list_history]: list_history table is not initialized")
+            return False
+
+        try:
+            list_history_folder = Path(self.stk_mch_folder) / "Excel"
+            list_history_folder.mkdir(parents=True, exist_ok=True)
+
+            today = datetime.now().strftime("%d_%m_%Y")
+            default_filename = f"History {today}.xlsx"
+            file_path = list_history_folder / default_filename
+
+            if not file_path.exists():
+                self.logger.warning(f"[Main]-[_init_table_list_history]: File not found: {file_path}")
+                return 
+
+            if file_path.stat().st_size == 0:
+                self.logger.warning(f"[Main]-[_init_table_list_history]: File is empty (0 bytes)")
+                return 
+
+            # ==================== ĐỌC BẰNG PANDAS ====================
+            df = pd.read_excel(
+                file_path,
+                sheet_name=0,           # sheet đầu tiên
+                header=0,               # dòng đầu làm header
+                dtype=str,              # đọc tất cả thành string để tránh lỗi kiểu dữ liệu
+                keep_default_na=False   # không chuyển rỗng thành NaN
+            )
+
+            # Loại bỏ các dòng hoàn toàn trống
+            df = df.dropna(how='all').reset_index(drop=True)
+
+            if df.empty:
+                self.logger.warning(f"[Main]-[_init_table_list_history]: No data in file")
+                return 
+
+            table_col_count = self.ui.list_history.columnCount()
+            current_row_count = self.ui.list_history.rowCount()
+
+            rows_added = 0
+
+            for _, row_series in df.iterrows():
+                row_data = row_series.iloc[:table_col_count].fillna("").tolist()
+
+                # Tìm dòng trống để ghi đè (nếu có)
+                target_row = None
+                for r in range(current_row_count):
+                    stt_item = self.ui.list_history.item(r, 0)
+                    if stt_item is None or not stt_item.text().strip():
+                        target_row = r
+                        break
+
+                if target_row is None:
+                    target_row = self.ui.list_history.rowCount()
+                    self.ui.list_history.insertRow(target_row)
+
+                # Đổ dữ liệu vào Table
+                for col_idx, value in enumerate(row_data):
+                    if col_idx < table_col_count:
+                        item = QTableWidgetItem(str(value).strip())
+                        self.ui.list_history.setItem(target_row, col_idx, item)
+
+                rows_added += 1
+
+            self.ui.list_history.resizeColumnsToContents()
+            self.ui.list_history.scrollToBottom()
+
+            self.logger.info(f"[Main]-[_init_table_list_history]: Loaded {rows_added} rows from {file_path.name}")
+            return 
+
+        except ImportError:
+            self.logger.error("[Main]-[_init_table_list_history]: pandas is not installed")
+            return 
+
+        except Exception as e:
+            self.logger.warning(f"[Main]-[_init_table_list_history]: Error loading file: {str(e)}")
+            return 
+        
     # ── Group A ──────────────────────────────────────────
     def on_pressure_sv_a_1_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_a_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
@@ -1158,12 +1252,10 @@ class StrikeMachine(QMainWindow):
         return True
     
     def _data_ready(self, data: dict):
-        import time as _time
-
         def _t(label, fn):
-            t = _time.perf_counter()
+            t = time.perf_counter()
             fn()
-            ms = (_time.perf_counter() - t) * 1000
+            ms = (time.perf_counter() - t) * 1000
             if ms > 1:
                 print(f"  [{label}] {ms:.1f}ms")
 
@@ -1243,7 +1335,7 @@ class StrikeMachine(QMainWindow):
                 print("Init Button Done")
                 self.init_signal = False
 
-            now = _time.time()
+            now = time.time()
             if now - self._last_history_time >= 5.0:
                 self._last_history_time = now
                 if bool(data.get('P1_Start_Heat', False)) or bool(data.get('P1_Start_Pressure', False)):
@@ -1391,7 +1483,9 @@ class StrikeMachine(QMainWindow):
                 bool(data.get('Bit_Alarm', False)),
                 str(data.get('Alarm_Info', ""))
             ]))
-
+            if now - self._last_export_time >= 60.0:
+                self._last_export_time = now
+                self.auto_export_all_tables_to_excel()
         except Exception as e:
             self.logger.error("[Main]-[_data_ready]:PLC Data Processing Error: %s", e)
             
@@ -1715,7 +1809,7 @@ class StrikeMachine(QMainWindow):
             simulator.set_channel_active(channel, 0.0, self.default_temp_room)  # Reset về mặc định
 
     def heating_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -1779,7 +1873,7 @@ class StrikeMachine(QMainWindow):
                 return
 
     def pumping_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -1828,7 +1922,7 @@ class StrikeMachine(QMainWindow):
             return
 
     def fill_oil_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -1876,7 +1970,7 @@ class StrikeMachine(QMainWindow):
                     self.logger.info("[Main]-[fill_oil_btn]: Group C Oil Filling Off!")
 
     def cycle_loop_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -1925,7 +2019,7 @@ class StrikeMachine(QMainWindow):
                 return
 
     def start_stop_btn(self, btn=None):
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -2102,6 +2196,65 @@ class StrikeMachine(QMainWindow):
         self.ui.bt_sv.blockSignals(False)
         self.ui.ct_sv.blockSignals(False)
 
+    def set_language_en(self):
+        self._app.removeTranslator(self._translator)
+        self._current_lang = "en"
+
+    def set_language_cn(self):
+        self._app.removeTranslator(self._translator)
+        self._translator.load(resource_path("tech_link_theme_cn.qm"))
+        self._app.installTranslator(self._translator)
+        self._current_lang = "cn"
+        
+    def changeEvent(self, event):
+        super().changeEvent(event)
+        if event.type() == QEvent.Type.LanguageChange:
+            ip_text = self.ui.plc_ip_address_edit.text()
+            db_text = self.ui.db_file_path_edit.text()
+            self.ui.retranslateUi(self)
+            charts = [self.chart_temp, self.chart_pressure_a,
+                self.chart_pressure_b, self.chart_pressure_c]
+            if self._current_lang == "cn":
+                self.ui.plc_ip_address_edit.setPlaceholderText("请输入IP地址: 172.16.100.***")
+                self.ui.db_file_path_edit.setPlaceholderText("输入路径文件夹")
+                
+                self.chart_temp.btn_setting.setText("烤箱")
+                self.chart_temp.plot.setLabel("left", "温度 (°C)") if self.current_unit == 0 else self.chart_temp.plot.setLabel("left", "温度 (°F)")
+                
+                self.chart_pressure_a.btn_setting.setText("A组")
+                self.chart_pressure_a.plot.setLabel("left", "温度 (°C)") if self.current_unit == 0 else self.chart_pressure_a.plot.setLabel("left", "温度 (°F)")
+                self.chart_pressure_a.plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")
+                
+                self.chart_pressure_b.btn_setting.setText("B组")
+                self.chart_pressure_b.plot.setLabel("left", "温度 (°C)") if self.current_unit == 0 else self.chart_pressure_b.plot.setLabel("left", "温度 (°F)")
+                self.chart_pressure_b.plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")
+                
+                self.chart_pressure_c.btn_setting.setText("C组")
+                self.chart_pressure_c.plot.setLabel("left", "温度 (°C)") if self.current_unit == 0 else self.chart_pressure_c.plot.setLabel("left", "温度 (°F)")
+                self.chart_pressure_c.plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")
+
+            elif self._current_lang == "en":
+                self.ui.plc_ip_address_edit.setPlaceholderText("Enter IP Address: 172.16.100.***")
+                self.ui.db_file_path_edit.setPlaceholderText("Enter Path Folder")
+                
+                self.chart_temp.btn_setting.setText("Oven")
+                self.chart_temp.plot.setLabel("left", "Temperature (°C)") if self.current_unit == 0 else self.chart_temp.plot.setLabel("left", "Temperature (°F)")
+                
+                self.chart_pressure_a.btn_setting.setText("Group A")
+                self.chart_pressure_a.plot.setLabel("left", "Temperature (°C)") if self.current_unit == 0 else self.chart_pressure_a.plot.setLabel("left", "Temperature (°F)")
+                self.chart_pressure_a.plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")
+                
+                self.chart_pressure_b.btn_setting.setText("Group B")
+                self.chart_pressure_b.plot.setLabel("left", "Temperature (°C)") if self.current_unit == 0 else self.chart_pressure_b.plot.setLabel("left", "Temperature (°F)")
+                self.chart_pressure_b.plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")
+                
+                self.chart_pressure_c.btn_setting.setText("Group C")
+                self.chart_pressure_c.plot.setLabel("left", "Temperature (°C)") if self.current_unit == 0 else self.chart_pressure_c.plot.setLabel("left", "Temperature (°F)")
+                self.chart_pressure_c.plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")
+                
+            self.ui.plc_ip_address_edit.setText(ip_text)
+            self.ui.db_file_path_edit.setText(db_text)
+
     def _set_cur_unit(self):
         index = self.ui.temp_unit_selection_combox.currentIndex()
         for i in range(len(self.cel_fah_change)):
@@ -2144,17 +2297,17 @@ class StrikeMachine(QMainWindow):
 
     def _set_chart_unit(self):
         if self.current_unit == 0:
-            self.chart_temp.set_temp_label("Temperature (°C)", unit="°C")
-            self.chart_pressure_a.set_temp_label("Temperature (°C)", unit="°C")
-            self.chart_pressure_b.set_temp_label("Temperature (°C)", unit="°C")
-            self.chart_pressure_c.set_temp_label("Temperature (°C)", unit="°C")
+            self.chart_temp.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_temp.set_temp_label("温度 (°C)", unit="°C")
+            self.chart_pressure_a.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_pressure_a.set_temp_label("温度 (°C)", unit="°C")
+            self.chart_pressure_b.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_pressure_b.set_temp_label("温度 (°C)", unit="°C")
+            self.chart_pressure_c.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_pressure_c.set_temp_label("温度 (°C)", unit="°C")
 
         elif self.current_unit == 1:
-            self.chart_temp.set_temp_label("Temperature (°F)", unit="°F")
-            self.chart_pressure_a.set_temp_label("Temperature (°F)", unit="°F")
-            self.chart_pressure_b.set_temp_label("Temperature (°F)", unit="°F")
-            self.chart_pressure_c.set_temp_label("Temperature (°F)", unit="°F")
-
+            self.chart_temp.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_temp.set_temp_label("温度 (°F)", unit="°F")
+            self.chart_pressure_a.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_pressure_a.set_temp_label("温度 (°F)", unit="°F")
+            self.chart_pressure_b.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_pressure_b.set_temp_label("温度 (°F)", unit="°F")
+            self.chart_pressure_c.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_pressure_c.set_temp_label("温度 (°F)", unit="°F")
+    
     def for_display_temp(self, celsius):
         if self.current_unit == 1:
             return celsius * 9/5 + 32
@@ -2304,16 +2457,16 @@ class StrikeMachine(QMainWindow):
                 mid_temp_str = f"{self.for_display_temp(mid_temp):.1f}°C"
                 end_temp_str = f"{self.for_display_temp(end_temp):.1f}°C"
 
-            today_date = datetime.now().strftime("%H:%M:%S-%d/%m")
+            today_date = datetime.now().strftime("%H:%M:%S-%d/%m/%y")
             stt = str(target_row)
             row_data = [
                 stt,                            # STT
                 group_name,                     # A, B, C Group
-                f"{pressure_value:.2f}",        # Pressure Value
-                temp_value_str,            # Temperature
-                front_temp_str,            # Front Temperature
-                mid_temp_str,              # Middle Temperature
-                end_temp_str,              # End Temperature
+                f"{pressure_value:.2f} bar",    # Pressure Value
+                temp_value_str,                 # Temperature
+                front_temp_str,                 # Front Temperature
+                mid_temp_str,                   # Middle Temperature
+                end_temp_str,                   # End Temperature
                 today_date                      # Date
             ]           
 
@@ -2324,9 +2477,9 @@ class StrikeMachine(QMainWindow):
             self.ui.list_history.scrollToBottom()
         except Exception as e:
             if not hasattr(self, 'dialog_notification') or self.dialog_notification is None:
-                self.logger.error("[ProductionApp]-[add_row_to_list_history]: Dialog_Notification not initialized")
+                self.logger.error("[Main]-[add_row_to_list_history]: Dialog_Notification not initialized")
             else:
-                self.logger.error(f"[ProductionApp]-[add_row_to_list_history]: Error adding row to list_history: {e}")
+                self.logger.error(f"[Main]-[add_row_to_list_history]: Error adding row to list_history: {e}")
 
     def _is_row_complete(self, row_index, total_columns):
         """Check if a specific row has all required data filled.
@@ -2336,6 +2489,20 @@ class StrikeMachine(QMainWindow):
             if item is None or not item.text().strip():
                 return False
         return True
+
+    def auto_export_all_tables_to_excel(self):
+        """
+        Export both the list_history and list_err tables to two dif Excel files
+        \nExport cả bảng list_history và list_err ra 2 file Excel riêng biệt.
+        """
+        current_date = datetime.now().strftime("%d_%m_%Y")
+
+        file_export = self.ui.list_history
+        default_filename_done = f"History {current_date}.xlsx"
+        list_history_folder = Path(self.stk_mch_folder) / "Excel"
+        filename_done = list_history_folder / default_filename_done
+        if filename_done:
+            self._export_table_to_excel(file_export, str(filename_done))
 
     def export_all_tables_to_excel_btn(self):
         """
@@ -2349,57 +2516,45 @@ class StrikeMachine(QMainWindow):
         list_history_folder = Path(self.stk_mch_folder) / "Excel"
         filename_done = list_history_folder / default_filename_done
         if filename_done:
-            # self._export_table_to_excel(file_export, filename_done)
             self.export_table_to_excel(file_export, str(filename_done))
 
     def _export_table_to_excel(self, table_widget, filename):
+        # Lấy headers từ QTableWidget
+        headers = []
+        for col in range(table_widget.columnCount()):
+            header = table_widget.horizontalHeaderItem(col)
+            headers.append(header.text() if header else f"Column {col + 1}")
+
+        # Lấy data từ QTableWidget
+        rows = []
+        for row in range(table_widget.rowCount()):
+            row_data = []
+            for col in range(table_widget.columnCount()):
+                item = table_widget.item(row, col)
+                row_data.append(item.text() if item else "")
+            rows.append(row_data)
+
+        # Tạo DataFrame và xuất Excel
+        df = pd.DataFrame(rows, columns=headers)
+        
         try:
-            original_filename = Path(filename)
-            counter = 1
-            
-            while True:
-                try:
-                    with open(filename, 'a'):
-                        pass
-                    break
-                except PermissionError:
-                    stem = original_filename.stem
-                    suffix = original_filename.suffix
-                    parent = original_filename.parent
-                    filename = str(parent / f"{stem} ({counter}){suffix}")
-                    counter += 1
-            
-            wb = Workbook()
-            ws = wb.active
-            ws.title = "Exported Data" # type: ignore
-
-            # Ghi dữ liệu
-            for row in range(table_widget.rowCount()):
-                row_data = []
-                for col in range(table_widget.columnCount()):
-                    item = table_widget.item(row, col)
-                    # self.logger.info("[Main]-[_export_table_to_excel]: Row {row}, Col {col}: {item.text() if item else 'None'}")
-                    row_data.append(item.text() if item else "")
-                ws.append(row_data) # type: ignore
-
-            # Auto-fit cột
-            for col in ws.columns: # type: ignore
-                max_length = 0
-                col_letter = col[0].column_letter # type: ignore
-                for cell in col:
-                    try:
-                        max_length = max(max_length, len(str(cell.value)))
-                    except:
-                        pass
-                ws.column_dimensions[col_letter].width = max_length + 2 # type: ignore
-
-            wb.save(filename)
-            self.logger.info(f"[ProductionApp]-[export_table_to_excel]: Exported to {filename}")
-            ltmessage.information(self, "Success", f"Exported to {filename}")
+            with pd.ExcelWriter(filename, engine="openpyxl") as writer:
+                df.to_excel(writer, index=False, sheet_name="Sheet1")
+                
+                # Auto-fit column width
+                worksheet = writer.sheets["Sheet1"]
+                for col_idx, col_name in enumerate(df.columns, start=1):
+                    max_len = max(
+                        len(str(col_name)),
+                        df.iloc[:, col_idx - 1].astype(str).map(len).max() if len(df) > 0 else 0
+                    )
+                    worksheet.column_dimensions[
+                        worksheet.cell(1, col_idx).column_letter
+                    ].width = max_len + 4
 
         except Exception as e:
-            self.logger.error(f"[ProductionApp]-[export_table_to_excel]: Export file Error: {e}")
-            ltmessage.error(self, "Export Error", str(e))
+            self.logger.error(f"[Main]-[export_table_to_excel]: Export file Error: {e}")
+            # ltmessage.error(self, "Export Error", str(e))
 
     def export_table_to_excel(self, table: QTableWidget, default_filename: str = "export"):
         """Xuất QTableWidget ra file Excel"""
@@ -2548,7 +2703,7 @@ if __name__ == "__main__":
     
     def cleanup():
         try:
-            window.export_all_tables_to_excel_btn()
+            window.auto_export_all_tables_to_excel()
             # window._database_auto_check()
             window._close_event_cleanup()
         except:

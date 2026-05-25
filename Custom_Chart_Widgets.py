@@ -286,8 +286,8 @@ class CustomChartWidget(QWidget):
 
         font = QFont(self._font_family, FONT_SIZE_SM, QFont.Weight.Bold)
 
-        _temp_names     = ["SV", "T1", "T2", "T3"]
-        _pressure_names = ["Pressure SV", "Pressure", "P3"]
+        _temp_names = ["SV", "T1", "T2", "T3"] if self.num_temp > 2 else ["SV", "T0"]
+        _pressure_names = ["Pressure SV", "Pressure"]
 
         for i in range(self.num_temp):
             w = self._build_legend_item(
@@ -450,9 +450,9 @@ class CustomChartWidget(QWidget):
         date_axis = _FixedTickDateAxis(orientation="bottom", tick_spacing=15)
         date_axis.setTickFont(font_tick)
         self.plot.setAxisItems({"bottom": date_axis})
-        self.plot.getAxis("bottom").setLabel("Time", **axis_style)
+        # self.plot.getAxis("bottom").setLabel("Time", **axis_style)
         self.plot.getAxis("left").setWidth(65)
-        self.plot.getAxis("bottom").setHeight(60)
+        # self.plot.getAxis("bottom").setHeight(60)
 
     # ── Pressure ViewBox (trục phải) ──────────────────────────────────────────
 
