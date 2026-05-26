@@ -6,7 +6,7 @@
 
 # pyinstaller --onefile --name="Packing Demo" --icon=icons\Download_Icons\robotic-arm.ico --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" main.py
 # pyinstaller --onefile --name="Testing App" --add-binary "lib\snap7.dll;." main_v2.py
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "tech_link_theme_cn.qm;." --add-data "style.json;." main_v2.py
+# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "tech_link_theme_cn.qm;." main_v2.py
 
 import sys
 import os
@@ -92,7 +92,6 @@ class StrikeMachine(QMainWindow):
         self.ui.setupUi(self)
         loadJsonStyle(self, self.ui) #type: ignore
         self._init_app_data()
-        self._init_db_layout_and_size()
         self._init_timer()
         self._init_group_object()
         self._init_list_unit()
@@ -102,11 +101,13 @@ class StrikeMachine(QMainWindow):
         self._paint_pv_obj("#E53935")
         self._paint_sv_obj("#43A047")
         self._setup_btn_signals()
+        self._init_db_layout_and_size()
         self._setup_plc_threads(True)
         self.current_unit = 0
         self._translator = QTranslator()
         self._current_lang = "en"
         self.ui.home_page_btn.click()
+        self.ui.clear_history_search.hide()
 
     def showEvent(self, event):# type: ignore
         super().showEvent(event)
@@ -348,6 +349,8 @@ class StrikeMachine(QMainWindow):
         self._app = QApplication.instance()
         self._lastpos = None
         self._last_history_time = 0.0
+
+        self._original_data: list = []
         self._last_export_time = 0
         self.db_dict: Optional[dict] = None
 
@@ -815,7 +818,7 @@ class StrikeMachine(QMainWindow):
 
         # self.ui.back_home_btn.clicked.connect(lambda: self.ui.chart_page_btn.click())
 
-        self.ui.temp_unit_selection_combox.currentIndexChanged.connect(lambda: QTimer.singleShot(0, self._set_cur_unit))
+        self.ui.temp_unit_selection_combox.currentIndexChanged.connect(lambda: QTimer.singleShot(50, self._set_cur_unit))
 
         self.ui.plc_io_btn.installEventFilter(self)
 
@@ -850,6 +853,9 @@ class StrikeMachine(QMainWindow):
         self.ui.reset_cycle_a_btn.clicked.connect(lambda: self.plc_writer_worker.write_value.emit("P1_Number_Test_Times", 0) if self.plc_writer_connection else None) #type: ignore
         self.ui.reset_cycle_b_btn.clicked.connect(lambda: self.plc_writer_worker.write_value.emit("P2_Number_Test_Times", 0) if self.plc_writer_connection else None) #type: ignore
         self.ui.reset_cycle_c_btn.clicked.connect(lambda: self.plc_writer_worker.write_value.emit("P3_Number_Test_Times", 0) if self.plc_writer_connection else None) #type: ignore
+
+        self.ui.search_data.textChanged.connect(self._on_search_changed)
+        self.ui.clear_history_search.clicked.connect(self._on_clear_clicked)
 
         spinbox_map = {
             "pressure_sv_a_1": self.on_pressure_sv_a_1_changed,
@@ -938,9 +944,12 @@ class StrikeMachine(QMainWindow):
 
     def _setup_table(self):
         header = self.ui.list_history.horizontalHeader()
+        header_2 = self.ui.list_history_2.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header_2.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
         for i in range(1, header.count()):
             header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+            header_2.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
 
     def _init_table_list_history(self):
         """
@@ -951,7 +960,7 @@ class StrikeMachine(QMainWindow):
             return False
 
         try:
-            list_history_folder = Path(self.stk_mch_folder) / "Excel"
+            list_history_folder = Path(self.stk_mch_folder) / "DB_address"
             list_history_folder.mkdir(parents=True, exist_ok=True)
 
             today = datetime.now().strftime("%d_%m_%Y")
@@ -1023,9 +1032,77 @@ class StrikeMachine(QMainWindow):
         except Exception as e:
             self.logger.warning(f"[Main]-[_init_table_list_history]: Error loading file: {str(e)}")
             return 
-        
+
+    def _on_search_changed(self, keyword: str):
+        keyword = keyword.strip()
+
+        if keyword:
+            self.ui.clear_history_search.show()
+            self.ui.stackedWidget_4.setCurrentIndex(1)
+            if not hasattr(self, '_original_data') or not self._original_data:
+                self._original_data = self._get_table_data()
+            filtered = [
+                row for row in self._original_data
+                if keyword.lower() in row[1].lower()
+            ]
+        else:
+            self.ui.clear_history_search.hide()
+            self.ui.stackedWidget_4.setCurrentIndex(0)
+            # self.ui.label_info.setText("")
+            filtered = self._original_data if hasattr(self, '_original_data') else self._get_table_data()
+            self._original_data = []
+
+        QTimer.singleShot(10, lambda: self._load_data(filtered, len(self._original_data) if self._original_data else len(filtered)))
+
+    def _get_table_data(self) -> list:
+        table = self.ui.list_history
+        records = []
+        for row in range(table.rowCount()):
+            row_data = []
+            for col in range(table.columnCount()):
+                item = table.item(row, col)
+                row_data.append(item.text() if item else "")
+            records.append(row_data)
+        return records
+    
+    def _load_data(self, records: list, total: int):
+        table = self.ui.list_history_2
+        table.setSortingEnabled(False)
+        table.setRowCount(0)
+
+        for row_idx, row_data in enumerate(records):
+            table.insertRow(row_idx)
+            for col_idx, value in enumerate(row_data):
+                item = QTableWidgetItem(str(value))
+                if col_idx == 0:
+                    item.setTextAlignment(Qt.AlignCenter)
+                else:
+                    item.setTextAlignment(Qt.AlignVCenter | Qt.AlignLeft)
+                table.setItem(row_idx, col_idx, item)
+
+        table.setSortingEnabled(True)
+        self._update_info(len(records), total)
+
+    def _update_info(self, shown: int, total: int):
+        if shown == total:
+            self.ui.label_info.setText(f"")
+        else:
+            self.ui.label_info.setText(f"Found {shown} / {total} records")
+
+    def _on_clear_clicked(self):
+        self.ui.search_data.clear()
+        self.ui.search_data.setFocus()
+
     # ── Group A ──────────────────────────────────────────
-    def on_pressure_sv_a_1_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
+    def on_pressure_sv_a_1_changed(self, value: float): 
+        if self.plc_writer_connection:
+            self.plc_writer_worker.write_value.emit("P1_TemperatureSetting", self.cal_fah_to_cel(value)) #type: ignore
+        else: 
+            pass
+        self.ui.at_sv.blockSignals(True)
+        self.ui.at_sv.setValue(value)
+        self.ui.at_sv.blockSignals(False)
+
     def on_pressure_sv_a_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_a_6_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Air_FillingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_a_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Air_HoldingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
@@ -1034,7 +1111,15 @@ class StrikeMachine(QMainWindow):
     def on_pressure_sv_a_10_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Oil_End_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
 
     # ── Group B ──────────────────────────────────────────
-    def on_pressure_sv_b_1_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
+    def on_pressure_sv_b_1_changed(self, value: float): 
+        if self.plc_writer_connection:
+            self.plc_writer_worker.write_value.emit("P2_TemperatureSetting", self.cal_fah_to_cel(value)) #type: ignore
+        else: 
+            pass
+        self.ui.bt_sv.blockSignals(True)
+        self.ui.bt_sv.setValue(value)
+        self.ui.bt_sv.blockSignals(False)
+
     def on_pressure_sv_b_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_b_6_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Air_FillingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_b_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Air_HoldingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
@@ -1043,7 +1128,15 @@ class StrikeMachine(QMainWindow):
     def on_pressure_sv_b_10_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Oil_End_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
 
     # ── Group C ──────────────────────────────────────────
-    def on_pressure_sv_c_1_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
+    def on_pressure_sv_c_1_changed(self, value: float): 
+        if self.plc_writer_connection:
+            self.plc_writer_worker.write_value.emit("P3_TemperatureSetting", self.cal_fah_to_cel(value)) #type: ignore
+        else: 
+            pass
+        self.ui.ct_sv.blockSignals(True)
+        self.ui.ct_sv.setValue(value)
+        self.ui.ct_sv.blockSignals(False)
+
     def on_pressure_sv_c_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_c_6_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Air_FillingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_c_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Air_HoldingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
@@ -1058,9 +1151,9 @@ class StrikeMachine(QMainWindow):
 
     # ── Temperature Modify ──────────────────────────────────────────
     def on_t0_sv_changed(self, value: float): self.plc_writer_worker.write_value.emit("T0_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_at_sv_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_bt_sv_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_ct_sv_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
+    def on_at_sv_changed(self, value: float): self.ui.pressure_sv_a_1.setValue(value)
+    def on_bt_sv_changed(self, value: float): self.ui.pressure_sv_b_1.setValue(value)
+    def on_ct_sv_changed(self, value: float): self.ui.pressure_sv_c_1.setValue(value)
 
     def on_t0_h_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("T0_TempLimitHIGH", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
     def on_at_h_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_TempLimitHIGH", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
@@ -1252,12 +1345,12 @@ class StrikeMachine(QMainWindow):
         return True
     
     def _data_ready(self, data: dict):
-        def _t(label, fn):
-            t = time.perf_counter()
-            fn()
-            ms = (time.perf_counter() - t) * 1000
-            if ms > 1:
-                print(f"  [{label}] {ms:.1f}ms")
+        # def _t(label, fn):
+            # t = time.perf_counter()
+            # fn()
+            # ms = (time.perf_counter() - t) * 1000
+            # if ms > 1:
+                # print(f"  [{label}] {ms:.1f}ms")
 
         try:
             if self.init_signal:
@@ -1319,6 +1412,8 @@ class StrikeMachine(QMainWindow):
                 self._init_button_obj([
                     bool(data.get('START', False)),
                     bool(data.get('STOP', False)),
+                    bool(data.get('T0_Start_Heat', False)),
+                    bool(data.get('T0_Stop_Heat', False)),
                     bool(data.get('P1_Start_Heat', False)),
                     bool(data.get('P1_Start_Pressure', False)),
                     bool(data.get('P1_Start_Oil', False)),
@@ -1336,7 +1431,7 @@ class StrikeMachine(QMainWindow):
                 self.init_signal = False
 
             now = time.time()
-            if now - self._last_history_time >= 5.0:
+            if now - self._last_history_time >= 1.0:
                 self._last_history_time = now
                 if bool(data.get('P1_Start_Heat', False)) or bool(data.get('P1_Start_Pressure', False)):
                     t1_a = float(data.get('P1_Current_Temp1', 0.0))
@@ -1369,12 +1464,15 @@ class StrikeMachine(QMainWindow):
                         t1_c, t2_c, t3_c
                     )
 
-            _t("t0_input_heat", lambda: self._t0_input_heat_filter([
+            # _t("t0_input_heat", lambda: 
+            self._t0_input_heat_filter([
                 bool(data.get('T0_Start_Heat', False)),
                 bool(data.get('T0_Stop_Heat', False))
-            ]))
+            ])
+            # )
 
-            _t("input_data", lambda: self._input_data_filter([
+            # _t("input_data", lambda: 
+            self._input_data_filter([
                 bool(data.get('P1_Start_Heat', False)),
                 bool(data.get('P1_Start_Pressure', False)),
                 bool(data.get('P1_Start_Oil', False)),
@@ -1387,9 +1485,11 @@ class StrikeMachine(QMainWindow):
                 bool(data.get('P3_Start_Pressure', False)),
                 bool(data.get('P3_Start_Oil', False)),
                 bool(data.get('P3_BitCountTimes', False)),
-            ]))
+            ])
+            # )
 
-            _t("i_o_group_3", lambda: self._i_o_group_3_filter([
+            # _t("i_o_group_3", lambda: 
+            self._i_o_group_3_filter([
                 float(data.get('T0_Current_Temp', 0.0)),
                 float(data.get('P1_Current_Temp1', 0.0)),
                 float(data.get('P1_Current_Temp2', 0.0)),
@@ -1406,14 +1506,18 @@ class StrikeMachine(QMainWindow):
                 float(data.get('P1_Current_PressureITV', 0.0)),
                 float(data.get('P2_Current_PressureITV', 0.0)),
                 float(data.get('P3_Current_PressureITV', 0.0))
-            ]))
+            ])
+            # )
 
-            _t("t0_data", lambda: self._t0_data_filter([
+            # _t("t0_data", lambda: 
+            self._t0_data_filter([
                 float(data.get('T0_TemperatureSetting', 0.0)),
                 float(data.get('T0_Current_Temp', 0.0))
-            ]))
+            ])
+            # )
 
-            _t("group_a", lambda: self._group_a_data_filter([
+            # _t("group_a", lambda: 
+            self._group_a_data_filter([
                 float(data.get('P1_Current_Temp1', 0.0)),
                 float(data.get('P1_Current_Temp2', 0.0)),
                 float(data.get('P1_Current_Temp3', 0.0)),
@@ -1423,9 +1527,11 @@ class StrikeMachine(QMainWindow):
                 float(data.get('P1_Current_Air_ReleaseTime', 0)/1000),
                 float(data.get('P1_Current_Oil_Start_Time', 0)/1000),
                 float(data.get('P1_Current_Oil_End_Time', 0)/1000)
-            ]))
+            ])
+            # )
 
-            _t("group_b", lambda: self._group_b_data_filter([
+            # _t("group_b", lambda: 
+            self._group_b_data_filter([
                 float(data.get('P2_Current_Temp1', 0.0)),
                 float(data.get('P2_Current_Temp2', 0.0)),
                 float(data.get('P2_Current_Temp3', 0.0)),
@@ -1435,9 +1541,11 @@ class StrikeMachine(QMainWindow):
                 float(data.get('P2_Current_Air_ReleaseTime', 0)/1000),
                 float(data.get('P2_Current_Oil_Start_Time', 0)/1000),
                 float(data.get('P2_Current_Oil_End_Time', 0)/1000)
-            ]))
+            ])
+            # )
 
-            _t("group_c", lambda: self._group_c_data_filter([
+            # _t("group_c", lambda: 
+            self._group_c_data_filter([
                 float(data.get('P3_Current_Temp1', 0.0)),
                 float(data.get('P3_Current_Temp2', 0.0)),
                 float(data.get('P3_Current_Temp3', 0.0)),
@@ -1447,42 +1555,55 @@ class StrikeMachine(QMainWindow):
                 float(data.get('P3_Current_Air_ReleaseTime', 0)/1000),
                 float(data.get('P3_Current_Oil_Start_Time', 0)/1000),
                 float(data.get('P3_Current_Oil_End_Time', 0)/1000)
-            ]))
+            ])
+            # )
 
-            _t("cycle_time", lambda: self._set_cycle_time_unit([
+            # _t("cycle_time", lambda: 
+            self._set_cycle_time_unit([
                 int(data.get('P1_Number_Test_Times', 0)),
                 int(data.get('P2_Number_Test_Times', 0)),
                 int(data.get('P3_Number_Test_Times', 0))
-            ]))
+            ])
+            # )
 
-            _t("at_data", lambda: self._at_data_filter([
+            # _t("at_data", lambda: 
+            self._at_data_filter([
                 float(data.get('P1_Current_Temp1', 0.0)),
                 float(data.get('P1_Current_Temp2', 0.0)),
                 float(data.get('P1_Current_Temp3', 0.0))
-            ]))
+            ])
+            # )
 
-            _t("bt_data", lambda: self._bt_data_filter([
+            # _t("bt_data", lambda: 
+            self._bt_data_filter([
                 float(data.get('P2_Current_Temp1', 0.0)),
                 float(data.get('P2_Current_Temp2', 0.0)),
                 float(data.get('P2_Current_Temp3', 0.0))
-            ]))
+            ])
+            # )
 
-            _t("ct_data", lambda: self._ct_data_filter([
+            # _t("ct_data", lambda: 
+            self._ct_data_filter([
                 float(data.get('P3_Current_Temp1', 0.0)),
                 float(data.get('P3_Current_Temp2', 0.0)),
                 float(data.get('P3_Current_Temp3', 0.0))
-            ]))
+            ])
+            # )
 
-            _t("itv_data", lambda: self._itv_data_filter([
+            # _t("itv_data", lambda: 
+            self._itv_data_filter([
                 float(data.get('P1_Current_PressureITV', 0.0)),
                 float(data.get('P2_Current_PressureITV', 0.0)),
                 float(data.get('P3_Current_PressureITV', 0.0))
-            ]))
+            ])
+            # )
 
-            _t("alarm", lambda: self._alarm_data_filter([
+            # _t("alarm", lambda: 
+            self._alarm_data_filter([
                 bool(data.get('Bit_Alarm', False)),
                 str(data.get('Alarm_Info', ""))
-            ]))
+            ])
+            # )
             if now - self._last_export_time >= 60.0:
                 self._last_export_time = now
                 self.auto_export_all_tables_to_excel()
@@ -1683,7 +1804,7 @@ class StrikeMachine(QMainWindow):
             self._last_group_a_avg = avg_a
 
         for i, val_a in enumerate(list_group_a_recv):
-            v = round(val_a if i >= 4 else self.for_display_temp(val_a), 2)
+            v = round(val_a if i >= 3 else self.for_display_temp(val_a), 2)
             if v != self._last_group_a[i]:
                 self.pressure_a_pv_obj[i].setValue(v)
                 self._last_group_a[i] = v
@@ -1704,7 +1825,7 @@ class StrikeMachine(QMainWindow):
             self._last_group_b_avg = avg_b
 
         for i, val_b in enumerate(list_group_b_recv):
-            v = round(val_b if i >= 4 else self.for_display_temp(val_b), 2)
+            v = round(val_b if i >= 3 else self.for_display_temp(val_b), 2)
             if v != self._last_group_b[i]:
                 self.pressure_b_pv_obj[i].setValue(v)
                 self._last_group_b[i] = v
@@ -1725,7 +1846,7 @@ class StrikeMachine(QMainWindow):
             self._last_group_c_avg = avg_c
 
         for i, val_c in enumerate(list_group_c_recv):
-            v = round(val_c if i >= 4 else self.for_display_temp(val_c), 2)
+            v = round(val_c if i >= 3 else self.for_display_temp(val_c), 2)
             if v != self._last_group_c[i]:
                 self.pressure_c_pv_obj[i].setValue(v)
                 self._last_group_c[i] = v
@@ -1787,6 +1908,7 @@ class StrikeMachine(QMainWindow):
     def _alarm_data_filter(self, alarm_recv):
         if alarm_recv[0]:
             self.ui.error_display.setText(alarm_recv[1])
+            print(alarm_recv[1])
 
     def on_heat_btn_clicked(self, channel: str, checked: bool):
         simulator = self.thread_dict.get("data_simulator")
@@ -2265,16 +2387,15 @@ class StrikeMachine(QMainWindow):
         self._set_chart_unit()
 
     def _set_sv_widget_pressure_obj(self):
-        for i in range(1):
-            self.pressure_a_sv_obj[i].blockSignals(True)
-            self.pressure_a_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_a_sv_obj[i].value()))
-            self.pressure_a_sv_obj[i].blockSignals(False)
-            self.pressure_b_sv_obj[i].blockSignals(True)
-            self.pressure_b_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_b_sv_obj[i].value()))
-            self.pressure_b_sv_obj[i].blockSignals(False)
-            self.pressure_c_sv_obj[i].blockSignals(True)
-            self.pressure_c_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_c_sv_obj[i].value()))
-            self.pressure_c_sv_obj[i].blockSignals(False)
+        self.pressure_a_sv_obj[0].blockSignals(True)
+        self.pressure_a_sv_obj[0].setValue(self.convert_cel_fah(self.pressure_a_sv_obj[0].value()))
+        self.pressure_a_sv_obj[0].blockSignals(False)
+        self.pressure_b_sv_obj[0].blockSignals(True)
+        self.pressure_b_sv_obj[0].setValue(self.convert_cel_fah(self.pressure_b_sv_obj[0].value()))
+        self.pressure_b_sv_obj[0].blockSignals(False)
+        self.pressure_c_sv_obj[0].blockSignals(True)
+        self.pressure_c_sv_obj[0].setValue(self.convert_cel_fah(self.pressure_c_sv_obj[0].value()))
+        self.pressure_c_sv_obj[0].blockSignals(False)
 
     def _set_sv_widget_temperature_obj(self):
         for i in range(4):
@@ -2457,8 +2578,8 @@ class StrikeMachine(QMainWindow):
                 mid_temp_str = f"{self.for_display_temp(mid_temp):.1f}°C"
                 end_temp_str = f"{self.for_display_temp(end_temp):.1f}°C"
 
-            today_date = datetime.now().strftime("%H:%M:%S-%d/%m/%y")
-            stt = str(target_row)
+            today_date = datetime.now().strftime("%H:%M:%S-%d/%m/%YY")
+            stt = str(target_row+1)
             row_data = [
                 stt,                            # STT
                 group_name,                     # A, B, C Group
@@ -2469,28 +2590,35 @@ class StrikeMachine(QMainWindow):
                 end_temp_str,                   # End Temperature
                 today_date                      # Date
             ]           
-
+            if self.ui.search_data.text().strip():
+                self._original_data.append(row_data)
+                return
             for col, data in enumerate(row_data):
                 self.ui.list_history.setItem(target_row, col, QTableWidgetItem(data))
 
+            self._original_data.append(row_data)
             # self.ui.list_history.resizeColumnsToContents()
+            
             self.ui.list_history.scrollToBottom()
         except Exception as e:
-            if not hasattr(self, 'dialog_notification') or self.dialog_notification is None:
-                self.logger.error("[Main]-[add_row_to_list_history]: Dialog_Notification not initialized")
-            else:
-                self.logger.error(f"[Main]-[add_row_to_list_history]: Error adding row to list_history: {e}")
-
-    def _is_row_complete(self, row_index, total_columns):
-        """Check if a specific row has all required data filled.
-        \nKiểm tra xem một hàng cụ thể có đầy đủ dữ liệu hay không."""
-        for col in range(total_columns):
-            item = self.ui.list_history.item(row_index, col)
-            if item is None or not item.text().strip():
-                return False
-        return True
+            self.logger.error(f"[Main]-[add_row_to_list_history]: Error adding row to list_history: {e}")
 
     def auto_export_all_tables_to_excel(self):
+        """
+        Export both the list_history and list_err tables to two dif Excel files
+        \nExport cả bảng list_history và list_err ra 2 file Excel riêng biệt.
+        """
+        current_date = datetime.now().strftime("%d_%m_%Y")
+
+        file_export = self.ui.list_history
+        default_filename_done = f"History {current_date}.xlsx"
+        list_history_folder = Path(self.stk_mch_folder) / "DB_address"
+        filename_done = list_history_folder / default_filename_done
+        if filename_done:
+            self._export_table_to_excel(file_export, str(filename_done))
+        self.logger.info("Autosave Done")
+
+    def save_after_quit_export_all_tables_to_excel(self):
         """
         Export both the list_history and list_err tables to two dif Excel files
         \nExport cả bảng list_history và list_err ra 2 file Excel riêng biệt.
@@ -2503,6 +2631,7 @@ class StrikeMachine(QMainWindow):
         filename_done = list_history_folder / default_filename_done
         if filename_done:
             self._export_table_to_excel(file_export, str(filename_done))
+        self.logger.info("Autosave Done")
 
     def export_all_tables_to_excel_btn(self):
         """
@@ -2691,7 +2820,6 @@ if __name__ == "__main__":
         sys.exit(1)
 
     window = StrikeMachine()
-    window.show()
 
     def center_window(win):
         screen = QApplication.primaryScreen().availableGeometry()
@@ -2700,11 +2828,12 @@ if __name__ == "__main__":
         win.move(x, y)
 
     center_window(window)
-    
+    window.show()
+
     def cleanup():
         try:
             window.auto_export_all_tables_to_excel()
-            # window._database_auto_check()
+            window.save_after_quit_export_all_tables_to_excel()
             window._close_event_cleanup()
         except:
             pass

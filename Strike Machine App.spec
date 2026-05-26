@@ -5,7 +5,7 @@ a = Analysis(
     ['main_v2.py'],
     pathex=[],
     binaries=[('lib\\snap7.dll', '.')],
-    datas=[('tech_link_theme_cn.qm', '.'), ('style.json', '.')],
+    datas=[('tech_link_theme_cn.qm', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
