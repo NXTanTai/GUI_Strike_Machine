@@ -17,7 +17,7 @@
                 "buttonName": "open_side_menu_btn"
             },
             "menuTransitionAnimation": {
-                "animationDuration": 500,
+                "animationDuration": 250,
                 "animationEasingCurve": "Linear",
                 "whenCollapsing": {
                     "animationDuration": 250,

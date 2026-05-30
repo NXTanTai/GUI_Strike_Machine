@@ -14,772 +14,718 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="441"/>
-        <source>dd/MM/yyyy h:mm:ss AP</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="579"/>
+        <location filename="tech_link_theme.ui" line="582"/>
         <source> Group</source>
         <translation> 团体</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="620"/>
+        <location filename="tech_link_theme.ui" line="623"/>
         <source> Chart</source>
         <translation> 图表</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="658"/>
+        <location filename="tech_link_theme.ui" line="661"/>
         <source> Setting</source>
         <translation> 环境</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="696"/>
+        <location filename="tech_link_theme.ui" line="699"/>
         <source> History</source>
         <translation> 历史</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1155"/>
+        <location filename="tech_link_theme.ui" line="1160"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1207"/>
+        <location filename="tech_link_theme.ui" line="1212"/>
         <source>Running</source>
         <translation>跑步</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1246"/>
+        <location filename="tech_link_theme.ui" line="1251"/>
         <source>°C </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1251"/>
-        <location filename="tech_link_theme.ui" line="3442"/>
-        <location filename="tech_link_theme.ui" line="5135"/>
-        <location filename="tech_link_theme.ui" line="5324"/>
-        <location filename="tech_link_theme.ui" line="5513"/>
-        <location filename="tech_link_theme.ui" line="5702"/>
-        <location filename="tech_link_theme.ui" line="7976"/>
-        <location filename="tech_link_theme.ui" line="8167"/>
-        <location filename="tech_link_theme.ui" line="9089"/>
-        <location filename="tech_link_theme.ui" line="9278"/>
-        <location filename="tech_link_theme.ui" line="9467"/>
-        <location filename="tech_link_theme.ui" line="9656"/>
-        <location filename="tech_link_theme.ui" line="9845"/>
-        <location filename="tech_link_theme.ui" line="10628"/>
-        <location filename="tech_link_theme.ui" line="10820"/>
-        <location filename="tech_link_theme.ui" line="11012"/>
-        <location filename="tech_link_theme.ui" line="11204"/>
-        <location filename="tech_link_theme.ui" line="11535"/>
-        <location filename="tech_link_theme.ui" line="11727"/>
-        <location filename="tech_link_theme.ui" line="11989"/>
-        <location filename="tech_link_theme.ui" line="12181"/>
-        <location filename="tech_link_theme.ui" line="12373"/>
-        <location filename="tech_link_theme.ui" line="12565"/>
-        <location filename="tech_link_theme.ui" line="12757"/>
-        <location filename="tech_link_theme.ui" line="12949"/>
-        <location filename="tech_link_theme.ui" line="13252"/>
-        <location filename="tech_link_theme.ui" line="13444"/>
-        <location filename="tech_link_theme.ui" line="13636"/>
-        <location filename="tech_link_theme.ui" line="13828"/>
-        <location filename="tech_link_theme.ui" line="14020"/>
-        <location filename="tech_link_theme.ui" line="14212"/>
-        <location filename="tech_link_theme.ui" line="14404"/>
-        <location filename="tech_link_theme.ui" line="14624"/>
-        <location filename="tech_link_theme.ui" line="14816"/>
-        <location filename="tech_link_theme.ui" line="15008"/>
-        <location filename="tech_link_theme.ui" line="15200"/>
-        <location filename="tech_link_theme.ui" line="15392"/>
-        <location filename="tech_link_theme.ui" line="15584"/>
-        <location filename="tech_link_theme.ui" line="15776"/>
+        <location filename="tech_link_theme.ui" line="1256"/>
+        <location filename="tech_link_theme.ui" line="2718"/>
+        <location filename="tech_link_theme.ui" line="4826"/>
+        <location filename="tech_link_theme.ui" line="5015"/>
+        <location filename="tech_link_theme.ui" line="5204"/>
+        <location filename="tech_link_theme.ui" line="5395"/>
+        <location filename="tech_link_theme.ui" line="5584"/>
+        <location filename="tech_link_theme.ui" line="6717"/>
+        <location filename="tech_link_theme.ui" line="7215"/>
+        <location filename="tech_link_theme.ui" line="7404"/>
+        <location filename="tech_link_theme.ui" line="7717"/>
+        <location filename="tech_link_theme.ui" line="8276"/>
+        <location filename="tech_link_theme.ui" line="9396"/>
+        <location filename="tech_link_theme.ui" line="10709"/>
+        <location filename="tech_link_theme.ui" line="10901"/>
+        <location filename="tech_link_theme.ui" line="11093"/>
+        <location filename="tech_link_theme.ui" line="11285"/>
+        <location filename="tech_link_theme.ui" line="11616"/>
+        <location filename="tech_link_theme.ui" line="11808"/>
+        <location filename="tech_link_theme.ui" line="12070"/>
+        <location filename="tech_link_theme.ui" line="12262"/>
+        <location filename="tech_link_theme.ui" line="12454"/>
+        <location filename="tech_link_theme.ui" line="12646"/>
+        <location filename="tech_link_theme.ui" line="12838"/>
+        <location filename="tech_link_theme.ui" line="13030"/>
+        <location filename="tech_link_theme.ui" line="13333"/>
+        <location filename="tech_link_theme.ui" line="13525"/>
+        <location filename="tech_link_theme.ui" line="13717"/>
+        <location filename="tech_link_theme.ui" line="13909"/>
+        <location filename="tech_link_theme.ui" line="14101"/>
+        <location filename="tech_link_theme.ui" line="14293"/>
+        <location filename="tech_link_theme.ui" line="14485"/>
+        <location filename="tech_link_theme.ui" line="14705"/>
+        <location filename="tech_link_theme.ui" line="14897"/>
+        <location filename="tech_link_theme.ui" line="15089"/>
+        <location filename="tech_link_theme.ui" line="15281"/>
+        <location filename="tech_link_theme.ui" line="15473"/>
+        <location filename="tech_link_theme.ui" line="15665"/>
+        <location filename="tech_link_theme.ui" line="15857"/>
         <source>°F</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1318"/>
+        <location filename="tech_link_theme.ui" line="1323"/>
         <source> Clear Data</source>
         <translation> 清晰数据</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1349"/>
+        <location filename="tech_link_theme.ui" line="1354"/>
         <source> Import Data</source>
         <translation> 导入数据</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1579"/>
-        <location filename="tech_link_theme.ui" line="4505"/>
-        <location filename="tech_link_theme.ui" line="4823"/>
-        <location filename="tech_link_theme.ui" line="4947"/>
-        <location filename="tech_link_theme.ui" line="6291"/>
-        <location filename="tech_link_theme.ui" line="6978"/>
-        <location filename="tech_link_theme.ui" line="7107"/>
-        <location filename="tech_link_theme.ui" line="7416"/>
-        <location filename="tech_link_theme.ui" line="8297"/>
+        <location filename="tech_link_theme.ui" line="1866"/>
+        <location filename="tech_link_theme.ui" line="3033"/>
+        <location filename="tech_link_theme.ui" line="4636"/>
+        <location filename="tech_link_theme.ui" line="6089"/>
+        <location filename="tech_link_theme.ui" line="6218"/>
+        <location filename="tech_link_theme.ui" line="6527"/>
+        <location filename="tech_link_theme.ui" line="7027"/>
+        <location filename="tech_link_theme.ui" line="7529"/>
+        <location filename="tech_link_theme.ui" line="8680"/>
         <source>Bar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1641"/>
+        <location filename="tech_link_theme.ui" line="3444"/>
         <source>Group C</source>
         <translation>C组</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1699"/>
-        <location filename="tech_link_theme.ui" line="1857"/>
-        <location filename="tech_link_theme.ui" line="2015"/>
+        <location filename="tech_link_theme.ui" line="3338"/>
+        <location filename="tech_link_theme.ui" line="3502"/>
+        <location filename="tech_link_theme.ui" line="3666"/>
         <source>PV</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1731"/>
-        <location filename="tech_link_theme.ui" line="1889"/>
-        <location filename="tech_link_theme.ui" line="2047"/>
+        <location filename="tech_link_theme.ui" line="3370"/>
+        <location filename="tech_link_theme.ui" line="3534"/>
+        <location filename="tech_link_theme.ui" line="3698"/>
         <source>SV</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1796"/>
+        <location filename="tech_link_theme.ui" line="3277"/>
         <source>Group A</source>
         <translation>A组</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1957"/>
+        <location filename="tech_link_theme.ui" line="3608"/>
         <source>Group B</source>
         <translation>B组</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2135"/>
+        <location filename="tech_link_theme.ui" line="8937"/>
         <source> Start</source>
         <translation> 开始</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2210"/>
+        <location filename="tech_link_theme.ui" line="9012"/>
         <source> Stop</source>
         <translation> 停止</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2387"/>
+        <location filename="tech_link_theme.ui" line="1539"/>
         <source> Oil Fill A</source>
         <translation> 油填充 A</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2436"/>
+        <location filename="tech_link_theme.ui" line="10380"/>
         <source> Oil Fill B</source>
         <translation> 油填充 B</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2485"/>
+        <location filename="tech_link_theme.ui" line="9758"/>
         <source> Oil Fill C</source>
         <translation> 油填充 C</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2612"/>
+        <location filename="tech_link_theme.ui" line="9844"/>
         <source> Pressure A</source>
         <translation> 压强 A</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2661"/>
+        <location filename="tech_link_theme.ui" line="9930"/>
         <source> Pressure B</source>
         <translation> 压强 B</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2710"/>
+        <location filename="tech_link_theme.ui" line="10016"/>
         <source> Pressure C</source>
         <translation> 压强 C</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2837"/>
+        <location filename="tech_link_theme.ui" line="10274"/>
         <source> Heating A</source>
         <translation> 加热 A</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2886"/>
+        <location filename="tech_link_theme.ui" line="10102"/>
         <source> Heating B</source>
         <translation> 加热 B</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2935"/>
+        <location filename="tech_link_theme.ui" line="10188"/>
         <source> Heating C</source>
         <translation> 加热 C</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="3257"/>
-        <location filename="tech_link_theme.ui" line="3631"/>
-        <location filename="tech_link_theme.ui" line="3816"/>
-        <location filename="tech_link_theme.ui" line="4001"/>
-        <location filename="tech_link_theme.ui" line="4186"/>
-        <location filename="tech_link_theme.ui" line="5891"/>
-        <location filename="tech_link_theme.ui" line="6123"/>
-        <location filename="tech_link_theme.ui" line="6479"/>
-        <location filename="tech_link_theme.ui" line="6664"/>
-        <location filename="tech_link_theme.ui" line="7295"/>
-        <location filename="tech_link_theme.ui" line="7604"/>
-        <location filename="tech_link_theme.ui" line="7789"/>
-        <location filename="tech_link_theme.ui" line="8485"/>
-        <location filename="tech_link_theme.ui" line="8670"/>
-        <location filename="tech_link_theme.ui" line="8855"/>
+        <location filename="tech_link_theme.ui" line="2163"/>
+        <location filename="tech_link_theme.ui" line="2348"/>
+        <location filename="tech_link_theme.ui" line="2533"/>
+        <location filename="tech_link_theme.ui" line="2907"/>
+        <location filename="tech_link_theme.ui" line="3908"/>
+        <location filename="tech_link_theme.ui" line="4093"/>
+        <location filename="tech_link_theme.ui" line="4278"/>
+        <location filename="tech_link_theme.ui" line="4510"/>
+        <location filename="tech_link_theme.ui" line="5773"/>
+        <location filename="tech_link_theme.ui" line="6406"/>
+        <location filename="tech_link_theme.ui" line="6906"/>
+        <location filename="tech_link_theme.ui" line="7906"/>
+        <location filename="tech_link_theme.ui" line="8091"/>
+        <location filename="tech_link_theme.ui" line="8559"/>
+        <location filename="tech_link_theme.ui" line="8868"/>
         <source>s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="3402"/>
-        <location filename="tech_link_theme.ui" line="5095"/>
-        <location filename="tech_link_theme.ui" line="5284"/>
-        <location filename="tech_link_theme.ui" line="5473"/>
-        <location filename="tech_link_theme.ui" line="5662"/>
-        <location filename="tech_link_theme.ui" line="7936"/>
-        <location filename="tech_link_theme.ui" line="8127"/>
-        <location filename="tech_link_theme.ui" line="9049"/>
-        <location filename="tech_link_theme.ui" line="9238"/>
-        <location filename="tech_link_theme.ui" line="9427"/>
-        <location filename="tech_link_theme.ui" line="9616"/>
-        <location filename="tech_link_theme.ui" line="9805"/>
-        <location filename="tech_link_theme.ui" line="10588"/>
-        <location filename="tech_link_theme.ui" line="10780"/>
-        <location filename="tech_link_theme.ui" line="10972"/>
-        <location filename="tech_link_theme.ui" line="11164"/>
-        <location filename="tech_link_theme.ui" line="11495"/>
-        <location filename="tech_link_theme.ui" line="11687"/>
-        <location filename="tech_link_theme.ui" line="11949"/>
-        <location filename="tech_link_theme.ui" line="12141"/>
-        <location filename="tech_link_theme.ui" line="12333"/>
-        <location filename="tech_link_theme.ui" line="12525"/>
-        <location filename="tech_link_theme.ui" line="12717"/>
-        <location filename="tech_link_theme.ui" line="12909"/>
-        <location filename="tech_link_theme.ui" line="13212"/>
-        <location filename="tech_link_theme.ui" line="13404"/>
-        <location filename="tech_link_theme.ui" line="13596"/>
-        <location filename="tech_link_theme.ui" line="13788"/>
-        <location filename="tech_link_theme.ui" line="13980"/>
-        <location filename="tech_link_theme.ui" line="14172"/>
-        <location filename="tech_link_theme.ui" line="14364"/>
-        <location filename="tech_link_theme.ui" line="14584"/>
-        <location filename="tech_link_theme.ui" line="14776"/>
-        <location filename="tech_link_theme.ui" line="14968"/>
-        <location filename="tech_link_theme.ui" line="15160"/>
-        <location filename="tech_link_theme.ui" line="15352"/>
-        <location filename="tech_link_theme.ui" line="15544"/>
-        <location filename="tech_link_theme.ui" line="15736"/>
+        <location filename="tech_link_theme.ui" line="2678"/>
+        <location filename="tech_link_theme.ui" line="4786"/>
+        <location filename="tech_link_theme.ui" line="4975"/>
+        <location filename="tech_link_theme.ui" line="5164"/>
+        <location filename="tech_link_theme.ui" line="5355"/>
+        <location filename="tech_link_theme.ui" line="5544"/>
+        <location filename="tech_link_theme.ui" line="6677"/>
+        <location filename="tech_link_theme.ui" line="7175"/>
+        <location filename="tech_link_theme.ui" line="7364"/>
+        <location filename="tech_link_theme.ui" line="7677"/>
+        <location filename="tech_link_theme.ui" line="8236"/>
+        <location filename="tech_link_theme.ui" line="9356"/>
+        <location filename="tech_link_theme.ui" line="10669"/>
+        <location filename="tech_link_theme.ui" line="10861"/>
+        <location filename="tech_link_theme.ui" line="11053"/>
+        <location filename="tech_link_theme.ui" line="11245"/>
+        <location filename="tech_link_theme.ui" line="11576"/>
+        <location filename="tech_link_theme.ui" line="11768"/>
+        <location filename="tech_link_theme.ui" line="12030"/>
+        <location filename="tech_link_theme.ui" line="12222"/>
+        <location filename="tech_link_theme.ui" line="12414"/>
+        <location filename="tech_link_theme.ui" line="12606"/>
+        <location filename="tech_link_theme.ui" line="12798"/>
+        <location filename="tech_link_theme.ui" line="12990"/>
+        <location filename="tech_link_theme.ui" line="13293"/>
+        <location filename="tech_link_theme.ui" line="13485"/>
+        <location filename="tech_link_theme.ui" line="13677"/>
+        <location filename="tech_link_theme.ui" line="13869"/>
+        <location filename="tech_link_theme.ui" line="14061"/>
+        <location filename="tech_link_theme.ui" line="14253"/>
+        <location filename="tech_link_theme.ui" line="14445"/>
+        <location filename="tech_link_theme.ui" line="14665"/>
+        <location filename="tech_link_theme.ui" line="14857"/>
+        <location filename="tech_link_theme.ui" line="15049"/>
+        <location filename="tech_link_theme.ui" line="15241"/>
+        <location filename="tech_link_theme.ui" line="15433"/>
+        <location filename="tech_link_theme.ui" line="15625"/>
+        <location filename="tech_link_theme.ui" line="15817"/>
         <source>°C</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="5941"/>
+        <location filename="tech_link_theme.ui" line="8377"/>
         <source>Oil End time:</source>
         <translation>结束加油时:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="6173"/>
+        <location filename="tech_link_theme.ui" line="8330"/>
         <source>Cycle Setting:</source>
         <translation>循环设置:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="8905"/>
+        <location filename="tech_link_theme.ui" line="4328"/>
         <source>Oil Start time:</source>
         <translation>开始加油时:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="9898"/>
+        <location filename="tech_link_theme.ui" line="9073"/>
         <source>End Temperature:</source>
         <translation>终点温度:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="9944"/>
+        <location filename="tech_link_theme.ui" line="9544"/>
         <source>Mid Temperature:</source>
         <translation>中点温度:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="9990"/>
+        <location filename="tech_link_theme.ui" line="9120"/>
         <source>Front Temperature:</source>
         <translation>头部温度:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10036"/>
+        <location filename="tech_link_theme.ui" line="9214"/>
         <source>Temp Setting:</source>
         <translation>温度设置:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10082"/>
+        <location filename="tech_link_theme.ui" line="9591"/>
         <source>Pipe Pressure:</source>
         <translation>管道压力:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10128"/>
+        <location filename="tech_link_theme.ui" line="9497"/>
         <source>ITV Pressure:</source>
         <translation>ITV 压力:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10174"/>
+        <location filename="tech_link_theme.ui" line="9638"/>
         <source>Pressure Setting:</source>
         <translation>压力设定:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10220"/>
+        <location filename="tech_link_theme.ui" line="9167"/>
         <source>Air Bleeding time:</source>
         <translation>排气时间:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10266"/>
+        <location filename="tech_link_theme.ui" line="9450"/>
         <source>Air Holding time:</source>
         <translation>保气时间:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10312"/>
+        <location filename="tech_link_theme.ui" line="9685"/>
         <source>Air Filling time:</source>
         <translation>充气时间:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11238"/>
+        <location filename="tech_link_theme.ui" line="11319"/>
         <source>Temperature A</source>
         <translation>温度 A</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11266"/>
+        <location filename="tech_link_theme.ui" line="11347"/>
         <source>PV:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11294"/>
+        <location filename="tech_link_theme.ui" line="11375"/>
         <source>SV:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11322"/>
+        <location filename="tech_link_theme.ui" line="11403"/>
         <source>H.Alm Value:</source>
         <translation>高报警值:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11350"/>
+        <location filename="tech_link_theme.ui" line="11431"/>
         <source>L.Alm Value:</source>
         <translation>低报警值：</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="12983"/>
+        <location filename="tech_link_theme.ui" line="13064"/>
         <source>Temperature Oven</source>
         <translation>烤箱温度</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="13010"/>
+        <location filename="tech_link_theme.ui" line="13091"/>
         <source>Temperature C</source>
         <translation>温度 C</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="13037"/>
+        <location filename="tech_link_theme.ui" line="13118"/>
         <source>Temperature B</source>
         <translation>温度 B</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="14439"/>
+        <location filename="tech_link_theme.ui" line="14520"/>
         <source>Offset Mid:</source>
         <translation>中点补偿值:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="15811"/>
+        <location filename="tech_link_theme.ui" line="15892"/>
         <source>Offset Front:</source>
         <translation>起始补偿值：</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="15839"/>
+        <location filename="tech_link_theme.ui" line="15920"/>
         <source>Offset End:</source>
         <translation>终点补偿值：</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="15914"/>
+        <location filename="tech_link_theme.ui" line="15995"/>
         <source> Heating T0</source>
         <translation> 加热 T0</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16137"/>
+        <location filename="tech_link_theme.ui" line="16228"/>
         <source>Connection Settings</source>
         <translation>连接设置</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="17010"/>
+        <location filename="tech_link_theme.ui" line="17111"/>
         <source> ~ 2056</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16656"/>
+        <location filename="tech_link_theme.ui" line="16827"/>
         <source> IP:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16740"/>
+        <location filename="tech_link_theme.ui" line="16747"/>
         <source> PLC Read:</source>
         <translation> PLC 读取：</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16778"/>
+        <location filename="tech_link_theme.ui" line="16953"/>
         <source> PLC Write:</source>
         <translation> PLC 记入：</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16698"/>
+        <location filename="tech_link_theme.ui" line="16785"/>
         <source> DB:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16231"/>
-        <location filename="tech_link_theme.ui" line="16462"/>
+        <location filename="tech_link_theme.ui" line="16322"/>
+        <location filename="tech_link_theme.ui" line="16553"/>
         <source>Online</source>
         <translation>在线</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16283"/>
-        <location filename="tech_link_theme.ui" line="16520"/>
+        <location filename="tech_link_theme.ui" line="16374"/>
+        <location filename="tech_link_theme.ui" line="16611"/>
         <source>Offline</source>
         <translation>离线</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16335"/>
-        <location filename="tech_link_theme.ui" line="16572"/>
+        <location filename="tech_link_theme.ui" line="16426"/>
+        <location filename="tech_link_theme.ui" line="16663"/>
         <source>Try Connecting...</source>
         <translation>尝试连接...</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16378"/>
-        <location filename="tech_link_theme.ui" line="16615"/>
+        <location filename="tech_link_theme.ui" line="16469"/>
+        <location filename="tech_link_theme.ui" line="16706"/>
         <source> ms ~ 1000 ms</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16903"/>
         <source>Connect</source>
-        <translation>连接</translation>
+        <translation type="vanished">连接</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16858"/>
+        <location filename="tech_link_theme.ui" line="16911"/>
         <source> Size Data:</source>
         <translation> 尺寸数据：</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16816"/>
+        <location filename="tech_link_theme.ui" line="16869"/>
         <source> DB Path:</source>
         <translation> DB 文件路径:</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="17156"/>
+        <location filename="tech_link_theme.ui" line="444"/>
+        <source>dd/MM/yyyy hh:mm:ss</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme.ui" line="17017"/>
+        <source> Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme.ui" line="17146"/>
+        <source> s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme.ui" line="17181"/>
+        <source> History Cycle:</source>
+        <translation> 历史周期：</translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme.ui" line="17338"/>
         <source>DI</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="17774"/>
+        <location filename="tech_link_theme.ui" line="17916"/>
         <source>T0 Heat:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18024"/>
+        <location filename="tech_link_theme.ui" line="18150"/>
         <source>P1 Heat:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18038"/>
+        <location filename="tech_link_theme.ui" line="18164"/>
         <source>P1 Press:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18170"/>
+        <location filename="tech_link_theme.ui" line="18288"/>
         <source>P1 Oil:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18184"/>
+        <location filename="tech_link_theme.ui" line="18302"/>
         <source>P1 Count:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18198"/>
+        <location filename="tech_link_theme.ui" line="18316"/>
         <source>P2 Heat:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18212"/>
+        <location filename="tech_link_theme.ui" line="18330"/>
         <source>P2 Press:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18226"/>
+        <location filename="tech_link_theme.ui" line="18344"/>
         <source>P2 Oil:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18240"/>
+        <location filename="tech_link_theme.ui" line="18358"/>
         <source>P3 Press:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18372"/>
+        <location filename="tech_link_theme.ui" line="18482"/>
         <source>P3 Oil:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18386"/>
+        <location filename="tech_link_theme.ui" line="18496"/>
         <source>P2 Count:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18400"/>
+        <location filename="tech_link_theme.ui" line="18510"/>
         <source>P3 Heat:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18650"/>
+        <location filename="tech_link_theme.ui" line="18744"/>
         <source>P3 Count:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18945"/>
+        <location filename="tech_link_theme.ui" line="19023"/>
         <source>AI</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19013"/>
+        <location filename="tech_link_theme.ui" line="19091"/>
         <source>T0:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19067"/>
+        <location filename="tech_link_theme.ui" line="19145"/>
         <source>ITV-2:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19081"/>
+        <location filename="tech_link_theme.ui" line="19159"/>
         <source>ITV-1:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19095"/>
+        <location filename="tech_link_theme.ui" line="19173"/>
         <source>P2:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19109"/>
+        <location filename="tech_link_theme.ui" line="19187"/>
         <source>P3:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19123"/>
+        <location filename="tech_link_theme.ui" line="19201"/>
         <source>ITV-3:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19137"/>
+        <location filename="tech_link_theme.ui" line="19215"/>
         <source>T1-3:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19151"/>
+        <location filename="tech_link_theme.ui" line="19229"/>
         <source>T1-2:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19165"/>
+        <location filename="tech_link_theme.ui" line="19243"/>
         <source>T2-1:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19179"/>
+        <location filename="tech_link_theme.ui" line="19257"/>
         <source>T1-1:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19193"/>
+        <location filename="tech_link_theme.ui" line="19271"/>
         <source>T2-2:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19207"/>
+        <location filename="tech_link_theme.ui" line="19285"/>
         <source>T2-3:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19221"/>
+        <location filename="tech_link_theme.ui" line="19299"/>
         <source>T3-1:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19235"/>
+        <location filename="tech_link_theme.ui" line="19313"/>
         <source>T3-2:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19249"/>
+        <location filename="tech_link_theme.ui" line="19327"/>
         <source>T3-3:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19263"/>
+        <location filename="tech_link_theme.ui" line="19341"/>
         <source>P1:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19864"/>
+        <location filename="tech_link_theme.ui" line="19942"/>
         <source>Total Test Time</source>
         <translation>总测试时间</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19970"/>
+        <location filename="tech_link_theme.ui" line="20048"/>
         <source>B: </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20128"/>
+        <location filename="tech_link_theme.ui" line="20206"/>
         <source>A: </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20283"/>
+        <location filename="tech_link_theme.ui" line="20361"/>
         <source>C: </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20441"/>
+        <location filename="tech_link_theme.ui" line="20519"/>
         <source>Connection Page</source>
         <translation>连接页面</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20479"/>
+        <location filename="tech_link_theme.ui" line="20557"/>
         <source>Home Page</source>
         <translation>首页</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20626"/>
+        <location filename="tech_link_theme.ui" line="20751"/>
+        <source>Search [Name]</source>
+        <translation>搜索 [姓名]</translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme.ui" line="20952"/>
+        <location filename="tech_link_theme.ui" line="21067"/>
+        <source>T-Oven.</source>
+        <translation>烤箱温度.</translation>
+    </message>
+    <message>
         <source>Searching</source>
-        <translation>搜索</translation>
+        <translation type="vanished">搜索</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20687"/>
-        <source>1</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20692"/>
-        <source>2</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20697"/>
-        <source>3</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20702"/>
-        <source>4</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20707"/>
-        <source>5</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20712"/>
-        <source>6</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20717"/>
-        <source>7</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20722"/>
-        <source>8</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20727"/>
-        <source>9</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20732"/>
-        <source>10</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20737"/>
-        <source>11</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20742"/>
-        <source>12</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20747"/>
-        <source>13</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20752"/>
-        <source>14</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20757"/>
-        <source>15</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20762"/>
-        <source>16</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20767"/>
-        <source>17</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20772"/>
-        <source>18</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20777"/>
+        <location filename="tech_link_theme.ui" line="20932"/>
+        <location filename="tech_link_theme.ui" line="21047"/>
         <source>No.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20782"/>
+        <location filename="tech_link_theme.ui" line="20937"/>
+        <location filename="tech_link_theme.ui" line="21052"/>
         <source>Name.</source>
         <translation>姓名.</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20787"/>
+        <location filename="tech_link_theme.ui" line="20942"/>
+        <location filename="tech_link_theme.ui" line="21057"/>
+        <source>Group.</source>
+        <translation>组.</translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme.ui" line="20947"/>
+        <location filename="tech_link_theme.ui" line="21062"/>
         <source>Pressure.</source>
         <translation>压力.</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20792"/>
         <source>Temp.</source>
-        <translation>温度.</translation>
+        <translation type="vanished">温度.</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20797"/>
+        <location filename="tech_link_theme.ui" line="20957"/>
+        <location filename="tech_link_theme.ui" line="21072"/>
         <source>Front.</source>
         <translation>起点.</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20802"/>
+        <location filename="tech_link_theme.ui" line="20962"/>
+        <location filename="tech_link_theme.ui" line="21077"/>
         <source>Middle.</source>
         <translation>中点.</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20807"/>
+        <location filename="tech_link_theme.ui" line="20967"/>
+        <location filename="tech_link_theme.ui" line="21082"/>
         <source>End.</source>
         <translation>终点.</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20812"/>
+        <location filename="tech_link_theme.ui" line="20972"/>
+        <location filename="tech_link_theme.ui" line="21087"/>
         <source>Date.</source>
         <translation>日期.</translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20865"/>
+        <location filename="tech_link_theme.ui" line="20837"/>
         <source> Export to Excel</source>
         <translation> 导出到 Excel</translation>
     </message>

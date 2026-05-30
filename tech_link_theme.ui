@@ -14,7 +14,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>892</height>
+    <height>960</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -411,6 +411,9 @@ background-color: rgb(255, 255, 255);
 border: none;
 </string>
          </property>
+         <property name="frame">
+          <bool>true</bool>
+         </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
@@ -438,7 +441,7 @@ border: none;
           </time>
          </property>
          <property name="displayFormat">
-          <string>dd/MM/yyyy h:mm:ss AP</string>
+          <string>dd/MM/yyyy hh:mm:ss</string>
          </property>
          <property name="timeSpec">
           <enum>Qt::LocalTime</enum>
@@ -486,7 +489,7 @@ background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
         <number>0</number>
        </property>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
          <property name="spacing">
           <number>5</number>
          </property>
@@ -535,9 +538,9 @@ QPushButton:checked {
 	color: #0AB1F9;
 }</string>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1">
+           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="8,9">
             <property name="spacing">
-             <number>15</number>
+             <number>10</number>
             </property>
             <property name="leftMargin">
              <number>0</number>
@@ -549,7 +552,7 @@ QPushButton:checked {
              <number>0</number>
             </property>
             <property name="bottomMargin">
-             <number>10</number>
+             <number>0</number>
             </property>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -748,6 +751,7 @@ QPushButton:hover {
 }
 
 QPushButton:pressed{
+	background: white;
 }</string>
               </property>
               <property name="text">
@@ -772,7 +776,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>1</number>
+              <number>3</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
@@ -3384,10 +3388,6 @@ QPushButton:checked {
                                     <property name="text">
                                      <string/>
                                     </property>
-                                    <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                                      <normaloff>:/Icons/eraser_hover.png</normaloff>:/Icons/eraser_hover.png</iconset>
-                                    </property>
                                     <property name="iconSize">
                                      <size>
                                       <width>35</width>
@@ -3552,10 +3552,6 @@ QPushButton:checked {
                                     <property name="text">
                                      <string/>
                                     </property>
-                                    <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                                      <normaloff>:/Icons/eraser_hover.png</normaloff>:/Icons/eraser_hover.png</iconset>
-                                    </property>
                                     <property name="iconSize">
                                      <size>
                                       <width>35</width>
@@ -3719,10 +3715,6 @@ QPushButton:checked {
                                     </property>
                                     <property name="text">
                                      <string/>
-                                    </property>
-                                    <property name="icon">
-                                     <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                                      <normaloff>:/Icons/eraser_hover.png</normaloff>:/Icons/eraser_hover.png</iconset>
                                     </property>
                                     <property name="iconSize">
                                      <size>
@@ -16051,7 +16043,7 @@ QPushButton:checked {
                  <item>
                   <widget class="QStackedWidget" name="stackedWidget_3">
                    <property name="currentIndex">
-                    <number>1</number>
+                    <number>0</number>
                    </property>
                    <widget class="QWidget" name="connection_page">
                     <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -16209,7 +16201,17 @@ QSpinBox:focus {
     border: 2px solid #0B7EC8;
     background-color: white;
 }
-
+QDoubleSpinBox {
+	color: black;
+    border: 1px solid #D1D5DB;
+    border-radius: 6px;
+    padding: 8px 12px;
+    background-color: #F9FAFB;
+}
+QDoubleSpinBox:focus {
+    border: 2px solid #0B7EC8;
+    background-color: white;
+}
 QLineEdit {
 	color: black;
     border: 1px solid #D1D5DB;
@@ -16225,7 +16227,7 @@ QLineEdit:focus {
                              <property name="title">
                               <string>Connection Settings</string>
                              </property>
-                             <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1,1,1,1,1" columnstretch="0,0,0,0">
+                             <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1,1,1,1,1,1" columnstretch="0,0,0,0">
                               <property name="leftMargin">
                                <number>10</number>
                               </property>
@@ -16717,8 +16719,8 @@ padding-right: 3px;</string>
                                 </layout>
                                </widget>
                               </item>
-                              <item row="3" column="0">
-                               <widget class="QPushButton" name="ip_plc_address">
+                              <item row="0" column="0">
+                               <widget class="QPushButton" name="read_plc_label">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -16742,11 +16744,7 @@ padding-right: 3px;</string>
 }</string>
                                 </property>
                                 <property name="text">
-                                 <string> IP:</string>
-                                </property>
-                                <property name="icon">
-                                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                                  <normaloff>:/Icons/ip-address.png</normaloff>:/Icons/ip-address.png</iconset>
+                                 <string> PLC Read:</string>
                                 </property>
                                 <property name="iconSize">
                                  <size>
@@ -16801,8 +16799,8 @@ padding-right: 3px;</string>
                                 </property>
                                </widget>
                               </item>
-                              <item row="0" column="0">
-                               <widget class="QPushButton" name="read_plc_label">
+                              <item row="3" column="0">
+                               <widget class="QPushButton" name="ip_plc_address">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -16826,45 +16824,11 @@ padding-right: 3px;</string>
 }</string>
                                 </property>
                                 <property name="text">
-                                 <string> PLC Read:</string>
+                                 <string> IP:</string>
                                 </property>
-                                <property name="iconSize">
-                                 <size>
-                                  <width>55</width>
-                                  <height>55</height>
-                                 </size>
-                                </property>
-                                <property name="checkable">
-                                 <bool>true</bool>
-                                </property>
-                               </widget>
-                              </item>
-                              <item row="1" column="0">
-                               <widget class="QPushButton" name="write_plc_label">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
-                                </property>
-                                <property name="font">
-                                 <font>
-                                  <family>MS Shell Dlg 2</family>
-                                  <pointsize>19</pointsize>
-                                  <weight>75</weight>
-                                  <bold>true</bold>
-                                 </font>
-                                </property>
-                                <property name="styleSheet">
-                                 <string notr="true">QPushButton {
-    color: black;
-    background-color: transparent;
-    border: none;
-    text-align: left;
-}</string>
-                                </property>
-                                <property name="text">
-                                 <string> PLC Write:</string>
+                                <property name="icon">
+                                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <normaloff>:/Icons/ip-address.png</normaloff>:/Icons/ip-address.png</iconset>
                                 </property>
                                 <property name="iconSize">
                                  <size>
@@ -16961,6 +16925,67 @@ padding-right: 3px;</string>
                                 </property>
                                </widget>
                               </item>
+                              <item row="1" column="0">
+                               <widget class="QPushButton" name="write_plc_label">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <family>MS Shell Dlg 2</family>
+                                  <pointsize>19</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    color: black;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string> PLC Write:</string>
+                                </property>
+                                <property name="iconSize">
+                                 <size>
+                                  <width>55</width>
+                                  <height>55</height>
+                                 </size>
+                                </property>
+                                <property name="checkable">
+                                 <bool>true</bool>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="3" column="2" colspan="2">
+                               <widget class="QLineEdit" name="plc_ip_address_edit">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>19</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="placeholderText">
+                                 <string notr="true">Enter IP Address: 172.16.100.***</string>
+                                </property>
+                               </widget>
+                              </item>
                               <item row="0" column="3" rowspan="2">
                                <widget class="QPushButton" name="rb_connect">
                                 <property name="sizePolicy">
@@ -17003,52 +17028,6 @@ QPushButton:hover {
                                 </property>
                                </widget>
                               </item>
-                              <item row="2" column="2" colspan="2">
-                               <widget class="QLineEdit" name="db_file_path_edit">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
-                                </property>
-                                <property name="font">
-                                 <font>
-                                  <pointsize>19</pointsize>
-                                  <weight>75</weight>
-                                  <bold>true</bold>
-                                 </font>
-                                </property>
-                                <property name="text">
-                                 <string/>
-                                </property>
-                                <property name="placeholderText">
-                                 <string notr="true">Enter Path Folder</string>
-                                </property>
-                               </widget>
-                              </item>
-                              <item row="3" column="2" colspan="2">
-                               <widget class="QLineEdit" name="plc_ip_address_edit">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
-                                </property>
-                                <property name="font">
-                                 <font>
-                                  <pointsize>19</pointsize>
-                                  <weight>75</weight>
-                                  <bold>true</bold>
-                                 </font>
-                                </property>
-                                <property name="text">
-                                 <string/>
-                                </property>
-                                <property name="placeholderText">
-                                 <string notr="true">Enter IP Address: 172.16.100.***</string>
-                                </property>
-                               </widget>
-                              </item>
                               <item row="4" column="2" colspan="2">
                                <widget class="QSpinBox" name="db_number_input">
                                 <property name="sizePolicy">
@@ -17078,6 +17057,29 @@ QPushButton:hover {
                                 </property>
                                 <property name="value">
                                  <number>1</number>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="2" column="2" colspan="2">
+                               <widget class="QLineEdit" name="db_file_path_edit">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>19</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="placeholderText">
+                                 <string notr="true">Enter Path Folder</string>
                                 </property>
                                </widget>
                               </item>
@@ -17113,6 +17115,83 @@ QPushButton:hover {
                                 </property>
                                 <property name="value">
                                  <number>0</number>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="6" column="2" colspan="2">
+                               <widget class="QDoubleSpinBox" name="table_write_cycle">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>0</width>
+                                  <height>0</height>
+                                 </size>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>19</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="buttonSymbols">
+                                 <enum>QAbstractSpinBox::NoButtons</enum>
+                                </property>
+                                <property name="suffix">
+                                 <string> s</string>
+                                </property>
+                                <property name="decimals">
+                                 <number>1</number>
+                                </property>
+                                <property name="value">
+                                 <double>1.000000000000000</double>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="6" column="0">
+                               <widget class="QPushButton" name="write_table_label">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <family>MS Shell Dlg 2</family>
+                                  <pointsize>19</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    color: black;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string> History Cycle:</string>
+                                </property>
+                                <property name="icon">
+                                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <normaloff>:/Icons/to-do-list.png</normaloff>:/Icons/to-do-list.png</iconset>
+                                </property>
+                                <property name="iconSize">
+                                 <size>
+                                  <width>55</width>
+                                  <height>55</height>
+                                 </size>
+                                </property>
+                                <property name="checkable">
+                                 <bool>true</bool>
                                 </property>
                                </widget>
                               </item>
@@ -17211,7 +17290,11 @@ QFrame:hover {
                               </font>
                              </property>
                              <property name="styleSheet">
-                              <string notr="true">QGroupBox {
+                              <string notr="true">QWidget{
+	border: 2px solid #E5E5E5; 
+	border-radius: 20px;
+}
+QGroupBox {
     border: 2px solid #E5E5E5;
     border-radius: 6px;
     margin-top: 10px;
@@ -17315,10 +17398,6 @@ QLineEdit:focus {
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -17364,10 +17443,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17433,10 +17508,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -17482,10 +17553,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17551,10 +17618,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -17600,10 +17663,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17669,10 +17728,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -17718,10 +17773,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17787,10 +17838,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -17836,10 +17883,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -17919,10 +17962,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -17968,10 +18007,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18037,10 +18072,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -18086,10 +18117,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18183,10 +18210,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -18232,10 +18255,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18385,10 +18404,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -18434,10 +18449,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18545,10 +18556,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -18594,10 +18601,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18663,10 +18666,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -18712,10 +18711,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18795,10 +18790,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -18844,10 +18835,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -18913,10 +18900,6 @@ border-radius: 20px;</string>
                                       <bold>true</bold>
                                      </font>
                                     </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
-                                    </property>
                                     <property name="text">
                                      <string/>
                                     </property>
@@ -18962,10 +18945,6 @@ border-radius: 20px;</string>
                                       <weight>75</weight>
                                       <bold>true</bold>
                                      </font>
-                                    </property>
-                                    <property name="styleSheet">
-                                     <string notr="true">border: 2px solid #E5E5E5; 
-border-radius: 20px;</string>
                                     </property>
                                     <property name="text">
                                      <string/>
@@ -20621,7 +20600,7 @@ QPushButton:pressed {
                </property>
                <item>
                 <widget class="QWidget" name="dashboard_stacked_widget" native="true">
-                 <layout class="QVBoxLayout" name="verticalLayout_59" stretch="9,1">
+                 <layout class="QVBoxLayout" name="verticalLayout_59" stretch="9">
                   <property name="leftMargin">
                    <number>0</number>
                   </property>
@@ -20642,7 +20621,7 @@ QPushButton:pressed {
 	border-radius: 20px;
 }</string>
                     </property>
-                    <layout class="QVBoxLayout" name="verticalLayout_60">
+                    <layout class="QVBoxLayout" name="verticalLayout_60" stretch="0,1">
                      <property name="spacing">
                       <number>2</number>
                      </property>
@@ -20677,7 +20656,7 @@ QPushButton:pressed {
                          <number>0</number>
                         </property>
                         <item>
-                         <widget class="QPushButton" name="pushButton">
+                         <widget class="QPushButton" name="search_icon">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                             <horstretch>0</horstretch>
@@ -20712,7 +20691,7 @@ QPushButton:pressed {
                           </property>
                           <property name="minimumSize">
                            <size>
-                            <width>35</width>
+                            <width>50</width>
                             <height>0</height>
                            </size>
                           </property>
@@ -20751,6 +20730,12 @@ QPushButton:pressed{
                         </item>
                         <item>
                          <widget class="QLineEdit" name="search_data">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
                           <property name="font">
                            <font>
                             <pointsize>14</pointsize>
@@ -20771,6 +20756,341 @@ QPushButton:pressed{
                           <property name="placeholderText">
                            <string>Search [Name]</string>
                           </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QWidget" name="multi_search_data" native="true">
+                          <property name="sizePolicy">
+                           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                           </sizepolicy>
+                          </property>
+                          <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,1,7,1,1,7">
+                           <property name="spacing">
+                            <number>5</number>
+                           </property>
+                           <property name="leftMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="topMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="rightMargin">
+                            <number>0</number>
+                           </property>
+                           <property name="bottomMargin">
+                            <number>0</number>
+                           </property>
+                           <item>
+                            <widget class="Line" name="line_31">
+                             <property name="styleSheet">
+                              <string notr="true">border:3px solid black;</string>
+                             </property>
+                             <property name="orientation">
+                              <enum>Qt::Horizontal</enum>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLabel" name="label">
+                             <property name="font">
+                              <font>
+                               <pointsize>16</pointsize>
+                               <weight>75</weight>
+                               <bold>true</bold>
+                              </font>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">QLabel {
+    background-color: transparent; 
+	border: none; 
+	color: #1e2937;
+	padding: 6px 4px;
+    selection-background-color: #3b82f6;
+    selection-color: #ffffff;
+}</string>
+                             </property>
+                             <property name="text">
+                              <string>Start:</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QDateTimeEdit" name="search_data_end_edit">
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>16</pointsize>
+                               <weight>75</weight>
+                               <bold>true</bold>
+                              </font>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">QDateTimeEdit{
+	border: 2px solid rgb(191, 191, 191);
+	border-radius: 5px;
+}
+QCalendarWidget {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+}
+
+QCalendarWidget #qt_calendar_navigationbar {
+    background-color: #eff6ff;
+    padding: 6px 8px;
+    border-bottom: 1px solid #bfdbfe;
+    border-radius: 8px 8px 0 0;
+}
+QCalendarWidget QToolButton {
+    color: #1e40af;
+    background-color: #dbeafe;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    font-size: 22px;
+	font-weight: 700;
+    padding: 6px 16px;
+}
+QCalendarWidget QToolButton:hover {
+    background-color: #bfdbfe;
+}
+QCalendarWidget QToolButton:pressed {
+    background-color: #1e40af;
+    color: #ffffff;
+}
+QCalendarWidget QToolButton::menu-indicator { image: none; }
+
+QCalendarWidget QSpinBox {
+    color: #1e3a8a;
+    background-color: #dbeafe;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    font-size: 18px;
+	font-weight: 700;
+    padding: 2px 4px;
+    selection-background-color: #1e40af;
+}
+
+QCalendarWidget QMenu {
+    background-color: #eff6ff;
+    color: #1e3a8a;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 4px;
+}
+QCalendarWidget QMenu::item:selected {
+    background-color: #1e40af;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+QCalendarWidget QAbstractItemView {
+    background-color: #eff6ff;
+    color: #1e3a8a;
+    selection-background-color: #1e3a8a;
+    selection-color: #ffffff;
+	font: 12px;
+	font-weight: 700;
+    outline: none;
+}
+
+QCalendarWidget::section {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    font-size: 22px;
+	font-weight: 700;
+    padding: 6px 12px;
+    border: none;
+}
+QCalendarWidget QTableView {
+    font-size: 22px;
+	font-weight: 700;
+    padding: 2px 4px;
+}
+QCalendarWidget QTableView::item {
+    min-width: 52px;
+    min-height: 60px;
+}
+QCalendarWidget QTableView QHeaderView::section {
+    font-size: 18px;
+    padding: 10px 0;
+    min-height: 60px;
+}
+</string>
+                             </property>
+                             <property name="alignment">
+                              <set>Qt::AlignCenter</set>
+                             </property>
+                             <property name="buttonSymbols">
+                              <enum>QAbstractSpinBox::NoButtons</enum>
+                             </property>
+                             <property name="currentSection">
+                              <enum>QDateTimeEdit::HourSection</enum>
+                             </property>
+                             <property name="displayFormat">
+                              <string>HH:mm - dd/MM/yyyy</string>
+                             </property>
+                             <property name="calendarPopup">
+                              <bool>true</bool>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="Line" name="line_30">
+                             <property name="styleSheet">
+                              <string notr="true">border:3px solid black;</string>
+                             </property>
+                             <property name="orientation">
+                              <enum>Qt::Horizontal</enum>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QLabel" name="label_3">
+                             <property name="font">
+                              <font>
+                               <pointsize>16</pointsize>
+                               <weight>75</weight>
+                               <bold>true</bold>
+                              </font>
+                             </property>
+                             <property name="text">
+                              <string>End:</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QDateTimeEdit" name="search_data_start_edit">
+                             <property name="sizePolicy">
+                              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                               <horstretch>0</horstretch>
+                               <verstretch>0</verstretch>
+                              </sizepolicy>
+                             </property>
+                             <property name="font">
+                              <font>
+                               <pointsize>16</pointsize>
+                               <weight>75</weight>
+                               <bold>true</bold>
+                              </font>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true">QDateTimeEdit{
+	border: 2px solid rgb(191, 191, 191);
+	border-radius: 5px;
+}
+QCalendarWidget {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+}
+
+QCalendarWidget #qt_calendar_navigationbar {
+    background-color: #eff6ff;
+    padding: 6px 8px;
+    border-bottom: 1px solid #bfdbfe;
+    border-radius: 8px 8px 0 0;
+}
+QCalendarWidget QToolButton {
+    color: #1e40af;
+    background-color: #dbeafe;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    font-size: 22px;
+	font-weight: 700;
+    padding: 6px 16px;
+}
+QCalendarWidget QToolButton:hover {
+    background-color: #bfdbfe;
+}
+QCalendarWidget QToolButton:pressed {
+    background-color: #1e40af;
+    color: #ffffff;
+}
+QCalendarWidget QToolButton::menu-indicator { image: none; }
+
+QCalendarWidget QSpinBox {
+    color: #1e3a8a;
+    background-color: #dbeafe;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    font-size: 18px;
+	font-weight: 700;
+    padding: 2px 4px;
+    selection-background-color: #1e40af;
+}
+
+QCalendarWidget QMenu {
+    background-color: #eff6ff;
+    color: #1e3a8a;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 4px;
+}
+QCalendarWidget QMenu::item:selected {
+    background-color: #1e40af;
+    color: #ffffff;
+    border-radius: 4px;
+}
+
+QCalendarWidget QAbstractItemView {
+    background-color: #eff6ff;
+    color: #1e3a8a;
+    selection-background-color: #1e3a8a;
+    selection-color: #ffffff;
+	font: 12px;
+	font-weight: 700;
+    outline: none;
+}
+
+QCalendarWidget::section {
+    background-color: #eff6ff;
+    color: #3b82f6;
+    font-size: 22px;
+	font-weight: 700;
+    padding: 6px 12px;
+    border: none;
+}
+QCalendarWidget QTableView {
+    font-size: 22px;
+	font-weight: 700;
+    padding: 2px 4px;
+}
+QCalendarWidget QTableView::item {
+    min-width: 52px;
+    min-height: 60px;
+}
+QCalendarWidget QTableView QHeaderView::section {
+    font-size: 18px;
+    padding: 10px 0;
+    min-height: 60px;
+}
+</string>
+                             </property>
+                             <property name="alignment">
+                              <set>Qt::AlignCenter</set>
+                             </property>
+                             <property name="buttonSymbols">
+                              <enum>QAbstractSpinBox::NoButtons</enum>
+                             </property>
+                             <property name="currentSection">
+                              <enum>QDateTimeEdit::HourSection</enum>
+                             </property>
+                             <property name="displayFormat">
+                              <string>HH:mm - dd/MM/yyyy</string>
+                             </property>
+                             <property name="calendarPopup">
+                              <bool>true</bool>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
                          </widget>
                         </item>
                         <item>
@@ -20796,7 +21116,7 @@ QPushButton:pressed{
                           </property>
                           <property name="minimumSize">
                            <size>
-                            <width>60</width>
+                            <width>45</width>
                             <height>0</height>
                            </size>
                           </property>
@@ -20814,6 +21134,62 @@ QPushButton:pressed{
                            </size>
                           </property>
                          </widget>
+                        </item>
+                        <item>
+                         <layout class="QHBoxLayout" name="list_query_btn">
+                          <property name="bottomMargin">
+                           <number>0</number>
+                          </property>
+                          <item>
+                           <widget class="QPushButton" name="export_all_tables_to_excel_btn">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>16</pointsize>
+                              <weight>75</weight>
+                              <bold>true</bold>
+                             </font>
+                            </property>
+                            <property name="styleSheet">
+                             <string notr="true">QPushButton {
+    background-color: #0B7EC8;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 8px;
+}
+QPushButton:hover {
+    background-color: #0968A3;
+}
+QPushButton:pressed {
+    background-color: #085A91;
+}
+QPushButton:disabled {
+    background-color: #94A3B8;
+    color: #CBD5E1;
+}</string>
+                            </property>
+                            <property name="text">
+                             <string> Export to Excel</string>
+                            </property>
+                            <property name="icon">
+                             <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                              <normaloff>:/Icons/xlsx-file-format.png</normaloff>:/Icons/xlsx-file-format.png</iconset>
+                            </property>
+                            <property name="iconSize">
+                             <size>
+                              <width>35</width>
+                              <height>35</height>
+                             </size>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
                         </item>
                        </layout>
                       </widget>
@@ -20857,7 +21233,7 @@ QTableWidget::item:selected { background-color: #dbeafe; color: #1e40af; }
 QTableWidget::item:hover { background-color: rgb(222, 225, 226); }
 QHeaderView::section {
     background-color: #f8fafc; color: #1e40af; font-family: &quot;Segoe UI&quot;;
-    font-size: 20px; font-weight: 700; letter-spacing: 1.5px;
+    font-size: 16px; font-weight: 700; letter-spacing: 1.5px;
     padding: 10px 14px; border: none; border-bottom: 2px solid #3b82f6;
     border-right: 1px solid #e2e8f0;
 }
@@ -20880,6 +21256,9 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
                            <property name="editTriggers">
                             <set>QAbstractItemView::NoEditTriggers</set>
                            </property>
+                           <property name="dragEnabled">
+                            <bool>false</bool>
+                           </property>
                            <attribute name="horizontalHeaderStretchLastSection">
                             <bool>true</bool>
                            </attribute>
@@ -20901,12 +21280,17 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
                            </column>
                            <column>
                             <property name="text">
+                             <string>Group.</string>
+                            </property>
+                           </column>
+                           <column>
+                            <property name="text">
                              <string>Pressure.</string>
                             </property>
                            </column>
                            <column>
                             <property name="text">
-                             <string>Temp.</string>
+                             <string>T-Oven.</string>
                             </property>
                            </column>
                            <column>
@@ -20967,7 +21351,7 @@ QTableWidget::item:selected { background-color: #dbeafe; color: #1e40af; }
 QTableWidget::item:hover { background-color: rgb(222, 225, 226); }
 QHeaderView::section {
     background-color: #f8fafc; color: #1e40af; font-family: &quot;Segoe UI&quot;;
-    font-size: 20px; font-weight: 700; letter-spacing: 1.5px;
+    font-size: 16px; font-weight: 700; letter-spacing: 1.5px;
     padding: 10px 14px; border: none; border-bottom: 2px solid #3b82f6;
     border-right: 1px solid #e2e8f0;
 }
@@ -21011,12 +21395,17 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
                            </column>
                            <column>
                             <property name="text">
+                             <string>Group.</string>
+                            </property>
+                           </column>
+                           <column>
+                            <property name="text">
                              <string>Pressure.</string>
                             </property>
                            </column>
                            <column>
                             <property name="text">
-                             <string>Temp.</string>
+                             <string>T-Oven.</string>
                             </property>
                            </column>
                            <column>
@@ -21047,62 +21436,6 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
                      </item>
                     </layout>
                    </widget>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="list_query_btn">
-                    <property name="bottomMargin">
-                     <number>5</number>
-                    </property>
-                    <item>
-                     <widget class="QPushButton" name="export_all_tables_to_excel_btn">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="font">
-                       <font>
-                        <pointsize>25</pointsize>
-                        <weight>75</weight>
-                        <bold>true</bold>
-                       </font>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">QPushButton {
-    background-color: #0B7EC8;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-}
-QPushButton:hover {
-    background-color: #0968A3;
-}
-QPushButton:pressed {
-    background-color: #085A91;
-}
-QPushButton:disabled {
-    background-color: #94A3B8;
-    color: #CBD5E1;
-}</string>
-                      </property>
-                      <property name="text">
-                       <string> Export to Excel</string>
-                      </property>
-                      <property name="icon">
-                       <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                        <normaloff>:/Icons/xlsx-file-format.png</normaloff>:/Icons/xlsx-file-format.png</iconset>
-                      </property>
-                      <property name="iconSize">
-                       <size>
-                        <width>55</width>
-                        <height>55</height>
-                       </size>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
                   </item>
                  </layout>
                 </widget>
@@ -21140,7 +21473,7 @@ QPushButton:disabled {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="language_btn_group"/>
   <buttongroup name="left_side_btn_group"/>
+  <buttongroup name="language_btn_group"/>
  </buttongroups>
 </ui>

@@ -1,35 +1,44 @@
 # pyside6-uic tech_link_theme.ui -o tech_link_theme.py
 # pyside6-rcc Icon.qrc -o Icon_rc.py
 # pyside6-rcc icons.qrc -o icons_rc.py
+# pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_en.ts
+# pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_cn.ts
 
 # pyinstaller --onefile --name="Packing Demo" --icon=icons\Download_Icons\robotic-arm.ico --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" main.py
-# pyinstaller --onefile --name="Testing App" --add-binary "lib\snap7.dll;." main.py
+# pyinstaller --onefile --name="Testing App" --add-binary "lib\snap7.dll;." main_v2.py
+# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "tech_link_theme_cn.qm;." main_v2.py
 
 import sys
 import os
 import time 
 import pandas as pd
+import io
+import msoffcrypto
 import logging
 import logging.handlers
 import atexit
+import sqlite3
+from openpyxl import Workbook
+from openpyxl.styles import Font, Border, Side, PatternFill
 from PySide6.QtCore import (Qt, QTimer, QObject,
                             QSettings, QDateTime, 
                             QEvent, QSharedMemory,
-                            QSystemSemaphore, QThread, Slot)
+                            QSystemSemaphore, QThread, QSortFilterProxyModel, 
+                            Slot, QRect, QPropertyAnimation,
+                            QEasingCurve, QTranslator, QLocale)
 from PySide6.QtGui import (QFont, QMovie)
 from PySide6.QtWidgets import (QVBoxLayout, QHeaderView, QAbstractSpinBox, 
                                QLabel,QMainWindow, QApplication, QLineEdit,
                                 QFileDialog, QDialog, QTableWidget, QTableWidgetItem
 )
-
 from typing import List, Optional, Tuple, Dict, Any
 from pathlib import Path
 from datetime import datetime 
 from openpyxl.styles import Font
 from tech_link_theme import Ui_MainWindow
 from Custom_Widgets import * #type: ignore
-# from Custom_Chart_Widgets import CustomChartWidget
-from matplot_chart_widget import CustomChartWidget
+from Custom_Chart_Widgets import CustomChartWidget
+# from matplot_chart_widget import CustomChartWidget
 from message_box import LightThemeMessageBox as ltmessage
 from password_dialog import *
 from marquee_label import MarqueeLabel
@@ -42,6 +51,10 @@ from qtimer_thread import Worker
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
 os.environ["QT_FONT_DPI"] = "96"
+
+BASE_DIR = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent
+
+settings_path = str(BASE_DIR / "settings.ini")
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -69,56 +82,73 @@ class StrikeMachine(QMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.settings = QSettings("TechLink", "STKMApp")
+        self.app_settings = QSettings(
+            settings_path,
+            QSettings.Format.IniFormat
+        )
+        # self.logger.info("INIT SETTINGS:", self.app_settings.format())
         self._find_stk_mch_folder()
         self._init_logger()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         loadJsonStyle(self, self.ui) #type: ignore
         self._init_app_data()
-        self._init_db_layout_and_size()
         self._init_timer()
         self._init_group_object()
         self._init_list_unit()
         self._create_charts()
-        self._simulate_data()
-        self._setup_table()
+        self._init_table_list_history()
+        # self._setup_table()
         self._paint_pv_obj("#E53935")
         self._paint_sv_obj("#43A047")
         self._setup_btn_signals()
-        # self._setup_plc_threads()
-        self.current_unit = 0
+        self._init_db_layout_and_size()
+        self._setup_plc_threads(False)
+        self._translator = QTranslator()
         self.ui.home_page_btn.click()
+        self.ui.clear_history_search.hide()
+
+    def showEvent(self, event):# type: ignore
+        super().showEvent(event)
 
     def _find_stk_mch_folder(self):
-        default_path = str(self.settings.value("stk_mch_folder", "C:\\", type=str))
-        stk_mch_folder = Path(default_path) / "SM_PRD"
+        # print("CURRENT SETTINGS:", self.app_settings.format())
+        stk_mch_folder = Path(self.app_settings.value("stk_mch_folder", "C:\\SM_PRD", type=str))
+        print("Loaded:", stk_mch_folder)
 
+        # Nếu folder chưa tồn tại
         if not stk_mch_folder.is_dir():
-            response = ltmessage.question(self, "Warning", "Data Folder not found! Create a new one?")
 
-            if response == ltmessage.Yes:
-                # Cho người dùng chọn nơi tạo thư mục SM_PRD
-                parent_folder = QFileDialog.getExistingDirectory(
-                    self,
-                    "Select a Path for SM_PRD folder",
-                    str(Path(default_path)),
-                    QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks #type: ignore
-                )
-                if parent_folder:
-                    stk_mch_folder = Path(parent_folder) / "SM_PRD"
-                    stk_mch_folder.mkdir(parents=True, exist_ok=True)
-                    # Lưu đường dẫn vào QSettings
-                    self.settings.setValue("stk_mch_folder", str(stk_mch_folder.parent))
-                else:
-                    return None
-            else:
+            response = ltmessage.question(
+                self,
+                "Warning",
+                "Data Folder not found! Create a new one?"
+            )
+
+            if response != ltmessage.Yes:
                 return None
-    
-        if not stk_mch_folder.exists():
-            stk_mch_folder.mkdir(parents=True, exist_ok=True)
-    
-        # Lưu đường dẫn vào thuộc tính của lớp
+
+            parent_folder = QFileDialog.getExistingDirectory(
+                self,
+                "Select a Path for SM_PRD folder",
+                str(stk_mch_folder.parent),
+                QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks # type: ignore
+            )
+
+            if not parent_folder:
+                return None
+
+            stk_mch_folder = Path(parent_folder) / "SM_PRD"
+
+            stk_mch_folder.mkdir(
+                parents=True,
+                exist_ok=True
+            )
+
+        # ALWAYS SAVE
+        self.app_settings.setValue("stk_mch_folder", str(stk_mch_folder))
+        self.app_settings.sync()
+
         self.stk_mch_folder = stk_mch_folder
 
     def _init_db_layout_and_size(self):
@@ -136,12 +166,14 @@ class StrikeMachine(QMainWindow):
                 return
             path = Path(file_str)
 
-        df = pd.read_excel(path, sheet_name='Sheet1', header=None)
+        df = self._read_protected_excel(path, password='19082002', sheet_name='Sheet1')
+        if df is None:
+            return
 
         db_layout: List[Tuple[str, str, int, Any]] = []
         max_byte = 0
         
-        for i in range(4, len(df)):
+        for i in range(5, len(df)):
             row = df.iloc[i]
             
             # Cột B: Name
@@ -158,25 +190,27 @@ class StrikeMachine(QMainWindow):
             # Cột D: Address
             try:
                 addr_str = str(row[3]).strip()
-                byte_addr = int(float(addr_str.split('.')[0])) if '.' in addr_str else int(float(addr_str))
+
+                if '.' in addr_str:
+                    parts = addr_str.split('.')
+                    byte_addr = int(float(parts[0]))
+                    bit_from_addr = int(parts[1])  # lấy bit từ cột D luôn
+                else:
+                    byte_addr = int(float(addr_str))
+                    bit_from_addr = 0
+
             except:
                 byte_addr = 0
-            
-            # Cập nhật max byte
+                bit_from_addr = 0
+
             if byte_addr > max_byte:
                 max_byte = byte_addr
-            
+
             # Xử lý Bit cho BOOL
             bit: Any = None
             if data_type == "BOOL":
-                addr_str = str(row[4]).strip()
-                if '.' in addr_str:
-                    try:
-                        bit = int(addr_str.split('.')[1])  # lấy phần sau dấu .
-                    except:
-                        bit = 0
-                else:
-                    bit = 0 
+                bit = bit_from_addr  # ← lấy từ addr_str, không đọc row[4] nữa
+
             db_layout.append((name, data_type, byte_addr, bit))
         
         last_item = db_layout[-1] if db_layout else None
@@ -194,8 +228,24 @@ class StrikeMachine(QMainWindow):
             "DB_LAYOUT": db_layout,
             "DB_TOTAL_BYTES": db_total_bytes
         }
+        self.logger.info(f"{self.db_dict}")
         self._gui_update_connection_group(stk_mch_file)
         # print(f"Generated DB Layout: \n{self.db_dict}")
+
+    def _read_protected_excel(self, path, password: str, sheet_name='Sheet1'):
+        """Đọc file Excel có password bảo vệ."""
+        try:
+            with open(path, 'rb') as f:
+                office_file = msoffcrypto.OfficeFile(f)
+                office_file.load_key(password=password)
+                decrypted = io.BytesIO()
+                office_file.decrypt(decrypted)
+
+            decrypted.seek(0)
+            return pd.read_excel(decrypted, sheet_name=sheet_name, header=None)
+
+        except Exception as e:
+            return None
 
     def _gui_update_connection_group(self, path_get):
         self.ui.plc_ip_address_edit.setText(self.db_dict["ip_plc"]) #type: ignore
@@ -265,12 +315,12 @@ class StrikeMachine(QMainWindow):
         lbl = QLabel(self)
         lbl.setStyleSheet("background: transparent;")
         gif_path = resource_path('gifs/Loading.gif')
-        print(f"[ProductionApp]-[_show_loading_dialog]: Trying to load gif from: {gif_path}")
-        print(f"[ProductionApp]-[_show_loading_dialog]: File exists: {os.path.exists(gif_path)}")
+        print(f"[Main]-[_show_loading_dialog]: Trying to load gif from: {gif_path}")
+        print(f"[Main]-[_show_loading_dialog]: File exists: {os.path.exists(gif_path)}")
 
         self.moviee = QMovie(gif_path)
         if not self.moviee.isValid():
-            print(f"[ProductionApp]-[_show_loading_dialog]: Failed to load Loading.gif from {gif_path}")
+            print(f"[Main]-[_show_loading_dialog]: Failed to load Loading.gif from {gif_path}")
             dialog.close()
             self._loading_dialog = None
             return
@@ -295,16 +345,16 @@ class StrikeMachine(QMainWindow):
             QApplication.instance().installEventFilter(self) # type: ignore
 
     def _init_app_data(self):
-        self.plc_clients = [
-            syss.plc_client_1, 
-            syss.plc_client_2, 
-            syss.plc_client_3, 
-            syss.plc_client_4, 
-            syss.plc_client_5, 
-            syss.plc_client_6
-        ]
+        self._app = QApplication.instance()
         self._lastpos = None
+        self._last_history_time = 0.0
 
+        self._current_unit = 0
+        self._current_lang = "en"
+        self._current_search_type = "name"
+
+        self._original_data: list = []
+        self._last_export_time = 0
         self.db_dict: Optional[dict] = None
 
         self.user = False
@@ -312,117 +362,34 @@ class StrikeMachine(QMainWindow):
         self.worker_dict = {}
         self.thread_dict = {}
 
+        self._prev_temps: dict[str, list[Optional[float]]] = {
+            'A': [None, None, None],
+            'B': [None, None, None],
+            'C': [None, None, None],
+        }
+
+        self._last_i_o_group_3: list = [None] * 16
+        self._last_group_a:     list = [None] * 9
+        self._last_group_b:     list = [None] * 9
+        self._last_group_c:     list = [None] * 9
+        self._last_group_a_avg: float | None = None
+        self._last_group_b_avg: float | None = None
+        self._last_group_c_avg: float | None = None
+        self._last_t0_pv:       float | None = None
+        self._last_cycle:       list = [None] * 3
+        self._last_at:          float | None = None
+        self._last_bt:          float | None = None
+        self._last_ct:          float | None = None
+        self._last_itv:         list = [None] * 3
+
+        self.init_signal = False
+
         self.plc_read_worker = None
         self.plc_read_connection = False
         self.plc_read_thread = None
         self.plc_writer_worker = None
         self.plc_writer_connection = False
         self.plc_writer_thread = None
-
-        # Group A
-        self.group_a_pv_dict = {
-            "Front PV Temp A": 0.0,
-            "Middle PV Temp A": 0.0,
-            "Back PV Temp A": 0.0,
-            "Pressure PV A": 0.0,
-            "Pressure ITV A": 0.0,
-            "Filling Time PV A": 0,
-            "G.Holding Time PV A": 0,
-            "Bleeding Time PV A": 0,
-            "Refueling Start PV A": 0,
-            "Refueling End PV A": 0,
-            "Number Test Times A": 0,
-        }
-        self.group_a_sv_dict = {
-            "Refueling Start SV A": 10.0,
-            "Refueling End SV A": 20.0,
-            "Filling Time SV A": 5.0,
-            "G.Holding Time SV A": 3.0,
-            "Bleeding Time SV A": 12.0,
-            "Pressure SV A": 45.0,
-            "Front High Alm A": 240.0,
-            "Front Low Alm A": 200.0,
-            "Front SV Temp A": 0.0,
-            "Front Offset A": 0.0,
-            "Middle High Alm A": 240.0,
-            "Middle Low Alm A": 200.0,
-            "Middle SV Temp A": 0.0,
-            "Middle Offset A": 0.0,
-            "Back High Alm A": 243.0,
-            "Back Low Alm A": 203.0,
-            "Back SV Temp A": 0.0,
-            "Back Offset A": 0.0
-        }
-
-        # Group B
-        self.group_b_pv_dict = {
-            "Front PV Temp B": 0.0,
-            "Middle PV Temp B": 0.0,
-            "Back PV Temp B": 0.0,
-            "Pressure PV B": 0.0,
-            "Pressure ITV B": 0.0,
-            "Filling Time PV B": 0,
-            "G.Holding Time PV B": 0,
-            "Bleeding Time PV B": 0,
-            "Refueling Start PV B": 0,
-            "Refueling End PV B": 0,
-            "Number Test Times B": 0
-        }
-        self.group_b_sv_dict = {
-            "Refueling Start B": 0.0,
-            "Refueling End B": 0.0,
-            "Filling Time B": 0.0,
-            "G.Holding Time B": 0.0,
-            "Bleeding Time B": 0.0,
-            "Pressure SV B": 0.0,
-            "Front High Alm B": 0.0,
-            "Front Low Alm B": 0.0,
-            "Front SV Temp B": 0.0,
-            "Front Offset B": 0.0,
-            "Middle High Alm B": 0.0,
-            "Middle Low Alm B": 0.0,
-            "Middle SV Temp B": 0.0,
-            "Middle Offset B": 0.0,
-            "Back High Alm B": 0.0,
-            "Back Low Alm B": 0.0,
-            "Back SV Temp B": 0.0,
-            "Back Offset B": 0.0
-        }
-
-        # Group C
-        self.group_c_pv_dict = {
-            "Front PV Temp C": 0.0,
-            "Middle PV Temp C": 0.0,
-            "Back PV Temp C": 0.0,
-            "Pressure PV C": 0.0,
-            "Pressure ITV C": 0.0,
-            "Filling Time PV C": 0,
-            "G.Holding Time PV C": 0,
-            "Bleeding Time PV C": 0,
-            "Refueling Start PV C": 0,
-            "Refueling End PV C": 0,
-            "Number Test Times C": 0,
-        }
-        self.group_c_sv_dict = {
-            "Refueling Start C": 0.0,
-            "Refueling End C": 0.0,
-            "Filling Time C": 0.0,
-            "G.Holding Time C": 0.0,
-            "Bleeding Time C": 0.0,
-            "Pressure SV C": 0.0,
-            "Front High Alm C": 0.0,
-            "Front Low Alm C": 0.0,
-            "Front SV Temp C": 0.0,
-            "Front Offset C": 0.0,
-            "Middle High Alm C": 0.0,
-            "Middle Low Alm C": 0.0,
-            "Middle SV Temp C": 0.0,
-            "Middle Offset C": 0.0,
-            "Back High Alm C": 0.0,
-            "Back Low Alm C": 0.0,
-            "Back SV Temp C": 0.0,
-            "Back Offset C": 0.0
-        }
 
         self.default_temp_room = 25.0
         
@@ -451,6 +418,19 @@ class StrikeMachine(QMainWindow):
         # for i in range(10):
         #     obj = getattr(self.ui, f"pressure_sv_a_{i}")
         #     self.pressure_state_obj.append(obj)
+        """
+        [0] = [2]
+        [1] = [3]
+        [2] = [4]
+        [3] = [5]
+        [4] = [6]
+        [5] = [7]
+        [6] = [8]
+        [7] = [9]
+        [8] = [10]
+        [9] = [11]
+        [10] = [12]
+        """
         self.pressure_a_pv_obj = tuple(
             getattr(self.ui, f"pressure_pv_a_{i}") 
             for i in range(2, 13)
@@ -467,10 +447,21 @@ class StrikeMachine(QMainWindow):
         )
 
         skip_value = frozenset({2, 3, 4})
+        """
+        [0] = 1
+        [1] = 5
+        [2] = 6
+        [3] = 7
+        [4] = 8
+        [5] = 9
+        [6] = 10
+        [7] = 11
+        """
         self.pressure_a_sv_obj = tuple(
             getattr(self.ui, f"pressure_sv_a_{i}") 
             for i in range(1, 12) if i not in skip_value
         )
+
 
         self.pressure_b_sv_obj = tuple(
             getattr(self.ui, f"pressure_sv_b_{i}") 
@@ -523,6 +514,79 @@ class StrikeMachine(QMainWindow):
             self.ui.ct_t3_offset_value
         )
 
+        self.list_for_import_a = (
+            self.ui.pressure_sv_a_11,
+            self.ui.pressure_sv_a_9,
+            self.ui.pressure_sv_a_10,
+            self.ui.pressure_sv_a_6,
+            self.ui.pressure_sv_a_7,
+            self.ui.pressure_sv_a_8,
+            self.ui.pressure_sv_a_5,
+            self.ui.pressure_sv_a_1,
+            self.ui.at_h_alm_value,
+            self.ui.at_l_alm_value,
+            self.ui.at_t1_offset_value,
+            self.ui.at_t2_offset_value,
+            self.ui.at_t3_offset_value
+        )
+        self.list_for_import_b = (
+            self.ui.pressure_sv_b_11,
+            self.ui.pressure_sv_b_9,
+            self.ui.pressure_sv_b_10,
+            self.ui.pressure_sv_b_6,
+            self.ui.pressure_sv_b_7,
+            self.ui.pressure_sv_b_8,
+            self.ui.pressure_sv_b_5,
+            self.ui.pressure_sv_b_1,
+            self.ui.bt_h_alm_value,
+            self.ui.bt_l_alm_value,
+            self.ui.bt_t1_offset_value,
+            self.ui.bt_t2_offset_value,
+            self.ui.bt_t3_offset_value
+        )
+        self.list_for_import_c = (
+            self.ui.pressure_sv_c_11,
+            self.ui.pressure_sv_c_9,
+            self.ui.pressure_sv_c_10,
+            self.ui.pressure_sv_c_6,
+            self.ui.pressure_sv_c_7,
+            self.ui.pressure_sv_c_8,
+            self.ui.pressure_sv_c_5,
+            self.ui.pressure_sv_c_1,
+            self.ui.ct_h_alm_value,
+            self.ui.ct_l_alm_value,
+            self.ui.ct_t1_offset_value,
+            self.ui.ct_t2_offset_value,
+            self.ui.ct_t3_offset_value
+        )
+        self.list_for_import_t0 = (
+            self.ui.t0_sv,
+            self.ui.t0_h_alm_value,
+            self.ui.t0_l_alm_value,
+            self.ui.t0_offset_value
+        )
+
+        self.io_group_1_switch_obj = tuple(
+            getattr(self.ui, f"i_o_group_1_switch_{i}") for i in range(2, 14)
+        )
+        self.i_o_group_3_obj = (
+            self.ui.t0_value,
+            self.ui.t1_1_value,
+            self.ui.t1_2_value,
+            self.ui.t1_3_value,
+            self.ui.t2_1_value,
+            self.ui.t2_2_value,
+            self.ui.t2_3_value,
+            self.ui.t3_1_value,
+            self.ui.t3_2_value,
+            self.ui.t3_3_value,
+            self.ui.p1_value,
+            self.ui.p2_value,
+            self.ui.p3_value,
+            self.ui.fp1_value,
+            self.ui.fp2_value,
+            self.ui.fp3_value
+        )
         # self.all_widgets = (
         #     self.pressure_state_obj +
         #     self.inlet_temp_obj     +
@@ -603,78 +667,6 @@ class StrikeMachine(QMainWindow):
             self.ui.stacked_cel_fah_temp_c_7
         ]
 
-        self.io_group_1_switch_obj = tuple(
-            getattr(self.ui, f"i_o_group_1_switch_{i}") for i in range(1, 9)
-        )
-
-    # def _create_charts(self):
-    #     font = QFont("Segoe UI", 17)
-    #     font.setWeight(QFont.Weight.Bold)
-
-    #     # Chart Nhiệt độ (Oven)
-    #     self.chart_temp = CustomChartWidget(
-    #         title="Oven",
-    #         num_temp=1,
-    #         num_pressure=2,
-    #         temp_label="Temperature (°C)",
-    #         pressure_label="Pressure (bar)",
-    #         temp_range=(0, 200),
-    #         pressure_range=(0, 10),
-    #         max_seconds=60,
-    #         chart_font=font
-    #     )
-
-    #     # Chart Group A
-    #     self.chart_pressure_a = CustomChartWidget(
-    #         title="Group A",
-    #         num_temp=3,
-    #         num_pressure=2,
-    #         temp_label="Temperature (°C)",
-    #         pressure_label="Pressure (bar)",
-    #         temp_range=(0, 200),
-    #         pressure_range=(0, 10),
-    #         max_seconds=60,
-    #         chart_font=font
-    #     )
-
-    #     # Chart Group B
-    #     self.chart_pressure_b = CustomChartWidget(
-    #         title="Group B",
-    #         num_temp=3,
-    #         num_pressure=2,
-    #         temp_label="Temperature (°C)",
-    #         pressure_label="Pressure (bar)",
-    #         temp_range=(0, 200),
-    #         pressure_range=(0, 10),
-    #         max_seconds=60,
-    #         chart_font=font
-    #     )
-
-    #     # Chart Group C
-    #     self.chart_pressure_c = CustomChartWidget(
-    #         title="Group C",
-    #         num_temp=3,
-    #         num_pressure=2,
-    #         temp_label="Temperature (°C)",
-    #         pressure_label="Pressure (bar)",
-    #         temp_range=(0, 200),
-    #         pressure_range=(0, 10),
-    #         max_seconds=60,
-    #         chart_font=font
-    #     )
-
-    #     # Kết nối nút tiêu đề
-    #     self.chart_temp.btn_setting.clicked.connect(self.temperature_page_btn)
-    #     self.chart_pressure_a.btn_setting.clicked.connect(self.ui.home_page_btn.click)
-    #     self.chart_pressure_b.btn_setting.clicked.connect(self.ui.home_page_btn.click)
-    #     self.chart_pressure_c.btn_setting.clicked.connect(self.ui.home_page_btn.click)
-
-    #     # Thêm vào layout
-    #     self.ui.card_temperature.addWidget(self.chart_temp)
-    #     self.ui.card_pressure_1.addWidget(self.chart_pressure_a)
-    #     self.ui.card_pressure_2.addWidget(self.chart_pressure_b)
-    #     self.ui.card_pressure_3.addWidget(self.chart_pressure_c)
-
     def _create_charts(self):
         font = QFont("Segoe UI", 17)
         font.setWeight(QFont.Weight.Bold)
@@ -683,48 +675,145 @@ class StrikeMachine(QMainWindow):
         self.chart_temp = CustomChartWidget(
             title="Oven",
             num_temp=2,
-            num_pressure=1,
+            num_pressure=0,
             temp_label="Temperature (°C)",
-            pressure_label="Pressure (bar)",
-            max_seconds=60
+            pressure_label="",
+            temp_range=(0, 50),
+            pressure_range=(0, 0),
+            max_seconds=60,
+            chart_font=font
         )
 
-        self.chart_pressure_a = CustomChartWidget(          # ← gán lại
-                title="Group A",
-                num_temp=4,
-                num_pressure=1,
-                temp_label="Temperature (°C)",
-                pressure_label="Pressure (bar)",
-                max_seconds=60
-            )
-        self.chart_pressure_b = CustomChartWidget(          # ← gán lại
-                title="Group B",
-                num_temp=4,
-                num_pressure=1,
-                temp_label="Temperature (°C)",
-                pressure_label="Pressure (bar)",
-                max_seconds=60
-            )
+        # Chart Group A
+        self.chart_pressure_a = CustomChartWidget(
+            title="Group A",
+            num_temp=4,
+            num_pressure=2,
+            temp_label="Temperature (°C)",
+            pressure_label="Pressure (bar)",
+            temp_range=(0, 50),
+            pressure_range=(0, 15),
+            max_seconds=60,
+            chart_font=font
+        )
+
+        # Chart Group B
+        self.chart_pressure_b = CustomChartWidget(
+            title="Group B",
+            num_temp=4,
+            num_pressure=2,
+            temp_label="Temperature (°C)",
+            pressure_label="Pressure (bar)",
+            temp_range=(0, 50),
+            pressure_range=(0, 15),
+            max_seconds=60,
+            chart_font=font
+        )
+
+        # Chart Group C
         self.chart_pressure_c = CustomChartWidget(
-                title="Group C",
-                num_temp=4,
-                num_pressure=1,
-                temp_label="Temperature (°C)",
-                pressure_label="Pressure (bar)",
-                max_seconds=60
-            )
-        # Kết nối nút
-        # self.chart_temp.btn_setting.clicked.connect(self.temperature_page_btn)
-        # self.chart_pressure_a.btn_setting.clicked.connect(self.ui.home_page_btn.click)
-        # self.chart_pressure_b.btn_setting.clicked.connect(self.ui.home_page_btn.click)
-        # self.chart_pressure_c.btn_setting.clicked.connect(self.ui.home_page_btn.click)
+            title="Group C",
+            num_temp=4,
+            num_pressure=2,
+            temp_label="Temperature (°C)",
+            pressure_label="Pressure (bar)",
+            temp_range=(0, 50),
+            pressure_range=(0, 15),
+            max_seconds=60,
+            chart_font=font
+        )
+
+        # Kết nối nút tiêu đề
+        self.chart_temp.btn_setting.clicked.connect(self.temperature_page_btn)
+        self.chart_pressure_a.btn_setting.clicked.connect(self.ui.home_page_btn.click)
+        self.chart_pressure_b.btn_setting.clicked.connect(self.ui.home_page_btn.click)
+        self.chart_pressure_c.btn_setting.clicked.connect(self.ui.home_page_btn.click)
 
         # Thêm vào layout
         self.ui.card_temperature.addWidget(self.chart_temp)
         self.ui.card_pressure_1.addWidget(self.chart_pressure_a)
         self.ui.card_pressure_2.addWidget(self.chart_pressure_b)
         self.ui.card_pressure_3.addWidget(self.chart_pressure_c)
+        self._chart_frames = [
+                self.ui.card_temperature.parentWidget(),   # frame chứa chart_temp
+                self.ui.card_pressure_1.parentWidget(),    # frame chứa chart_pressure_a
+                self.ui.card_pressure_2.parentWidget(),    # frame chứa chart_pressure_b
+                self.ui.card_pressure_3.parentWidget(),    # frame chứa chart_pressure_c
+            ]
 
+        charts = [self.chart_temp, self.chart_pressure_a,
+                self.chart_pressure_b, self.chart_pressure_c]
+
+        for idx, chart in enumerate(charts):
+            chart.clicked.connect(lambda i=idx: self._toggle_chart_frame(i))
+
+        self._maximized_chart_idx = -1
+        QTimer.singleShot(100, self._save_grid_rects)
+        self._chart_layouts = [
+            self.ui.card_temperature,
+            self.ui.card_pressure_1,
+            self.ui.card_pressure_2,
+            self.ui.card_pressure_3,
+        ]
+        # QTimer.singleShot(25,  self.chart_pressure_a._render_timer.start)
+        # QTimer.singleShot(50,  self.chart_pressure_b._render_timer.start)
+        # QTimer.singleShot(75,  self.chart_pressure_c._render_timer.start)
+        
+    def _save_grid_rects(self):
+        rects = [f.geometry() for f in self._chart_frames]
+        if all(r.width() > 0 and r.height() > 0 for r in rects):
+            self._grid_rects = rects
+            # print("Grid rects saved:", rects)  # xoá sau khi debug xong
+        else:
+            QTimer.singleShot(100, self._save_grid_rects)
+    
+    def _toggle_chart_frame(self, idx: int):
+        frames = self._chart_frames
+        charts = [self.chart_temp, self.chart_pressure_a,
+                self.chart_pressure_b, self.chart_pressure_c]
+        grid = self.ui.gridLayout_2
+
+        # idx → (row, col) trong grid 2x2
+        positions = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (1, 1)}
+        row, col = positions[idx]
+
+        if self._maximized_chart_idx == idx:
+            # ── Thu nhỏ ───────────────────────────────────────────────────────
+            self._maximized_chart_idx = -1
+
+            # Trả stretch về đều
+            grid.setRowStretch(0, 1)
+            grid.setRowStretch(1, 1)
+            grid.setColumnStretch(0, 1)
+            grid.setColumnStretch(1, 1)
+
+            # Hiện lại 3 frame còn lại
+            for i, f in enumerate(frames):
+                if i != idx:
+                    f.show()
+
+            # Bật lại render timer cho tất cả
+            for c in charts:
+                c._render_timer.start()
+
+        else:
+            # ── Phóng to ──────────────────────────────────────────────────────
+            self._maximized_chart_idx = idx
+
+            other_row = 1 if row == 0 else 0
+            other_col = 1 if col == 0 else 0
+
+            grid.setRowStretch(row,       100)
+            grid.setRowStretch(other_row, 0)
+            grid.setColumnStretch(col,       100)
+            grid.setColumnStretch(other_col, 0)
+
+            # Ẩn 3 frame còn lại + tắt render timer
+            for i, f in enumerate(frames):
+                if i != idx:
+                    f.hide()
+                    charts[i]._render_timer.stop()
+        
     ###########################################################################################
     #############################------ Button Function Setup ------###########################
     def _setup_btn_signals(self):
@@ -735,15 +824,17 @@ class StrikeMachine(QMainWindow):
         self.ui.history_page_btn.clicked.connect(self.history_page_btn)
         # self.ui.backward_btn.clicked.connect(lambda: self.ui.home_page_btn.click())
 
+        self.ui.eng_language.clicked.connect(self.set_language_en)
+        self.ui.cn_language.clicked.connect(self.set_language_cn)
+
         self.ui.next_group_page_btn.clicked.connect(self.next_previous_pressure_page)
-        self.ui.previus_group_page_btn.clicked.connect(self.next_previous_pressure_page)
 
         self.ui.back_connection_page_btn.clicked.connect(lambda: self.ui.stackedWidget_3.setCurrentWidget(self.ui.connection_page))
         self.ui.back_home_page_btn.clicked.connect(lambda: self.ui.home_page_btn.click())
 
         # self.ui.back_home_btn.clicked.connect(lambda: self.ui.chart_page_btn.click())
 
-        self.ui.temp_unit_selection_combox.currentIndexChanged.connect(lambda: QTimer.singleShot(0, self._set_cur_unit))
+        self.ui.temp_unit_selection_combox.currentIndexChanged.connect(lambda: QTimer.singleShot(50, self._set_cur_unit))
 
         self.ui.plc_io_btn.installEventFilter(self)
 
@@ -752,13 +843,13 @@ class StrikeMachine(QMainWindow):
         self.ui.start_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.start_btn))
         self.ui.stop_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.stop_btn))
 
-        self.ui.heat_btn_a.toggled.connect(lambda checked: self.on_heat_btn_clicked("A", checked))
-        self.ui.heat_btn_b.toggled.connect(lambda checked: self.on_heat_btn_clicked("B", checked))
-        self.ui.heat_btn_c.toggled.connect(lambda checked: self.on_heat_btn_clicked("C", checked))
+        # self.ui.heat_btn_a.toggled.connect(lambda checked: self.on_heat_btn_clicked("A", checked))
+        # self.ui.heat_btn_b.toggled.connect(lambda checked: self.on_heat_btn_clicked("B", checked))
+        # self.ui.heat_btn_c.toggled.connect(lambda checked: self.on_heat_btn_clicked("C", checked))
 
-        # self.ui.heat_btn_a.toggled.connect(lambda checked: self.heating_btn("A", checked, self.ui.heat_btn_a))
-        # self.ui.heat_btn_b.toggled.connect(lambda checked: self.heating_btn("B", checked, self.ui.heat_btn_b))
-        # self.ui.heat_btn_c.toggled.connect(lambda checked: self.heating_btn("C", checked, self.ui.heat_btn_c))
+        self.ui.heat_btn_a.toggled.connect(lambda checked: self.heating_btn("A", checked, self.ui.heat_btn_a))
+        self.ui.heat_btn_b.toggled.connect(lambda checked: self.heating_btn("B", checked, self.ui.heat_btn_b))
+        self.ui.heat_btn_c.toggled.connect(lambda checked: self.heating_btn("C", checked, self.ui.heat_btn_c))
         self.ui.heat_btn_t0.toggled.connect(lambda checked: self.heating_btn("T0", checked, self.ui.heat_btn_t0))
 
         self.ui.vacuum_btn_a.toggled.connect(lambda checked: self.pumping_btn("A", checked, self.ui.vacuum_btn_a))
@@ -772,6 +863,16 @@ class StrikeMachine(QMainWindow):
         self.ui.set_cycle_a_btn.toggled.connect(lambda checked: self.cycle_loop_btn("A", checked, self.ui.set_cycle_a_btn))
         self.ui.set_cycle_b_btn.toggled.connect(lambda checked: self.cycle_loop_btn("B", checked, self.ui.set_cycle_b_btn))
         self.ui.set_cycle_c_btn.toggled.connect(lambda checked: self.cycle_loop_btn("C", checked, self.ui.set_cycle_c_btn))
+
+        self.ui.clear_data_btn.clicked.connect(self.clear_data_btn)
+
+        self.ui.reset_cycle_a_btn.clicked.connect(lambda: self.plc_writer_worker.write_value.emit("P1_Number_Test_Times", 0) if self.plc_writer_connection else None) #type: ignore
+        self.ui.reset_cycle_b_btn.clicked.connect(lambda: self.plc_writer_worker.write_value.emit("P2_Number_Test_Times", 0) if self.plc_writer_connection else None) #type: ignore
+        self.ui.reset_cycle_c_btn.clicked.connect(lambda: self.plc_writer_worker.write_value.emit("P3_Number_Test_Times", 0) if self.plc_writer_connection else None) #type: ignore
+
+        self.ui.search_data.textChanged.connect(self._on_search_changed)
+        self.ui.search_type_btn.clicked.connect(self.search_type_btn)
+        self.ui.clear_history_search.clicked.connect(self._on_clear_clicked)
 
         spinbox_map = {
             "pressure_sv_a_1": self.on_pressure_sv_a_1_changed,
@@ -834,7 +935,10 @@ class StrikeMachine(QMainWindow):
             "bt_t3_offset_value": self.on_bt_t3_offset_value_changed,
             "ct_t1_offset_value": self.on_ct_t1_offset_value_changed,
             "ct_t2_offset_value": self.on_ct_t2_offset_value_changed,
-            "ct_t3_offset_value": self.on_ct_t3_offset_value_changed
+            "ct_t3_offset_value": self.on_ct_t3_offset_value_changed,
+
+            "table_write_cycle": self.on_table_write_cycle_value_changed,
+
         }
 
         install_clear_on_focus(self.ui.db_file_path_edit)
@@ -856,36 +960,241 @@ class StrikeMachine(QMainWindow):
             spinbox.valueChanged.connect(handler)
 
         self.ui.export_all_tables_to_excel_btn.clicked.connect(self.export_all_tables_to_excel_btn)
+        self.ui.error_display._speed = 200
 
     def _setup_table(self):
         header = self.ui.list_history.horizontalHeader()
+        header_2 = self.ui.list_history_2.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        header_2.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
         for i in range(1, header.count()):
             header.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+            header_2.setSectionResizeMode(i, QHeaderView.ResizeMode.Stretch)
+
+    def _init_table_list_history(self):
+        """
+        Tải dữ liệu excel lên widget list_history sử dụng pandas.
+        """
+        if not self.ui.list_history:
+            self.logger.error("[Main]-[_init_table_list_history]: list_history table is not initialized")
+            return False
+
+        try:
+            list_history_folder = Path(self.stk_mch_folder) / "DB_address"
+            list_history_folder.mkdir(parents=True, exist_ok=True)
+
+            today = datetime.now().strftime("%d_%m_%Y")
+            default_filename = f"History {today}.xlsx"
+            file_path = list_history_folder / default_filename
+
+            if not file_path.exists():
+                self.logger.warning(f"[Main]-[_init_table_list_history]: File not found: {file_path}")
+                return 
+
+            if file_path.stat().st_size == 0:
+                self.logger.warning(f"[Main]-[_init_table_list_history]: File is empty (0 bytes)")
+                return 
+
+            # ==================== ĐỌC BẰNG PANDAS ====================
+            df = pd.read_excel(
+                file_path,
+                sheet_name=0,           # sheet đầu tiên
+                header=0,               # dòng đầu làm header
+                dtype=str,              # đọc tất cả thành string để tránh lỗi kiểu dữ liệu
+                keep_default_na=False   # không chuyển rỗng thành NaN
+            )
+
+            # Loại bỏ các dòng hoàn toàn trống
+            df = df.dropna(how='all').reset_index(drop=True)
+
+            if df.empty:
+                self.logger.warning(f"[Main]-[_init_table_list_history]: No data in file")
+                return 
+
+            table_col_count = self.ui.list_history.columnCount()
+            current_row_count = self.ui.list_history.rowCount()
+
+            rows_added = 0
+
+            for _, row_series in df.iterrows():
+                row_data = row_series.iloc[:table_col_count].fillna("").tolist()
+
+                # Tìm dòng trống để ghi đè (nếu có)
+                target_row = None
+                for r in range(current_row_count):
+                    stt_item = self.ui.list_history.item(r, 0)
+                    if stt_item is None or not stt_item.text().strip():
+                        target_row = r
+                        break
+
+                if target_row is None:
+                    target_row = self.ui.list_history.rowCount()
+                    self.ui.list_history.insertRow(target_row)
+
+                # Đổ dữ liệu vào Table
+                for col_idx, value in enumerate(row_data):
+                    if col_idx < table_col_count:
+                        item = QTableWidgetItem(str(value).strip())
+                        self.ui.list_history.setItem(target_row, col_idx, item)
+
+                rows_added += 1
+
+            header = self.ui.list_history.horizontalHeader()
+            for col in range(self.ui.list_history.columnCount()):
+                header.setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
+            header.setSectionResizeMode(
+                self.ui.list_history.columnCount() - 1,
+                QHeaderView.ResizeMode.Stretch
+            )
+            self.ui.list_history.scrollToBottom()
+
+            self.logger.info(f"[Main]-[_init_table_list_history]: Loaded {rows_added} rows from {file_path.name}")
+            return 
+
+        except ImportError:
+            self.logger.error("[Main]-[_init_table_list_history]: pandas is not installed")
+            return 
+
+        except Exception as e:
+            self.logger.warning(f"[Main]-[_init_table_list_history]: Error loading file: {str(e)}")
+            return 
+        
+    def _on_search_changed(self, keyword: str):
+        keyword = keyword.strip()
+
+        if keyword:
+            self.ui.clear_history_search.show()
+            self.ui.stackedWidget_4.setCurrentIndex(1)
+            if not hasattr(self, '_original_data') or not self._original_data:
+                self._original_data = self._get_table_data()
+
+            col_map = {
+                "name":  1,
+                "group": 2,
+                "date":  8,
+            }
+            col_idx = col_map.get(self._current_search_type, 1)
+
+            filtered = [
+                row for row in self._original_data
+                if keyword.lower() in row[col_idx].lower()
+            ]
+        else:
+            self.ui.clear_history_search.hide()
+            self.ui.stackedWidget_4.setCurrentIndex(0)
+            filtered = self._original_data if hasattr(self, '_original_data') else self._get_table_data()
+            self._original_data = []
+
+        # QTimer.singleShot(10, lambda: 
+        self._load_data(filtered, len(self._original_data) if self._original_data else len(filtered))
+        # )
+
+    def _get_table_data(self) -> list:
+        table = self.ui.list_history
+        records = []
+        for row in range(table.rowCount()):
+            row_data = []
+            for col in range(table.columnCount()):
+                item = table.item(row, col)
+                row_data.append(item.text() if item else "")
+            records.append(row_data)
+        return records
+    
+    def _load_data(self, records: list, total: int):
+        table = self.ui.list_history_2
+        table.setSortingEnabled(False)
+        table.setRowCount(0)
+
+        for row_idx, row_data in enumerate(records):
+            table.insertRow(row_idx)
+            for col_idx, value in enumerate(row_data):
+                item = QTableWidgetItem(str(value))
+                if col_idx == 0:
+                    item.setTextAlignment(Qt.AlignCenter)
+                else:
+                    item.setTextAlignment(Qt.AlignVCenter | Qt.AlignLeft)
+                table.setItem(row_idx, col_idx, item)
+
+        table.setSortingEnabled(True)
+        header = table.horizontalHeader()
+        for col in range(table.columnCount() - 1):
+            header.setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(
+            table.columnCount() - 1,
+            QHeaderView.ResizeMode.Stretch
+        )
+        self._update_info(len(records), total)
+
+    def _update_info(self, shown: int, total: int):
+        if shown == total:
+            self.ui.label_info.setText(f"")
+        else:
+            self.ui.label_info.setText(f"Found {shown} / {total} records")
+
+    def search_type_btn(self):
+        get_text = self.ui.search_data.text()
+        if self._current_search_type == "name":
+            self._current_search_type = "group"
+            self.ui.search_data.setPlaceholderText("Search [Group]")
+        elif self._current_search_type == "group":
+            self._current_search_type = "date"
+            self.ui.search_data.setPlaceholderText("Search [Date]")
+        elif self._current_search_type == "date":
+            self._current_search_type = "name"
+            self.ui.search_data.setPlaceholderText("Search [Name]")
+        self.ui.search_data.setText(get_text)
+
+    def _on_clear_clicked(self):
+        self.ui.search_data.clear()
+        self.ui.search_data.setFocus()
 
     # ── Group A ──────────────────────────────────────────
-    def on_pressure_sv_a_1_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
+    def on_pressure_sv_a_1_changed(self, value: float): 
+        if self.plc_writer_connection:
+            self.plc_writer_worker.write_value.emit("P1_TemperatureSetting", self.cal_fah_to_cel(value)) #type: ignore
+        else: 
+            pass
+        self.ui.at_sv.blockSignals(True)
+        self.ui.at_sv.setValue(value)
+        self.ui.at_sv.blockSignals(False)
+
     def on_pressure_sv_a_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_a_6_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Air_FillingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_a_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Air_ReleaseTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
+    def on_pressure_sv_a_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Air_HoldingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_a_8_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Air_ReleaseTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_a_9_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Oil_Start_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_a_10_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Oil_End_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
 
     # ── Group B ──────────────────────────────────────────
-    def on_pressure_sv_b_1_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
+    def on_pressure_sv_b_1_changed(self, value: float): 
+        if self.plc_writer_connection:
+            self.plc_writer_worker.write_value.emit("P2_TemperatureSetting", self.cal_fah_to_cel(value)) #type: ignore
+        else: 
+            pass
+        self.ui.bt_sv.blockSignals(True)
+        self.ui.bt_sv.setValue(value)
+        self.ui.bt_sv.blockSignals(False)
+
     def on_pressure_sv_b_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_b_6_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Air_FillingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_b_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Air_ReleaseTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
+    def on_pressure_sv_b_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Air_HoldingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_b_8_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Air_ReleaseTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_b_9_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Oil_Start_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_b_10_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Oil_End_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
 
     # ── Group C ──────────────────────────────────────────
-    def on_pressure_sv_c_1_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
+    def on_pressure_sv_c_1_changed(self, value: float): 
+        if self.plc_writer_connection:
+            self.plc_writer_worker.write_value.emit("P3_TemperatureSetting", self.cal_fah_to_cel(value)) #type: ignore
+        else: 
+            pass
+        self.ui.ct_sv.blockSignals(True)
+        self.ui.ct_sv.setValue(value)
+        self.ui.ct_sv.blockSignals(False)
+
     def on_pressure_sv_c_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_c_6_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Air_FillingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_c_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Air_ReleaseTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
+    def on_pressure_sv_c_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Air_HoldingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_c_8_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Air_ReleaseTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_c_9_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Oil_Start_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
     def on_pressure_sv_c_10_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Oil_End_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
@@ -897,9 +1206,9 @@ class StrikeMachine(QMainWindow):
 
     # ── Temperature Modify ──────────────────────────────────────────
     def on_t0_sv_changed(self, value: float): self.plc_writer_worker.write_value.emit("T0_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_at_sv_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_bt_sv_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_ct_sv_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
+    def on_at_sv_changed(self, value: float): self.ui.pressure_sv_a_1.setValue(value)
+    def on_bt_sv_changed(self, value: float): self.ui.pressure_sv_b_1.setValue(value)
+    def on_ct_sv_changed(self, value: float): self.ui.pressure_sv_c_1.setValue(value)
 
     def on_t0_h_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("T0_TempLimitHIGH", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
     def on_at_h_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_TempLimitHIGH", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
@@ -921,6 +1230,7 @@ class StrikeMachine(QMainWindow):
     def on_ct_t1_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Temp1Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
     def on_ct_t2_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Temp2Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
     def on_ct_t3_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Temp3Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
+    def on_table_write_cycle_value_changed(self, value: float): self.ui.table_write_cycle.setValue(float(self.ui.read_time_input.value())/1000) if (value*1000) < self.ui.read_time_input.value() else None #type: ignore
 
     def home_page_btn(self):
         self.user = False
@@ -960,19 +1270,15 @@ class StrikeMachine(QMainWindow):
         elif index == 1:
             self.ui.stackedWidget.setCurrentIndex(0)
 
-    def _setup_plc_threads(self):
+    def _setup_plc_threads(self, state: bool):
+        if not state:
+            self.logger.info("PLC Thread set Off")
+            self.setup_simulate_threads()
+            return
+        
         if not self.db_dict:
             ltmessage.error(self, "Error", "DB Layout not found! Cannot start PLC threads.")
             return 
-
-        if not self._setup_read_plc_thread(
-            ip=self.db_dict["ip_plc"],
-            db_number=self.db_dict["db_name"],
-            db_layout=self.db_dict["DB_LAYOUT"],
-            db_size=self.db_dict["DB_TOTAL_BYTES"],
-            poll_ms=self.db_dict["read_time"]
-        ):
-            ltmessage.error(self, "Error", "Failed to connect to PLC! Try again later.")
 
         if not self._setup_write_plc_thread(
             ip=self.db_dict["ip_plc"],
@@ -983,8 +1289,16 @@ class StrikeMachine(QMainWindow):
         ):
             ltmessage.error(self, "Error", "Failed to connect to PLC! Try again later.")
 
-    def _simulate_data(self):
-        self.setup_simulate_threads()
+        time.sleep(0.2)
+
+        if not self._setup_read_plc_thread(
+            ip=self.db_dict["ip_plc"],
+            db_number=self.db_dict["db_name"],
+            db_layout=self.db_dict["DB_LAYOUT"],
+            db_size=self.db_dict["DB_TOTAL_BYTES"],
+            poll_ms=self.db_dict["read_time"]
+        ):
+            ltmessage.error(self, "Error", "Failed to connect to PLC! Try again later.")
 
     def setup_simulate_threads(self):
         try:
@@ -1031,6 +1345,7 @@ class StrikeMachine(QMainWindow):
             self.plc_read_thread.started.connect(self.plc_read_worker.run)
             self.plc_read_worker.data_ready.connect(self._data_ready)
             self.plc_read_worker.connected.connect(self._read_status_plc)
+            self.plc_read_worker.init_data.connect(self._set_system_data)
             
             self.plc_read_worker.finished.connect(self.plc_read_thread.quit)
             self.plc_read_worker.finished.connect(self.plc_read_worker.deleteLater)
@@ -1040,7 +1355,7 @@ class StrikeMachine(QMainWindow):
             if not self.plc_read_thread.isRunning():
                 raise Exception("plc_read_thread failed to start")
         except Exception as e:
-            print("PLC Reader gone wrong:", e)
+            self.logger.info("PLC Reader gone wrong:", e)
             return False
         
         self.worker_dict["plc_read_worker"] = self.plc_read_worker
@@ -1081,42 +1396,139 @@ class StrikeMachine(QMainWindow):
             self.plc_writer_thread.start()
             
         except Exception as e:
-            print("PLC Writer gone wrong:", e)
+            self.logger.info("PLC Writer gone wrong:", e)
         self.thread_dict["plc_writer_thread"] = self.plc_writer_thread
         return True
-
+    
     def _data_ready(self, data: dict):
+        # def _t(label, fn):
+            # t = time.perf_counter()
+            # fn()
+            # ms = (time.perf_counter() - t) * 1000
+            # if ms > 1:
+                # print(f"  [{label}] {ms:.1f}ms")
+
         try:
-            # self.add_row_to_list_history(
-            #     "A", 
-            #     str(data.get('P1_Current_PressureHose', 0.0)), 
-            #     str((data.get('P1_Current_Temp1', 0.0) + data.get('P1_Current_Temp2', 0.0) + data.get('P1_Current_Temp3', 0.0)) / 3), 
-            #     str(data.get('P1_Current_Temp1', 0.0)), 
-            #     str(data.get('P1_Current_Temp2', 0.0)), 
-            #     str(data.get('P1_Current_Temp3', 0.0))
-            # )
-            # self.add_row_to_list_history(
-            #     "B", 
-            #     str(data.get('P2_Current_PressureHose', 0.0)), 
-            #     str((data.get('P2_Current_Temp1', 0.0) + data.get('P2_Current_Temp2', 0.0) + data.get('P2_Current_Temp3', 0.0)) / 3), 
-            #     str(data.get('P2_Current_Temp1', 0.0)), 
-            #     str(data.get('P2_Current_Temp2', 0.0)), 
-            #     str(data.get('P2_Current_Temp3', 0.0))
-            # )
-            # self.add_row_to_list_history(
-            #     "C", 
-            #     str(data.get('P3_Current_PressureHose', 0.0)), 
-            #     str((data.get('P3_Current_Temp1', 0.0) + data.get('P3_Current_Temp2', 0.0) + data.get('P3_Current_Temp3', 0.0)) / 3), 
-            #     str(data.get('P3_Current_Temp1', 0.0)), 
-            #     str(data.get('P3_Current_Temp2', 0.0)), 
-            #     str(data.get('P3_Current_Temp3', 0.0))
-            # )
-            # ====================== INPUT BOOLS ======================
-            self._input_data_filter([
-                bool(data.get('START', False)),
-                bool(data.get('STOP', False)),
+            if self.init_signal:
+                self.logger.info("[Main]-[_data_ready]: Getting PLC State")
+                self._init_pressure_group_sv_obj([
+                    int(data.get('P1_CountTimes', 0)),
+                    float(data.get('P1_Oil_Start_Time', 0)/1000),
+                    float(data.get('P1_Oil_End_Time', 0)/1000),
+                    float(data.get('P1_Air_FillingTime', 0)/1000),
+                    float(data.get('P1_Air_HoldingTime', 0)/1000),
+                    float(data.get('P1_Air_ReleaseTime', 0)/1000),
+                    float(data.get('P1_PressureSetting', 0.00)),
+                    self.for_display_temp(float(data.get('P1_TemperatureSetting', 0.0))),
+                    self.for_display_temp(float(data.get('P1_TempLimitHIGH', 0.0))),
+                    self.for_display_temp(float(data.get('P1_TempLimitLOW', 0.0))),
+                    self.for_display_temp(float(data.get('P1_Temp1Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P1_Temp2Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P1_Temp3Offset', 0.0)))
+                ],
+                [
+                    int(data.get('P2_CountTimes', 0)),
+                    float(data.get('P2_Oil_Start_Time', 0)/1000),
+                    float(data.get('P2_Oil_End_Time', 0)/1000),
+                    float(data.get('P2_Air_FillingTime', 0)/1000),
+                    float(data.get('P2_Air_HoldingTime', 0)/1000),
+                    float(data.get('P2_Air_ReleaseTime', 0)/1000),
+                    float(data.get('P2_PressureSetting', 0.00)),
+                    float(data.get('P2_TemperatureSetting', 0.0)),
+                    float(data.get('P2_TempLimitHIGH', 0.0)),
+                    float(data.get('P2_TempLimitLOW', 0.0)),
+                    float(data.get('P2_Temp1Offset', 0.0)),
+                    float(data.get('P2_Temp2Offset', 0.0)),
+                    float(data.get('P2_Temp3Offset', 0.0))
+                ],
+                [
+                    int(data.get('P3_CountTimes', 0)),
+                    float(data.get('P3_Oil_Start_Time', 0)/1000),
+                    float(data.get('P3_Oil_End_Time', 0)/1000),
+                    float(data.get('P3_Air_FillingTime', 0)/1000),
+                    float(data.get('P3_Air_HoldingTime', 0)/1000),
+                    float(data.get('P3_Air_ReleaseTime', 0)/1000),
+                    float(data.get('P3_PressureSetting', 0.00)),
+                    float(data.get('P3_TemperatureSetting', 0.0)),
+                    self.for_display_temp(float(data.get('P3_TemperatureSetting', 0.0))),
+                    self.for_display_temp(float(data.get('P3_TempLimitHIGH', 0.0))),
+                    self.for_display_temp(float(data.get('P3_TempLimitLOW', 0.0))),
+                    self.for_display_temp(float(data.get('P3_Temp1Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P3_Temp2Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P3_Temp3Offset', 0.0)))
+                ],
+                [
+                    self.for_display_temp(float(data.get('T0_TemperatureSetting', 0.0))),
+                    self.for_display_temp(float(data.get('T0_TempLimitHIGH', 0.0))),
+                    self.for_display_temp(float(data.get('T0_TempLimitLOW', 0.0))),
+                    self.for_display_temp(float(data.get('T0_TempOffset', 0.0)))
+                ])
+                print("Init Value Done")
+                
+                self._init_button_obj([
+                    bool(data.get('START', False)),
+                    bool(data.get('STOP', False)),
+                    bool(data.get('T0_Start_Heat', False)),
+                    bool(data.get('T0_Stop_Heat', False)),
+                    bool(data.get('P1_Start_Heat', False)),
+                    bool(data.get('P1_Start_Pressure', False)),
+                    bool(data.get('P1_Start_Oil', False)),
+                    bool(data.get('P1_BitCountTimes', False)),
+                    bool(data.get('P2_Start_Heat', False)),
+                    bool(data.get('P2_Start_Pressure', False)),
+                    bool(data.get('P2_Start_Oil', False)),
+                    bool(data.get('P2_BitCountTimes', False)),
+                    bool(data.get('P3_Start_Heat', False)),
+                    bool(data.get('P3_Start_Pressure', False)),
+                    bool(data.get('P3_Start_Oil', False)),
+                    bool(data.get('P3_BitCountTimes', False)),
+                ])
+                print("Init Button Done")
+                self.init_signal = False
+
+            now = time.time()
+            if now - self._last_history_time >= self.ui.table_write_cycle.value():
+                self._last_history_time = now
+                if bool(data.get('P1_Start_Heat', False)) or bool(data.get('P1_Start_Pressure', False)):
+                    self.add_row_to_list_history(
+                        self.ui.code_display.text(),
+                        "Group A",
+                        float(data.get('P1_Current_PressureHose', 0.0)),
+                        float(data.get('T0_Current_Temp', 0.0)),
+                        float(data.get('P1_Current_Temp1', 0.0)), 
+                        float(data.get('P1_Current_Temp2', 0.0)), 
+                        float(data.get('P1_Current_Temp3', 0.0))
+                    )
+                if bool(data.get('P2_Start_Heat', False)) or bool(data.get('P2_Start_Pressure', False)):
+                    self.add_row_to_list_history(
+                        self.ui.code_display.text(),
+                        "Group B",
+                        float(data.get('P2_Current_PressureHose', 0.00)),
+                        float(data.get('T0_Current_Temp', 0.0)),
+                        float(data.get('P2_Current_Temp1', 0.0)), 
+                        float(data.get('P2_Current_Temp2', 0.0)), 
+                        float(data.get('P2_Current_Temp3', 0.0))
+                    )
+                if bool(data.get('P3_Start_Heat', False)) or bool(data.get('P3_Start_Pressure', False)):
+                    self.add_row_to_list_history(
+                        self.ui.code_display.text(),
+                        "Group C",
+                        float(data.get('P3_Current_PressureHose', 0.0)),
+                        float(data.get('T0_Current_Temp', 0.0)),
+                        float(data.get('P3_Current_Temp1', 0.0)), 
+                        float(data.get('P3_Current_Temp2', 0.0)), 
+                        float(data.get('P3_Current_Temp3', 0.0))
+                    )
+
+            # _t("t0_input_heat", lambda: 
+            self._t0_input_heat_filter([
                 bool(data.get('T0_Start_Heat', False)),
-                bool(data.get('T0_StopHeat', False)),
+                bool(data.get('T0_Stop_Heat', False))
+            ])
+            # )
+
+            # _t("input_data", lambda: 
+            self._input_data_filter([
                 bool(data.get('P1_Start_Heat', False)),
                 bool(data.get('P1_Start_Pressure', False)),
                 bool(data.get('P1_Start_Oil', False)),
@@ -1130,109 +1542,205 @@ class StrikeMachine(QMainWindow):
                 bool(data.get('P3_Start_Oil', False)),
                 bool(data.get('P3_BitCountTimes', False)),
             ])
+            # )
 
-            # ====================== T0 ======================
+            # _t("i_o_group_3", lambda: 
+            self._i_o_group_3_filter([
+                float(data.get('T0_Current_Temp', 0.0)),
+                float(data.get('P1_Current_Temp1', 0.0)),
+                float(data.get('P1_Current_Temp2', 0.0)),
+                float(data.get('P1_Current_Temp3', 0.0)),
+                float(data.get('P2_Current_Temp1', 0.0)),
+                float(data.get('P2_Current_Temp2', 0.0)),
+                float(data.get('P2_Current_Temp3', 0.0)),
+                float(data.get('P3_Current_Temp1', 0.0)),
+                float(data.get('P3_Current_Temp2', 0.0)),
+                float(data.get('P3_Current_Temp3', 0.0)),
+                float(data.get('P1_Current_PressureHose', 0.00)),
+                float(data.get('P2_Current_PressureHose', 0.00)),
+                float(data.get('P3_Current_PressureHose', 0.00)),
+                float(data.get('P1_Current_PressureITV', 0.0)),
+                float(data.get('P2_Current_PressureITV', 0.0)),
+                float(data.get('P3_Current_PressureITV', 0.0))
+            ])
+            # )
+
+            # _t("t0_data", lambda: 
             self._t0_data_filter([
                 float(data.get('T0_TemperatureSetting', 0.0)),
                 float(data.get('T0_Current_Temp', 0.0))
             ])
+            # )
 
-            # ====================== P1 ======================
+            # _t("group_a", lambda: 
             self._group_a_data_filter([
-                float((data.get('P1_Current_Temp1', 0.0) + 
-                       data.get('P1_Current_Temp2', 0.0) + 
-                       data.get('P1_Current_Temp3', 0.0)) / 3), # Tính trung bình 3 cảm biến nhiệt độ
                 float(data.get('P1_Current_Temp1', 0.0)),
                 float(data.get('P1_Current_Temp2', 0.0)),
                 float(data.get('P1_Current_Temp3', 0.0)),
-                float(data.get('P1_Current_PressureHose', 0.0)),
+                float(data.get('P1_Current_PressureHose', 0.00)),
                 float(data.get('P1_Current_Air_FillingTime', 0)/1000),
                 float(data.get('P1_Current_Air_HoldingTime', 0)/1000),
                 float(data.get('P1_Current_Air_ReleaseTime', 0)/1000),
                 float(data.get('P1_Current_Oil_Start_Time', 0)/1000),
-                float(data.get('P1_Current_Oil_End_Time', 0)/1000)
+                float(data.get('P1_Current_Oil_End_Time', 0)/1000),
+                int(data.get('P1_Number_Test_Times', 0)),
+                float(data.get('P1_Current_PressureITV', 0.0))
             ])
+            # )
 
-            # ====================== P2 ======================
+            # _t("group_b", lambda: 
             self._group_b_data_filter([
-                float((data.get('P2_Current_Temp1', 0.0) + 
-                       data.get('P2_Current_Temp2', 0.0) + 
-                       data.get('P2_Current_Temp3', 0.0)) / 3), # Tính trung bình 3 cảm biến nhiệt độ
                 float(data.get('P2_Current_Temp1', 0.0)),
                 float(data.get('P2_Current_Temp2', 0.0)),
                 float(data.get('P2_Current_Temp3', 0.0)),
-                float(data.get('P2_Current_PressureHose', 0.0)),
+                float(data.get('P2_Current_PressureHose', 0.00)),
                 float(data.get('P2_Current_Air_FillingTime', 0)/1000),
                 float(data.get('P2_Current_Air_HoldingTime', 0)/1000),
                 float(data.get('P2_Current_Air_ReleaseTime', 0)/1000),
                 float(data.get('P2_Current_Oil_Start_Time', 0)/1000),
-                float(data.get('P2_Current_Oil_End_Time', 0)/1000)
+                float(data.get('P2_Current_Oil_End_Time', 0)/1000),
+                int(data.get('P2_Number_Test_Times', 0)),
+                float(data.get('P2_Current_PressureITV', 0.0))
             ])
+            # )
 
-            # ====================== P3 ======================
+            # _t("group_c", lambda: 
             self._group_c_data_filter([
-                float((data.get('P3_Current_Temp1', 0.0) + 
-                       data.get('P3_Current_Temp2', 0.0) + 
-                       data.get('P3_Current_Temp3', 0.0)) / 3), # Tính trung bình 3 cảm biến nhiệt độ
                 float(data.get('P3_Current_Temp1', 0.0)),
                 float(data.get('P3_Current_Temp2', 0.0)),
                 float(data.get('P3_Current_Temp3', 0.0)),
-                float(data.get('P3_Current_PressureHose', 0.0)),
+                float(data.get('P3_Current_PressureHose', 0.00)),
                 float(data.get('P3_Current_Air_FillingTime', 0)/1000),
                 float(data.get('P3_Current_Air_HoldingTime', 0)/1000),
                 float(data.get('P3_Current_Air_ReleaseTime', 0)/1000),
                 float(data.get('P3_Current_Oil_Start_Time', 0)/1000),
-                float(data.get('P3_Current_Oil_End_Time', 0)/1000)
+                float(data.get('P3_Current_Oil_End_Time', 0)/1000),
+                int(data.get('P3_Number_Test_Times', 0)),
+                float(data.get('P3_Current_PressureITV', 0.0))
             ])
+            # )
 
-            # ====================== Cycle / Number Test Times ======================
-
+            # _t("cycle_time", lambda: 
             self._set_cycle_time_unit([
                 int(data.get('P1_Number_Test_Times', 0)),
                 int(data.get('P2_Number_Test_Times', 0)),
                 int(data.get('P3_Number_Test_Times', 0))
             ])
+            # )
 
-            # ====================== AT, BT, CT Widgets ======================
+            # _t("at_data", lambda: 
             self._at_data_filter([
                 float(data.get('P1_Current_Temp1', 0.0)),
                 float(data.get('P1_Current_Temp2', 0.0)),
                 float(data.get('P1_Current_Temp3', 0.0))
             ])
+            # )
 
+            # _t("bt_data", lambda: 
             self._bt_data_filter([
                 float(data.get('P2_Current_Temp1', 0.0)),
                 float(data.get('P2_Current_Temp2', 0.0)),
                 float(data.get('P2_Current_Temp3', 0.0))
             ])
+            # )
 
+            # _t("ct_data", lambda: 
             self._ct_data_filter([
                 float(data.get('P3_Current_Temp1', 0.0)),
                 float(data.get('P3_Current_Temp2', 0.0)),
                 float(data.get('P3_Current_Temp3', 0.0))
             ])
+            # )
 
-            # ====================== ITV Pressure ======================
-            self._itv_data_filter([
-                float(data.get('P1_Current_PressureITV', 0.0)),
-                float(data.get('P2_Current_PressureITV', 0.0)),
-                float(data.get('P3_Current_PressureITV', 0.0))
-            ])
-
-            # ====================== Alarm ======================
+            # _t("alarm", lambda: 
             self._alarm_data_filter([
                 bool(data.get('Bit_Alarm', False)),
                 str(data.get('Alarm_Info', ""))
             ])
-
+            # )
+            if now - self._last_export_time >= 60.0:
+                self._last_export_time = now
+                self.auto_export_all_tables_to_excel()
         except Exception as e:
-            print("PLC Data Processing Error: %s", e)
+            self.logger.error("[Main]-[_data_ready]:PLC Data Processing Error: %s", e)
+            
+    def _set_system_data(self):
+        self.init_signal = True
+        
+    def _init_button_obj(self, list_bool):
+        self.logger.info("[Main]-[_init_button_obj]: CHECKING PLC BOOL")
+        if not list_bool[1]:
+            self.ui.sys_state_stacked_wid_39.setCurrentIndex(0)
+            if list_bool[0]:
+                self.logger.info("[Main]-[_init_button_obj]: START BOOL: 1")
+                self.ui.sys_state_stacked_wid_39.setCurrentIndex(1)
+                self.ui.start_stop_stacked.setCurrentIndex(1)
 
-    def _write_done(self, address: str, value: Any):
-        print(f"Write to {address} successful: {value}")
+        if not list_bool[3]:
+            if list_bool[2]:
+                self.logger.info("[Main]-[_init_button_obj]: HEAT T0 BOOL: 1")
+                self.ui.heat_btn_t0.click() if not self.ui.heat_btn_t0.isChecked() else None
 
-    def _write_error(self, error: str):
-        print(f"Write failed: {error}")
+        if list_bool[4]:
+            self.logger.info("[Main]-[_init_button_obj]: HEAT A BOOL: 1")
+            self.ui.heat_btn_a.click() if not self.ui.heat_btn_a.isChecked() else None
+        if list_bool[5]:
+            self.logger.info("[Main]-[_init_button_obj]: PRESSURE A BOOL: 1")
+            self.ui.vacuum_btn_a.click() if not self.ui.vacuum_btn_a.isChecked() else None
+        if list_bool[6]:
+            self.logger.info("[Main]-[_init_button_obj]: OIL A BOOL: 1")
+            self.ui.refuel_btn_a.click() if not self.ui.refuel_btn_a.isChecked() else None
+        if list_bool[7]:
+            self.logger.info("[Main]-[_init_button_obj]: CYCLE A BOOL: 1")
+            self.ui.set_cycle_a_btn.click() if not self.ui.set_cycle_a_btn.isChecked() else None
+
+        if list_bool[8]:
+            self.logger.info("[Main]-[_init_button_obj]: HEAT B BOOL: 1")
+            self.ui.heat_btn_b.click() if not self.ui.heat_btn_b.isChecked() else None
+        if list_bool[9]:
+            self.logger.info("[Main]-[_init_button_obj]: PRESSURE B BOOL: 1")
+            self.ui.vacuum_btn_b.click() if not self.ui.vacuum_btn_b.isChecked() else None
+        if list_bool[10]:
+            self.logger.info("[Main]-[_init_button_obj]: OIL B BOOL: 1")
+            self.ui.refuel_btn_b.click() if not self.ui.refuel_btn_b.isChecked() else None
+        if list_bool[11]:
+            self.logger.info("[Main]-[_init_button_obj]: CYCLE B BOOL: 1")
+            self.ui.set_cycle_b_btn.click() if not self.ui.set_cycle_b_btn.isChecked() else None
+
+        if list_bool[12]:
+            self.logger.info("[Main]-[_init_button_obj]: HEAT C BOOL: 1")
+            self.ui.heat_btn_c.click() if not self.ui.heat_btn_c.isChecked() else None
+        if list_bool[13]:
+            self.logger.info("[Main]-[_init_button_obj]: PRESSURE C BOOL: 1")
+            self.ui.vacuum_btn_c.click() if not self.ui.vacuum_btn_c.isChecked() else None
+        if list_bool[14]:
+            self.logger.info("[Main]-[_init_button_obj]: OIL C BOOL: 1")
+            self.ui.refuel_btn_c.click() if not self.ui.refuel_btn_c.isChecked() else None
+        if list_bool[15]:
+            self.logger.info("[Main]-[_init_button_obj]: CYCLE C BOOL: 1")
+            self.ui.set_cycle_c_btn.click() if not self.ui.set_cycle_c_btn.isChecked() else None
+
+    def _init_pressure_group_sv_obj(self, list_init_a, list_init_b, list_init_c, list_init_t0):
+        for i in range(len(self.list_for_import_a)):
+            self.list_for_import_a[i].blockSignals(True)
+            # self.list_for_import_a[i].setValue(self.convert_cel_fah(list_init_a[i]))
+            self.list_for_import_a[i].setValue(list_init_a[i])
+            self.list_for_import_a[i].blockSignals(False)
+
+            self.list_for_import_b[i].blockSignals(True)
+            # self.list_for_import_b[i].setValue(self.convert_cel_fah(list_init_b[i]))
+            self.list_for_import_b[i].setValue(list_init_b[i])
+            self.list_for_import_b[i].blockSignals(False)
+
+            self.list_for_import_c[i].blockSignals(True)
+            # self.list_for_import_c[i].setValue(self.convert_cel_fah(list_init_c[i]))
+            self.list_for_import_c[i].setValue(list_init_c[i])
+            self.list_for_import_c[i].blockSignals(False)   
+
+        for i in range(len(self.list_for_import_t0)):
+            self.list_for_import_t0[i].blockSignals(True)
+            self.list_for_import_t0[i].setValue(list_init_t0[i])
+            self.list_for_import_t0[i].blockSignals(False)
 
     def _read_status_plc(self, connected: bool):
         if connected:
@@ -1248,98 +1756,177 @@ class StrikeMachine(QMainWindow):
             self.ui.sys_state_stacked_wid_42.setCurrentIndex(1)
         self.plc_writer_connection = connected
 
+    def _temp_changed(self, group: str, t1: float, t2: float, t3: float) -> bool:
+        prev = self._prev_temps[group]
+        current = [t1, t2, t3]
+        
+        if any(p is None for p in prev):
+            self._prev_temps[group] = current
+            return True
+        
+        changed = any(abs(c - p) >= 1.0 for c, p in zip(current, prev))
+        if changed:
+            self._prev_temps[group] = current
+        return changed
+
     def _data_group_filter(self, list_group_a_recv, list_group_b_recv, list_group_c_recv):
         if not isinstance(list_group_a_recv, list) and not isinstance(list_group_b_recv, list) and not isinstance(list_group_c_recv, list):
             return
-        pv_avg = [(list_group_a_recv[4] + list_group_b_recv[4] + list_group_c_recv[4]) / 3]
-        temp_values = [self.for_display_temp((self.ui.pressure_sv_a_1.value() + self.ui.pressure_sv_a_1.value() + self.ui.pressure_sv_a_1.value())/3),
-                        self.for_display_temp((list_group_a_recv[0] + list_group_b_recv[0] + list_group_c_recv[0]) / 3)
-                       ]
-        self.chart_temp.append_data(temp_values, pv_avg)
+        pv_avg = (list_group_a_recv[1] + list_group_b_recv[1] + list_group_c_recv[1]) / 3
+        self.add_row_to_list_history(
+            self.ui.code_display.text(),
+            "Group A",
+            list_group_a_recv[0],
+            pv_avg,
+            self.for_display_temp(list_group_a_recv[2]), 
+            self.for_display_temp(list_group_a_recv[3]), 
+            self.for_display_temp(list_group_a_recv[4])
+        )
+        self.add_row_to_list_history(
+            self.ui.code_display.text(),
+            "Group B",
+            list_group_b_recv[0],
+            pv_avg,
+            self.for_display_temp(list_group_b_recv[2]), 
+            self.for_display_temp(list_group_b_recv[3]), 
+            self.for_display_temp(list_group_b_recv[4])
+        )
+        self.add_row_to_list_history(
+            self.ui.code_display.text(),
+            "Group C",
+            list_group_c_recv[0],
+            pv_avg,
+            self.for_display_temp(list_group_c_recv[2]), 
+            self.for_display_temp(list_group_c_recv[3]), 
+            self.for_display_temp(list_group_c_recv[4])
+        )
 
-        group_a_values = [self.ui.pressure_sv_a_1.value(),
-                            self.for_display_temp(list_group_a_recv[2]),
-                            self.for_display_temp(list_group_a_recv[3]),
-                            self.for_display_temp(list_group_a_recv[4])]
-        group_a_press_values = [list_group_a_recv[0]]
-        self.chart_pressure_a.append_data(group_a_values, group_a_press_values)
-
-        group_b_values = [self.ui.pressure_sv_b_1.value(),
-                        self.for_display_temp(list_group_b_recv[2]),
-                        self.for_display_temp(list_group_b_recv[3]),
-                        self.for_display_temp(list_group_b_recv[4])]
-        group_b_press_values = [list_group_b_recv[0]]
-        self.chart_pressure_b.append_data(group_b_values, group_b_press_values)
-
-        group_c_values = [self.ui.pressure_sv_c_1.value(),
-                        self.for_display_temp(list_group_c_recv[2]),
-                        self.for_display_temp(list_group_c_recv[3]),
-                        self.for_display_temp(list_group_c_recv[4])]
-        group_c_press_values = [list_group_c_recv[0]]
-        self.chart_pressure_c.append_data(group_c_values, group_c_press_values)
+    def _t0_input_heat_filter(self, list_t0_input_recv):
+        if not list_t0_input_recv[1]:
+            self.ui.i_o_group_1_switch_1.setCurrentIndex(1)
+            if list_t0_input_recv[0]:
+                self.ui.i_o_group_1_switch_1.setCurrentIndex(0)
 
     def _input_data_filter(self, list_input_recv):
         for obj, value in zip(self.io_group_1_switch_obj, list_input_recv):
             obj.setCurrentIndex(value)
 
+    def _i_o_group_3_filter(self, values):
+        for i, (obj, value) in enumerate(zip(self.i_o_group_3_obj, values)):
+            v = round(value, 2)
+            if v != self._last_i_o_group_3[i]:
+                obj.setValue(value)
+                self._last_i_o_group_3[i] = v
+
     def _group_a_data_filter(self, list_group_a_recv):
         group_a_values = [self.ui.pressure_sv_a_1.value(),
-                            self.for_display_temp(list_group_a_recv[0]),
-                            self.for_display_temp(list_group_a_recv[1]),
-                            self.for_display_temp(list_group_a_recv[2]),
-                            list_group_a_recv[3]]
-        self.chart_pressure_a.append_data(group_a_values)
-        self.temp_pv_obj[1].setValue(self.for_display_temp(list_group_a_recv[1]))
+                        self.for_display_temp(list_group_a_recv[0]),
+                        self.for_display_temp(list_group_a_recv[1]),
+                        self.for_display_temp(list_group_a_recv[2])]
+        group_a_press_values = [self.ui.pressure_sv_a_5.value(),
+                                list_group_a_recv[3]]
+        self.chart_pressure_a.append_data(group_a_values, group_a_press_values)
+
+        avg_a = round(self.for_display_temp(
+            (list_group_a_recv[0]+list_group_a_recv[1]+list_group_a_recv[2])/3), 2)
+        if avg_a != self._last_group_a_avg:
+            self.temp_pv_obj[1].setValue(avg_a)
+            self._last_group_a_avg = avg_a
+
         for i, val_a in enumerate(list_group_a_recv):
-            self.pressure_a_pv_obj[i].setValue(val_a if i >= 4 else self.for_display_temp(val_a))
+            v = round(val_a if i >= 3 else self.for_display_temp(val_a), 2)
+            if v != self._last_group_a[i]:
+                self.pressure_a_pv_obj[i].setValue(v)
+                self._last_group_a[i] = v
 
     def _group_b_data_filter(self, list_group_b_recv):
         group_b_values = [self.ui.pressure_sv_b_1.value(),
                         self.for_display_temp(list_group_b_recv[0]),
                         self.for_display_temp(list_group_b_recv[1]),
-                        self.for_display_temp(list_group_b_recv[2]),
-                        list_group_b_recv[3]
-                        ]
-        self.chart_pressure_b.append_data(group_b_values)
-        self.temp_pv_obj[2].setValue(self.for_display_temp(list_group_b_recv[1]))
+                        self.for_display_temp(list_group_b_recv[2])]
+        group_b_press_values = [self.ui.pressure_sv_b_5.value(),
+                                list_group_b_recv[3]]
+        self.chart_pressure_b.append_data(group_b_values, group_b_press_values)
+
+        avg_b = round(self.for_display_temp(
+            (list_group_b_recv[0]+list_group_b_recv[1]+list_group_b_recv[2])/3), 2)
+        if avg_b != self._last_group_b_avg:
+            self.temp_pv_obj[2].setValue(avg_b)
+            self._last_group_b_avg = avg_b
+
         for i, val_b in enumerate(list_group_b_recv):
-            self.pressure_b_pv_obj[i].setValue(val_b if i >= 4 else self.for_display_temp(val_b))
-      
+            v = round(val_b if i >= 3 else self.for_display_temp(val_b), 2)
+            if v != self._last_group_b[i]:
+                self.pressure_b_pv_obj[i].setValue(v)
+                self._last_group_b[i] = v
+
     def _group_c_data_filter(self, list_group_c_recv):
         group_c_values = [self.ui.pressure_sv_c_1.value(),
                         self.for_display_temp(list_group_c_recv[0]),
                         self.for_display_temp(list_group_c_recv[1]),
-                        self.for_display_temp(list_group_c_recv[2]),
-                        list_group_c_recv[3]]
-        self.chart_pressure_c.append_data(group_c_values)
-        self.temp_pv_obj[3].setValue(self.for_display_temp(list_group_c_recv[1]))
+                        self.for_display_temp(list_group_c_recv[2])]
+        group_c_press_values = [self.ui.pressure_sv_c_5.value(),
+                                list_group_c_recv[3]]
+        self.chart_pressure_c.append_data(group_c_values, group_c_press_values)
+
+        avg_c = round(self.for_display_temp(
+            (list_group_c_recv[0]+list_group_c_recv[1]+list_group_c_recv[2])/3), 2)
+        if avg_c != self._last_group_c_avg:
+            self.temp_pv_obj[3].setValue(avg_c)
+            self._last_group_c_avg = avg_c
+
         for i, val_c in enumerate(list_group_c_recv):
-            self.pressure_c_pv_obj[i].setValue(val_c if i >= 4 else self.for_display_temp(val_c))
+            v = round(val_c if i >= 3 else self.for_display_temp(val_c), 2)
+            if v != self._last_group_c[i]:
+                self.pressure_c_pv_obj[i].setValue(v)
+                self._last_group_c[i] = v
+
     def _t0_data_filter(self, list_group_t0_recv):
         sv_t0 = list_group_t0_recv[0]
         pv_t0 = list_group_t0_recv[1]
-        temp_values = [self.for_display_temp(sv_t0),
-                        self.for_display_temp(pv_t0)]
-        self.chart_temp.append_data(temp_values)
-        self.temp_pv_obj[0].setValue(self.for_display_temp(pv_t0))
+        self.chart_temp.append_data([
+            self.for_display_temp(sv_t0),
+            self.for_display_temp(pv_t0)
+        ])
+        v = round(self.for_display_temp(pv_t0), 2)
+        if v != self._last_t0_pv:
+            self.temp_pv_obj[0].setValue(v)
+            self._last_t0_pv = v
+
+    def _set_cycle_time_unit(self, list_cycle_recv):
+        for i, (displ_obj, val) in enumerate(zip(
+            [self.ui.cycle_a_displ_3,  self.ui.cycle_b_displ_3,  self.ui.cycle_c_displ_3],
+            list_cycle_recv
+        )):
+            if val != self._last_cycle[i]:
+                displ_obj.setValue(val)
+                self._last_cycle[i] = val
 
     def _at_data_filter(self, list_group_at_recv):
-        self.ui.at_pv.setValue(self.for_display_temp(list_group_at_recv[0] + list_group_at_recv[1] + list_group_at_recv[2])/3)
+        v = round(self.for_display_temp(
+            (list_group_at_recv[0]+list_group_at_recv[1]+list_group_at_recv[2])/3), 2)
+        if v != self._last_at:
+            self.ui.at_pv.setValue(v)
+            self._last_at = v
 
     def _bt_data_filter(self, list_group_bt_recv):
-        self.ui.bt_pv.setValue(self.for_display_temp(list_group_bt_recv[0] + list_group_bt_recv[1] + list_group_bt_recv[2])/3)
+        v = round(self.for_display_temp(
+            (list_group_bt_recv[0]+list_group_bt_recv[1]+list_group_bt_recv[2])/3), 2)
+        if v != self._last_bt:
+            self.ui.bt_pv.setValue(v)
+            self._last_bt = v
 
     def _ct_data_filter(self, list_group_ct_recv):
-        self.ui.ct_pv.setValue(self.for_display_temp(list_group_ct_recv[0] + list_group_ct_recv[1] + list_group_ct_recv[2])/3)
-
-    def _itv_data_filter(self, list_group_itv_recv):
-        self.ui.fp1_value.setValue(list_group_itv_recv[0])
-        self.ui.fp2_value.setValue(list_group_itv_recv[1])
-        self.ui.fp3_value.setValue(list_group_itv_recv[2])
+        v = round(self.for_display_temp(
+            (list_group_ct_recv[0]+list_group_ct_recv[1]+list_group_ct_recv[2])/3), 2)
+        if v != self._last_ct:
+            self.ui.ct_pv.setValue(v)
+            self._last_ct = v
 
     def _alarm_data_filter(self, alarm_recv):
         if alarm_recv[0]:
             self.ui.error_display.setText(alarm_recv[1])
+            print(alarm_recv[1])
 
     def on_heat_btn_clicked(self, channel: str, checked: bool):
         simulator = self.thread_dict.get("data_simulator")
@@ -1362,8 +1949,7 @@ class StrikeMachine(QMainWindow):
             simulator.set_channel_active(channel, 0.0, self.default_temp_room)  # Reset về mặc định
 
     def heating_btn(self, channel: str, checked: bool, btn=None):
-        self.disable_controls_group(channel, False)
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -1373,48 +1959,61 @@ class StrikeMachine(QMainWindow):
         else:
             if channel == "A":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P1_Start_Heat", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P1_Start_Heat", True)
                     self.disable_heat_group(channel, False)
+                    self.logger.info("[Main]-[heating_btn]: Group A Heating On!")
                     # ltmessage.information(self, "Heating", "Group A Heating On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P1_Start_Heat", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P1_Start_Heat", False)
                     self.disable_heat_group(channel, True)
-                    print("Group A Heating Off!")
+                    self.logger.info("[Main]-[heating_btn]: Group A Heating Off!")
                 return
             if channel == "B":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P2_Start_Heat", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P2_Start_Heat", True)
                     self.disable_heat_group(channel, False)
+                    self.logger.info("[Main]-[heating_btn]: Group B Heating On!")
                     # ltmessage.information(self, "Heating", "Group B Heating On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P2_Start_Heat", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P2_Start_Heat", False)
                     self.disable_heat_group(channel, True)
-                    print("Group B Heating Off!")
+                    self.logger.info("[Main]-[heating_btn]: Group B Heating Off!")
                 return
             if channel == "C":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P3_Start_Heat", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P3_Start_Heat", True)
                     self.disable_heat_group(channel, False)
+                    self.logger.info("[Main]-[heating_btn]: Group C Heating On!")
                     # ltmessage.information(self, "Heating", "Group C Heating On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P3_Start_Heat", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P3_Start_Heat", False)
                     self.disable_heat_group(channel, True)
-                    print("Group C Heating Off!")
+                    self.logger.info("[Main]-[heating_btn]: Group C Heating Off!")
                 return
             if channel == "T0":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("T0_Start_Heat", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("T0_Start_Heat", True)
                     self.disable_heat_group(channel, False)
+                    self.logger.info("[Main]-[heating_btn]: T0 Heating On!")
                     # ltmessage.information(self, "Heating", "T0 Heating On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", True)
+                        QTimer.singleShot(100,  lambda: self.plc_writer_worker.write_bool.emit("T0_Start_Heat", False))
+                        QTimer.singleShot(200,  lambda: self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", False))
                     self.disable_heat_group(channel, True)
-                    print("T0 Heating Off!")
+                    self.logger.info("[Main]-[heating_btn]: T0 Heating Off!")
                 return
 
-
     def pumping_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -1424,37 +2023,46 @@ class StrikeMachine(QMainWindow):
         else:
             if channel == "A":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", True)
                     self.disable_pressure_group(channel, False)
+                    self.logger.info("[Main]-[pumping_btn]: Group A Pressure On!")
                     # ltmessage.information(self, "Pumping", "Group A Pressure On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", False)
                     self.disable_pressure_group(channel, True)
-                    print("Group A Pressure Off!")
+                    self.logger.info("[Main]-[pumping_btn]: Group A Pressure Off!")
 
             elif channel == "B":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", True)
                     self.disable_pressure_group(channel, False)
+                    self.logger.info("[Main]-[pumping_btn]: Group B Pressure On!")
                     # ltmessage.information(self, "Pumping", "Group B Pressure On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", False)
                     self.disable_pressure_group(channel, True)
-                    print("Group B Pressure Off!")
+                    self.logger.info("[Main]-[pumping_btn]: Group B Pressure Off!")
 
             elif channel == "C":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", True)
                     self.disable_pressure_group(channel, False)
+                    self.logger.info("[Main]-[pumping_btn]: Group C Pressure On!")
                     # ltmessage.information(self, "Pumping", "Group C Pressure On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", False)
                     self.disable_pressure_group(channel, True)
-                    print("Group C Pressure Off!")
+                    self.logger.info("[Main]-[pumping_btn]: Group C Pressure Off!")
             return
 
     def fill_oil_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -1464,36 +2072,45 @@ class StrikeMachine(QMainWindow):
         else:
             if channel == "A":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P1_Start_Oil", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P1_Start_Oil", True)
                     self.disable_oil_group(channel, False)
+                    self.logger.info("[Main]-[fill_oil_btn]: Group A Oil Filling On!")
                     # ltmessage.information(self, "Oil Fill", "Group A Oil Filling On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P1_Start_Oil", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P1_Start_Oil", False)
                     self.disable_oil_group(channel, True)
-                    print("Group A Oil Filling Off!")
+                    self.logger.info("[Main]-[fill_oil_btn]: Group A Oil Filling Off!")
 
             if channel == "B":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P2_Start_Oil", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P2_Start_Oil", True)
                     self.disable_oil_group(channel, False)
+                    self.logger.info("[Main]-[fill_oil_btn]: Group B Oil Filling On!")
                     # ltmessage.information(self, "Oil Fill", "Group B Oil Filling On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P2_Start_Oil", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P2_Start_Oil", False)
                     self.disable_oil_group(channel, True)
-                    print("Group B Oil Filling Off!")
+                    self.logger.info("[Main]-[fill_oil_btn]: Group B Oil Filling Off!")
 
             if channel == "C":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P3_Start_Oil", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P3_Start_Oil", True)
                     self.disable_oil_group(channel, False)
+                    self.logger.info("[Main]-[fill_oil_btn]: Group C Oil Filling On!")
                     # ltmessage.information(self, "Oil Fill", "Group C Oil Filling On!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P3_Start_Oil", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P3_Start_Oil", False)
                     self.disable_oil_group(channel, True)
-                    print("Group C Oil Filling Off!")
+                    self.logger.info("[Main]-[fill_oil_btn]: Group C Oil Filling Off!")
 
     def cycle_loop_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -1503,37 +2120,46 @@ class StrikeMachine(QMainWindow):
         else:
             if channel == "A":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", True)
                     self.ui.pressure_sv_a_11.setEnabled(False)
+                    self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat Off!")
                     # ltmessage.information(self, "Set Cycle A", "Group A Auto Repeat!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", False)
                     self.ui.pressure_sv_a_11.setEnabled(True)
-                    print("Group A Auto Repeat Off!")
+                    self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat On!")
                 return
             if channel == "B":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", True)
                     self.ui.pressure_sv_b_11.setEnabled(False)
+                    self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat Off!")
                     # ltmessage.information(self, "Set Cycle B", "Group B Auto Repeat!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", False)
                     self.ui.pressure_sv_b_11.setEnabled(True)
-                    print("Group B Auto Repeat Off!")
+                    self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat On!")
                 return
             if channel == "C":
                 if checked:
-                    self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", True)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", True)
                     self.ui.pressure_sv_c_11.setEnabled(False)
+                    self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat Off!")
                     # ltmessage.information(self, "Set Cycle C", "Group C Auto Repeat!")
                 else:
-                    self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", False)
+                    if not self.init_signal:
+                        self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", False)
                     self.ui.pressure_sv_c_11.setEnabled(True)
-                    print("Group C Auto Repeat Off!")
+                    self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat On!")
                 return
 
     def start_stop_btn(self, btn=None):
-        if not self.plc_writer_connection:
+        if not self.plc_writer_connection and not self.init_signal:
             ltmessage.error(self, "Error", "PLC Writer not connected!")
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -1544,14 +2170,42 @@ class StrikeMachine(QMainWindow):
             self.ui.sys_state_stacked_wid_39.setCurrentIndex(1)
             self.ui.start_stop_stacked.setCurrentIndex(1)
             self.plc_writer_worker.write_bool.emit("START", True)
-            QTimer.singleShot(250, lambda: self.plc_writer_worker.write_bool.emit("START", False))
+            self.logger.info("[Main]-[start_stop_btn]: System On")
+            # QTimer.singleShot(250, lambda: self.plc_writer_worker.write_bool.emit("START", False))
             # ltmessage.information(self, "Strike Machine", "System On!")
         elif self.ui.start_stop_stacked.currentIndex() == 1:
             self.ui.sys_state_stacked_wid_39.setCurrentIndex(0)
             self.ui.start_stop_stacked.setCurrentIndex(0)
             self.plc_writer_worker.write_bool.emit("STOP", True)
-            QTimer.singleShot(250, lambda: self.plc_writer_worker.write_bool.emit("STOP", False))
-            print("System Off!")
+            QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("START", False))
+            QTimer.singleShot(200, lambda: self.plc_writer_worker.write_bool.emit("STOP", False))
+            self.logger.info("[Main]-[start_stop_btn]: System Off")
+
+    def clear_data_btn(self):
+        reply = ltmessage.question(
+            self, "Clear Data", "Set all SV to 0?"
+        )
+
+        if reply == ltmessage.Yes:
+            try:
+                self.ui.code_display.setText("")
+                for i in range(len(self.pressure_a_sv_obj)):
+                    self.pressure_a_sv_obj[i].setValue(0)
+                    self.pressure_b_sv_obj[i].setValue(0)
+                    self.pressure_c_sv_obj[i].setValue(0)
+                for i in range(len(self.temp_sv_obj)):
+                    self.temp_sv_obj[i].setValue(0)
+                    
+                for i in range(len(self.temp_h_alm_obj)):
+                    self.temp_h_alm_obj[i].setValue(0)
+
+                for i in range(len(self.temp_l_alm_obj)):
+                    self.temp_l_alm_obj[i].setValue(0)
+
+                for i in range(len(self.temp_offset_obj)):
+                    self.temp_offset_obj[i].setValue(0)
+            except Exception as e:
+                ltmessage.error(self, "Error", f"Failed to clear data: {e}")
 
     def new_data_btn(self):
         stk_mch_file = Path(self.stk_mch_folder)/ "Setting File" 
@@ -1564,157 +2218,202 @@ class StrikeMachine(QMainWindow):
         )
         if not file_str:  # User cancel
             return
-        # path = Path(file_str)
+        path = Path(file_str)
 
-        # df = pd.read_excel(path, sheet_name='Sheet1', header=None)
+        df = pd.read_excel(path, sheet_name='Sheet1', header=None)
+        self.ui.code_display.setText(str(df.iloc[0][0]).strip() if pd.notna(df.iloc[0][0]) else "")
+        for i in range(2, len(df)): # Bắt đầu từ hàng 3
+            column = df.iloc[i]
 
-        # db_layout: List[Tuple[str, str, int, Any]] = []
-        # max_byte = 0
-        
-        # for i in range(4, len(df)):
-        #     row = df.iloc[i]
+            name_raw = str(column[0]).strip() if pd.notna(column[0]) else ""
+            if name_raw == "" or name_raw.lower() == "nan":
+                break
+            # Cột B: Group A
+            try:
+                value_a_raw = str(column[1]).strip()
+                value_a = float(value_a_raw)
+            except:
+                value_a = 0
+            self.list_for_import_a[i-2].blockSignals(True)
+            self.list_for_import_a[i-2].setValue(value_a)
             
-        #     # Cột B: Name
-        #     name_raw = str(row[1]).strip() if pd.notna(row[1]) else ""
-        #     if name_raw == "" or name_raw.lower() == "nan":
-        #         break
+            # Cột C: Group B
+            try:
+                value_b_raw = str(column[2]).strip()
+                value_b = float(value_b_raw)
+            except:
+                value_b = 0
+            self.list_for_import_c[i-2].blockSignals(True)
+            self.list_for_import_b[i-2].setValue(value_b)
+            
+            # Cột D: Group C
+            try:
+                value_c_raw = str(column[3]).strip()
+                value_c = float(value_c_raw)
+            except:
+                value_c = 0
+            self.list_for_import_c[i-2].blockSignals(True)
+            self.list_for_import_c[i-2].setValue(value_c)
+
+            if i >= 9  and i <=12:
+                # Cột E: Group T0
+                try:
+                    value_t0_raw = str(column[4]).strip()
+                    value_t0 = float(value_t0_raw)
+                except:
+                    value_t0 = 0
+                self.list_for_import_t0[i-9].blockSignals(True)
+                self.list_for_import_t0[i-9].setValue(value_t0)
+        self.ui.at_sv.blockSignals(True)
+        self.ui.at_sv.setValue(self.ui.pressure_sv_a_1.value())
+        self.ui.bt_sv.blockSignals(True)
+        self.ui.bt_sv.setValue(self.ui.pressure_sv_b_1.value())
+        self.ui.ct_sv.blockSignals(True)
+        self.ui.ct_sv.setValue(self.ui.pressure_sv_c_1.value())
+        items_a = [
+            self.plc_writer_worker.get_item("P1_CountTimes", self.list_for_import_a[0].value()),
+            self.plc_writer_worker.get_item("P1_Oil_Start_Time", self.list_for_import_a[1].value()),
+            self.plc_writer_worker.get_item("P1_Oil_End_Time", self.list_for_import_a[2].value()),
+            self.plc_writer_worker.get_item("P1_Air_FillingTime", self.list_for_import_a[3].value()),
+            self.plc_writer_worker.get_item("P1_Air_HoldingTime", self.list_for_import_a[4].value()),
+            self.plc_writer_worker.get_item("P1_Air_ReleaseTime", self.list_for_import_a[5].value()),
+            self.plc_writer_worker.get_item("P1_PressureSetting", self.list_for_import_a[6].value()),
+            self.plc_writer_worker.get_item("P1_TemperatureSetting", self.list_for_import_a[7].value()),
+            self.plc_writer_worker.get_item("P1_TempLimitHIGH", self.list_for_import_a[8].value()),
+            self.plc_writer_worker.get_item("P1_TempLimitLOW", self.list_for_import_a[9].value()),
+            self.plc_writer_worker.get_item("P1_Temp1Offset", self.list_for_import_a[10].value()),
+            self.plc_writer_worker.get_item("P1_Temp2Offset", self.list_for_import_a[11].value()),
+            self.plc_writer_worker.get_item("P1_Temp3Offset", self.list_for_import_a[12].value())
+        ]
+        items_b = [
+            self.plc_writer_worker.get_item("P2_CountTimes", self.list_for_import_b[0].value()),
+            self.plc_writer_worker.get_item("P2_Oil_Start_Time", self.list_for_import_b[1].value()),
+            self.plc_writer_worker.get_item("P2_Oil_End_Time", self.list_for_import_b[2].value()),
+            self.plc_writer_worker.get_item("P2_Air_FillingTime", self.list_for_import_b[3].value()),
+            self.plc_writer_worker.get_item("P2_Air_HoldingTime", self.list_for_import_b[4].value()),
+            self.plc_writer_worker.get_item("P2_Air_ReleaseTime", self.list_for_import_b[5].value()),
+            self.plc_writer_worker.get_item("P2_PressureSetting", self.list_for_import_b[6].value()),
+            self.plc_writer_worker.get_item("P2_TemperatureSetting", self.list_for_import_b[7].value()),
+            self.plc_writer_worker.get_item("P2_TempLimitHIGH", self.list_for_import_b[8].value()),
+            self.plc_writer_worker.get_item("P2_TempLimitLOW", self.list_for_import_b[9].value()),
+            self.plc_writer_worker.get_item("P2_Temp1Offset", self.list_for_import_b[10].value()),
+            self.plc_writer_worker.get_item("P2_Temp2Offset", self.list_for_import_b[11].value()),
+            self.plc_writer_worker.get_item("P2_Temp3Offset", self.list_for_import_b[12].value())
+        ]
+        items_c = [
+            self.plc_writer_worker.get_item("P3_CountTimes", self.list_for_import_c[0].value()),
+            self.plc_writer_worker.get_item("P3_Oil_Start_Time", self.list_for_import_c[1].value()),
+            self.plc_writer_worker.get_item("P3_Oil_End_Time", self.list_for_import_c[2].value()),
+            self.plc_writer_worker.get_item("P3_Air_FillingTime", self.list_for_import_c[3].value()),
+            self.plc_writer_worker.get_item("P3_Air_HoldingTime", self.list_for_import_c[4].value()),
+            self.plc_writer_worker.get_item("P3_Air_ReleaseTime", self.list_for_import_c[5].value()),
+            self.plc_writer_worker.get_item("P3_PressureSetting", self.list_for_import_c[6].value()),
+            self.plc_writer_worker.get_item("P3_TemperatureSetting", self.list_for_import_c[7].value()),
+            self.plc_writer_worker.get_item("P3_TempLimitHIGH", self.list_for_import_c[8].value()),
+            self.plc_writer_worker.get_item("P3_TempLimitLOW", self.list_for_import_c[9].value()),
+            self.plc_writer_worker.get_item("P3_Temp1Offset", self.list_for_import_c[10].value()),
+            self.plc_writer_worker.get_item("P3_Temp2Offset", self.list_for_import_c[11].value()),
+            self.plc_writer_worker.get_item("P3_Temp3Offset", self.list_for_import_c[12].value())
+        ]
+        items_t0 = [
+            self.plc_writer_worker.get_item("T0_TemperatureSetting", self.list_for_import_t0[0].value()),
+            self.plc_writer_worker.get_item("T0_TempLimitHIGH", self.list_for_import_t0[1].value()),
+            self.plc_writer_worker.get_item("T0_TempLimitLOW", self.list_for_import_t0[2].value()),
+            self.plc_writer_worker.get_item("T0_TempOffset", self.list_for_import_t0[3].value())
+        ]
+        self.plc_writer_worker.write_multi.emit(items_a)
+        self.plc_writer_worker.write_multi.emit(items_b)
+        self.plc_writer_worker.write_multi.emit(items_c)
+        self.plc_writer_worker.write_multi.emit(items_t0)
+        for i in range(len(self.list_for_import_a)):
+            self.list_for_import_a[i].blockSignals(False)
+            self.list_for_import_b[i].blockSignals(False)
+            self.list_for_import_c[i].blockSignals(False)
+        for i in range(len(self.list_for_import_t0)):
+            self.list_for_import_t0[i].blockSignals(False)
+        
+        self.ui.at_sv.blockSignals(False)
+        self.ui.bt_sv.blockSignals(False)
+        self.ui.ct_sv.blockSignals(False)
+
+    def set_language_en(self):
+        self._app.removeTranslator(self._translator)
+        self._current_lang = "en"
+
+    def set_language_cn(self):
+        self._app.removeTranslator(self._translator)
+        self._translator.load(resource_path("tech_link_theme_cn.qm"))
+        self._app.installTranslator(self._translator)
+        self._current_lang = "cn"
+        
+    def changeEvent(self, event):
+        super().changeEvent(event)
+        if event.type() == QEvent.Type.LanguageChange:
+            ip_text = self.ui.plc_ip_address_edit.text()
+            db_text = self.ui.db_file_path_edit.text()
+            self.ui.retranslateUi(self)
+            charts = [self.chart_temp, self.chart_pressure_a,
+                self.chart_pressure_b, self.chart_pressure_c]
+            if self._current_lang == "cn":
+                self.ui.plc_ip_address_edit.setPlaceholderText("请输入IP地址: 172.16.100.***")
+                self.ui.db_file_path_edit.setPlaceholderText("输入路径文件夹")
                 
-        #     # Chuẩn hóa tên
-        #     name = name_raw.replace(" ", "_").replace("-", "_")
-            
-        #     # Cột C: Type
-        #     data_type = str(row[2]).strip().upper() if pd.notna(row[2]) else ""
-            
-        #     # Cột D: Address
-        #     try:
-        #         addr_str = str(row[3]).strip()
-        #         byte_addr = int(float(addr_str.split('.')[0])) if '.' in addr_str else int(float(addr_str))
-        #     except:
-        #         byte_addr = 0
-            
-        #     # Cập nhật max byte
-        #     if byte_addr > max_byte:
-        #         max_byte = byte_addr
-            
-        #     # Xử lý Bit cho BOOL
-        #     bit: Any = None
-        #     if data_type == "BOOL":
-        #         addr_str = str(row[3]).strip()
-        #         if '.' in addr_str:
-        #             try:
-        #                 bit = int(addr_str.split('.')[1])  # lấy phần sau dấu .
-        #             except:
-        #                 bit = 0
-        #         else:
-        #             bit = 0 
-        #     db_layout.append((name, data_type, byte_addr, bit))
-        
-        # last_item = db_layout[-1] if db_layout else None
-        # if last_item and last_item[1] == "STRING":
-        #     string_start = last_item[2]
-        #     db_total_bytes = string_start + 256
-        # else:
-        #     db_total_bytes = max_byte + 4
-        
-        # self.db_dict =  {
-        #     "ip_plc": str(df.iloc[0, 1]).strip(),
-        #     "cycle_time": int(str(df.iloc[1, 1]).strip()),
-        #     "db_name": str(df.iloc[2, 0]).strip(),
-        #     "DB_LAYOUT": db_layout,
-        #     "DB_TOTAL_BYTES": db_total_bytes
-        # }
+                self.chart_temp.btn_setting.setText("烤箱")
+                self.chart_temp.plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else self.chart_temp.plot.setLabel("left", "温度 (°F)")
+                
+                self.chart_pressure_a.btn_setting.setText("A组")
+                self.chart_pressure_a.plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else self.chart_pressure_a.plot.setLabel("left", "温度 (°F)")
+                self.chart_pressure_a.plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")
+                
+                self.chart_pressure_b.btn_setting.setText("B组")
+                self.chart_pressure_b.plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else self.chart_pressure_b.plot.setLabel("left", "温度 (°F)")
+                self.chart_pressure_b.plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")
+                
+                self.chart_pressure_c.btn_setting.setText("C组")
+                self.chart_pressure_c.plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else self.chart_pressure_c.plot.setLabel("left", "温度 (°F)")
+                self.chart_pressure_c.plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")
 
-    def update_simulator_sv(self):
-        """Gọi hàm này mỗi khi SV thay đổi trên UI"""
-        simulator = self.thread_dict.get("data_simulator")
-        if simulator is None:
-            return
-
-        pressure_sv = [
-            self.pressure_a_sv_obj[0].value(),
-            self.pressure_b_sv_obj[0].value(),
-            self.pressure_c_sv_obj[0].value(),
-        ]
-
-        temp_sv = [
-            self.pressure_a_sv_obj[1].value(),
-            self.pressure_b_sv_obj[1].value(),
-            self.pressure_c_sv_obj[1].value(),
-        ]
-        simulator.update_sv(pressure_sv, temp_sv)
-
-    def on_write_sv_clicked(self):
-        sv_data = {
-            "A": {
-                "pressure":     self.pressure_a_sv_obj[0].value(),
-                "temp":         self.pressure_a_sv_obj[1].value(),
-                "front_temp":   self.pressure_a_sv_obj[2].value(),
-                "mid_temp":     self.pressure_a_sv_obj[3].value(),
-                "end_temp":     self.pressure_a_sv_obj[4].value(),
-                "gas_fill":     self.pressure_a_sv_obj[5].value(),
-                "gas_hold":     self.pressure_a_sv_obj[6].value(),
-                "gas_bleed":    self.pressure_a_sv_obj[7].value(),
-                "refuel_start": self.pressure_a_sv_obj[8].value(),
-                "refuel_end":   self.pressure_a_sv_obj[9].value(),
-            },
-            "B": {
-                "pressure":     self.pressure_b_sv_obj[0].value(),
-                "temp":         self.pressure_b_sv_obj[1].value(),
-                "front_temp":   self.pressure_b_sv_obj[2].value(),
-                "mid_temp":     self.pressure_b_sv_obj[3].value(),
-                "end_temp":     self.pressure_b_sv_obj[4].value(),
-                "gas_fill":     self.pressure_b_sv_obj[5].value(),
-                "gas_hold":     self.pressure_b_sv_obj[6].value(),
-                "gas_bleed":    self.pressure_b_sv_obj[7].value(),
-                "refuel_start": self.pressure_b_sv_obj[8].value(),
-                "refuel_end":   self.pressure_b_sv_obj[9].value(),
-            },
-            "C": {
-                "pressure":     self.pressure_c_sv_obj[0].value(),
-                "temp":         self.pressure_c_sv_obj[1].value(),
-                "front_temp":   self.pressure_c_sv_obj[2].value(),
-                "mid_temp":     self.pressure_c_sv_obj[3].value(),
-                "end_temp":     self.pressure_c_sv_obj[4].value(),
-                "gas_fill":     self.pressure_c_sv_obj[5].value(),
-                "gas_hold":     self.pressure_c_sv_obj[6].value(),
-                "gas_bleed":    self.pressure_c_sv_obj[7].value(),
-                "refuel_start": self.pressure_c_sv_obj[8].value(),
-                "refuel_end":   self.pressure_c_sv_obj[9].value(),
-            },
-        }
-
-        try:
-            self.plc_writer.write_all_sv(sv_data)
-            print("Write PLC success")
-        except Exception as e:
-            print(f"Write PLC error: {e}")
-
-    def _set_pv_data(self, list_1, list_2, list_3):
-        for i, (val_1, val_2, val_3) in enumerate(zip(list_1, list_2, list_3)):
-            self.pressure_a_pv_obj[i].setValue(val_1 if i == 4 else self.for_display_temp(val_1))
-            self.pressure_b_pv_obj[i].setValue(val_2 if i == 4 else self.for_display_temp(val_2))
-            self.pressure_c_pv_obj[i].setValue(val_3 if i == 4 else self.for_display_temp(val_3))
+            elif self._current_lang == "en":
+                self.ui.plc_ip_address_edit.setPlaceholderText("Enter IP Address: 172.16.100.***")
+                self.ui.db_file_path_edit.setPlaceholderText("Enter Path Folder")
+                
+                self.chart_temp.btn_setting.setText("Oven")
+                self.chart_temp.plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else self.chart_temp.plot.setLabel("left", "Temperature (°F)")
+                
+                self.chart_pressure_a.btn_setting.setText("Group A")
+                self.chart_pressure_a.plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else self.chart_pressure_a.plot.setLabel("left", "Temperature (°F)")
+                self.chart_pressure_a.plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")
+                
+                self.chart_pressure_b.btn_setting.setText("Group B")
+                self.chart_pressure_b.plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else self.chart_pressure_b.plot.setLabel("left", "Temperature (°F)")
+                self.chart_pressure_b.plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")
+                
+                self.chart_pressure_c.btn_setting.setText("Group C")
+                self.chart_pressure_c.plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else self.chart_pressure_c.plot.setLabel("left", "Temperature (°F)")
+                self.chart_pressure_c.plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")
+                
+            self.ui.plc_ip_address_edit.setText(ip_text)
+            self.ui.db_file_path_edit.setText(db_text)
 
     def _set_cur_unit(self):
         index = self.ui.temp_unit_selection_combox.currentIndex()
         for i in range(len(self.cel_fah_change)):
             self.cel_fah_change[i].setCurrentIndex(index)
-        self.current_unit = index
+        self._current_unit = index
         self._set_sv_widget_pressure_obj()
         self._set_sv_widget_temperature_obj()
         self._set_chart_unit()
 
     def _set_sv_widget_pressure_obj(self):
-        for i in range(1):
-            self.pressure_a_sv_obj[i].blockSignals(True)
-            self.pressure_a_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_a_sv_obj[i].value()))
-            self.pressure_a_sv_obj[i].blockSignals(False)
-            self.pressure_b_sv_obj[i].blockSignals(True)
-            self.pressure_b_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_b_sv_obj[i].value()))
-            self.pressure_b_sv_obj[i].blockSignals(False)
-            self.pressure_c_sv_obj[i].blockSignals(True)
-            self.pressure_c_sv_obj[i].setValue(self.convert_cel_fah(self.pressure_c_sv_obj[i].value()))
-            self.pressure_c_sv_obj[i].blockSignals(False)
+        self.pressure_a_sv_obj[0].blockSignals(True)
+        self.pressure_a_sv_obj[0].setValue(self.convert_cel_fah(self.pressure_a_sv_obj[0].value()))
+        self.pressure_a_sv_obj[0].blockSignals(False)
+        self.pressure_b_sv_obj[0].blockSignals(True)
+        self.pressure_b_sv_obj[0].setValue(self.convert_cel_fah(self.pressure_b_sv_obj[0].value()))
+        self.pressure_b_sv_obj[0].blockSignals(False)
+        self.pressure_c_sv_obj[0].blockSignals(True)
+        self.pressure_c_sv_obj[0].setValue(self.convert_cel_fah(self.pressure_c_sv_obj[0].value()))
+        self.pressure_c_sv_obj[0].blockSignals(False)
 
     def _set_sv_widget_temperature_obj(self):
         for i in range(4):
@@ -1736,33 +2435,33 @@ class StrikeMachine(QMainWindow):
             self.temp_offset_obj[i].blockSignals(False)
 
     def _set_chart_unit(self):
-        if self.current_unit == 0:
-            self.chart_temp.set_y_label("°C")
-            self.chart_pressure_a.set_y_label("°C")
-            self.chart_pressure_b.set_y_label("°C")
-            self.chart_pressure_c.set_y_label("°C")
+        if self._current_unit == 0:
+            self.chart_temp.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_temp.set_temp_label("温度 (°C)", unit="°C")
+            self.chart_pressure_a.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_pressure_a.set_temp_label("温度 (°C)", unit="°C")
+            self.chart_pressure_b.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_pressure_b.set_temp_label("温度 (°C)", unit="°C")
+            self.chart_pressure_c.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_pressure_c.set_temp_label("温度 (°C)", unit="°C")
 
-        elif self.current_unit == 1:
-            self.chart_temp.set_y_label("°F")
-            self.chart_pressure_a.set_y_label("°F")
-            self.chart_pressure_b.set_y_label("°F")
-            self.chart_pressure_c.set_y_label("°F")
-
+        elif self._current_unit == 1:
+            self.chart_temp.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_temp.set_temp_label("温度 (°F)", unit="°F")
+            self.chart_pressure_a.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_pressure_a.set_temp_label("温度 (°F)", unit="°F")
+            self.chart_pressure_b.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_pressure_b.set_temp_label("温度 (°F)", unit="°F")
+            self.chart_pressure_c.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_pressure_c.set_temp_label("温度 (°F)", unit="°F")
+    
     def for_display_temp(self, celsius):
-        if self.current_unit == 1:
+        if self._current_unit == 1:
             return celsius * 9/5 + 32
         return celsius
 
     # def _update_alarm_state(self, )
 
     def convert_cel_fah(self, temp):
-        if self.current_unit == 1:
+        if self._current_unit == 1:
             return temp * 9/5 + 32
-        elif self.current_unit == 0:
+        elif self._current_unit == 0:
             return (temp - 32) * 5/9
 
     def cal_fah_to_cel(self, temp):
-        if self.current_unit == 1:
+        if self._current_unit == 1:
             return (temp - 32) * 5/9
         return temp
     
@@ -1787,17 +2486,17 @@ class StrikeMachine(QMainWindow):
         \nBật hoặc tắt các điều khiển UI trong quá trình hoạt động của máy.
         """
         if channel == "A":
-            for i in range(9, 11):
+            for i in range(5, 7):
                 self.pressure_a_sv_obj[i].setEnabled(status)
             return
 
         elif channel == "B":
-            for i in range(9, 11):
+            for i in range(5, 7):
                 self.pressure_b_sv_obj[i].setEnabled(status)
             return
 
         elif channel == "C":
-            for i in range(9, 11):
+            for i in range(5, 7):
                 self.pressure_c_sv_obj[i].setEnabled(status)
             return
 
@@ -1807,17 +2506,17 @@ class StrikeMachine(QMainWindow):
         \nBật hoặc tắt các điều khiển UI trong quá trình hoạt động của máy.
         """
         if channel == "A":
-            for i in range(5, 9):
+            for i in range(1, 5):
                 self.pressure_a_sv_obj[i].setEnabled(status)
             return
 
         elif channel == "B":
-            for i in range(5, 9):
+            for i in range(1, 5):
                 self.pressure_b_sv_obj[i].setEnabled(status)
             return
 
         elif channel == "C":
-            for i in range(5, 9):
+            for i in range(1, 5):
                 self.pressure_c_sv_obj[i].setEnabled(status)
             return
 
@@ -1864,17 +2563,13 @@ class StrikeMachine(QMainWindow):
                 self.temp_offset_obj[i].setEnabled(status)
             return
 
-    def add_row_to_list_history(self, group_name: str, pressure_value: str, temp_value: str, front_temp: str, mid_temp: str, end_temp: str):
+    def add_row_to_list_history(self, product_name: str, group_name: str, pressure_value: float, temp_value: float, front_temp: float, mid_temp: float, end_temp: float):
         """
         Add a new entry to the 'list_history' table, filling empty rows first before adding new ones.
         \nThêm một mục mới vào bảng 'list_history', ưu tiên điền vào hàng trống trước khi thêm hàng mới.
         """
         # TOTAL_COLUMNS = 8
 
-        if not self.ui.list_history:
-            print("[ProductionApp]-[add_row_to_list_history]: list_history table is not initialized")
-            # self.dialog_notification.check_main_win.emit("MainWindow", "list_history table is not initialized")
-            return
         try:
             row_count = self.ui.list_history.rowCount()
             target_row = None
@@ -1890,72 +2585,72 @@ class StrikeMachine(QMainWindow):
                 target_row = row_count
                 self.ui.list_history.insertRow(target_row)
 
-            # start_time = begin_time or datetime.now().strftime("%H:%M:%S")
-            # end_time = done_time or datetime.now().strftime("%H:%M:%S")
-            today_date = datetime.now().strftime("%d/%m/%y")
+            if self._current_unit == 1:
+                temp_value_str = f"{self.for_display_temp(temp_value):.1f}°F"
+                front_temp_str = f"{self.for_display_temp(front_temp):.1f}°F"
+                mid_temp_str = f"{self.for_display_temp(mid_temp):.1f}°F"
+                end_temp_str = f"{self.for_display_temp(end_temp):.1f}°F"
+            else:
+                temp_value_str = f"{self.for_display_temp(temp_value):.1f}°C"
+                front_temp_str = f"{self.for_display_temp(front_temp):.1f}°C"
+                mid_temp_str = f"{self.for_display_temp(mid_temp):.1f}°C"
+                end_temp_str = f"{self.for_display_temp(end_temp):.1f}°C"
 
-            # Chuyển đổi total_time (chuỗi H:MM:SS hoặc HH:MM:SS) thành số giây
-            def time_str_to_seconds(time_str):
-                try:
-                    parts = [int(x) for x in str(time_str).split(":")]
-                    if len(parts) == 3:
-                        h, m, s = parts
-                    elif len(parts) == 2:
-                        h, m = parts
-                        s = 0
-                    else:
-                        return 0
-                    return h * 3600 + m * 60 + s
-                except Exception:
-                    return 0
-            
-            def time_str_to_minutes(time_str):
-                try:
-                    parts = [int(x) for x in str(time_str).split(":")]
-                    if len(parts) == 3:
-                        h, m, s = parts
-                    elif len(parts) == 2:
-                        h, m = parts
-                        s = 0
-                    else:
-                        return 0
-                    return h * 60 + m * 1 + (s/60)
-                except Exception:
-                    return 0
-
-            # total_time_sec = time_str_to_seconds(total_time)
-            # total_time_min = time_str_to_minutes(total_time)
-            stt = str(target_row)
+            today_date = datetime.now().strftime("%H:%M:%S - %d/%m/%Y")
+            stt = str(target_row+1)
             row_data = [
-                stt,                    # STT
-                group_name,             # A, B, C Group
-                pressure_value,         # Pressure Value
-                temp_value,             # Temperature
-                front_temp,             # Front Temperature
-                mid_temp,               # Middle Temperature
-                end_temp,               # End Temperature
-                today_date              # Date
+                stt,                            # STT
+                product_name,                   # Product Name
+                group_name,                     # A, B, C Group
+                f"{pressure_value:.2f} bar",    # Pressure Value
+                temp_value_str,                 # Temperature
+                front_temp_str,                 # Front Temperature
+                mid_temp_str,                   # Middle Temperature
+                end_temp_str,                   # End Temperature
+                today_date                      # Date
             ]           
-
+            if self.ui.search_data.text().strip():
+                self._original_data.append(row_data)
+                return
             for col, data in enumerate(row_data):
                 self.ui.list_history.setItem(target_row, col, QTableWidgetItem(data))
 
-            self.ui.list_history.resizeColumnsToContents()
-
+            self._original_data.append(row_data)
+            # self.ui.list_history.resizeColumnsToContents()
+            
+            self.ui.list_history.scrollToBottom()
         except Exception as e:
-            if not hasattr(self, 'dialog_notification') or self.dialog_notification is None:
-                self.logger.error("[ProductionApp]-[add_row_to_list_history]: Dialog_Notification not initialized")
-            else:
-                self.logger.error(f"[ProductionApp]-[add_row_to_list_history]: Error adding row to list_history: {e}")
+            self.logger.error(f"[Main]-[add_row_to_list_history]: Error adding row to list_history: {e}")
 
-    def _is_row_complete(self, row_index, total_columns):
-        """Check if a specific row has all required data filled.
-        \nKiểm tra xem một hàng cụ thể có đầy đủ dữ liệu hay không."""
-        for col in range(total_columns):
-            item = self.ui.list_history.item(row_index, col)
-            if item is None or not item.text().strip():
-                return False
-        return True
+    def auto_export_all_tables_to_excel(self):
+        """
+        Export both the list_history and list_err tables to two dif Excel files
+        \nExport cả bảng list_history và list_err ra 2 file Excel riêng biệt.
+        """
+        current_date = datetime.now().strftime("%d_%m_%Y")
+
+        file_export = self.ui.list_history
+        default_filename_done = f"History {current_date}.xlsx"
+        list_history_folder = Path(self.stk_mch_folder) / "DB_address"
+        filename_done = list_history_folder / default_filename_done
+        if filename_done:
+            self._export_table_to_excel(file_export, str(filename_done))
+            self.logger.info("Autosave Done")
+
+    def save_after_quit_export_all_tables_to_excel(self):
+        """
+        Export both the list_history and list_err tables to two dif Excel files
+        \nExport cả bảng list_history và list_err ra 2 file Excel riêng biệt.
+        """
+        current_date = datetime.now().strftime("%d_%m_%Y")
+
+        file_export = self.ui.list_history
+        default_filename_done = f"History {current_date}.xlsx"
+        list_history_folder = Path(self.stk_mch_folder) / "Excel"
+        filename_done = list_history_folder / default_filename_done
+        if filename_done:
+            self._export_table_to_excel(file_export, str(filename_done))
+            self.logger.info("Save Done")
 
     def export_all_tables_to_excel_btn(self):
         """
@@ -1969,57 +2664,50 @@ class StrikeMachine(QMainWindow):
         list_history_folder = Path(self.stk_mch_folder) / "Excel"
         filename_done = list_history_folder / default_filename_done
         if filename_done:
-            # self._export_table_to_excel(file_export, filename_done)
             self.export_table_to_excel(file_export, str(filename_done))
 
     def _export_table_to_excel(self, table_widget, filename):
+        # Lấy headers từ QTableWidget
+        headers = []
+        for col in range(table_widget.columnCount()):
+            header = table_widget.horizontalHeaderItem(col)
+            headers.append(header.text() if header else f"Column {col + 1}")
+
+        # Lấy data từ QTableWidget
+        rows = []
+        for row in range(table_widget.rowCount()):
+            row_data = []
+            for col in range(table_widget.columnCount()):
+                item = table_widget.item(row, col)
+                row_data.append(item.text() if item else "")
+            rows.append(row_data)
+
+        # Tạo DataFrame và xuất Excel
+        df = pd.DataFrame(rows, columns=headers)
+        
         try:
-            original_filename = Path(filename)
-            counter = 1
-            
-            while True:
-                try:
-                    with open(filename, 'a'):
-                        pass
-                    break
-                except PermissionError:
-                    stem = original_filename.stem
-                    suffix = original_filename.suffix
-                    parent = original_filename.parent
-                    filename = str(parent / f"{stem} ({counter}){suffix}")
-                    counter += 1
-            
-            wb = Workbook()
-            ws = wb.active
-            ws.title = "Exported Data" # type: ignore
-
-            # Ghi dữ liệu
-            for row in range(table_widget.rowCount()):
-                row_data = []
-                for col in range(table_widget.columnCount()):
-                    item = table_widget.item(row, col)
-                    print(f"Row {row}, Col {col}: {item.text() if item else 'None'}")
-                    row_data.append(item.text() if item else "")
-                ws.append(row_data) # type: ignore
-
-            # Auto-fit cột
-            for col in ws.columns: # type: ignore
-                max_length = 0
-                col_letter = col[0].column_letter # type: ignore
-                for cell in col:
-                    try:
-                        max_length = max(max_length, len(str(cell.value)))
-                    except:
-                        pass
-                ws.column_dimensions[col_letter].width = max_length + 2 # type: ignore
-
-            wb.save(filename)
-            self.logger.info(f"[ProductionApp]-[export_table_to_excel]: Exported to {filename}")
-            ltmessage.information(self, "Success", f"Exported to {filename}")
-
+            with pd.ExcelWriter(filename, engine="openpyxl") as writer:
+                df.to_excel(writer, index=False, sheet_name="Sheet1")
+                
+                # Auto-fit column width
+                worksheet = writer.sheets["Sheet1"]
+                for col_idx, col_name in enumerate(df.columns, start=1):
+                    max_len = max(
+                        len(str(col_name)),
+                        df.iloc[:, col_idx - 1].astype(str).map(len).max() if len(df) > 0 else 0
+                    )
+                    worksheet.column_dimensions[
+                        worksheet.cell(1, col_idx).column_letter
+                    ].width = max_len + 4
+                header_font = Font(sz=12, bold=True, color="1E40AF")
+                border_bottom = Border(bottom=Side(style="medium", color="3B82F6"))
+                for col_idx in range(1, len(headers) + 1):
+                    cell = worksheet.cell(row=1, column=col_idx)
+                    cell.font = header_font
+                    cell.border = border_bottom
         except Exception as e:
-            self.logger.error(f"[ProductionApp]-[export_table_to_excel]: Export file Error: {e}")
-            ltmessage.error(self, "Export Error", str(e))
+            self.logger.error(f"[Main]-[export_table_to_excel]: Export file Error: {e}")
+            # ltmessage.error(self, "Export Error", str(e))
 
     def export_table_to_excel(self, table: QTableWidget, default_filename: str = "export"):
         """Xuất QTableWidget ra file Excel"""
@@ -2043,7 +2731,7 @@ class StrikeMachine(QMainWindow):
         for col in range(table.columnCount()):
             header = table.horizontalHeaderItem(col)
             headers.append(header.text() if header else f"Column {col + 1}")
-
+        
         # Lấy data từ QTableWidget
         rows = []
         for row in range(table.rowCount()):
@@ -2071,18 +2759,29 @@ class StrikeMachine(QMainWindow):
                         worksheet.cell(1, col_idx).column_letter
                     ].width = max_len + 4
 
+                header_font = Font(bold=True, color="1E40AF")
+                border_bottom = Border(bottom=Side(style="medium", color="3B82F6"))
+                for col_idx in range(1, len(headers) + 1):
+                    cell = worksheet.cell(row=1, column=col_idx)
+                    cell.font = header_font
+                    cell.border = border_bottom
             ltmessage.information(self, "Success", f"Exported successfully:\n{file_path}")
 
         except Exception as e:
             ltmessage.error(self, "Error", f"Export failed:\n{e}")
-
+            
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if hasattr(self, '_maximized_chart_idx') and self._maximized_chart_idx == -1:
+            QTimer.singleShot(50, self._save_grid_rects)
+            
     def closeEvent(self, event):
         reply = ltmessage.question(
             self, "Exit Confirmation", "Are you sure you want to exit?"
         )
 
         if reply == ltmessage.Yes:
-            print("Application is closing...")
+            self.logger.info("Application is closing...")
             try:
                 self._close_event_cleanup()
             except Exception as e:
@@ -2101,7 +2800,6 @@ class StrikeMachine(QMainWindow):
                 timer.stop()
             timer.deleteLater()
         self.all_timer.clear()
-        self.off_simulate()
         self.hide()
 
         if self.plc_read_worker:
@@ -2113,6 +2811,7 @@ class StrikeMachine(QMainWindow):
             self.plc_read_thread.wait()
         if self.plc_writer_thread:
             self.plc_writer_thread.wait()
+        self.off_simulate()
 
     def off_simulate(self):
         for name, thread in list(getattr(self, 'thread_dict', {}).items()):
@@ -2151,7 +2850,6 @@ if __name__ == "__main__":
         sys.exit(1)
 
     window = StrikeMachine()
-    window.show()
 
     def center_window(win):
         screen = QApplication.primaryScreen().availableGeometry()
@@ -2160,11 +2858,12 @@ if __name__ == "__main__":
         win.move(x, y)
 
     center_window(window)
-    
+    window.show()
+
     def cleanup():
         try:
-            # winsdow.export_all_tables_to_excel_btn()
-            # window._database_auto_check()
+            window.auto_export_all_tables_to_excel()
+            window.save_after_quit_export_all_tables_to_excel()
             window._close_event_cleanup()
         except:
             pass

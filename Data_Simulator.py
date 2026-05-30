@@ -7,7 +7,7 @@ class DataSimulator(QThread):
 
     def __init__(self):
         super().__init__()
-        self.running = False
+        self._running = False
 
         self.target_pressure_a = 0.0
         self.target_pressure_b = 0.0
@@ -66,9 +66,9 @@ class DataSimulator(QThread):
         return self._approach(current, target, step_ratio=0.02, noise=0.3)
 
     def run(self):
-        self.running = True
-        while self.running:
-            time.sleep(0.5)
+        self._running = True
+        while self._running:
+            time.sleep(1)
 
             self.pressure_a = self._approach_pressure(self.pressure_a, self.target_pressure_a)
             self.pressure_b = self._approach_pressure(self.pressure_b, self.target_pressure_b)
@@ -112,3 +112,5 @@ class DataSimulator(QThread):
 
             self.db_data_convert.emit(group_a_data, group_b_data, group_c_data)
 
+    def stop(self):
+        self._running = False
