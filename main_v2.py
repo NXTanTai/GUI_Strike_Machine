@@ -21,7 +21,7 @@ import sqlite3
 import threading
 from openpyxl import Workbook
 from openpyxl.styles import Font, Border, Side, PatternFill
-from PySide6.QtCore import (Qt, QTimer, QObject, QDate,
+from PySide6.QtCore import (Qt, QTimer, QObject, QDate, QTime,
                             QSettings, QDateTime, QModelIndex,
                             QEvent, QSharedMemory, QAbstractTableModel,
                             QSystemSemaphore, QThread, QSortFilterProxyModel, 
@@ -79,6 +79,8 @@ def install_clear_on_focus(widget):
     f = FocusSelectFilter(widget)
     widget.installEventFilter(f)
 
+SIMULATE = True
+
 class StrikeMachine(QMainWindow):
 
     def __init__(self, parent=None):
@@ -104,13 +106,13 @@ class StrikeMachine(QMainWindow):
         self._paint_pv_obj("#E53935")
         self._paint_sv_obj("#43A047")
         self._setup_btn_signals()
-        self._setup_plc_threads(False)
+        self._setup_plc_threads(SIMULATE)
         self._translator = QTranslator()
         self.ui.home_page_btn.click()
-        self.ui.search_data_start_edit.setDateTime(QDateTime.currentDateTime())
-        self.ui.search_data_end_edit.setDateTime(QDateTime.currentDateTime())
         self.ui.clear_history_search.hide()
         self.ui.multi_search_data.hide()
+        self._set_time_search_data_start_edit()
+        self._set_time_search_data_end_edit()
         self.ui.stackedWidget_4.setCurrentIndex(0)
 
     def showEvent(self, event):# type: ignore
@@ -375,7 +377,7 @@ class StrikeMachine(QMainWindow):
         self._original_data: list = []
         self._last_export_time = 0
         self.db_dict: Optional[dict] = None
-
+        
         self.user = False
         self._dialog_open = False
         self.worker_dict = {}
@@ -879,6 +881,7 @@ class StrikeMachine(QMainWindow):
         self.ui.temp_unit_selection_combox.currentIndexChanged.connect(lambda: QTimer.singleShot(50, self._set_cur_unit))
 
         self.ui.plc_io_btn.installEventFilter(self)
+        self.ui.code_display.installEventFilter(self)
 
         self.ui.new_data_btn.clicked.connect(self.new_data_btn)
         
@@ -913,8 +916,11 @@ class StrikeMachine(QMainWindow):
         self.ui.reset_cycle_c_btn.clicked.connect(lambda: self.plc_writer_worker.write_value.emit("P3_Number_Test_Times", 0) if self.plc_writer_connection else None) #type: ignore
 
         self.ui.search_data.textChanged.connect(self._on_search_changed)
+        self.ui.search_data_start_edit.dateTimeChanged.connect(self._on_search_changed)
+        self.ui.search_data_end_edit.dateTimeChanged.connect(self._on_search_changed)
         self.ui.search_type_btn.clicked.connect(self.search_type_btn)
         self.ui.clear_history_search.clicked.connect(self._on_clear_clicked)
+        self.ui.export_all_tables_to_excel_btn.clicked.connect(self.export_all_tables_to_excel_btn)
 
         spinbox_map = {
             "pressure_sv_a_1": self.on_pressure_sv_a_1_changed,
@@ -992,8 +998,51 @@ class StrikeMachine(QMainWindow):
             spinbox.setKeyboardTracking(False)
             spinbox.valueChanged.connect(handler)
 
-        self.ui.export_all_tables_to_excel_btn.clicked.connect(self.export_all_tables_to_excel_btn)
         self.ui.error_display._speed = 50
+
+    def _init_history_database(self):
+        """Khởi tạo SQLite Database - Không xóa bảng cũ"""
+        db_folder = Path(self.stk_mch_folder) / "DB_address"
+        db_folder.mkdir(parents=True, exist_ok=True)
+        
+        self.history_db_path = db_folder / "history.db"
+        
+        try:
+            self.conn = sqlite3.connect(str(self.history_db_path), check_same_thread=False)
+            self.conn.execute("PRAGMA journal_mode=WAL")
+            self.conn.execute("PRAGMA synchronous=NORMAL")
+            # self.conn.execute("DROP TABLE IF EXISTS history")
+            # Kiểm tra xem bảng đã có chưa
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='history'")
+            table_exists = cursor.fetchone() is not None
+
+            if not table_exists:
+                # Tạo mới nếu chưa có
+                self.conn.execute('''
+                    CREATE TABLE history (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        "No." TEXT,
+                        "Name." TEXT,
+                        "Group." TEXT,
+                        "Pressure." TEXT,
+                        "T-Oven." TEXT,
+                        "Front." TEXT,
+                        "Middle." TEXT,
+                        "End." TEXT,
+                        "Date." TEXT
+                    )
+                ''')
+                # self.logger.info("Created new history table")
+            else:
+                # self.logger.info("History table already exists")
+
+                self.conn.commit()
+                self.logger.info(f"SQLite DB ready: {self.history_db_path}")
+            
+        except Exception as e:
+            # self.logger.error(f"SQLite init error: {e}")
+            self.conn = None
 
     def _init_table_list_history(self):
         if not self.conn:
@@ -1131,191 +1180,128 @@ class StrikeMachine(QMainWindow):
 
         sb.valueChanged.connect(self._on_history_scroll)
 
-    def _init_history_database(self):
-        """Khởi tạo SQLite Database - Không xóa bảng cũ"""
-        db_folder = Path(self.stk_mch_folder) / "DB_address"
-        db_folder.mkdir(parents=True, exist_ok=True)
+    def _on_search_changed(self, *args):
+        """Hỗ trợ cả textbox và dateTimeChanged"""
+        # Lấy keyword từ textbox
+        keyword = self.ui.search_data.text().strip().lower()
         
-        self.history_db_path = db_folder / "history.db"
-        
-        try:
-            self.conn = sqlite3.connect(str(self.history_db_path), check_same_thread=False)
-            self.conn.execute("PRAGMA journal_mode=WAL")
-            self.conn.execute("PRAGMA synchronous=NORMAL")
-
-            # Kiểm tra xem bảng đã có chưa
-            cursor = self.conn.cursor()
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='history'")
-            table_exists = cursor.fetchone() is not None
-
-            if not table_exists:
-                # Tạo mới nếu chưa có
-                self.conn.execute('''
-                    CREATE TABLE history (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        "No." TEXT,
-                        "Name." TEXT,
-                        "Group." TEXT,
-                        "Pressure." TEXT,
-                        "T-Oven." TEXT,
-                        "Front." TEXT,
-                        "Middle." TEXT,
-                        "End." TEXT,
-                        "Date." TEXT
-                    )
-                ''')
-                # self.logger.info("Created new history table")
-            else:
-                # self.logger.info("History table already exists")
-
-                self.conn.commit()
-                self.logger.info(f"SQLite DB ready: {self.history_db_path}")
-            
-        except Exception as e:
-            # self.logger.error(f"SQLite init error: {e}")
-            self.conn = None
-
-    def _on_search_changed(self, keyword: str):
-        keyword = keyword.strip().lower()
-        
-        if not keyword or not self.conn:
-            self.ui.clear_history_search.hide()
-            self.ui.stackedWidget_4.setCurrentIndex(0)
-            self._update_info(0, 0)
+        if not self.conn:
             return
 
-        self._search_keyword = keyword
-        self._search_offset = 0
-        self._search_cache = []
-        self._search_total = 0
-        self._loading_search_chunk = False
+        # Nếu không có từ khóa và không phải chế độ name-group-date → load mặc định
+        start_dt = self.ui.search_data_start_edit.dateTime()
+        end_dt = self.ui.search_data_end_edit.dateTime()
+        if start_dt == end_dt and not keyword:
+            self.ui.clear_history_search.hide()
+            self.ui.stackedWidget_4.setCurrentIndex(0)
+            return
+            
+        self.ui.clear_history_search.show()
+        self.ui.stackedWidget_4.setCurrentIndex(1)
 
         try:
-            col_map = {
-                "name": '"Name."',
-                "group": '"Group."',
-                "date": '"Date."',
-            }
+            where_clauses = []
+            params = []
 
+            # ==================== TỪ KHÓA ====================
+            if keyword:
+                if self._current_search_type == "name":
+                    where_clauses.append('"Name." LIKE ?')
+                    params.append(f"%{keyword}%")
+                elif self._current_search_type == "group":
+                    where_clauses.append('"Group." LIKE ?')
+                    params.append(f"%{keyword}%")
+                else:  # name-group-date
+                    if keyword.startswith("-"):
+                        group_part = keyword[1:].strip()
+                        where_clauses.append('"Group." LIKE ?')
+                        params.append(f"%{group_part}%")
+
+                    # "name - group name" → tìm AND cả Name lẫn Group
+                    elif " - " in keyword:
+                        parts = keyword.split(" - ", 1)
+                        name_part = parts[0].strip()
+                        group_part = parts[1].strip()
+                        where_clauses.append('"Name." LIKE ? AND "Group." LIKE ?')
+                        params.extend([f"%{name_part}%", f"%{group_part}%"])
+
+                    # Không có "-" → tìm OR như cũ
+                    else:
+                        where_clauses.append('("Name." LIKE ? OR "Group." LIKE ?)')
+                        params.extend([f"%{keyword}%", f"%{keyword}%"])
+
+            # ==================== KHOẢNG THỜI GIAN ====================
             if self._current_search_type == "name-group-date":
-                parts = keyword.strip().split()
-                if len(parts) == 1:
-                    where_clause = '"Name." LIKE ? OR "Group." LIKE ? OR "Date." LIKE ?'
-                    params_count = (f"%{parts[0]}%", f"%{parts[0]}%", f"%{parts[0]}%")
-                else:
-                    conditions = []
-                    params_list = []
-                    for part in parts:
-                        conditions.append('("Name." LIKE ? OR "Group." LIKE ? OR "Date." LIKE ?)')
-                        params_list += [f"%{part}%", f"%{part}%", f"%{part}%"]
-                    where_clause = " AND ".join(conditions)
-                    params_count = tuple(params_list)
-            else:
-                col = col_map.get(self._current_search_type, '"Name."')
-                where_clause = f'{col} LIKE ?'
-                params_count = (f"%{keyword}%",)
+                start_date = self.ui.search_data_start_edit.dateTime().toString("HH:mm - dd/MM/yyyy")
+                end_date = self.ui.search_data_end_edit.dateTime().toString("HH:mm - dd/MM/yyyy")
 
-            self._search_where_clause = where_clause  # ✅ Lưu lại
-            self._search_params = params_count        # ✅ Lưu lại
+                if start_date and end_date:
+                    where_clauses.append('"Date." >= ? AND "Date." <= ?')
+                    params.extend([start_date, end_date])
 
-            self._search_total = self.conn.execute(
-                f'SELECT COUNT(*) FROM history WHERE {where_clause}',
-                params_count
-            ).fetchone()[0]
-
-            if self._search_total == 0:
-                self._load_filtered_data([])
-                self.ui.clear_history_search.show()
-                self.ui.stackedWidget_4.setCurrentIndex(1)
+            # Nếu không có điều kiện nào
+            if not where_clauses:
+                self.ui.clear_history_search.hide()
+                self.ui.stackedWidget_4.setCurrentIndex(0)
+                # self._init_table_list_history()
                 return
+
+            where_clause = " AND ".join(where_clauses)
+            self._search_where_clause = where_clause
+            self._search_params = tuple(params)
 
             self._search_fetch_chunk(reset=True)
 
-            self.ui.clear_history_search.show()
-            self.ui.stackedWidget_4.setCurrentIndex(1)
-
-            sb = self.ui.list_history_2.verticalScrollBar()
-            if not getattr(self, '_search_scroll_connected', False):
-                sb.valueChanged.connect(self._on_search_scroll)
-                self._search_scroll_connected = True
-
         except Exception as e:
             self.logger.error(f"Search error: {e}")
+            # self._init_table_list_history()
 
     def _search_fetch_chunk(self, reset=False):
-        where_clause = getattr(self, '_search_where_clause', '"Name." LIKE ?')
-        params = getattr(self, '_search_params', (f"%{self._search_keyword}%",))
-        keyword = self._search_keyword
+        if not hasattr(self, '_search_where_clause'):
+            return
 
-        if reset:
+        where_clause = self._search_where_clause
+        params = self._search_params
+
+        try:
             cursor = self.conn.cursor()
-            cursor.execute(
-                f'SELECT * FROM history WHERE {where_clause} ORDER BY id DESC LIMIT 100',
-                params
-            )
-            rows = cursor.fetchall()
-            rows.reverse()
-
-            self._search_cache = []
-            for idx, row in enumerate(rows):
-                stt = self._search_total - len(rows) + idx + 1
-                self._search_cache.append(
-                    [str(stt)] + [str(v if v is not None else "") for v in row[2:]]
+            
+            # === QUAN TRỌNG: Nếu là search theo thời gian thì lấy HẾT ===
+            if self._current_search_type == "name-group-date":
+                # Lấy toàn bộ kết quả theo thời gian (không giới hạn)
+                cursor.execute(
+                    f'SELECT * FROM history WHERE {where_clause} ORDER BY id ASC',
+                    params
                 )
-            self._search_db_offset = self._search_total - len(rows)
-
-            self._load_filtered_data(self._search_cache)
-            self.ui.list_history_2.scrollToBottom()
-
-        else:
-            if self._search_db_offset <= 0:
-                self._loading_search_chunk = False
-                return
-
-            fetch_end = self._search_db_offset
-            fetch_start = max(0, fetch_end - 100)
-            fetch_count = fetch_end - fetch_start
-
-            cursor = self.conn.cursor()
-            cursor.execute(
-                f'''SELECT * FROM (
-                    SELECT *, ROW_NUMBER() OVER (ORDER BY id ASC) as rn
-                    FROM history WHERE {where_clause}
-                ) WHERE rn > ? AND rn <= ?''',
-                params + (fetch_start, fetch_start + fetch_count)
-            )
-            rows = cursor.fetchall()
-
-            new_chunk = []
-            for idx, row in enumerate(rows):
-                stt = fetch_start + idx + 1
-                new_chunk.append(
-                    [str(stt)] + [str(v if v is not None else "") for v in row[2:-1]]
+            else:
+                # Các chế độ khác thì giới hạn 200 để tránh lag
+                cursor.execute(
+                    f'SELECT * FROM history WHERE {where_clause} ORDER BY id ASC',  # LIMIT 200
+                    params
                 )
 
-            self._search_cache = new_chunk + self._search_cache
-            self._search_db_offset = fetch_start
+            rows = cursor.fetchall()
 
-            table = self.ui.list_history_2
-            table.setUpdatesEnabled(False)
-            for i, row_data in enumerate(new_chunk):
-                table.insertRow(i)
-                for col_idx, value in enumerate(row_data):
-                    item = QTableWidgetItem(value)
-                    if col_idx == 0:
-                        item.setTextAlignment(Qt.AlignCenter)
-                    table.setItem(i, col_idx, item)
-            table.setUpdatesEnabled(True)
+            filtered = []
+            for row_idx, row in enumerate(rows):
+                # row[0] = id, row[1] = No.
+                if row[1] is not None and str(row[1]).strip() != "":
+                    original_stt = str(row[1])
+                else:
+                    original_stt = str(row[0])  # Fallback về id
 
-            first_visible_row = len(new_chunk)
-            table.scrollTo(
-                table.model().index(first_visible_row, 0),
-                QTableWidget.ScrollHint.PositionAtTop
-            )
+                row_list = [original_stt] + [str(v if v is not None else "") for v in row[2:]]
+                filtered.append(row_list)
 
-            self._loading_search_chunk = False
+            self._load_filtered_data(filtered)
+        except Exception as e:
+            self.logger.error(f"_search_fetch_chunk error: {e}")
+            # self._init_table_list_history()
 
     def _on_search_scroll(self, value: int):
+        """
+        Xử lí dữ liệu khi cuộn History lên trên, thêm 100 hoặc tuỳ chỉnh số dòng vào table History
+        """
         if value > 100:
             return
         if self._search_db_offset <= 0:
@@ -1327,6 +1313,9 @@ class StrikeMachine(QMainWindow):
         QTimer.singleShot(2000, self._search_fetch_chunk)
 
     def _load_filtered_data(self, filtered_data: list):
+        """
+        Load dữ liệu từ database vào table thứ 2 để hiển thị
+        """
         table = self.ui.list_history_2
         table.setUpdatesEnabled(False)
         table.setRowCount(0)
@@ -1341,7 +1330,7 @@ class StrikeMachine(QMainWindow):
 
         table.setUpdatesEnabled(True)
         self._resize_table_columns(table)
-        self._update_info(self._search_total, len(self._all_rows_cache) + self._db_offset)
+        # self._update_info(self._search_total, len(self._all_rows_cache) + self._db_offset)
 
     def _resize_table_columns(self, table):
         if not table or table.columnCount() == 0:
@@ -1350,11 +1339,6 @@ class StrikeMachine(QMainWindow):
         header = table.horizontalHeader()
         for col in range(table.columnCount() - 1):
             header.setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
-
-        header.setSectionResizeMode(
-            table.columnCount() - 1,
-            QHeaderView.ResizeMode.Stretch
-        )
 
     def _update_info(self, shown: int, total: int):
         if shown == total:
@@ -1367,9 +1351,6 @@ class StrikeMachine(QMainWindow):
             self._current_search_type = "group"
             self.ui.search_data.setPlaceholderText("Search [Group]")
         elif self._current_search_type == "group":
-            self._current_search_type = "date"
-            self.ui.search_data.setPlaceholderText("Search [Date]")
-        elif self._current_search_type == "date":
             self._current_search_type = "name-group-date"
             self.ui.search_data.setSizePolicy(
                 QSizePolicy.Policy.Preferred,
@@ -1379,6 +1360,8 @@ class StrikeMachine(QMainWindow):
             self.ui.multi_search_data.show()
         elif self._current_search_type == "name-group-date":
             self._current_search_type = "name"
+            self._set_time_search_data_start_edit()
+            self._set_time_search_data_end_edit()
             self.ui.search_data.setSizePolicy(
                 QSizePolicy.Policy.Expanding,
                 QSizePolicy.Policy.Preferred
@@ -1388,8 +1371,39 @@ class StrikeMachine(QMainWindow):
 
     def _on_clear_clicked(self):
         self.ui.search_data.clear()
+        self._set_time_search_data_start_edit()
+        self._set_time_search_data_end_edit()
         self.ui.search_data.setFocus()
+        self.ui.list_history.scrollToBottom()
 
+    def _set_time_search_data_start_edit(self):
+        now = QDateTime.currentDateTime()
+        rounded_time, extra_day = self.round_time(now.time())
+        
+        self.ui.search_data_start_edit.setDateTime(
+            QDateTime(now.date().addDays(extra_day), rounded_time)
+        )
+
+    def _set_time_search_data_end_edit(self):
+        now = QDateTime.currentDateTime()
+        rounded_time, extra_day = self.round_time(now.time())
+        
+        self.ui.search_data_end_edit.setDateTime(
+            QDateTime(now.date().addDays(extra_day), rounded_time)
+        )
+
+    def round_time(self, time: QTime):
+        minute = time.minute()
+        hour = time.hour()
+
+        if minute <= 30:
+            return QTime(hour, 30, 0), 0        # (time, ngày cộng thêm)
+        else:
+            next_hour = hour + 1
+            if next_hour >= 24:
+                return QTime(0, 0, 0), 1        # Qua ngày mới
+            return QTime(next_hour, 0, 0), 0
+        
     # ── Group A ──────────────────────────────────────────
     def on_pressure_sv_a_1_changed(self, value: float): 
         if self.plc_writer_connection:
@@ -1536,7 +1550,7 @@ class StrikeMachine(QMainWindow):
             self.ui.stackedWidget.setCurrentIndex(0)
 
     def _setup_plc_threads(self, state: bool):
-        if not state:
+        if state:
             self.logger.info("PLC Thread set Off")
             self.setup_simulate_threads()
             return
@@ -2147,7 +2161,7 @@ class StrikeMachine(QMainWindow):
     def _alarm_data_filter(self, alarm_recv):
         if alarm_recv[0]:
             self.ui.error_display.setText(alarm_recv[1])
-            print(alarm_recv[1])
+            # print(alarm_recv[1])
 
     def on_heat_btn_clicked(self, channel: str, checked: bool):
         simulator = self.thread_dict.get("data_simulator")
@@ -2406,25 +2420,91 @@ class StrikeMachine(QMainWindow):
         reply = ltmessage.question(
             self, "Clear Data", "Set all SV to 0?"
         )
-
         if reply == ltmessage.Yes:
             try:
                 self.ui.code_display.setText("")
                 for i in range(len(self.pressure_a_sv_obj)):
+                    self.pressure_a_sv_obj[i].blockSignals(False)
+                    self.pressure_b_sv_obj[i].blockSignals(False)
+                    self.pressure_c_sv_obj[i].blockSignals(False)                    
                     self.pressure_a_sv_obj[i].setValue(0)
                     self.pressure_b_sv_obj[i].setValue(0)
                     self.pressure_c_sv_obj[i].setValue(0)
+                    self.pressure_a_sv_obj[i].blockSignals(True)
+                    self.pressure_b_sv_obj[i].blockSignals(True)
+                    self.pressure_c_sv_obj[i].blockSignals(True)       
                 for i in range(len(self.temp_sv_obj)):
+                    self.temp_sv_obj[i].blockSignals(False)
                     self.temp_sv_obj[i].setValue(0)
-                    
+                    self.temp_sv_obj[i].blockSignals(True)
                 for i in range(len(self.temp_h_alm_obj)):
+                    self.temp_h_alm_obj[i].blockSignals(False)
                     self.temp_h_alm_obj[i].setValue(0)
+                    self.temp_h_alm_obj[i].blockSignals(True)
 
                 for i in range(len(self.temp_l_alm_obj)):
+                    self.temp_l_alm_obj[i].blockSignals(False)
                     self.temp_l_alm_obj[i].setValue(0)
-
+                    self.temp_l_alm_obj[i].blockSignals(True)
                 for i in range(len(self.temp_offset_obj)):
+                    self.temp_offset_obj[i].blockSignals(False)
                     self.temp_offset_obj[i].setValue(0)
+                    self.temp_offset_obj[i].blockSignals(True)
+                items_a = [
+                    self.plc_writer_worker.get_item("P1_CountTimes", self.list_for_import_a[0].value()),
+                    self.plc_writer_worker.get_item("P1_Oil_Start_Time", self.list_for_import_a[1].value()),
+                    self.plc_writer_worker.get_item("P1_Oil_End_Time", self.list_for_import_a[2].value()),
+                    self.plc_writer_worker.get_item("P1_Air_FillingTime", self.list_for_import_a[3].value()),
+                    self.plc_writer_worker.get_item("P1_Air_HoldingTime", self.list_for_import_a[4].value()),
+                    self.plc_writer_worker.get_item("P1_Air_ReleaseTime", self.list_for_import_a[5].value()),
+                    self.plc_writer_worker.get_item("P1_PressureSetting", self.list_for_import_a[6].value()),
+                    self.plc_writer_worker.get_item("P1_TemperatureSetting", self.list_for_import_a[7].value()),
+                    self.plc_writer_worker.get_item("P1_TempLimitHIGH", self.list_for_import_a[8].value()),
+                    self.plc_writer_worker.get_item("P1_TempLimitLOW", self.list_for_import_a[9].value()),
+                    self.plc_writer_worker.get_item("P1_Temp1Offset", self.list_for_import_a[10].value()),
+                    self.plc_writer_worker.get_item("P1_Temp2Offset", self.list_for_import_a[11].value()),
+                    self.plc_writer_worker.get_item("P1_Temp3Offset", self.list_for_import_a[12].value())
+                ]
+                items_b = [
+                    self.plc_writer_worker.get_item("P2_CountTimes", self.list_for_import_b[0].value()),
+                    self.plc_writer_worker.get_item("P2_Oil_Start_Time", self.list_for_import_b[1].value()),
+                    self.plc_writer_worker.get_item("P2_Oil_End_Time", self.list_for_import_b[2].value()),
+                    self.plc_writer_worker.get_item("P2_Air_FillingTime", self.list_for_import_b[3].value()),
+                    self.plc_writer_worker.get_item("P2_Air_HoldingTime", self.list_for_import_b[4].value()),
+                    self.plc_writer_worker.get_item("P2_Air_ReleaseTime", self.list_for_import_b[5].value()),
+                    self.plc_writer_worker.get_item("P2_PressureSetting", self.list_for_import_b[6].value()),
+                    self.plc_writer_worker.get_item("P2_TemperatureSetting", self.list_for_import_b[7].value()),
+                    self.plc_writer_worker.get_item("P2_TempLimitHIGH", self.list_for_import_b[8].value()),
+                    self.plc_writer_worker.get_item("P2_TempLimitLOW", self.list_for_import_b[9].value()),
+                    self.plc_writer_worker.get_item("P2_Temp1Offset", self.list_for_import_b[10].value()),
+                    self.plc_writer_worker.get_item("P2_Temp2Offset", self.list_for_import_b[11].value()),
+                    self.plc_writer_worker.get_item("P2_Temp3Offset", self.list_for_import_b[12].value())
+                ]
+                items_c = [
+                    self.plc_writer_worker.get_item("P3_CountTimes", self.list_for_import_c[0].value()),
+                    self.plc_writer_worker.get_item("P3_Oil_Start_Time", self.list_for_import_c[1].value()),
+                    self.plc_writer_worker.get_item("P3_Oil_End_Time", self.list_for_import_c[2].value()),
+                    self.plc_writer_worker.get_item("P3_Air_FillingTime", self.list_for_import_c[3].value()),
+                    self.plc_writer_worker.get_item("P3_Air_HoldingTime", self.list_for_import_c[4].value()),
+                    self.plc_writer_worker.get_item("P3_Air_ReleaseTime", self.list_for_import_c[5].value()),
+                    self.plc_writer_worker.get_item("P3_PressureSetting", self.list_for_import_c[6].value()),
+                    self.plc_writer_worker.get_item("P3_TemperatureSetting", self.list_for_import_c[7].value()),
+                    self.plc_writer_worker.get_item("P3_TempLimitHIGH", self.list_for_import_c[8].value()),
+                    self.plc_writer_worker.get_item("P3_TempLimitLOW", self.list_for_import_c[9].value()),
+                    self.plc_writer_worker.get_item("P3_Temp1Offset", self.list_for_import_c[10].value()),
+                    self.plc_writer_worker.get_item("P3_Temp2Offset", self.list_for_import_c[11].value()),
+                    self.plc_writer_worker.get_item("P3_Temp3Offset", self.list_for_import_c[12].value())
+                ]
+                items_t0 = [
+                    self.plc_writer_worker.get_item("T0_TemperatureSetting", self.list_for_import_t0[0].value()),
+                    self.plc_writer_worker.get_item("T0_TempLimitHIGH", self.list_for_import_t0[1].value()),
+                    self.plc_writer_worker.get_item("T0_TempLimitLOW", self.list_for_import_t0[2].value()),
+                    self.plc_writer_worker.get_item("T0_TempOffset", self.list_for_import_t0[3].value())
+                ]
+                self.plc_writer_worker.write_multi.emit(items_a)
+                self.plc_writer_worker.write_multi.emit(items_b)
+                self.plc_writer_worker.write_multi.emit(items_c)
+                self.plc_writer_worker.write_multi.emit(items_t0)
             except Exception as e:
                 ltmessage.error(self, "Error", f"Failed to clear data: {e}")
 
@@ -2445,7 +2525,6 @@ class StrikeMachine(QMainWindow):
         self.ui.code_display.setText(str(df.iloc[0][0]).strip() if pd.notna(df.iloc[0][0]) else "")
         for i in range(2, len(df)): # Bắt đầu từ hàng 3
             column = df.iloc[i]
-
             name_raw = str(column[0]).strip() if pd.notna(column[0]) else ""
             if name_raw == "" or name_raw.lower() == "nan":
                 break
@@ -2485,6 +2564,7 @@ class StrikeMachine(QMainWindow):
                     value_t0 = 0
                 self.list_for_import_t0[i-9].blockSignals(True)
                 self.list_for_import_t0[i-9].setValue(value_t0)
+
         self.ui.at_sv.blockSignals(True)
         self.ui.at_sv.setValue(self.ui.pressure_sv_a_1.value())
         self.ui.bt_sv.blockSignals(True)
@@ -2556,6 +2636,9 @@ class StrikeMachine(QMainWindow):
         self.ui.at_sv.blockSignals(False)
         self.ui.bt_sv.blockSignals(False)
         self.ui.ct_sv.blockSignals(False)
+        self.ui.set_cycle_a_btn.click()
+        self.ui.set_cycle_b_btn.click()
+        self.ui.set_cycle_c_btn.click()
 
     def set_language_en(self):
         self._app.removeTranslator(self._translator)
@@ -2832,12 +2915,12 @@ class StrikeMachine(QMainWindow):
             self._pending_rows.append([
                 "", product_name, group_name,
                 f"{pressure_value:.2f} bar",
-                fmt(temp_value), fmt(front_temp), fmt(mid_temp), fmt(end_temp),
-                datetime.now().strftime("%H:%M:%S - %d/%m/%Y")
+                fmt(temp_value), fmt(front_temp), 
+                fmt(mid_temp), fmt(end_temp),
+                datetime.now().strftime("%H:%M - %d/%m/%Y")
             ])
         except Exception as e:
             self.logger.error(f"[add_row_to_list_history] Error: {e}")
-
 
     def _flush_history(self):
         """Mỗi 1s — batch insert DB + append vào table"""
@@ -2858,7 +2941,6 @@ class StrikeMachine(QMainWindow):
                 self.conn.commit()
             except Exception as e:
                 self.logger.error(f"[_flush_history][DB] {e}")
-
         threading.Thread(target=_db_batch, daemon=True).start()
 
         # Append vào cache
@@ -2927,7 +3009,7 @@ class StrikeMachine(QMainWindow):
         """
         current_date = datetime.now().strftime("%d_%m_%Y")
 
-        file_export = self.ui.list_history
+        file_export = self.ui.list_history_2 if self.ui.stackedWidget_4.currentIndex() == 1 else self.ui.list_history
         default_filename_done = f"History {current_date}.xlsx"
         list_history_folder = Path(self.stk_mch_folder) / "Excel"
         filename_done = list_history_folder / default_filename_done
@@ -3079,7 +3161,8 @@ class StrikeMachine(QMainWindow):
             self.plc_read_thread.wait()
         if self.plc_writer_thread:
             self.plc_writer_thread.wait()
-        self.stop_simulate_threads()
+        
+        self.stop_simulate_threads() if SIMULATE else None
 
     def stop_simulate_threads(self):
         try:
