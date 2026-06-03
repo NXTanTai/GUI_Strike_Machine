@@ -70,6 +70,7 @@ class PLCWrite(QObject):
         db_size:   int = 584,
         write_gap_ms: int = 300,          # Khoảng cách giữa các lần ghi
         retry_ms:  int = 3000,
+        logger=None,
         parent:    Optional[QObject] = None,
     ):
         super().__init__(parent)
@@ -82,6 +83,7 @@ class PLCWrite(QObject):
         self._db_size     = db_size
         self._write_gap_ms = write_gap_ms
         self._retry_ms    = retry_ms
+        self.logger = logger
         # print("DB Layout:", db_layout)
         # Layout dict để tra cứu nhanh
         self._layout_dict: dict[str, tuple[str, int, Any]] = self._build_layout_dict()
@@ -108,7 +110,8 @@ class PLCWrite(QObject):
     @Slot()
     def run(self):
         self._running = True
-        print("PLC Write init")
+        if self.logger:
+            self.logger.info("[PLC WRITE]: PLC Write init")
 
         # Timer chính để ghi dữ liệu
         self._timer = QTimer(self)
@@ -179,22 +182,27 @@ class PLCWrite(QObject):
     @Slot(str, bool)
     def _enqueue_bool(self, name: str, value: bool):
         self._queue.put(("bool", name, value))
-        print(f"BOOL Enqueued → {name} = {value}")
+        if self.logger:
+            self.logger.info(f"[PLC WRITE]: BOOL Enqueued → {name} = {value}")
 
     @Slot(str, object)
     def _enqueue_value(self, name: str, value: object):
         """Enqueue riêng cho REAL, INT, DINT, STRING"""
         self._queue.put(("value", name, value))
-        print(f"Value Enqueued → {name} = {value}")
+        if self.logger:
+            self.logger.info(f"[PLC WRITE]: Value Enqueued → {name} = {value}")
 
     @Slot(object)
     def _enqueue_multi(self, items: object):
         self._queue.put(("multi_vars", items))
-        print(f"Cmd Area recv: \n{items}")
+        if self.logger:
+            self.logger.info(f"[PLC WRITE]: Multi vars enqueued: {len(items)}")
 
     @Slot(dict)
     def _enqueue_full_db(self, data: object):
         self._queue.put(("full_db", data))
+        if self.logger:
+            self.logger.info(f"[PLC WRITE]: Full DB write enqueued: {len(data)} tags")
 
     # ── Drain Queue ─────────────────────────────────────────────────────────
     @Slot()
@@ -219,7 +227,8 @@ class PLCWrite(QObject):
                 self._write_full_db(item[1])
 
         except Exception as e:
-            logger.debug("Drain error: %s", e)
+            if self.logger:
+                self.logger.error("[PLC WRITE]: Drain error: %s", e)
     # ── Connection ──────────────────────────────────────────────────────────
     @Slot()
     def _try_connect(self):
@@ -282,7 +291,8 @@ class PLCWrite(QObject):
             self.connected.emit(True)
         else:
             msg = f"Connection failed: {result['error']}"
-            logger.error(msg)
+            if self.logger:
+                self.logger.error("[PLC WRITE]: " + msg)
             self.error.emit(msg)
             self.connected.emit(False)
             self._client = None
@@ -316,11 +326,11 @@ class PLCWrite(QObject):
             result = set_bool(raw, 0, bit or 0, bool(value))
 
             self._client.db_write(self._db_number, offset, result)
-            print(f"[BOOL] {name} = {value} | Offset: {offset}.{(bit or 0)} | DB{self._db_number}")
+            if self.logger:
+                self.logger.info(f"[PLC WRITE]: BOOL OK → {name} = {value}")
             self.write_done.emit(name)
-            logger.debug(f"BOOL OK → {name} = {value}")
         except Exception as exc:
-            self._handle_write_error(f"Write BOOL [{name}]", exc)
+            self._handle_write_error(f"[PLC WRITE]: Write BOOL [{name}]", exc)
 
 
     def _write_value(self, name: str, value: Any):
@@ -345,11 +355,12 @@ class PLCWrite(QObject):
             self._pack(raw, dtype, bit, value, offset=0)
             self._client.db_write(self._db_number, offset, raw)
 
-            print(f"[Value] {name} = {value} | Offset: {offset} | DB{self._db_number}")
+            if self.logger:
+                self.logger.info(f"[PLC WRITE]: Value written → {name} = {value} | Offset: {offset} | DB{self._db_number}")
             self.write_done.emit(name)
             
         except Exception as exc:
-            self._handle_write_error(f"Write value [{name}]", exc)
+            self._handle_write_error(f"[PLC WRITE]: Write value [{name}]", exc)
 
     def _write_multi_vars(self, items: list):
         """
@@ -369,11 +380,12 @@ class PLCWrite(QObject):
             result = self._client.write_multi_vars(items)
             if result == 0:
                 self.write_done.emit("multi_vars")
-                logger.info(f"write_multi_vars OK: {len(items)} items: {items}")
+                if self.logger:
+                    self.logger.info(f"[PLC WRITE]: write_multi_vars OK: {len(items)} items: {items}")
             else:
-                self.error.emit(f"write_multi_vars returned: {result}")
+                self.error.emit(f"[PLC WRITE]: write_multi_vars returned: {result}")
         except Exception as exc:
-            self._handle_write_error("write_multi_vars", exc)
+            self._handle_write_error(f"[PLC WRITE]: write_multi_vars", exc)
 
     def _write_full_db(self, data: dict):
         """
@@ -393,10 +405,11 @@ class PLCWrite(QObject):
 
             self._client.db_write(self._db_number, 0, raw)
             self.write_done.emit("full_db")
-            logger.info("Full DB write successful (%d tags)", len(data))
+            if self.logger:
+                self.logger.info(f"[PLC WRITE]: Full DB write successful (%d tags)", len(data))
 
         except Exception as exc:
-            self._handle_write_error("Full DB write", exc)
+            self._handle_write_error(f"[PLC WRITE]: Full DB write", exc)
 
     def _ensure_connected(self) -> bool:
         if not self._client or not self._client.get_connected():
@@ -405,7 +418,8 @@ class PLCWrite(QObject):
 
     def _handle_write_error(self, context: str, exc: Exception):
         msg = f"{context} failed: {exc}"
-        logger.warning(msg)
+        if self.logger:
+            self.logger.error(msg)
         self.error.emit(msg)
         self._reconnect()
 
