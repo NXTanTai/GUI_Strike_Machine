@@ -1,12 +1,11 @@
 # pyside6-uic tech_link_theme.ui -o tech_link_theme.py
 # pyside6-rcc Icon.qrc -o Icon_rc.py
 # pyside6-rcc icons.qrc -o icons_rc.py
+
 # pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_en.ts
 # pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_cn.ts
 
-# pyinstaller --onefile --name="Packing Demo" --icon=icons\Download_Icons\robotic-arm.ico --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" main.py
-# pyinstaller --onefile --name="Testing App" --add-binary "lib\snap7.dll;." main_v2.py
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "tech_link_theme_cn.qm;." main_v2.py
+# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\hose_icon.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." main_v2.py
 
 import sys
 import os
@@ -19,21 +18,18 @@ import atexit
 import sqlite3
 import threading
 import multiprocessing
-from openpyxl.styles import Font, Border, Side, Alignment
 from PySide6.QtCore import (Qt, QLocale,
-                            QTimer, QObject, QDate, 
+                            QTimer, QObject, 
                             QTime, QSettings, QDateTime,
                             QEvent, QSharedMemory, QSystemSemaphore, 
                             QThread, QEasingCurve, QTranslator)
 from PySide6.QtGui import QFont, QMovie
 from PySide6.QtWidgets import (QVBoxLayout, QHeaderView, QAbstractSpinBox,
-                               QLabel,QMainWindow, QApplication, QLineEdit, 
-                                QFileDialog, QDialog, QTableWidget, QTableWidgetItem, QSizePolicy
-)
+                               QLabel, QMainWindow, QApplication, QLineEdit,
+                               QFileDialog, QDialog, QTableWidget, QTableWidgetItem)
 from typing import List, Optional, Tuple, Any
 from pathlib import Path
-from datetime import datetime 
-from openpyxl.styles import Font
+from datetime import datetime
 from tech_link_theme import Ui_MainWindow
 from Custom_Widgets import * #type: ignore
 from Custom_Chart_Widgets import CustomChartWidget
@@ -88,6 +84,7 @@ class StrikeMachine(QMainWindow):
             QSettings.Format.IniFormat
         )
         # self.logger.info("INIT SETTINGS:", self.app_settings.format())
+        self._show_loading_dialog()
         self._find_stk_mch_folder()
         self._init_logger()
         self.ui = Ui_MainWindow()
@@ -116,6 +113,7 @@ class StrikeMachine(QMainWindow):
         )
         self.ui.stacked_list_history_page.setCurrentIndex(0)
         self.ui.error_display.setText("Hello")
+        self._close_loading_dialog()
 
     def showEvent(self, event):# type: ignore
         super().showEvent(event)
@@ -326,16 +324,8 @@ class StrikeMachine(QMainWindow):
         vbox = QVBoxLayout()
         lbl = QLabel(self)
         lbl.setStyleSheet("background: transparent;")
-        gif_path = resource_path('gifs/Loading.gif')
-        print(f"[Main]-[_show_loading_dialog]: Trying to load gif from: {gif_path}")
-        print(f"[Main]-[_show_loading_dialog]: File exists: {os.path.exists(gif_path)}")
-
+        gif_path = os.path.join(resource_path('gifs'), 'Loading.gif')
         self.moviee = QMovie(gif_path)
-        if not self.moviee.isValid():
-            print(f"[Main]-[_show_loading_dialog]: Failed to load Loading.gif from {gif_path}")
-            dialog.close()
-            self._loading_dialog = None
-            return
         lbl.setMovie(self.moviee)
         self.moviee.start()
         vbox.addWidget(lbl)
@@ -343,18 +333,9 @@ class StrikeMachine(QMainWindow):
         dialog.show()
         QApplication.processEvents()
         self._loading_dialog = dialog
-
+        
     def _close_loading_dialog(self):
-        if hasattr(self, '_loading_dialog'):
-            self._loading_dialog.close()# type: ignore
-            del self._loading_dialog
-        if not self._ui_shown:
-            self._init_scene_before_show()
-            self.center_window()
-            self.show()  # Show UI chính ở đây
-            # self._check_user()
-            self._ui_shown = True
-            QApplication.instance().installEventFilter(self) # type: ignore
+        self._loading_dialog.close()
 
     def _init_app_data(self):
         self._app = QApplication.instance()
@@ -2135,33 +2116,36 @@ class StrikeMachine(QMainWindow):
         if not isinstance(list_group_a_recv, list) and not isinstance(list_group_b_recv, list) and not isinstance(list_group_c_recv, list):
             return
         pv_avg = (list_group_a_recv[1] + list_group_b_recv[1] + list_group_c_recv[1]) / 3
-        groups = []
-        groups.append({
-            "group": "Group A",
-            "pressure": list_group_a_recv[0],
-            "temp": pv_avg,
-            "front": self.for_display_temp(list_group_a_recv[2]), 
-            "mid": self.for_display_temp(list_group_a_recv[3]), 
-            "end": self.for_display_temp(list_group_a_recv[4])
-        })
-        groups.append({
-            "group": "Group B",
-            "pressure": list_group_b_recv[0],
-            "temp": pv_avg,
-            "front": self.for_display_temp(list_group_b_recv[2]), 
-            "mid": self.for_display_temp(list_group_b_recv[3]), 
-            "end": self.for_display_temp(list_group_b_recv[4])
-        })
-        groups.append({
-            "group": "Group C",
-            "pressure": list_group_c_recv[0],
-            "temp": pv_avg,
-            "front": self.for_display_temp(list_group_c_recv[2]), 
-            "mid": self.for_display_temp(list_group_c_recv[3]), 
-            "end": self.for_display_temp(list_group_c_recv[4])
-        })
-        if groups:
-            self.add_row_to_list_history(self.ui.code_display.text(), groups)
+        now = time.time()
+        if now - self._last_history_time >= self.ui.table_write_cycle.value():
+            self._last_history_time = now
+            groups = []
+            groups.append({
+                "group": "Group A",
+                "pressure": list_group_a_recv[0],
+                "temp": pv_avg,
+                "front": self.for_display_temp(list_group_a_recv[2]), 
+                "mid": self.for_display_temp(list_group_a_recv[3]), 
+                "end": self.for_display_temp(list_group_a_recv[4])
+            })
+            groups.append({
+                "group": "Group B",
+                "pressure": list_group_b_recv[0],
+                "temp": pv_avg,
+                "front": self.for_display_temp(list_group_b_recv[2]), 
+                "mid": self.for_display_temp(list_group_b_recv[3]), 
+                "end": self.for_display_temp(list_group_b_recv[4])
+            })
+            groups.append({
+                "group": "Group C",
+                "pressure": list_group_c_recv[0],
+                "temp": pv_avg,
+                "front": self.for_display_temp(list_group_c_recv[2]), 
+                "mid": self.for_display_temp(list_group_c_recv[3]), 
+                "end": self.for_display_temp(list_group_c_recv[4])
+            })
+            if groups:
+                self.add_row_to_list_history(self.ui.code_display.text(), groups)
 
     def _t0_input_heat_filter(self, list_t0_input_recv):
         if not list_t0_input_recv[1]:
@@ -2170,6 +2154,30 @@ class StrikeMachine(QMainWindow):
                 self.ui.i_o_group_1_switch_1.setCurrentIndex(0)
 
     def _input_data_filter(self, list_input_recv):
+        # button_map = [
+        #     (self.ui.heat_btn_a,    0,  "HEAT A"),
+        #     (self.ui.vacuum_btn_a,  1,  "PRESSURE A"),
+        #     (self.ui.refuel_btn_a,  2,  "OIL A"),
+        #     (self.ui.set_cycle_a_btn, 3, "CYCLE A"),
+
+        #     (self.ui.heat_btn_b,    4,  "HEAT B"),
+        #     (self.ui.vacuum_btn_b,  5,  "PRESSURE B"),
+        #     (self.ui.refuel_btn_b,  6, "OIL B"),
+        #     (self.ui.set_cycle_b_btn, 7, "CYCLE B"),
+
+        #     (self.ui.heat_btn_c,    8, "HEAT C"),
+        #     (self.ui.vacuum_btn_c,  9, "PRESSURE C"),
+        #     (self.ui.refuel_btn_c,  10, "OIL C"),
+        #     (self.ui.set_cycle_c_btn, 11, "CYCLE C"),
+        # ]
+
+        # for btn, idx, label in button_map:
+        #     new_val = list_input_recv[idx]
+        #     if btn.isChecked() != new_val:
+        #         self.logger.info(f"[Main]-[_button_changed]: {label} BOOL: {not new_val} -> {new_val}")
+        #         btn.blockSignals(True)
+        #         btn.setChecked(new_val)
+        #         btn.blockSignals(False)
         for obj, value in zip(self.io_group_1_switch_obj, list_input_recv):
             obj.setCurrentIndex(value)
 
@@ -2742,7 +2750,7 @@ class StrikeMachine(QMainWindow):
                 value_b = float(value_b_raw)
             except:
                 value_b = 0
-            self.list_for_import_c[i-2].blockSignals(True)
+            self.list_for_import_b[i-2].blockSignals(True)
             self.list_for_import_b[i-2].setValue(value_b)
             
             # Cột D: Group C
@@ -2772,11 +2780,11 @@ class StrikeMachine(QMainWindow):
         self.ui.ct_sv.setValue(self.ui.pressure_sv_c_1.value())
         items_a = [
             self.plc_writer_worker.get_item("P1_CountTimes", self.list_for_import_a[0].value()),
-            self.plc_writer_worker.get_item("P1_Oil_Start_Time", self.list_for_import_a[1].value()),
-            self.plc_writer_worker.get_item("P1_Oil_End_Time", self.list_for_import_a[2].value()),
-            self.plc_writer_worker.get_item("P1_Air_FillingTime", self.list_for_import_a[3].value()),
-            self.plc_writer_worker.get_item("P1_Air_HoldingTime", self.list_for_import_a[4].value()),
-            self.plc_writer_worker.get_item("P1_Air_ReleaseTime", self.list_for_import_a[5].value()),
+            self.plc_writer_worker.get_item("P1_Oil_Start_Time", (self.list_for_import_a[1].value()*1000)),
+            self.plc_writer_worker.get_item("P1_Oil_End_Time", (self.list_for_import_a[2].value()*1000)),
+            self.plc_writer_worker.get_item("P1_Air_FillingTime", (self.list_for_import_a[3].value()*1000)),
+            self.plc_writer_worker.get_item("P1_Air_HoldingTime", (self.list_for_import_a[4].value()*1000)),
+            self.plc_writer_worker.get_item("P1_Air_ReleaseTime", (self.list_for_import_a[5].value()*1000)),
             self.plc_writer_worker.get_item("P1_PressureSetting", self.list_for_import_a[6].value()),
             self.plc_writer_worker.get_item("P1_TemperatureSetting", self.list_for_import_a[7].value()),
             self.plc_writer_worker.get_item("P1_TempLimitHIGH", self.list_for_import_a[8].value()),
@@ -2787,11 +2795,11 @@ class StrikeMachine(QMainWindow):
         ]
         items_b = [
             self.plc_writer_worker.get_item("P2_CountTimes", self.list_for_import_b[0].value()),
-            self.plc_writer_worker.get_item("P2_Oil_Start_Time", self.list_for_import_b[1].value()),
-            self.plc_writer_worker.get_item("P2_Oil_End_Time", self.list_for_import_b[2].value()),
-            self.plc_writer_worker.get_item("P2_Air_FillingTime", self.list_for_import_b[3].value()),
-            self.plc_writer_worker.get_item("P2_Air_HoldingTime", self.list_for_import_b[4].value()),
-            self.plc_writer_worker.get_item("P2_Air_ReleaseTime", self.list_for_import_b[5].value()),
+            self.plc_writer_worker.get_item("P2_Oil_Start_Time", (self.list_for_import_b[1].value()*1000)),
+            self.plc_writer_worker.get_item("P2_Oil_End_Time", (self.list_for_import_b[2].value()*1000)),
+            self.plc_writer_worker.get_item("P2_Air_FillingTime", (self.list_for_import_b[3].value()*1000)),
+            self.plc_writer_worker.get_item("P2_Air_HoldingTime", (self.list_for_import_b[4].value()*1000)),
+            self.plc_writer_worker.get_item("P2_Air_ReleaseTime", (self.list_for_import_b[5].value()*1000)),
             self.plc_writer_worker.get_item("P2_PressureSetting", self.list_for_import_b[6].value()),
             self.plc_writer_worker.get_item("P2_TemperatureSetting", self.list_for_import_b[7].value()),
             self.plc_writer_worker.get_item("P2_TempLimitHIGH", self.list_for_import_b[8].value()),
@@ -2802,11 +2810,11 @@ class StrikeMachine(QMainWindow):
         ]
         items_c = [
             self.plc_writer_worker.get_item("P3_CountTimes", self.list_for_import_c[0].value()),
-            self.plc_writer_worker.get_item("P3_Oil_Start_Time", self.list_for_import_c[1].value()),
-            self.plc_writer_worker.get_item("P3_Oil_End_Time", self.list_for_import_c[2].value()),
-            self.plc_writer_worker.get_item("P3_Air_FillingTime", self.list_for_import_c[3].value()),
-            self.plc_writer_worker.get_item("P3_Air_HoldingTime", self.list_for_import_c[4].value()),
-            self.plc_writer_worker.get_item("P3_Air_ReleaseTime", self.list_for_import_c[5].value()),
+            self.plc_writer_worker.get_item("P3_Oil_Start_Time", (self.list_for_import_c[1].value()*1000)),
+            self.plc_writer_worker.get_item("P3_Oil_End_Time", (self.list_for_import_c[2].value()*1000)),
+            self.plc_writer_worker.get_item("P3_Air_FillingTime", (self.list_for_import_c[3].value()*1000)),
+            self.plc_writer_worker.get_item("P3_Air_HoldingTime", (self.list_for_import_c[4].value()*1000)),
+            self.plc_writer_worker.get_item("P3_Air_ReleaseTime", (self.list_for_import_c[5].value()*1000)),
             self.plc_writer_worker.get_item("P3_PressureSetting", self.list_for_import_c[6].value()),
             self.plc_writer_worker.get_item("P3_TemperatureSetting", self.list_for_import_c[7].value()),
             self.plc_writer_worker.get_item("P3_TempLimitHIGH", self.list_for_import_c[8].value()),
@@ -2825,6 +2833,7 @@ class StrikeMachine(QMainWindow):
         self.plc_writer_worker.write_multi.emit(items_b)
         self.plc_writer_worker.write_multi.emit(items_c)
         self.plc_writer_worker.write_multi.emit(items_t0)
+        
         for i in range(len(self.list_for_import_a)):
             self.list_for_import_a[i].blockSignals(False)
             self.list_for_import_b[i].blockSignals(False)
@@ -2835,9 +2844,13 @@ class StrikeMachine(QMainWindow):
         self.ui.at_sv.blockSignals(False)
         self.ui.bt_sv.blockSignals(False)
         self.ui.ct_sv.blockSignals(False)
-        self.ui.set_cycle_a_btn.click()
-        self.ui.set_cycle_b_btn.click()
-        self.ui.set_cycle_c_btn.click()
+
+        if not self.ui.set_cycle_a_btn.isChecked():
+            self.ui.set_cycle_a_btn.click()
+        if not self.ui.set_cycle_b_btn.isChecked():
+            self.ui.set_cycle_b_btn.click()
+        if not self.ui.set_cycle_c_btn.isChecked():
+            self.ui.set_cycle_c_btn.click()
 
     def set_language_en(self):
         self._app.removeTranslator(self._translator)
@@ -3331,28 +3344,28 @@ if __name__ == "__main__":
     multiprocessing.freeze_support()
     app = QApplication(sys.argv)
     QLocale.setDefault(QLocale(QLocale.Language.C))
-    
+
     window_id = 'StrikeMachine_Instance'
     shared_mem_id = 'StrikeMachine_SharedMem'
-    
+
     semaphore = QSystemSemaphore(window_id, 1)
     semaphore.acquire()
-    
+
     if sys.platform != 'win32':
         nix_fix_shared_mem = QSharedMemory(shared_mem_id)
         if nix_fix_shared_mem.attach():
             nix_fix_shared_mem.detach()
-    
+
     shared_memory = QSharedMemory(shared_mem_id)
-    
+
     if shared_memory.attach():
         is_running = True
     else:
         shared_memory.create(1)
         is_running = False
-    
+
     semaphore.release()
-    
+
     if is_running:
         sys.exit(1)
 
@@ -3365,11 +3378,15 @@ if __name__ == "__main__":
         win.move(x, y)
 
     center_window(window)
+
+    # dialog.close()
+
     window.show()
     QTimer.singleShot(100, lambda: (
         window.raise_(),
         window.activateWindow()
     ))
+
     def cleanup():
         try:
             window._close_event_cleanup()
@@ -3377,5 +3394,5 @@ if __name__ == "__main__":
             pass
 
     atexit.register(cleanup)
-    
+
     sys.exit(app.exec())

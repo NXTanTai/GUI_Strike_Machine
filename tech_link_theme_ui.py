@@ -10264,7 +10264,7 @@ class Ui_MainWindow(object):
 
         self.stackedWidget_2.setCurrentIndex(1)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_b_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_c_3.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_3.setCurrentIndex(0)
