@@ -65,7 +65,14 @@ def install_clear_on_focus(widget):
     f = FocusSelectFilter(widget)
     widget.installEventFilter(f)
 
-SIMULATE = True #os.path.isfile(resource_path("simulate.txt"))
+def get_exe_dir():
+    """Lấy thư mục chứa file .exe (hoặc .py khi dev)"""
+    if getattr(sys, 'frozen', False):
+        return Path(sys.executable).parent
+    else:
+        return Path(__file__).parent
+
+SIMULATE = (get_exe_dir() / "simulate.txt").is_file()
 
 class StrikeMachine(QMainWindow):
     _request_scroll_reset   = Signal()
@@ -1011,9 +1018,6 @@ class StrikeMachine(QMainWindow):
             self.conn.execute("PRAGMA journal_mode=WAL")
             self.conn.execute("PRAGMA synchronous=NORMAL")
 
-            # self.conn.execute("DROP TABLE IF EXISTS history") # Xoá bảng cũ nếu có (dùng khi cần reset dữ liệu)
-
-            # Kiểm tra xem bảng đã có chưa
             cursor = self.conn.cursor()
             cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='history'")
             table_exists = cursor.fetchone() is not None
@@ -1033,14 +1037,17 @@ class StrikeMachine(QMainWindow):
                         "Date." TEXT
                     )
                 ''')
-            else:
-                self.conn.commit()
-                self.logger.info(f"SQLite DB ready: {self.history_db_path}")
-            result = self.conn.execute('SELECT MAX(CAST("No." AS INTEGER)) FROM history').fetchone()[0]
+
+            self.conn.commit()
+            self.logger.info(f"SQLite DB ready: {self.history_db_path}")
+
+            result = self.conn.execute(
+                'SELECT MAX(CAST("No." AS INTEGER)) FROM history'
+            ).fetchone()[0]
             self._history_batch_counter = result if result else 0
-            
+
         except Exception as e:
-            # self.logger.error(f"SQLite init error: {e}")
+            self.logger.error(f"SQLite init error: {e}")
             self.conn = None
 
     def _init_table_list_history(self):
@@ -2115,14 +2122,12 @@ class StrikeMachine(QMainWindow):
         self.plc_writer_connection = connected
             
     def _data_group_filter(self, list_group_a_recv, list_group_b_recv, list_group_c_recv):
-        # Guard: kiểm tra tất cả đều là list
         groups_recv = [list_group_a_recv, list_group_b_recv, list_group_c_recv]
         if not all(isinstance(g, list) for g in groups_recv):
             return
 
         pv_avg = sum(g[1] for g in groups_recv) / 3
 
-        # Map: (prefix_ui, data_list)
         group_ui_map = [
             ("pressure_pv_a", list_group_a_recv),
             ("pressure_pv_b", list_group_b_recv),
@@ -2136,14 +2141,27 @@ class StrikeMachine(QMainWindow):
             getattr(self.ui, f"{prefix}_5").setValue(data[0])
             getattr(self.ui, f"{prefix}_12").setValue(data[5])
 
-        # Ghi history theo chu kỳ
+        btn_map = [
+            ("Group A", list_group_a_recv, "heat_btn_a", "vacuum_btn_a"),
+            ("Group B", list_group_b_recv, "heat_btn_b", "vacuum_btn_b"),
+            ("Group C", list_group_c_recv, "heat_btn_c", "vacuum_btn_c"),
+        ]
+
+        active_groups = [
+            (label, data)
+            for label, data, heat_btn, vacuum_btn in btn_map
+            if getattr(self.ui, heat_btn).isChecked() or getattr(self.ui, vacuum_btn).isChecked()
+        ]
+
+        if not active_groups:
+            return
+
         now = time.time()
         if now - self._last_history_time < self.ui.table_write_cycle.value():
             return
 
         self._last_history_time = now
 
-        group_labels = ["Group A", "Group B", "Group C"]
         history_groups = [
             {
                 "group": label,
@@ -2153,7 +2171,7 @@ class StrikeMachine(QMainWindow):
                 "mid":   self.for_display_temp(data[3]),
                 "end":   self.for_display_temp(data[4]),
             }
-            for label, data in zip(group_labels, groups_recv)
+            for label, data in active_groups
         ]
 
         self.add_row_to_list_history(self.ui.code_display.text(), history_groups)

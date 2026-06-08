@@ -1,4 +1,5 @@
 # pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
+# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\hose_icon.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
 
 import multiprocessing
 import subprocess
@@ -74,8 +75,8 @@ if os.environ.get(LOADING_ENV):
             if not pixmap.isNull():
                 scaled = pixmap.scaled(
                     self.size(),
-                    Qt.KeepAspectRatio,
-                    Qt.SmoothTransformation,
+                    Qt.KeepAspectRatio,  # type: ignore
+                    Qt.SmoothTransformation,  # type: ignore
                 )
                 self.setPixmap(scaled)
 
@@ -187,7 +188,7 @@ if __name__ == '__main__':
 
         error_detail = traceback.format_exc()
         if app is not None:
-            QMessageBox.critical(None, 'Startup errors',
+            QMessageBox.critical(None, 'Startup errors',  # type: ignore
                                  f'The app cannot be launched:\n\n{error_detail}')
         else:
             with open('crash.log', 'w') as f:
