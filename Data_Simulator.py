@@ -1,6 +1,21 @@
 from PySide6.QtCore import QThread, Signal, Slot
+from dataclasses import dataclass
 import time
 import random
+
+
+@dataclass
+class ChannelState:
+    target_pressure:     float = 0.0
+    target_pressure_itv: float = 0.0
+    target_temp:         float = 25.0
+    pressure:            float = 0.0
+    pressure_itv:        float = 0.0
+    temp_t1:             float = 25.0
+    temp_t2:             float = 25.0
+    temp_t3:             float = 25.0
+    active:              bool  = False
+
 
 class DataSimulator(QThread):
     db_data_convert = Signal(list, list, list)
@@ -8,109 +23,84 @@ class DataSimulator(QThread):
     def __init__(self):
         super().__init__()
         self._running = False
+        self.channels = {
+            "A": ChannelState(),
+            "B": ChannelState(),
+            "C": ChannelState(),
+        }
 
-        self.target_pressure_a = 0.0
-        self.target_pressure_b = 0.0
-        self.target_pressure_c = 0.0
+    @Slot(str, float)
+    def set_heat_active(self, channel: str, temp_sv: float):
+        ch = self.channels.get(channel)
+        if ch:
+            ch.target_temp = temp_sv
 
-        self.target_temp_a = 25.0
-        self.target_temp_b = 25.0
-        self.target_temp_c = 25.0
+    @Slot(str, float)
+    def set_pressure_active(self, channel: str, pressure_sv: float, pressure_itv_sv: float):
+        ch = self.channels.get(channel)
+        if ch:
+            ch.target_pressure     = pressure_sv
+            ch.target_pressure_itv = pressure_itv_sv
+            ch.active              = pressure_sv > 0 or pressure_itv_sv > 0
 
-        self.pressure_a = 0.0
-        self.pressure_b = 0.0
-        self.pressure_c = 0.0
+    @Slot(list, list, list)
+    def update_sv(self, pressure_sv: list, pressure_itv_sv: list, temp_sv: list):
+        for ch, p, p_itv, t in zip(
+            self.channels.values(),
+            pressure_sv,
+            pressure_itv_sv,
+            temp_sv
+        ):
+            ch.target_pressure     = p
+            ch.target_pressure_itv = p_itv
+            ch.target_temp         = t
 
-        self.temp_a_t1 = 25.0
-        self.temp_a_t2 = 25.0
-        self.temp_a_t3 = 25.0
-
-        self.temp_b_t1 = 25.0
-        self.temp_b_t2 = 25.0
-        self.temp_b_t3 = 25.0
-
-        self.temp_c_t1 = 25.0
-        self.temp_c_t2 = 25.0
-        self.temp_c_t3 = 25.0
-
-    @Slot(str, float, float)
-    def set_channel_active(self, channel: str, pressure_sv: float, temp_sv: float):
-        if   channel == "A":
-            self.target_pressure_a = pressure_sv
-            self.target_temp_a     = temp_sv if temp_sv > 36 else self.target_temp_a
-        elif channel == "B":
-            self.target_pressure_b = pressure_sv
-            self.target_temp_b     = temp_sv if temp_sv > 36 else self.target_temp_b
-        elif channel == "C":
-            self.target_pressure_c = pressure_sv
-            self.target_temp_c     = temp_sv if temp_sv > 36 else self.target_temp_c
-
-    @Slot(list, list)
-    def update_sv(self, pressure_sv: list, temp_sv: list):
-        self.target_pressure_a = pressure_sv[0]
-        self.target_pressure_b = pressure_sv[1]
-        self.target_pressure_c = pressure_sv[2]
-
-        self.target_temp_a = temp_sv[0]
-        self.target_temp_b = temp_sv[1]
-        self.target_temp_c = temp_sv[2]
-
-    def _approach(self, current: float, target: float, step_ratio=0.02, noise=1.0) -> float:
+    def _approach(self, current: float, target: float,
+                  step_ratio: float = 0.02, noise: float = 1.0) -> float:
         diff = target - current
         if abs(diff) < noise * 2:
             return target + random.uniform(-noise, noise)
-
         return current + diff * step_ratio + random.uniform(-noise * 0.3, noise * 0.3)
 
-    def _approach_pressure(self, current: float, target: float) -> float:
-        return self._approach(current, target, step_ratio=0.02, noise=0.3)
+    def _approach_temp(self, current: float, target: float) -> float:
+        return self._approach(current, target, step_ratio=0.02, noise=0.15)
 
+    def _approach_pressure(self, current: float, target: float,
+                            active: bool = False) -> float:
+        if active:
+            return self._approach(current, target, step_ratio=0.35, noise=0.01)
+        return self._approach(current, target, step_ratio=0.02, noise=0.025)
+
+    def _update_channel(self, ch: ChannelState):
+        ch.pressure     = self._approach_pressure(ch.pressure,     ch.target_pressure,     ch.active)
+        ch.pressure_itv = self._approach_pressure(ch.pressure_itv, ch.target_pressure_itv, ch.active)
+        ch.temp_t1      = self._approach_temp(ch.temp_t1, ch.target_temp)
+        ch.temp_t2      = self._approach_temp(ch.temp_t2, ch.target_temp)
+        ch.temp_t3      = self._approach_temp(ch.temp_t3, ch.target_temp)
+
+    def _build_group_data(self, ch: ChannelState) -> list:
+        return [
+            max(ch.pressure, 0),
+            (ch.temp_t1 + ch.temp_t2 + ch.temp_t3) / 3,
+            ch.temp_t1,
+            ch.temp_t2,
+            ch.temp_t3,
+            ch.pressure_itv,
+        ]
+    
     def run(self):
         self._running = True
         while self._running:
-            time.sleep(1)
+            time.sleep(0.5)
 
-            self.pressure_a = self._approach_pressure(self.pressure_a, self.target_pressure_a)
-            self.pressure_b = self._approach_pressure(self.pressure_b, self.target_pressure_b)
-            self.pressure_c = self._approach_pressure(self.pressure_c, self.target_pressure_c)
+            for ch in self.channels.values():
+                self._update_channel(ch)
 
-            self.temp_a_t1 = self._approach(self.temp_a_t1, self.target_temp_a, noise=1.0)
-            self.temp_a_t2 = self._approach(self.temp_a_t2, self.target_temp_a, noise=1.2)
-            self.temp_a_t3 = self._approach(self.temp_a_t3, self.target_temp_a, noise=0.8)
-
-            self.temp_b_t1 = self._approach(self.temp_b_t1, self.target_temp_b, noise=1.0)
-            self.temp_b_t2 = self._approach(self.temp_b_t2, self.target_temp_b, noise=1.2)
-            self.temp_b_t3 = self._approach(self.temp_b_t3, self.target_temp_b, noise=0.8)
-
-            self.temp_c_t1 = self._approach(self.temp_c_t1, self.target_temp_c, noise=1.0)
-            self.temp_c_t2 = self._approach(self.temp_c_t2, self.target_temp_c, noise=1.2)
-            self.temp_c_t3 = self._approach(self.temp_c_t3, self.target_temp_c, noise=0.8)
-
-            group_a_data = [
-                max(self.pressure_a, 0),
-                (self.temp_a_t1 + self.temp_a_t2 + self.temp_a_t3) / 3,
-                self.temp_a_t1,
-                self.temp_a_t2,
-                self.temp_a_t3,
-            ]
-
-            group_b_data = [
-                max(self.pressure_b, 0),
-                (self.temp_b_t1 + self.temp_b_t2 + self.temp_b_t3) / 3,
-                self.temp_b_t1,
-                self.temp_b_t2,
-                self.temp_b_t3,
-            ]
-
-            group_c_data = [
-                max(self.pressure_c, 0),
-                (self.temp_c_t1 + self.temp_c_t2 + self.temp_c_t3) / 3,
-                self.temp_c_t1,
-                self.temp_c_t2,
-                self.temp_c_t3
-            ]
-
-            self.db_data_convert.emit(group_a_data, group_b_data, group_c_data)
+            self.db_data_convert.emit(
+                self._build_group_data(self.channels["A"]),
+                self._build_group_data(self.channels["B"]),
+                self._build_group_data(self.channels["C"]),
+            )
 
     def stop(self):
         self._running = False

@@ -372,7 +372,6 @@ class StrikeMachine(QMainWindow):
         self.db_dict: Optional[dict] = None
         
         self.user = False
-        self._dialog_open = False
         self.worker_dict = {}
         self.thread_dict = {}
         
@@ -410,22 +409,10 @@ class StrikeMachine(QMainWindow):
         self.timer_stacked_pressure_page = QTimer()
         self.all_timer.append(self.timer_stacked_pressure_page)
         
-        self.chart_0_timer = QTimer()
-        self.all_timer.append(self.chart_0_timer)
-        self.chart_0_timer.timeout.connect(self.update_chart_temp)
-        self.chart_0_timer.start(self.db_dict["read_time"])
-        self.chart_1_timer = QTimer()
-        self.all_timer.append(self.chart_1_timer)
-        self.chart_1_timer.timeout.connect(self.update_chart_pressure_a)
-        self.chart_1_timer.start(self.db_dict["read_time"])
-        self.chart_2_timer = QTimer()
-        self.all_timer.append(self.chart_2_timer)
-        self.chart_2_timer.timeout.connect(self.update_chart_pressure_b)
-        self.chart_2_timer.start(self.db_dict["read_time"])
-        self.chart_3_timer = QTimer()
-        self.all_timer.append(self.chart_3_timer)
-        self.chart_3_timer.timeout.connect(self.update_chart_pressure_c)
-        self.chart_3_timer.start(self.db_dict["read_time"])
+        self.chart_timer = QTimer()
+        self.all_timer.append(self.chart_timer)
+        self.chart_timer.timeout.connect(self._update_all_charts)
+        self.chart_timer.start(self.db_dict["read_time"])
 
         self._history_flush_timer = QTimer(self)
         self.all_timer.append(self._history_flush_timer)
@@ -444,6 +431,12 @@ class StrikeMachine(QMainWindow):
         self.date_time_timer.timeout.connect(self.update_clock)
         self.date_time_timer.start(1000)
         self.update_clock()
+
+    def _update_all_charts(self):
+        self.update_chart_temp()
+        self.update_chart_pressure_a()
+        self.update_chart_pressure_b()
+        self.update_chart_pressure_c()
 
     def _init_group_object(self):
         # self.pressure_state_obj = []
@@ -711,7 +704,7 @@ class StrikeMachine(QMainWindow):
             pressure_label="",
             temp_range=(0, 50),
             pressure_range=(0, 0),
-            max_seconds=60,
+            max_seconds=30,
             chart_font=font
         )
 
@@ -724,7 +717,7 @@ class StrikeMachine(QMainWindow):
             pressure_label="Pressure (bar)",
             temp_range=(0, 50),
             pressure_range=(0, 15),
-            max_seconds=60,
+            max_seconds=30,
             chart_font=font
         )
 
@@ -737,7 +730,7 @@ class StrikeMachine(QMainWindow):
             pressure_label="Pressure (bar)",
             temp_range=(0, 50),
             pressure_range=(0, 15),
-            max_seconds=60,
+            max_seconds=30,
             chart_font=font
         )
 
@@ -750,7 +743,7 @@ class StrikeMachine(QMainWindow):
             pressure_label="Pressure (bar)",
             temp_range=(0, 50),
             pressure_range=(0, 15),
-            max_seconds=60,
+            max_seconds=30,
             chart_font=font
         )
 
@@ -786,10 +779,7 @@ class StrikeMachine(QMainWindow):
             self.ui.card_pressure_2,
             self.ui.card_pressure_3,
         ]
-        # QTimer.singleShot(25,  self.chart_pressure_a._render_timer.start)
-        # QTimer.singleShot(50,  self.chart_pressure_b._render_timer.start)
-        # QTimer.singleShot(75,  self.chart_pressure_c._render_timer.start)
-        
+
     def _save_grid_rects(self):
         rects = [f.geometry() for f in self._chart_frames]
         if all(r.width() > 0 and r.height() > 0 for r in rects):

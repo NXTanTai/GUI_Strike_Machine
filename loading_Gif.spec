@@ -2,9 +2,9 @@
 
 
 a = Analysis(
-    ['main.py'],
+    ['loading_Gif.py'],
     pathex=[],
-    binaries=[('lib\\snap7.dll', '.')],
+    binaries=[],
     datas=[('gifs', 'gifs'), ('tech_link_theme_cn.qm', '.')],
     hiddenimports=[],
     hookspath=[],
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='Strike Machine App',
+    name='loading_Gif',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -35,5 +35,4 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['icons\\hose_icon.png'],
 )

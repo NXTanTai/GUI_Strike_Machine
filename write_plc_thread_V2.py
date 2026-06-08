@@ -1,58 +1,56 @@
 import struct
+import time
 import logging
 import threading
 import snap7
 from typing import Any, Optional
 from queue import Queue
-from snap7.error import *
+from snap7.error import * # type: ignore
 from snap7.type import Area
 from snap7.util import set_bool, set_real, set_dint, set_int, set_string
 
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
-logger = logging.getLogger(__name__)
-
-
-# ── Helpers for Write ───────────────────────────────────────────────────────
 def _set_bool(data: bytearray, byte_idx: int, bit_idx: int, value: bool) -> None:
     if value:
         data[byte_idx] |= (1 << (7 - bit_idx))
     else:
         data[byte_idx] &= ~(1 << (7 - bit_idx))
 
-
 def _set_real(data: bytearray, offset: int, value: float) -> None:
     struct.pack_into(">f", data, offset, value)
-
 
 def _set_dint(data: bytearray, offset: int, value: int) -> None:
     struct.pack_into(">i", data, offset, value)
 
-
 def _set_int(data: bytearray, offset: int, value: int) -> None:
     struct.pack_into(">h", data, offset, value)
 
-
 def _set_string(data: bytearray, offset: int, value: str) -> None:
-    max_len = data[offset]                      # Byte đầu tiên là max length
+    max_len = data[offset]
     encoded = value.encode("utf-8", errors="replace")
     if len(encoded) > max_len:
         encoded = encoded[:max_len]
     data[offset + 1] = len(encoded)
     data[offset + 2: offset + 2 + len(encoded)] = encoded
 
-
-# ── PLCWrite ────────────────────────────────────────────────────────────────
-
 class PLCWrite(QObject):
-    # Incoming signals (gọi từ main thread)
-    write_bool   = Signal(str, bool)      # (tag_name, value)
-    write_value   = Signal(str, object)      # (tag_name, value)
-    write_multi = Signal(object)             # {tag_name: value, ...}
-    write_full_db  = Signal(object)             # Ghi toàn bộ DB một lần
+    """
+    Object dùng để ghi dữ liệu xuống PLC
+    \n
+    Có thể tạo nhiều Object để xử lí nhiều vùng dữ liệu hoặc từ nhiều PLC
+    \n
+    Nếu chỉ định ghi 1 vùng riêng biệt thì lên cấu hình db_layout riêng
+    """
+    write_bool      = Signal(str, bool)        # (tag_name, bit)
+    write_value     = Signal(str, object)      # (tag_name, value)
+    write_multi     = Signal(object, str)      # (list_var[get_item(tag_name, value), ...])
+    write_full_db   = Signal(object)           # Ghi toàn bộ DB một lần
 
-    # Outgoing signals
-    write_done    = Signal(str)               # tag_name hoặc "full_db"
+    write_bool_done    = Signal()
+    write_value_done    = Signal()
+    write_multi_done    = Signal(str, bool)
+    write_full_db_done    = Signal()
     error         = Signal(str)
     connected     = Signal(bool)
     disconnected  = Signal()
@@ -68,7 +66,7 @@ class PLCWrite(QObject):
         db_number: int = 1,
         db_layout: Optional[list[tuple[str, str, int, Any]]] = None,
         db_size:   int = 584,
-        write_gap_ms: int = 300,          # Khoảng cách giữa các lần ghi
+        write_ms: int = 300,
         retry_ms:  int = 3000,
         logger=None,
         parent:    Optional[QObject] = None,
@@ -81,11 +79,10 @@ class PLCWrite(QObject):
         self._db_number   = db_number
         self._db_layout   = db_layout
         self._db_size     = db_size
-        self._write_gap_ms = write_gap_ms
+        self._write_ms = write_ms
         self._retry_ms    = retry_ms
         self.logger = logger
         # print("DB Layout:", db_layout)
-        # Layout dict để tra cứu nhanh
         self._layout_dict: dict[str, tuple[str, int, Any]] = self._build_layout_dict()
 
         self._client: snap7.client.Client | None = None
@@ -93,11 +90,12 @@ class PLCWrite(QObject):
         self._timer: QTimer | None = None
         self._retry_timer: QTimer | None = None
         self._running = False
+        self._last_error_log_time = 0
 
     def _build_layout_dict(self) -> dict:
         """Xử lý trường hợp tag name trùng nhau"""
         layout = {}
-        for item in self._db_layout:
+        for item in self._db_layout: #type: ignore
             if len(item) >= 4:
                 name, dtype, offset, bit = item[:4]
                 # Nếu tag trùng tên, ưu tiên dùng tag Actual (_Act) nếu có
@@ -113,17 +111,14 @@ class PLCWrite(QObject):
         if self.logger:
             self.logger.info("[PLC WRITE]: PLC Write init")
 
-        # Timer chính để ghi dữ liệu
         self._timer = QTimer(self)
-        self._timer.setInterval(self._write_gap_ms)
+        self._timer.setInterval(self._write_ms)
         self._timer.timeout.connect(self._drain_queue)
 
-        # Retry timer
         self._retry_timer = QTimer(self)
         self._retry_timer.setInterval(self._retry_ms)
         self._retry_timer.timeout.connect(self._try_connect)
 
-        # Kết nối signals
         self.write_bool.connect(self._enqueue_bool, Qt.QueuedConnection) #type: ignore
         self.write_value.connect(self._enqueue_value, Qt.QueuedConnection) #type: ignore
         self.write_multi.connect(self._enqueue_multi, Qt.QueuedConnection) #type: ignore
@@ -138,7 +133,6 @@ class PLCWrite(QObject):
         self._running = False
         self._request_stop.emit()
 
-    # ── Stop Handler ────────────────────────────────────────────────────────
     @Slot()
     def _do_stop(self):
         if self._timer:
@@ -192,11 +186,11 @@ class PLCWrite(QObject):
         if self.logger:
             self.logger.info(f"[PLC WRITE]: Value Enqueued → {name} = {value}")
 
-    @Slot(object)
-    def _enqueue_multi(self, items: object):
-        self._queue.put(("multi_vars", items))
+    @Slot(object, str)
+    def _enqueue_multi(self, items: object, group: str = ""):
+        self._queue.put(("multi_vars", items, group))
         if self.logger:
-            self.logger.info(f"[PLC WRITE]: Multi vars enqueued: {len(items)}")
+            self.logger.info(f"[PLC WRITE]: Multi vars enqueued: {len(items)} | group={group}")
 
     @Slot(dict)
     def _enqueue_full_db(self, data: object):
@@ -204,7 +198,6 @@ class PLCWrite(QObject):
         if self.logger:
             self.logger.info(f"[PLC WRITE]: Full DB write enqueued: {len(data)} tags")
 
-    # ── Drain Queue ─────────────────────────────────────────────────────────
     @Slot()
     def _drain_queue(self):
         if not self._running or self._queue.empty():
@@ -221,7 +214,7 @@ class PLCWrite(QObject):
                 self._write_value(item[1], item[2])
 
             elif cmd_type == "multi_vars":
-                self._write_multi_vars(item[1])
+                self._write_multi_vars(item[1], item[2])
 
             elif cmd_type == "full_db":
                 self._write_full_db(item[1])
@@ -229,7 +222,7 @@ class PLCWrite(QObject):
         except Exception as e:
             if self.logger:
                 self.logger.error("[PLC WRITE]: Drain error: %s", e)
-    # ── Connection ──────────────────────────────────────────────────────────
+                
     @Slot()
     def _try_connect(self):
         if not self._running:
@@ -245,11 +238,11 @@ class PLCWrite(QObject):
         if self._client and self._client.get_connected():
             if self._retry_timer and self._retry_timer.isActive():
                 self._retry_timer.stop()
-            if not self._timer.isActive():
-                self._timer.start()
+            if not self._timer.isActive():   # type: ignore
+                self._timer.start()   # type: ignore
         else:
-            if not self._retry_timer.isActive():
-                self._retry_timer.start()
+            if not self._retry_timer.isActive():   # type: ignore
+                self._retry_timer.start()   # type: ignore
 
     def _connect_plc(self):
         if not self._running:
@@ -262,20 +255,17 @@ class PLCWrite(QObject):
             try:
                 c = snap7.client.Client()
                 c.connect(self._ip, self._rack, self._slot)
-                result["client"] = c
+                result["client"] = c    # type: ignore
             except Exception as exc:
-                result["error"] = exc
+                result["error"] = exc   # type: ignore
             finally:
                 done.set()
 
         t = threading.Thread(target=_do_connect, daemon=True)
         t.start()
 
-        # ✅ Poll mỗi 100ms thay vì chờ cứng 3s
-        # → thoát ngay khi _running = False
         while not done.wait(timeout=0.1):
             if not self._running:
-                # Không cần disconnect vì connect chưa xong
                 return
 
         if not self._running:
@@ -292,7 +282,10 @@ class PLCWrite(QObject):
         else:
             msg = f"Connection failed: {result['error']}"
             if self.logger:
-                self.logger.error("[PLC WRITE]: " + msg)
+                now = time.time()
+                if now - self._last_error_log_time >= 5:
+                    self.logger.error("[PLC WRITE]: " + msg)
+                    self._last_error_log_time = now
             self.error.emit(msg)
             self.connected.emit(False)
             self._client = None
@@ -306,7 +299,6 @@ class PLCWrite(QObject):
             self._client = None
         self.connected.emit(False)
 
-    # ── Write Methods ───────────────────────────────────────────────────────
     def _write_bool(self, name: str, value: bool):
         """
         Ghi BOOL riêng biệt
@@ -322,13 +314,13 @@ class PLCWrite(QObject):
         _, offset, bit = tag
 
         try:
-            raw = self._client.db_read(self._db_number, offset, 1)
+            raw = self._client.db_read(self._db_number, offset, 1) # type: ignore
             result = set_bool(raw, 0, bit or 0, bool(value))
 
-            self._client.db_write(self._db_number, offset, result)
+            self._client.db_write(self._db_number, offset, result) # type: ignore
             if self.logger:
                 self.logger.info(f"[PLC WRITE]: BOOL OK → {name} = {value}")
-            self.write_done.emit(name)
+            # self.write_done.emit(name)
         except Exception as exc:
             self._handle_write_error(f"[PLC WRITE]: Write BOOL [{name}]", exc)
 
@@ -350,51 +342,60 @@ class PLCWrite(QObject):
 
         try:
             size = self._get_dtype_size(dtype)
-            raw = bytearray(self._client.db_read(self._db_number, offset, size))
+            raw = bytearray(self._client.db_read(self._db_number, offset, size)) # type: ignore
 
             self._pack(raw, dtype, bit, value, offset=0)
-            self._client.db_write(self._db_number, offset, raw)
+            self._client.db_write(self._db_number, offset, raw) # type: ignore
 
             if self.logger:
                 self.logger.info(f"[PLC WRITE]: Value written → {name} = {value} | Offset: {offset} | DB{self._db_number}")
-            self.write_done.emit(name)
+            # self.write_done.emit(name)
             
         except Exception as exc:
             self._handle_write_error(f"[PLC WRITE]: Write value [{name}]", exc)
 
-    def _write_multi_vars(self, items: list):
+    def _write_multi_vars(self, items: list, group: str = ""):
         """
-        Ghi nhiều var REAL, INT, DINT, STRING 1 lần, tối đa 20 var
+        Ghi nhiều item REAL, INT, DINT 1 lần, tối đa 20 item
         Dùng get_item func để lấy key và địa chỉ
         Ví dụ:
         items = [
             plc_write.get_item("Motor_Start", True),
             plc_write.get_item("Setpoint_Temp", 85.5),
             plc_write.get_item("Speed_RPM", 1500),
+            ...
         ]
-        plc_write.write_multi.emit(items)
+        plc_write.write_multi.emit(items, "A")
         """
         if not self._ensure_connected():
             return
         try:
-            result = self._client.write_multi_vars(items)
+            result = self._client.write_multi_vars(items)  # type: ignore
             if result == 0:
-                self.write_done.emit("multi_vars")
+                self.write_multi_done.emit(group, True)
                 if self.logger:
-                    self.logger.info(f"[PLC WRITE]: write_multi_vars OK: {len(items)}")
+                    self.logger.info(f"[PLC WRITE]: write_multi_vars OK: {len(items)} tags | group={group}")
             else:
                 self.error.emit(f"[PLC WRITE]: write_multi_vars returned: {result}")
         except Exception as exc:
             self._handle_write_error(f"[PLC WRITE]: write_multi_vars", exc)
-
+            
     def _write_full_db(self, data: dict):
         """
         Ghi toàn bộ DB 
+        Không cần thiết phải đúng thứ tự
+        datas = {
+            "Motor_Start":  True,
+            "Motor_Speed":   1500,
+            "Setpoint_Temp": 85.5,
+            ...
+        }
+        plc_write.write_full_db.emit(datas)
         """
         if not self._ensure_connected():
             return
         try:
-            raw = bytearray(self._client.db_read(self._db_number, 0, self._db_size))
+            raw = bytearray(self._client.db_read(self._db_number, 0, self._db_size))    # type: ignore
 
             for name, value in data.items():
                 tag = self._layout_dict.get(name)
@@ -403,8 +404,8 @@ class PLCWrite(QObject):
                 dtype, offset, bit = tag
                 self._pack(raw, dtype, bit, value, offset=offset)
 
-            self._client.db_write(self._db_number, 0, raw)
-            self.write_done.emit("full_db")
+            self._client.db_write(self._db_number, 0, raw)                              # type: ignore
+            # self.write_done.emit("full_db")
             if self.logger:
                 self.logger.info(f"[PLC WRITE]: Full DB write successful (%d tags)", len(data))
 
@@ -433,7 +434,6 @@ class PLCWrite(QObject):
         if self._retry_timer and not self._retry_timer.isActive():
             self._retry_timer.start()
 
-    # ── Helper ──────────────────────────────────────────────────────────────
     def _get_dtype_size(self, dtype: str) -> int:
         return {"BOOL": 1, "INT": 2, "DINT": 4, "REAL": 4, "STRING": 256}.get(dtype, 1)
 

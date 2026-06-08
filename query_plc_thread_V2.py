@@ -1,15 +1,12 @@
 import struct
+import time
 import logging
 import threading
 import snap7
 from typing import Any, Optional
-from snap7.error import *
+from snap7.error import * # type: ignore
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
-logger = logging.getLogger(__name__)
-
-
-# ── Helpers ─────────────────────────────────────────────────────────────────
 def _get_bool(data: bytes, byte_idx: int, bit_idx: int) -> bool:
     if byte_idx >= len(data) or bit_idx < 0 or bit_idx > 7:
         return False
@@ -18,32 +15,33 @@ def _get_bool(data: bytes, byte_idx: int, bit_idx: int) -> bool:
 def _get_real(data: bytes, offset: int) -> float:
     return struct.unpack_from(">f", data, offset)[0]
 
-
 def _get_dint(data: bytes, offset: int) -> int:
     return struct.unpack_from(">i", data, offset)[0]
 
-
 def _get_int(data: bytes, offset: int) -> int:
     return struct.unpack_from(">h", data, offset)[0]
-
 
 def _get_string(data: bytes, offset: int) -> str:
     act_len = data[offset + 1]
     raw = data[offset + 2: offset + 2 + act_len]
     return raw.decode("utf-8", errors="replace")
 
-
-# ── PLCRead ─────────────────────────────────────────────────────────────────
-
 class PLCRead(QObject):
-    init_data     = Signal()           # Dùng để trigger lấy data lần đầu sau khi connect thành công
+    """
+    Object dùng để lấy dữ liệu từ PLC
+    \n
+    Có thể tạo nhiều Object để xử lí nhiều vùng dữ liệu hoặc từ nhiều PLC
+    \n
+    Nếu chỉ định đọc 1 vùng riêng biệt thì lên cấu hình db_layout riêng
+    """
+    init_data     = Signal()           # Dùng để trigger lấy dữ liệu hiện có sau khi connect thành công
     data_ready    = Signal(dict)
     error         = Signal(str)
     connected     = Signal(bool)
     disconnected  = Signal()
     finished      = Signal()           # Dùng để thông báo đã dừng
 
-    _request_stop = Signal()           # Signal dùng để stop an toàn từ Main Thread
+    _request_stop = Signal()           # Signal dùng để stop từ Main Thread
 
     def __init__(
         self,
@@ -74,12 +72,10 @@ class PLCRead(QObject):
         self._poll_timer:  QTimer | None = None
         self._retry_timer: QTimer | None = None
         self._running = False
-
-    # ── Public API ──────────────────────────────────────────────────────────
+        self._last_error_log_time = 0
 
     @Slot()
     def run(self):
-        """Gọi từ thread.started.connect()"""
         self._running = True
         if self.logger:
             self.logger.info("[PLC READ]: PLC Read init")
@@ -91,14 +87,14 @@ class PLCRead(QObject):
         self._retry_timer.setInterval(self._retry_ms)
         self._retry_timer.timeout.connect(self._try_connect)
 
-        self._request_stop.connect(self._do_stop, Qt.QueuedConnection)
+        self._request_stop.connect(self._do_stop, Qt.QueuedConnection) # type: ignore
 
         self._try_connect()
 
     @Slot()
     def stop(self):
         self._running = False
-        self._request_stop.emit()   # An toàn cross-thread
+        self._request_stop.emit()
 
     def set_poll_interval(self, ms: int):
         self._poll_ms = ms
@@ -112,15 +108,11 @@ class PLCRead(QObject):
 
     @Slot(int)
     def set_interval(self, interval):
-        self._poll_timer.setInterval(interval)
-
-    # ── Stop Handler ───────────────────────────────────────────────────────
+        self._poll_timer.setInterval(interval) # type: ignore
 
     @Slot()
     def _do_stop(self):
         """Chạy trong Worker Thread"""
-        # if self.logger:
-        #     self.logger.info("[PLC READ]: _do_stop called - Cleaning up")
         if self._poll_timer:
             self._poll_timer.stop()
             self._poll_timer.deleteLater()
@@ -135,8 +127,6 @@ class PLCRead(QObject):
 
         self.finished.emit()
         QThread.currentThread().quit()
-
-    # ── Connection ──────────────────────────────────────────────────────────
 
     @Slot()
     def _try_connect(self):
@@ -154,12 +144,12 @@ class PLCRead(QObject):
             if self._retry_timer and self._retry_timer.isActive():
                 self._retry_timer.stop()
             self.init_data.emit()
-            self._poll_timer.start()
+            self._poll_timer.start() # type: ignore
             if self.logger:
                 self.logger.info("[PLC READ]: Connected to PLC, started reading")
         else:
-            if not self._retry_timer.isActive():
-                self._retry_timer.start()
+            if not self._retry_timer.isActive(): # type: ignore
+                self._retry_timer.start()  # type: ignore
 
     def _connect_plc(self):
         if not self._running:
@@ -172,9 +162,9 @@ class PLCRead(QObject):
             try:
                 c = snap7.client.Client()
                 c.connect(self._ip, self._rack, self._slot)
-                result["client"] = c
+                result["client"] = c # type: ignore
             except Exception as exc:
-                result["error"] = exc
+                result["error"] = exc # type: ignore
             finally:
                 done.set()
 
@@ -198,7 +188,10 @@ class PLCRead(QObject):
         else:
             msg = f"Connection failed: {result['error']}"
             if self.logger:
-                self.logger.error("[PLC READ]: " + msg)
+                now = time.time()
+                if now - self._last_error_log_time >= 5:
+                    self.logger.error("[PLC READ]: " + msg)
+                    self._last_error_log_time = now
             self.error.emit(msg)
             self.connected.emit(False)
             self._client = None
@@ -212,8 +205,6 @@ class PLCRead(QObject):
             self._client = None
         self.connected.emit(False)
 
-    # ── Poll ────────────────────────────────────────────────────────────────
-
     @Slot()
     def _poll(self):
         if not self._running or not self._client or not self._client.get_connected():
@@ -223,7 +214,6 @@ class PLCRead(QObject):
         try:
             raw = self._client.db_read(self._db_number, 0, self._db_size)
             result = self._parse(raw)
-            # print("Data read and parsed:", result)
             self.data_ready.emit(result)
 
         except S7Error as exc:
@@ -236,11 +226,10 @@ class PLCRead(QObject):
     def _reconnect(self):
         if not self._running:
             return
-        self._poll_timer.stop()
+        self._poll_timer.stop() # type: ignore
         self._disconnect_plc()
-        self._retry_timer.start()
+        self._retry_timer.start() # type: ignore
 
-    # ── Parse ───────────────────────────────────────────────────────────────
     def _parse(self, raw: bytes) -> dict:
         if not self._db_layout:
             return {}
@@ -266,6 +255,6 @@ class PLCRead(QObject):
             except Exception as exc:
                 result[name] = None
                 if self.logger:
-                    self.logger.debug("[PLC READ]: Parse error [%s]: %s", name, exc)
+                    self.logger.error("[PLC READ]: Parse error [%s]: %s", name, exc)
 
         return result

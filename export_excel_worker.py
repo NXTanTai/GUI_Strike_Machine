@@ -2,6 +2,10 @@ from PySide6.QtCore import QObject, Signal
 import concurrent.futures
 
 class ExportWorker(QObject):
+    """
+    Object sử dụng xlsxwriter để xuất dữ liệu từ file db
+    \nDùng 1 process riêng để tránh freeze UI
+    """
     finished = Signal(str, str)
 
     def __init__(
@@ -38,15 +42,14 @@ class ExportWorker(QObject):
             except Exception as e:
                 self.finished.emit("", str(e))
 
-
 def _export_process(
-    db_path: str,
-    file_path: str,
-    name: str = "",
-    group: str = "",
-    start_date: str = "",
-    end_date: str = "",
-) -> list[str]:
+        db_path: str,
+        file_path: str,
+        name: str = "",
+        group: str = "",
+        start_date: str = "",
+        end_date: str = "",
+    ) -> list[str]:
     import sqlite3
     import xlsxwriter
     from pathlib import Path
@@ -96,6 +99,20 @@ def _export_process(
     if where_clauses:
         query += " WHERE " + " AND ".join(where_clauses)
     query += " ORDER BY id ASC"
+    if start_date and end_date and start_date != end_date:
+        actual_start_date = start_date
+        actual_end_date   = end_date
+    else:
+        date_query = f"""
+            SELECT
+                MIN("Date."),
+                MAX("Date.")
+            FROM ({query.replace('ORDER BY id ASC', '')}) t
+        """
+        cursor.execute(date_query, params)
+        date_row = cursor.fetchone()
+        actual_start_date = date_row[0] if date_row and date_row[0] else start_date
+        actual_end_date   = date_row[1] if date_row and date_row[1] else end_date
     cursor.execute(query, params)
 
     base_path     = Path(file_path)
@@ -118,6 +135,9 @@ def _export_process(
         })
 
         def hdr(left, right, bottom=1):
+            """
+            Set Style cho vùng header
+            """
             return wb.add_format({
                 "font_name": "Times New Roman", "font_size": 13, "bold": True,
                 "font_color": "#FFFFFF", "bg_color": "#4472C4",
@@ -126,6 +146,10 @@ def _export_process(
             })
 
         def dat(bg, left, right):
+            """
+            Set Style cho vùng dữ liệu
+            \nTách làm 2 kiểu cho từng dòng chẵn và lẻ
+            """
             f = {
                 "font_name": "Times New Roman", "font_size": 12,
                 "align": "center", "valign": "vcenter",
@@ -144,7 +168,7 @@ def _export_process(
         for i, w in enumerate(COL_WIDTHS):
             ws.set_column(i, i, w)
 
-        ws.merge_range(0, 0, 1, LAST_COL, "DỮ LIỆU BÁO CÁO", title_fmt)
+        ws.merge_range(0, 0, 1, LAST_COL, f"REPORT | {actual_start_date} - {actual_end_date}", title_fmt)
         ws.set_row(0, 30)
         ws.set_row(1, 10)
 
@@ -162,7 +186,9 @@ def _export_process(
         return fmts[key][slot]
     
     def flush_group(ws, fmts, pending, row_data, row_group):
-        """Flush toàn bộ pending cùng lúc — đảm bảo No./Name./Date. dùng chung màu."""
+        """
+        Flush toàn bộ pending cùng lúc — đảm bảo No./Name./Date. dùng chung màu.
+        """
         if not pending:
             return
 
@@ -246,7 +272,6 @@ def _export_process(
 
             row_in_sheet += 1
 
-    # ── Flush cuối ───────────────────────────────────────────────────────────
     flush_group(ws, fmts, pending, row_data, row_group)
 
     wb.close()

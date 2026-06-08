@@ -1,58 +1,78 @@
 from PySide6.QtWidgets import QLabel
 from PySide6.QtCore import QTimer, Qt
-from PySide6.QtGui import QPainter
+from PySide6.QtGui import QPainter, QFontMetrics
 
 class MarqueeLabel(QLabel):
-    def __init__(self, parent=None, speed=50):
+    def __init__(self, parent=None, speed=60):
         super().__init__(parent)
         self._text = ""
         self._offset = 0
-        self._speed = speed  # ms mỗi bước dịch
-
+        self._speed = speed
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._update_scroll)
+        self.setMinimumHeight(28)
 
     def setText(self, text: str):
-        self._text = text
+        self._text = text.strip() if text else ""
         self._offset = 0
-        self._update_scroll()  # tách logic ra hàm riêng
+        self._update_timer_state()
+        self.update()
 
-    def resizeEvent(self, event):
+    def resizeEvent(self, event):          # ← Thêm cái này
         super().resizeEvent(event)
-        self._update_scroll()  # gọi lại khi widget bị resize
+        self._offset = 0
+        self._update_timer_state()
+        self.update()
+
+    def _update_timer_state(self):         # ← Tách logic ra hàm riêng
+        if not self._text:
+            self._timer.stop()
+            return
+
+        fm = QFontMetrics(self.font())
+        text_width = fm.horizontalAdvance(self._text)
+
+        if text_width > self.width() + 10:
+            if not self._timer.isActive():
+                self._timer.start(self._speed)
+        else:
+            self._timer.stop()
 
     def _update_scroll(self):
         if not self._text:
+            self._timer.stop()
             return
 
-        fm = self.fontMetrics()
+        fm = QFontMetrics(self.font())
         text_width = fm.horizontalAdvance(self._text)
-        widget_width = self.width()
 
-        if text_width > widget_width:
-            self._offset += 2                    # Tốc độ di chuyển (pixel mỗi lần)
-            if self._offset > text_width + 50:   # Reset khi chạy hết
-                self._offset = 0
-
-            self.update()                        # Vẽ lại
-            self._timer.start(self._speed)
-        else:
+        if text_width <= self.width() + 10:
             self._timer.stop()
+            self._offset = 0
             self.update()
+            return
+
+        self._offset += 2
+        if self._offset > text_width + 60:
+            self._offset = 0
+
+        self.update()
 
     def paintEvent(self, event):
-        if not self._timer.isActive():
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+
+        if not self._text:
             super().paintEvent(event)
             return
 
-        painter = QPainter(self)
-        fm = self.fontMetrics()
-
-        # Vẽ text dịch theo offset
-        display = self._text + "     " + self._text
-        x = -self._offset
+        fm = QFontMetrics(self.font())
         y = (self.height() + fm.ascent() - fm.descent()) // 2
 
-        painter.setPen(self.palette().color(self.foregroundRole()))
-        painter.drawText(x, y, display)
+        if not self._timer.isActive():
+            painter.drawText(0, y, self._text)
+        else:
+            display = self._text + "    " + self._text
+            painter.drawText(-self._offset, y, display)
+
         painter.end()
