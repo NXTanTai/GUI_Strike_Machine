@@ -35,5 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['icons\\hose_icon.png'],
+    icon=['icons\\strike_machine.png'],
 )

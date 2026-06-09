@@ -27,6 +27,7 @@ from Custom_Widgets.QCustomSlideMenu import QCustomSlideMenu
 from marquee_label import MarqueeLabel
 from qtime_only_edit import TimeOnlyEdit
 import Icon_rc
+import resources_rc
 import files_rc
 
 class Ui_MainWindow(object):
@@ -111,15 +112,19 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QHBoxLayout(self.header_frame)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(10, 5, 5, 5)
-        self.label_2 = QLabel(self.header_frame)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setMinimumSize(QSize(60, 0))
-        self.label_2.setMaximumSize(QSize(60, 16777215))
-        self.label_2.setStyleSheet(u"    background-color: transparent;\n"
-"    border-radius: 8px;\n"
-"    image: url(:/Icons/Logo_Cty_2.png);")
+        self.logo_btn = QPushButton(self.header_frame)
+        self.logo_btn.setObjectName(u"logo_btn")
+        sizePolicy.setHeightForWidth(self.logo_btn.sizePolicy().hasHeightForWidth())
+        self.logo_btn.setSizePolicy(sizePolicy)
+        self.logo_btn.setMinimumSize(QSize(80, 0))
+        self.logo_btn.setMaximumSize(QSize(80, 16777215))
+        self.logo_btn.setStyleSheet(u"background-color: transparent;\n"
+"border-radius: 8px;")
+        self.logo_btn.setIcon(icon)
+        self.logo_btn.setIconSize(QSize(60, 60))
+        self.logo_btn.setCheckable(True)
 
-        self.horizontalLayout.addWidget(self.label_2)
+        self.horizontalLayout.addWidget(self.logo_btn)
 
         self.company_header_layout = QVBoxLayout()
         self.company_header_layout.setObjectName(u"company_header_layout")
@@ -129,12 +134,10 @@ class Ui_MainWindow(object):
         self.company_name.setSizePolicy(sizePolicy)
         font1 = QFont()
         font1.setFamilies([u"Segoe UI"])
-        font1.setPointSize(30)
+        font1.setPointSize(35)
         font1.setBold(True)
         self.company_name.setFont(font1)
-        self.company_name.setStyleSheet(u"\n"
-"    color: #1E293B;\n"
-"    letter-spacing: 1px;")
+        self.company_name.setStyleSheet(u"color: #1E293B;")
 
         self.company_header_layout.addWidget(self.company_name)
 
@@ -5046,6 +5049,10 @@ class Ui_MainWindow(object):
         self.gridLayout.setRowStretch(13, 1)
         self.gridLayout.setRowStretch(14, 1)
         self.gridLayout.setRowStretch(15, 1)
+        self.gridLayout.setColumnStretch(0, 2)
+        self.gridLayout.setColumnStretch(2, 3)
+        self.gridLayout.setColumnStretch(4, 3)
+        self.gridLayout.setColumnStretch(6, 3)
 
         self.verticalLayout_63.addWidget(self.widget_6)
 
@@ -7905,7 +7912,8 @@ class Ui_MainWindow(object):
         self.read_time_input.setSizePolicy(sizePolicy)
         self.read_time_input.setMinimumSize(QSize(0, 0))
         font22 = QFont()
-        font22.setPointSize(21)
+        font22.setFamilies([u"Segoe UI"])
+        font22.setPointSize(24)
         font22.setBold(True)
         self.read_time_input.setFont(font22)
         self.read_time_input.setAlignment(Qt.AlignCenter)
@@ -8106,7 +8114,7 @@ class Ui_MainWindow(object):
         self.cycle_a_displ_3.setSizePolicy(sizePolicy)
         font23 = QFont()
         font23.setFamilies([u"Segoe UI"])
-        font23.setPointSize(21)
+        font23.setPointSize(24)
         font23.setBold(True)
         font23.setItalic(False)
         self.cycle_a_displ_3.setFont(font23)
@@ -10141,27 +10149,43 @@ class Ui_MainWindow(object):
         __qtablewidgetitem2 = QTableWidgetItem()
         self.list_history.setHorizontalHeaderItem(2, __qtablewidgetitem2)
         __qtablewidgetitem3 = QTableWidgetItem()
+        __qtablewidgetitem3.setTextAlignment(Qt.AlignCenter)
         self.list_history.setHorizontalHeaderItem(3, __qtablewidgetitem3)
         __qtablewidgetitem4 = QTableWidgetItem()
+        __qtablewidgetitem4.setTextAlignment(Qt.AlignCenter)
         self.list_history.setHorizontalHeaderItem(4, __qtablewidgetitem4)
         __qtablewidgetitem5 = QTableWidgetItem()
+        __qtablewidgetitem5.setTextAlignment(Qt.AlignCenter)
         self.list_history.setHorizontalHeaderItem(5, __qtablewidgetitem5)
         __qtablewidgetitem6 = QTableWidgetItem()
+        __qtablewidgetitem6.setTextAlignment(Qt.AlignCenter)
         self.list_history.setHorizontalHeaderItem(6, __qtablewidgetitem6)
         __qtablewidgetitem7 = QTableWidgetItem()
+        __qtablewidgetitem7.setTextAlignment(Qt.AlignCenter)
         self.list_history.setHorizontalHeaderItem(7, __qtablewidgetitem7)
         __qtablewidgetitem8 = QTableWidgetItem()
         self.list_history.setHorizontalHeaderItem(8, __qtablewidgetitem8)
         self.list_history.setObjectName(u"list_history")
         self.list_history.setFont(font29)
         self.list_history.setStyleSheet(u"QTableWidget {\n"
-"    background-color: #ffffff; border: 1px solid #BFC8D3; border-radius: 8px;\n"
-"    gridline-color: #BFC8D3; color: #334155;\n"
-"    selection-background-color: #dbeafe; selection-color: #1e40af; outline: none;\n"
+"    border: 1px solid #BFC8D3; \n"
+"    border-radius: 8px;\n"
+"    gridline-color: #BFC8D3; \n"
+"    color: #334155;\n"
+"    selection-background-color: #dbeafe; \n"
+"    selection-color: #1e40af; \n"
+"    outline: none;\n"
 "}\n"
-"QTableWidget::item { padding: 8px 14px; border-bottom: 1px solid #f1f5f9; }\n"
-"QTableWidget::item:selected { background-color: #dbeafe; color: #1e40af; }\n"
-"QTableWidget::item:hover { background-color: rgb(222, 225, 226); }\n"
+"QTableWidget::item { \n"
+"    padding: 8px 14px; \n"
+"    border-bottom: 1px solid #f1f5f9;\n"
+"}\n"
+"QTableWidget::item:selected { \n"
+"    color: #1e40af; \n"
+"}\n"
+"QTableWidget::item:hover { \n"
+"    background-color: rgb(222, 225, 226); \n"
+"}\n"
 "QHeaderView::section {\n"
 "    background-color: #f8fafc; color: #1e40af; font-family: \"Segoe UI\";\n"
 "    font-size: 16px; font-weight: 700; letter-spacing: 1.5px;\n"
@@ -10171,8 +10195,8 @@ class Ui_MainWindow(object):
 "QHeaderView::section:last { border-right: none; }\n"
 "QScrollBar:vertical { background: #f8fafc; width: 20px; border-radius: 4px; }\n"
 "QScrollBar::handle:vertical { background: #cbd5e1; border-radius: 4px; min-height: 24px; }\n"
-"QScrollBar::handle:vertical:"
-                        "hover { background: #94a3b8; }\n"
+""
+                        "QScrollBar::handle:vertical:hover { background: #94a3b8; }\n"
 "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }\n"
 "QScrollBar:horizontal { background: #f8fafc; height: 8px; border-radius: 4px; }\n"
 "QScrollBar::handle:horizontal { background: #cbd5e1; border-radius: 4px; min-width: 24px; }\n"
@@ -10183,7 +10207,9 @@ class Ui_MainWindow(object):
         self.list_history.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.list_history.setDragEnabled(False)
         self.list_history.setSortingEnabled(False)
+        self.list_history.setWordWrap(False)
         self.list_history.horizontalHeader().setCascadingSectionResizes(True)
+        self.list_history.horizontalHeader().setMinimumSectionSize(55)
         self.list_history.horizontalHeader().setStretchLastSection(True)
         self.list_history.verticalHeader().setVisible(False)
         self.list_history.verticalHeader().setDefaultSectionSize(40)
@@ -10283,7 +10309,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(2)
+        self.stackedWidget_2.setCurrentIndex(3)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
@@ -10325,7 +10351,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_t0_3.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(1)
+        self.stackedWidget_3.setCurrentIndex(0)
         self.sys_state_stacked_wid_40.setCurrentIndex(2)
         self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
@@ -10348,8 +10374,8 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Tech-Link - Production System", None))
-        self.label_2.setText("")
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Tech-Link - Strike Machine System", None))
+        self.logo_btn.setText("")
         self.company_name.setText(QCoreApplication.translate("MainWindow", u"TECH-LINK", None))
         self.error_display.setText("")
         self.eng_language.setText("")

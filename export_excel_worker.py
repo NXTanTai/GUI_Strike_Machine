@@ -57,9 +57,10 @@ def _export_process(
     CHUNK_SIZE = 10_000
     MAX_ROWS   = 999_997
 
-    HEADERS    = ["No.", "Name.", "Group.", "Pressure.", "T-Oven.",
-                  "Front.", "Middle.", "End.", "Date."]
-    COL_WIDTHS = [9.1, 11.4, 18.6, 19.0, 21.4, 11.0, 19.5, 19.9, 24.1]
+    HEADERS    = ["No.", "Name.", "Group.", 
+                  "Pressure.", "T-Oven.", "Front.", 
+                  "Middle.", "End.", "Date."]
+    COL_WIDTHS = [10, 20.0, 13.5, 16.5, 16.5, 16.5, 16.5, 16.5, 22.5]
     LAST_COL   = len(HEADERS) - 1
     MERGE_COLS = {0, 1, 8}  # No., Name., Date.
 
@@ -71,10 +72,10 @@ def _export_process(
     use_parts = max_id > MAX_ROWS
 
     query = '''
-        SELECT "No.", "Name.", "Group.", "Pressure.", "T-Oven.",
-               "Front.", "Middle.", "End.", "Date."
-        FROM history
-    '''
+            SELECT "No.", "Name.", "Group.", "Pressure.", "T-Oven.",
+                "Front.", "Middle.", "End.", "Date."
+            FROM history
+            '''
     where_clauses: list[str] = []
     params: list[str] = []
 
@@ -168,14 +169,12 @@ def _export_process(
         for i, w in enumerate(COL_WIDTHS):
             ws.set_column(i, i, w)
 
-        ws.merge_range(0, 0, 1, LAST_COL, f"REPORT | {actual_start_date} - {actual_end_date}", title_fmt)
-        ws.set_row(0, 30)
-        ws.set_row(1, 10)
-
-        ws.set_row(2, 30)
+        ws.merge_range(0, 0, 0, LAST_COL, f"REPORT | {actual_start_date} - {actual_end_date}", title_fmt)
+        ws.set_row(0, 40)
+        ws.set_row(1, 30)
         for col_idx, col_name in enumerate(HEADERS):
             slot = 0 if col_idx == 0 else (2 if col_idx == LAST_COL else 1)
-            ws.write(2, col_idx, col_name, fmts["hdr"][slot])
+            ws.write(1, col_idx, col_name, fmts["hdr"][slot])
 
         created_files.append(str(part_path))
         return wb, ws, fmts
@@ -214,7 +213,7 @@ def _export_process(
                 ws.merge_range(start_row, col_idx, end_row, col_idx, value, fmt)
 
     part_num     = 1
-    row_in_sheet = 3
+    row_in_sheet = 2 # row bắt đầu ghi dữ liệu
     group_num    = -1           
     prev_no      = object()
 

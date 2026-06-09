@@ -1,5 +1,5 @@
 # pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\hose_icon.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
+# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\hose_icon.png  --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
 
 import multiprocessing
 import subprocess
@@ -10,7 +10,6 @@ import sys
 
 LOADING_ENV   = 'STRIKE_MACHINE_LOADING'
 LOADING_PAUSE = 'STRIKE_MACHINE_LOADING_PAUSE'
-
 
 def _spawn_loading():
     sig   = tempfile.NamedTemporaryFile(delete=False, suffix='.lock')
@@ -28,7 +27,6 @@ def _spawn_loading():
         close_fds=True,
     )
     return proc, sig.name, pause.name
-
 
 def _close_loading(proc, signal_file, pause_file=None):
     if proc is None:

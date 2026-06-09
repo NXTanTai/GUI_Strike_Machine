@@ -14,12 +14,13 @@ import msoffcrypto
 import logging
 import sqlite3
 import threading
+import webbrowser
 from PySide6.QtCore import (Qt, QTimer, QObject, 
                             QTime, QSettings, QDateTime,
                             QEvent, QThread, QEasingCurve, 
                             QTranslator)
-from PySide6.QtGui import QFont
-from PySide6.QtWidgets import (QHeaderView, QAbstractSpinBox,
+from PySide6.QtGui import QFont, QFontDatabase, QPalette
+from PySide6.QtWidgets import (QHeaderView, QAbstractSpinBox, QStyledItemDelegate,
                                QMainWindow, QApplication, QLineEdit,
                                QFileDialog, QTableWidget, QTableWidgetItem)
 from typing import List, Optional, Tuple, Any
@@ -73,6 +74,14 @@ def get_exe_dir():
         return Path(__file__).parent
 
 SIMULATE = (get_exe_dir() / "simulate.txt").is_file()
+
+class BackgroundDelegate(QStyledItemDelegate):
+    def paint(self, painter: QPainter, option, index):
+        bg = index.data(Qt.BackgroundRole)
+        if bg:
+            painter.fillRect(option.rect, bg)
+            option.palette.setColor(QPalette.ColorRole.Base, bg)
+        super().paint(painter, option, index)
 
 class StrikeMachine(QMainWindow):
     _request_scroll_reset   = Signal()
@@ -334,10 +343,14 @@ class StrikeMachine(QMainWindow):
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Type.MouseButtonDblClick:
             double_click_actions = {
+                self.ui.logo_btn        :self._on_logo_clicked,
                 self.ui.plc_io_btn    : self.i_o_page_btn,
                 self.ui.clear_group_a: self.clear_group_a_btn,
                 self.ui.clear_group_b: self.clear_group_b_btn,
-                self.ui.clear_group_c: self.clear_group_c_btn
+                self.ui.clear_group_c: self.clear_group_c_btn,
+                self.ui.reset_cycle_a_btn: self.reset_cycle_a_btn("A"),
+                self.ui.reset_cycle_b_btn: self.reset_cycle_a_btn("B"),
+                self.ui.reset_cycle_c_btn: self.reset_cycle_a_btn("C"),
             }
             if obj in double_click_actions:
                 double_click_actions[obj]()
@@ -346,8 +359,12 @@ class StrikeMachine(QMainWindow):
     def _init_app_data(self):
         self._app = QApplication.instance()
         self._lastpos = None
+        self.ui.list_history.setItemDelegate(BackgroundDelegate(self.ui.list_history))
+        self.ui.list_history_2.setItemDelegate(BackgroundDelegate(self.ui.list_history_2))
         self._last_history_time = 0.0
         self.db_dict = None
+        self._COLOR_EVEN = QColor("#E2F1FD")
+        self._COLOR_ODD  = QColor("#FFFFFF")
 
         self._pending_rows = []
         self._all_rows_cache = []
@@ -849,13 +866,15 @@ class StrikeMachine(QMainWindow):
             expandedWidth = 175,
             expandedHeight = "parent",
             animationDuration = 200,
-            animationEasingCurve = QEasingCurve.Linear,
+            animationEasingCurve = QEasingCurve.Linear,  # type: ignore
             collapsingAnimationDuration = 200,
-            collapsingAnimationEasingCurve = QEasingCurve.Linear,
+            collapsingAnimationEasingCurve = QEasingCurve.Linear,  # type: ignore
             expandingAnimationDuration = 200,
-            expandingAnimationEasingCurve = QEasingCurve.Linear,
+            expandingAnimationEasingCurve = QEasingCurve.Linear,  # type: ignore
         )
         self.ui.open_side_menu_btn.clicked.connect(self._on_menu_toggle)
+        self.ui.logo_btn.installEventFilter(self)
+        
         ### Left side menu button
         self.ui.home_page_btn.clicked.connect(self.pressure_page_btn)
         self.ui.chart_page_btn.clicked.connect(self.home_page_btn)
@@ -1085,9 +1104,9 @@ class StrikeMachine(QMainWindow):
             self.ui.list_history.verticalScrollBar().valueChanged.connect(
                 self._on_history_scroll
             )
-            self._resize_table_columns(self.ui.list_history)
             self.ui.list_history.scrollToBottom()
             self.logger.info(f"Total {total_db:,} records, showing last {self._table_display}")
+            self._resize_table_columns(self.ui.list_history)
 
         except Exception as e:
             self.logger.error(f"Error loading history: {e}")
@@ -1113,22 +1132,38 @@ class StrikeMachine(QMainWindow):
             row_idx += span
 
     def _render_chunk(self, start: int, end: int):
-        """Render cache[start:end] vào table"""
         chunk = self._all_rows_cache[start:end]
         if not chunk:
             return
 
-        table = self.ui.list_history
+        table            = self.ui.list_history
+        existing_batches = self._count_batches(table)
+        prev_no          = None
+        batch_counter    = existing_batches
+
         table.setUpdatesEnabled(False)
+
         for row_data in chunk:
+            current_no = str(row_data[0]) if row_data[0] else ""
+            if current_no != prev_no:
+                batch_counter += 1
+                prev_no = current_no
+
             row_pos = table.rowCount()
             table.insertRow(row_pos)
             for col, value in enumerate(row_data):
-                item = QTableWidgetItem(value)
-                if col == 0:
-                    item.setTextAlignment(Qt.AlignCenter)   # type: ignore
-                table.setItem(row_pos, col, item)
+                table.setItem(row_pos, col,
+                    self._make_colored_item(str(value), batch_counter))
+
         table.setUpdatesEnabled(True)
+
+    def _make_colored_item(self, value: str, batch_counter: int) -> QTableWidgetItem:
+        item = QTableWidgetItem(value)
+        item.setTextAlignment(Qt.AlignCenter)  # type: ignore
+        color = self._COLOR_EVEN if batch_counter % 2 == 0 else self._COLOR_ODD
+        print(f"batch={batch_counter}, color={color.name()}")
+        item.setData(Qt.BackgroundRole, color)  # ← đổi từ setBackground → setData
+        return item
 
     def _on_history_scroll(self, value: int):
         sb = self.ui.list_history.verticalScrollBar()
@@ -1147,7 +1182,7 @@ class StrikeMachine(QMainWindow):
                 return
 
             table = self.ui.list_history
-            sb = table.verticalScrollBar()
+            sb    = table.verticalScrollBar()
 
             if sb.value() > sb.minimum() + 50:
                 return
@@ -1160,7 +1195,7 @@ class StrikeMachine(QMainWindow):
             fetch_start = max(0, self._db_offset - self._table_display)
             fetch_count = self._db_offset - fetch_start
 
-            cursor = self.conn.cursor() # type: ignore
+            cursor = self.conn.cursor()  # type: ignore
             cursor.execute(
                 'SELECT * FROM history ORDER BY id ASC LIMIT ? OFFSET ?',
                 (fetch_count, fetch_start)
@@ -1169,26 +1204,34 @@ class StrikeMachine(QMainWindow):
 
             new_chunk = []
             for idx, row in enumerate(rows):
-                stt = row[1] if row[1] else str(fetch_start + idx + 1)
+                stt       = row[1] if row[1] else str(fetch_start + idx + 1)
                 formatted = [str(stt)] + [str(v if v is not None else "") for v in row[2:]]
                 new_chunk.append(formatted)
 
             if not new_chunk:
                 return
 
-            self._db_offset = fetch_start
+            self._db_offset      = fetch_start
             self._all_rows_cache = new_chunk + self._all_rows_cache
 
+            existing_batches = self._count_batches(table)
+            prev_no          = None
+            batch_counter    = existing_batches
+
             table.setUpdatesEnabled(False)
+
             for i, row_data in enumerate(new_chunk):
+                current_no = str(row_data[0]) if row_data[0] else ""
+                if current_no != prev_no:
+                    batch_counter += 1
+                    prev_no = current_no
+
                 table.insertRow(i)
                 for col, value in enumerate(row_data):
-                    item = QTableWidgetItem(value)
-                    if col == 0:
-                        item.setTextAlignment(Qt.AlignCenter)   # type: ignore
-                    table.setItem(i, col, item)
-            table.setUpdatesEnabled(True)
+                    table.setItem(i, col,
+                        self._make_colored_item(str(value), batch_counter))
 
+            table.setUpdatesEnabled(True)
             self._apply_span(table)
 
             table.scrollTo(
@@ -1373,23 +1416,39 @@ class StrikeMachine(QMainWindow):
             self._loading_search_chunk = False
 
     def _prepend_search_data(self, new_chunk: list):
-        table = self.ui.list_history_2
+        table            = self.ui.list_history_2
+        existing_batches = self._count_batches(table)
+        prev_no          = None
+        batch_counter    = existing_batches
+
         table.setUpdatesEnabled(False)
+
         for i, row_data in enumerate(new_chunk):
+            current_no = str(row_data[0]) if row_data[0] else ""
+            if current_no != prev_no:
+                batch_counter += 1
+                prev_no = current_no
+
             table.insertRow(i)
             for col, value in enumerate(row_data):
-                item = QTableWidgetItem(value)
-                if col == 0:
-                    item.setTextAlignment(Qt.AlignCenter)   # type: ignore
-                table.setItem(i, col, item)
-        table.setUpdatesEnabled(True)
+                table.setItem(i, col,
+                    self._make_colored_item(str(value), batch_counter))
 
+        table.setUpdatesEnabled(True)
         self._apply_span(table)
 
         table.scrollTo(
             table.model().index(len(new_chunk), 0),
             QTableWidget.ScrollHint.PositionAtTop
         )
+
+    def _count_batches(self, table) -> int:
+        seen = set()
+        for row in range(table.rowCount()):
+            item = table.item(row, 0)
+            if item:
+                seen.add(item.text())
+        return len(seen)
 
     def _on_search_scroll(self, value: int):
         sb = self.ui.list_history_2.verticalScrollBar()
@@ -1403,50 +1462,61 @@ class StrikeMachine(QMainWindow):
         self._loading_search_chunk = True
         self._search_prepend = True
         QTimer.singleShot(1000, self._search_fetch_chunk)
-
+        
     def _load_filtered_data(self, filtered_data: list):
         table = self.ui.list_history_2
         table.setUpdatesEnabled(False)
         table.setRowCount(0)
         table.setRowCount(len(filtered_data))
 
+        prev_no       = None
+        batch_counter = 0
+
         for row_idx, row_data in enumerate(filtered_data):
+            current_no = str(row_data[0]) if row_data[0] else ""
+            if current_no != prev_no:
+                batch_counter += 1
+                prev_no = current_no
+
             for col, value in enumerate(row_data):
-                item = QTableWidgetItem(value)
-                if col == 0:
-                    item.setTextAlignment(Qt.AlignCenter)   # type: ignore
-                table.setItem(row_idx, col, item)
+                table.setItem(row_idx, col,
+                    self._make_colored_item(str(value), batch_counter))
 
         row_idx = 0
         while row_idx < table.rowCount():
-            current_no = table.item(row_idx, 0).text() if table.item(row_idx, 0) else ""    # type: ignore
+            current_no = table.item(row_idx, 0).text() if table.item(row_idx, 0) else ""  # type: ignore
             span = 1
-
-            # Đếm bao nhiêu row tiếp theo có cùng No.
             while (row_idx + span < table.rowCount() and
                 table.item(row_idx + span, 0) and
-                table.item(row_idx + span, 0).text() == current_no):    # type: ignore
+                table.item(row_idx + span, 0).text() == current_no):  # type: ignore
                 span += 1
-
-            # Merge nếu có nhiều hơn 1 row
             if span > 1:
-                for merge_col in [0, 1, 8]:  # No., Name., Date. — sửa index nếu khác
+                for merge_col in [0, 1, 8]:
                     table.setSpan(row_idx, merge_col, span, 1)
-
             row_idx += span
 
         table.setUpdatesEnabled(True)
         table.scrollToBottom()
         self._resize_table_columns(table)
-        # self._update_info(self._search_total, len(self._all_rows_cache) + self._db_offset)
 
     def _resize_table_columns(self, table):
         if not table or table.columnCount() == 0:
             return
-            
+        
+        screen = QApplication.primaryScreen().availableGeometry()
+        is_maximized = (self.width() >= screen.width() - 50 and 
+                        self.height() >= screen.height() - 50)
+
         header = table.horizontalHeader()
-        for col in range(table.columnCount() - 1):
-            header.setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
+        last_col = table.columnCount() - 1
+        if is_maximized:
+            header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+            header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+            header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+            header.setSectionResizeMode(last_col, QHeaderView.ResizeMode.ResizeToContents)
+        else:
+            for col in range(last_col):
+                header.setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
 
     def _on_clear_clicked(self):
         self.ui.search_data.clear()
@@ -1568,13 +1638,13 @@ class StrikeMachine(QMainWindow):
     def on_ct_t3_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Temp3Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
     def on_table_write_cycle_value_changed(self, value: float): self.ui.table_write_cycle.setValue(float(self.ui.read_time_input.value())/1000) if (value*1000) < self.ui.read_time_input.value() else None #type: ignore
 
+    def _on_logo_clicked(self):
+        webbrowser.open("https://www.techlinksilicones.com/")
+
     def _on_menu_toggle(self):
-        # Pause tất cả chart
         if self.ui.stackedWidget_2.currentIndex() == 0:
             self._pause_charts()
             self.ui.left_side_menu_widget.slideMenu()
-            
-            # Resume sau khi animation xong
             QTimer.singleShot(220, self._resume_charts)
         else:
             self.ui.left_side_menu_widget.slideMenu()
@@ -1763,6 +1833,7 @@ class StrikeMachine(QMainWindow):
             
         except Exception as e:
             self.logger.info("PLC Writer gone wrong:", e)
+            return False
         self.thread_dict["plc_writer_thread"] = self.plc_writer_thread
         return True
     
@@ -1773,7 +1844,6 @@ class StrikeMachine(QMainWindow):
             # ms = (time.perf_counter() - t) * 1000
             # if ms > 1:
                 # print(f"  [{label}] {ms:.1f}ms")
-
         try:
             if self.init_signal:
                 self.logger.info("[Main]-[_data_ready]: Getting PLC State")
@@ -2088,17 +2158,14 @@ class StrikeMachine(QMainWindow):
     def _init_pressure_group_sv_obj(self, list_init_a, list_init_b, list_init_c, list_init_t0):
         for i in range(len(self.list_for_import_a)):
             self.list_for_import_a[i].blockSignals(True)
-            # self.list_for_import_a[i].setValue(self.convert_cel_fah(list_init_a[i]))
             self.list_for_import_a[i].setValue(list_init_a[i])
             self.list_for_import_a[i].blockSignals(False)
 
             self.list_for_import_b[i].blockSignals(True)
-            # self.list_for_import_b[i].setValue(self.convert_cel_fah(list_init_b[i]))
             self.list_for_import_b[i].setValue(list_init_b[i])
             self.list_for_import_b[i].blockSignals(False)
 
             self.list_for_import_c[i].blockSignals(True)
-            # self.list_for_import_c[i].setValue(self.convert_cel_fah(list_init_c[i]))
             self.list_for_import_c[i].setValue(list_init_c[i])
             self.list_for_import_c[i].blockSignals(False)   
 
@@ -2294,7 +2361,7 @@ class StrikeMachine(QMainWindow):
                 sv_obj = self.ui.pressure_sv_b_1
             if channel == "C":
                 sv_obj = self.ui.pressure_sv_c_1
-            temp_sv = max(sv_obj.value(), self.default_temp_room)
+            temp_sv = max(sv_obj.value(), self.default_temp_room)  # type: ignore
             simulator.set_heat_active(channel, temp_sv)  # type: ignore
         else:
             simulator.set_heat_active(channel, 25.0)
@@ -2311,8 +2378,8 @@ class StrikeMachine(QMainWindow):
                 sv_obj = self.ui.pressure_sv_b_5
             if channel == "C":
                 sv_obj = self.ui.pressure_sv_c_5
-            pressure_itv_sv = sv_obj.value()
-            pressure_sv = sv_obj.value()
+            pressure_itv_sv = sv_obj.value()  # type: ignore
+            pressure_sv = sv_obj.value()  # type: ignore
             simulator.set_pressure_active(channel, pressure_sv, pressure_itv_sv)  # type: ignore
         else:
             simulator.set_pressure_active(channel, 0.0, 0.0)
@@ -2777,6 +2844,26 @@ class StrikeMachine(QMainWindow):
             except Exception as e:
                 ltmessage.error(self, "Error", f"Failed to clear data: {e}")
 
+    def reset_cycle_a_btn(self, channel):
+        if channel == "A":
+            self.plc_writer_worker.write_value.emit("P1_Number_Test_Times", 0) if self.plc_writer_connection else None #type: ignore
+            if self.plc_writer_connection:
+                self.logger.info(f"[Main]-[reset_cycle_a_btn]: Total A Cycle: {self.ui.cycle_a_displ_3.value()}")
+            else:
+                self.logger.info(f"[Main]-[reset_cycle_a_btn]: Cannot set Total A Cycle")
+        if channel == "B":
+            self.plc_writer_worker.write_value.emit("P2_Number_Test_Times", 0) if self.plc_writer_connection else None #type: ignore
+            if self.plc_writer_connection:
+                self.logger.info(f"[Main]-[reset_cycle_b_btn]: Total B Cycle: {self.ui.cycle_b_displ_3.value()}")
+            else:
+                self.logger.info(f"[Main]-[reset_cycle_b_btn]: Cannot set Total B Cycle")
+        if channel == "C":
+            self.plc_writer_worker.write_value.emit("P3_Number_Test_Times", 0) if self.plc_writer_connection else None #type: ignore
+            if self.plc_writer_connection:
+                self.logger.info(f"[Main]-[reset_cycle_c_btn]: Total C Cycle: {self.ui.cycle_c_displ_3.value()}")
+            else:
+                self.logger.info(f"[Main]-[reset_cycle_c_btn]: Cannot set Total C Cycle")
+
     def new_data_btn(self):
         stk_mch_file = Path(self.stk_mch_folder)/ "Setting File" 
         # print("Default path for data file:", stk_mch_file)s
@@ -2935,44 +3022,44 @@ class StrikeMachine(QMainWindow):
             db_text = self.ui.db_file_path_edit.text()
             self.ui.retranslateUi(self)
             charts = [self.chart_temp, self.chart_pressure_a,
-                self.chart_pressure_b, self.chart_pressure_c]
+                        self.chart_pressure_b, self.chart_pressure_c]
             if self._current_lang == "cn":
                 self.ui.plc_ip_address_edit.setPlaceholderText("请输入IP地址: 172.16.100.***")
                 self.ui.db_file_path_edit.setPlaceholderText("输入路径文件夹")
                 
-                self.chart_temp.btn_setting.setText("烤箱")
-                self.chart_temp.plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else self.chart_temp.plot.setLabel("left", "温度 (°F)")
+                charts[0].btn_setting.setText("烤箱")
+                charts[0].plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else charts[0].plot.setLabel("left", "温度 (°F)")
                 
-                self.chart_pressure_a.btn_setting.setText("A组")
-                self.chart_pressure_a.plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else self.chart_pressure_a.plot.setLabel("left", "温度 (°F)")
-                self.chart_pressure_a.plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")    # type: ignore
+                charts[1].btn_setting.setText("A组")
+                charts[1].plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else charts[1].plot.setLabel("left", "温度 (°F)")
+                charts[1].plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")    # type: ignore
                 
-                self.chart_pressure_b.btn_setting.setText("B组")
-                self.chart_pressure_b.plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else self.chart_pressure_b.plot.setLabel("left", "温度 (°F)")
-                self.chart_pressure_b.plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")    # type: ignore
+                charts[2].btn_setting.setText("B组")
+                charts[2].plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else charts[2].plot.setLabel("left", "温度 (°F)")
+                charts[2].plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")    # type: ignore
                 
-                self.chart_pressure_c.btn_setting.setText("C组")
-                self.chart_pressure_c.plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else self.chart_pressure_c.plot.setLabel("left", "温度 (°F)")
-                self.chart_pressure_c.plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")    # type: ignore
+                charts[3].btn_setting.setText("C组")
+                charts[3].plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else charts[3].plot.setLabel("left", "温度 (°F)")
+                charts[3].plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")    # type: ignore
 
             elif self._current_lang == "en":
                 self.ui.plc_ip_address_edit.setPlaceholderText("Enter IP Address: 172.16.100.***")
                 self.ui.db_file_path_edit.setPlaceholderText("Enter Path Folder")
                 
-                self.chart_temp.btn_setting.setText("Oven")
-                self.chart_temp.plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else self.chart_temp.plot.setLabel("left", "Temperature (°F)")
+                charts[0].btn_setting.setText("Oven")
+                charts[0].plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else charts[0].plot.setLabel("left", "Temperature (°F)")
                 
-                self.chart_pressure_a.btn_setting.setText("Group A")
-                self.chart_pressure_a.plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else self.chart_pressure_a.plot.setLabel("left", "Temperature (°F)")
-                self.chart_pressure_a.plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")    # type: ignore
+                charts[1].btn_setting.setText("Group A")
+                charts[1].plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else charts[1].plot.setLabel("left", "Temperature (°F)")
+                charts[1].plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")    # type: ignore
                 
-                self.chart_pressure_b.btn_setting.setText("Group B")
-                self.chart_pressure_b.plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else self.chart_pressure_b.plot.setLabel("left", "Temperature (°F)")
-                self.chart_pressure_b.plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")    # type: ignore
+                charts[2].btn_setting.setText("Group B")
+                charts[2].plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else charts[2].plot.setLabel("left", "Temperature (°F)")
+                charts[2].plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")    # type: ignore
                 
-                self.chart_pressure_c.btn_setting.setText("Group C")
-                self.chart_pressure_c.plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else self.chart_pressure_c.plot.setLabel("left", "Temperature (°F)")
-                self.chart_pressure_c.plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")    # type: ignore
+                charts[3].btn_setting.setText("Group C")
+                charts[3].plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else charts[3].plot.setLabel("left", "Temperature (°F)")
+                charts[3].plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")    # type: ignore
                 
             self.ui.plc_ip_address_edit.setText(ip_text)
             self.ui.db_file_path_edit.setText(db_text)
@@ -3033,8 +3120,6 @@ class StrikeMachine(QMainWindow):
         if self._current_unit == 1:
             return celsius * 9/5 + 32
         return celsius
-
-    # def _update_alarm_state(self, )
 
     def convert_cel_fah(self, temp):
         if self._current_unit == 1:
@@ -3243,31 +3328,27 @@ class StrikeMachine(QMainWindow):
         if not self._pending_rows or not self.conn:
             return
 
-        # Lấy tối đa 3 row để flush
         rows = self._pending_rows[:3]
-        self._pending_rows = self._pending_rows[3:]   # Giữ lại nếu còn thừa
+        self._pending_rows = self._pending_rows[3:]
 
         self._history_batch_counter += 1
         batch_no = str(self._history_batch_counter)
 
-        # Gán batch_no vào cột đầu tiên
         for row_data in rows:
             row_data[0] = batch_no
 
         try:
-            # Insert vào DB
             self.conn.executemany('''
                 INSERT INTO history ("No.", "Name.", "Group.", "Pressure.", "T-Oven.",
                                 "Front.", "Middle.", "End.", "Date.")
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', rows)
             self.conn.commit()
-
         except Exception as e:
             self.logger.error(f"[_flush_history][DB] {e}")
 
-        table = self.ui.list_history
-        scrollbar = table.verticalScrollBar()
+        table         = self.ui.list_history
+        scrollbar     = table.verticalScrollBar()
         was_at_bottom = scrollbar.value() >= scrollbar.maximum() - 5
 
         table.setUpdatesEnabled(False)
@@ -3275,14 +3356,10 @@ class StrikeMachine(QMainWindow):
         for row_data in rows:
             row_pos = table.rowCount()
             table.insertRow(row_pos)
-
             for col, value in enumerate(row_data):
-                item = QTableWidgetItem(str(value))
-                if col == 0:
-                    item.setTextAlignment(Qt.AlignCenter)   # type: ignore
-                table.setItem(row_pos, col, item)   
+                table.setItem(row_pos, col,
+                    self._make_colored_item(str(value), self._history_batch_counter))
 
-            # Giới hạn số dòng hiển thị
             if table.rowCount() > self._table_display:
                 table.removeRow(0)
 
@@ -3303,9 +3380,9 @@ class StrikeMachine(QMainWindow):
             reply = ltmessage.question(
                 self, "Export All File", "This might take a while. Do you want to continue?"
             )
-
             if reply == ltmessage.Yes:
                 pass
+
             else:
                 return
         self.export_table_to_excel(str(filename_done))
@@ -3323,7 +3400,7 @@ class StrikeMachine(QMainWindow):
             file_path += ".xlsx"
 
         self._exporting = True
-        self.ui.error_display.setText("Exporting... Please wait.")
+        self.ui.error_display.setText(" Exporting... Please wait.")
         self._export_thread = QThread()
         if self.ui.stacked_list_history_page.currentIndex() == 0:
             self._export_worker = ExportWorker(self.history_db_path, file_path) # type: ignore
@@ -3353,8 +3430,10 @@ class StrikeMachine(QMainWindow):
         if error:
             ltmessage.error(self, "Error", f"Export failed:\n{error}")
         else:
-            reply = ltmessage.question(
-                self, "Export Success", f"Go to Save Folder?"
+            reply = ltmessage.custom(
+                self, "Export Success", f"Go to Save Folder?",
+                msg_type="success",      # ← icon success
+                buttons=["Yes", "No"]
             )
             if reply == ltmessage.Yes:
                 folder = str(Path(file_path.split("|")[0]).parent)
@@ -3365,6 +3444,8 @@ class StrikeMachine(QMainWindow):
 
     def resizeEvent(self, event): # type: ignore
         super().resizeEvent(event)
+        self._resize_table_columns(self.ui.list_history)
+        self._resize_table_columns(self.ui.list_history_2)
         if hasattr(self, '_maximized_chart_idx') and self._maximized_chart_idx == -1:
             QTimer.singleShot(50, self._save_grid_rects)
             

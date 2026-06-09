@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QSpinBox, QCheckBox, QSlider, QFormLayout, QSplitter, QDialog)
 from PySide6.QtCore import Qt, QTimer, QPropertyAnimation, QEasingCurve, QRect, QPropertyAnimation
 from PySide6.QtGui import QFont, QPixmap, QPainter, QColor, QLinearGradient, QPalette
+import resources_rc
 
 FONT_FAMILY  = "Segoe UI"
 FONT_SIZE_LG = 16
@@ -22,7 +23,7 @@ class LightThemeMessageBox(QDialog):
         
         # Question (returns True/False)
         if LightThemeMessageBox.question(self, "Title", "Question?"):
-            # User clicked Yes
+            # User clicked Yes/No
             
         # Warning
         LightThemeMessageBox.warning(self, "Title", "Warning message")
@@ -32,6 +33,13 @@ class LightThemeMessageBox(QDialog):
         
         # Success
         LightThemeMessageBox.success(self, "Title", "Success message")
+
+        # Customs
+        reply = LightThemeMessageBox.custom(
+            self, "Title", f"Question?",
+            msg_type="success",
+            buttons=["Yes", "No"]
+        )
     """
     
     Yes = True
@@ -50,7 +58,7 @@ class LightThemeMessageBox(QDialog):
         self.setMinimumWidth(450)
         self.setMaximumWidth(600)
         
-        self.setWindowFlags(Qt.Dialog | Qt.FramelessWindowHint)
+        self.setWindowFlags(Qt.Dialog | Qt.FramelessWindowHint)  # type: ignore
         
         self.setStyleSheet("""
             QDialog {
@@ -87,13 +95,17 @@ class LightThemeMessageBox(QDialog):
         header_layout = QHBoxLayout(header_frame)
         header_layout.setContentsMargins(20, 15, 20, 15)
         
-        icon_label = QLabel(self.get_icon())
-        icon_label.setFont(font_label)
-        icon_label.setStyleSheet(f"""
-            font-size: 28px;
+        icon_label = QLabel()
+        icon_label.setStyleSheet("""
             border: none;
-            color: {self.get_color()};
-        """)
+        """)                          
+        icon_label.setFixedSize(40, 40)
+        pixmap = QPixmap(self.get_icon()).scaled(
+            40, 40,
+            Qt.KeepAspectRatio,
+            Qt.SmoothTransformation
+        )
+        icon_label.setPixmap(pixmap)
         
         title_label = QLabel(title)
         title_label.setStyleSheet("""
@@ -244,13 +256,13 @@ class LightThemeMessageBox(QDialog):
     def get_icon(self):
         """Get icon based on message type"""
         icons = {
-            "info": "ℹ️",
-            "question": "❓",
-            "warning": "⚠️",
-            "error": "❌",
-            "success": "✅"
+            "info":     ":/message_box/information.png",
+            "question": ":/message_box/question-mark.png",
+            "warning":  ":/message_box/warning.png",
+            "error":    ":/message_box/error.png",
+            "success":  ":/message_box/check.png",
         }
-        return icons.get(self.msg_type, "ℹ️")
+        return icons.get(self.msg_type, ":/message_box/information.png")
     
     def get_color(self):
         """Get color based on message type"""
