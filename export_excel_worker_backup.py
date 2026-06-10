@@ -58,12 +58,12 @@ def _export_process(
     MAX_ROWS   = 999_997
 
     HEADERS    = ["No.", "Name.", "Group.", 
-                  "Pressure Setting.", "Pressure.", "Oven Setting.", 
-                  "T-Oven.", "Temperature Setting.", "Front.", 
+                  "Pressure Setting.", "Pressure.", 
+                  "Temperature Setting.", "T-Oven.", "Front.", 
                   "Middle.", "End.", "Date."]
-    COL_WIDTHS = [10.0, 20.0, 11.0, 20.0, 14.0, 16.0, 14.5, 24.0, 14.5, 14.5, 14.5, 21.0]
+    COL_WIDTHS = [10, 20.0, 13.5, 20.0, 16.5, 24.0, 16.5, 16.5, 16.5, 16.5, 22.5]
     LAST_COL   = len(HEADERS) - 1
-    MERGE_COLS = {0, 1, 5, 6, 11}  # No., Name., Date.
+    MERGE_COLS = {0, 1, 6, 10}  # No., Name., Date.
 
     conn   = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -75,7 +75,7 @@ def _export_process(
     query = '''
             SELECT "No.", "Name.", "Group.",
                 "Pressure SV.", "Pressure.",
-                "Oven SV.", "T-Oven.", "Temperature SV.",
+                "Temperature SV.", "T-Oven.",
                 "Front.", "Middle.", "End.", "Date."
             FROM history
             '''

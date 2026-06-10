@@ -8356,7 +8356,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_28 = QVBoxLayout(self.device_frame_2)
         self.verticalLayout_28.setSpacing(10)
         self.verticalLayout_28.setObjectName(u"verticalLayout_28")
-        self.verticalLayout_28.setContentsMargins(0, 15, 0, 15)
+        self.verticalLayout_28.setContentsMargins(0, 15, 0, 10)
         self.widget_26 = QWidget(self.device_frame_2)
         self.widget_26.setObjectName(u"widget_26")
         self.widget_26.setStyleSheet(u"")
@@ -8417,7 +8417,7 @@ class Ui_MainWindow(object):
         self.gridLayout_7 = QGridLayout(self.i_o_group_1)
         self.gridLayout_7.setSpacing(10)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.gridLayout_7.setContentsMargins(10, 15, 10, 10)
+        self.gridLayout_7.setContentsMargins(0, 15, 10, 10)
         self.i_o_group_1_switch_3 = QStackedWidget(self.i_o_group_1)
         self.i_o_group_1_switch_3.setObjectName(u"i_o_group_1_switch_3")
         sizePolicy.setHeightForWidth(self.i_o_group_1_switch_3.sizePolicy().hasHeightForWidth())
@@ -9097,7 +9097,7 @@ class Ui_MainWindow(object):
         self.gridLayout_5 = QGridLayout(self.i_o_group_3)
         self.gridLayout_5.setSpacing(10)
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.gridLayout_5.setContentsMargins(10, 15, 10, 10)
+        self.gridLayout_5.setContentsMargins(0, 15, 10, 10)
         self.t0_value = QDoubleSpinBox(self.i_o_group_3)
         self.t0_value.setObjectName(u"t0_value")
         sizePolicy.setHeightForWidth(self.t0_value.sizePolicy().hasHeightForWidth())
@@ -9508,7 +9508,9 @@ class Ui_MainWindow(object):
 "    background-color: white;\n"
 "}")
         self.gridLayout_6 = QGridLayout(self.i_o_group_2)
+        self.gridLayout_6.setSpacing(10)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.gridLayout_6.setContentsMargins(10, 15, 10, 10)
         self.db_file_path = QPushButton(self.i_o_group_2)
         self.db_file_path.setObjectName(u"db_file_path")
         sizePolicy.setHeightForWidth(self.db_file_path.sizePolicy().hasHeightForWidth())
@@ -9630,12 +9632,12 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.db_data_size_input, 3, 1, 1, 1)
 
+        self.gridLayout_6.setColumnStretch(1, 1)
 
         self.horizontalLayout_24.addWidget(self.i_o_group_2)
 
-        self.horizontalLayout_24.setStretch(0, 1)
-        self.horizontalLayout_24.setStretch(1, 2)
-        self.horizontalLayout_24.setStretch(2, 2)
+        self.horizontalLayout_24.setStretch(1, 1)
+        self.horizontalLayout_24.setStretch(2, 1)
 
         self.verticalLayout_28.addWidget(self.widget_26)
 
@@ -9697,7 +9699,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_28.addWidget(self.widget_29)
 
-        self.verticalLayout_28.setStretch(0, 15)
+        self.verticalLayout_28.setStretch(0, 8)
         self.verticalLayout_28.setStretch(1, 1)
 
         self.verticalLayout_40.addWidget(self.device_frame_2)
@@ -9735,7 +9737,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3 = QHBoxLayout(self.widget_2)
         self.horizontalLayout_3.setSpacing(5)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.horizontalLayout_3.setContentsMargins(5, 5, 0, 0)
+        self.horizontalLayout_3.setContentsMargins(5, 2, 5, 0)
         self.search_icon = QPushButton(self.widget_2)
         self.search_icon.setObjectName(u"search_icon")
         sizePolicy.setHeightForWidth(self.search_icon.sizePolicy().hasHeightForWidth())
@@ -9803,6 +9805,7 @@ class Ui_MainWindow(object):
 "    selection-background-color: #3b82f6;\n"
 "    selection-color: #ffffff;\n"
 "}")
+        self.search_data_start_label_2.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout_4.addWidget(self.search_data_start_label_2)
 
@@ -9840,6 +9843,7 @@ class Ui_MainWindow(object):
 "    selection-background-color: #3b82f6;\n"
 "    selection-color: #ffffff;\n"
 "}")
+        self.search_data_start_label.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
         self.horizontalLayout_4.addWidget(self.search_data_start_label)
 
@@ -9962,6 +9966,7 @@ class Ui_MainWindow(object):
         self.search_data_end_label = QLabel(self.multi_search_data)
         self.search_data_end_label.setObjectName(u"search_data_end_label")
         self.search_data_end_label.setFont(font29)
+        self.search_data_end_label.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
         self.horizontalLayout_4.addWidget(self.search_data_end_label)
 
@@ -10205,6 +10210,7 @@ class Ui_MainWindow(object):
         self.list_history.setAutoScrollMargin(25)
         self.list_history.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.list_history.setDragEnabled(False)
+        self.list_history.setAlternatingRowColors(False)
         self.list_history.setSortingEnabled(False)
         self.list_history.setWordWrap(False)
         self.list_history.horizontalHeader().setCascadingSectionResizes(True)
@@ -10310,7 +10316,7 @@ class Ui_MainWindow(object):
 
         self.stackedWidget_2.setCurrentIndex(3)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_b_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_c_1.setCurrentIndex(0)
@@ -10350,7 +10356,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_t0_3.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(0)
+        self.stackedWidget_3.setCurrentIndex(1)
         self.sys_state_stacked_wid_40.setCurrentIndex(2)
         self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
@@ -10787,7 +10793,7 @@ class Ui_MainWindow(object):
         self.ip_plc_address.setText(QCoreApplication.translate("MainWindow", u" IP:", None))
         self.plc_ip_address_edit.setText("")
         self.db_number.setText(QCoreApplication.translate("MainWindow", u" DB:", None))
-        self.write_plc_label_2.setText(QCoreApplication.translate("MainWindow", u" Size Data:", None))
+        self.write_plc_label_2.setText(QCoreApplication.translate("MainWindow", u" Size DB:", None))
         self.db_data_size_input.setSuffix(QCoreApplication.translate("MainWindow", u" ~ 2056", None))
         self.back_connection_page_btn.setText(QCoreApplication.translate("MainWindow", u"Connection Page", None))
         self.back_home_page_btn.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))

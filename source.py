@@ -56,7 +56,7 @@ def resource_path(relative_path):
 def install_clear_on_focus(widget):
     class FocusSelectFilter(QObject):
         def eventFilter(self, obj, event):
-            if event.type() == QEvent.FocusIn:
+            if event.type() == QEvent.FocusIn:   # type: ignore
                 if isinstance(widget, QAbstractSpinBox):
                     QTimer.singleShot(0, widget.lineEdit().selectAll)
                 elif isinstance(widget, QLineEdit):
@@ -77,7 +77,7 @@ SIMULATE = (get_exe_dir() / "simulate.txt").is_file()
 
 class BackgroundDelegate(QStyledItemDelegate):
     def paint(self, painter: QPainter, option, index):
-        bg = index.data(Qt.BackgroundRole)
+        bg = index.data(Qt.BackgroundRole)  # type: ignore
         if bg:
             painter.fillRect(option.rect, bg)
             option.palette.setColor(QPalette.ColorRole.Base, bg)
@@ -134,9 +134,7 @@ class StrikeMachine(QMainWindow):
         test_text = "Strike Machine System - Running Normally - No Error Detected"
         # test_text = "Hello Hello Hello"
         self.ui.error_display.setText(test_text)
-        print(f"MarqueeLabel setText: '{self.ui.error_display.text()}'")
-        print(f"Widget visible: {self.ui.error_display.isVisible()}")
-        print(f"Widget size: {self.ui.error_display.size()}")
+        print(f"MarqueeLabel setText: '{self.ui.error_display.text()}' \nWidget visible: {self.ui.error_display.isVisible()} \nWidget size: {self.ui.error_display.size()}")
 
     def showEvent(self, event):# type: ignore
         super().showEvent(event)
@@ -227,7 +225,7 @@ class StrikeMachine(QMainWindow):
                 if '.' in addr_str:
                     parts = addr_str.split('.')
                     byte_addr = int(float(parts[0]))
-                    bit_from_addr = int(parts[1])  # lấy bit từ cột D luôn
+                    bit_from_addr = int(parts[1])
                 else:
                     byte_addr = int(float(addr_str))
                     bit_from_addr = 0
@@ -242,7 +240,7 @@ class StrikeMachine(QMainWindow):
             # Xử lý Bit cho BOOL
             bit: Any = None
             if data_type == "BOOL":
-                bit = bit_from_addr  # ← lấy từ addr_str, không đọc row[4] nữa
+                bit = bit_from_addr
 
             db_layout.append((name, data_type, byte_addr, bit))
         
@@ -285,7 +283,7 @@ class StrikeMachine(QMainWindow):
             except Exception as e:
                 if self.logger:
                     self.logger.error("[EXCEL]: Cannot read file: %s", e)
-                return None  # ← return None, KHÔNG raise → app không bị tắt
+                return None
 
         if sheet_name and sheet_name in df_dict:
             return df_dict[sheet_name]
@@ -767,13 +765,11 @@ class StrikeMachine(QMainWindow):
             chart_font=font
         )
 
-        # Kết nối nút tiêu đề
         self.chart_temp.btn_setting.clicked.connect(self.temperature_page_btn)
         self.chart_pressure_a.btn_setting.clicked.connect(self.ui.home_page_btn.click)
         self.chart_pressure_b.btn_setting.clicked.connect(self.ui.home_page_btn.click)
         self.chart_pressure_c.btn_setting.clicked.connect(self.ui.home_page_btn.click)
 
-        # Thêm vào layout
         self.ui.card_temperature.addWidget(self.chart_temp)
         self.ui.card_pressure_1.addWidget(self.chart_pressure_a)
         self.ui.card_pressure_2.addWidget(self.chart_pressure_b)
@@ -804,7 +800,7 @@ class StrikeMachine(QMainWindow):
         rects = [f.geometry() for f in self._chart_frames]
         if all(r.width() > 0 and r.height() > 0 for r in rects):
             self._grid_rects = rects
-            # print("Grid rects saved:", rects)  # xoá sau khi debug xong
+            # print("Grid rects saved:", rects)
         else:
             QTimer.singleShot(100, self._save_grid_rects)
     
@@ -819,26 +815,21 @@ class StrikeMachine(QMainWindow):
         row, col = positions[idx]
 
         if self._maximized_chart_idx == idx:
-            # ── Thu nhỏ ───────────────────────────────────────────────────────
             self._maximized_chart_idx = -1
 
-            # Trả stretch về đều
             grid.setRowStretch(0, 1)
             grid.setRowStretch(1, 1)
             grid.setColumnStretch(0, 1)
             grid.setColumnStretch(1, 1)
 
-            # Hiện lại 3 frame còn lại
             for i, f in enumerate(frames):
                 if i != idx:
                     f.show()
 
-            # Bật lại render timer cho tất cả
             for c in charts:
                 c._render_timer.start()
 
         else:
-            # ── Phóng to ──────────────────────────────────────────────────────
             self._maximized_chart_idx = idx
 
             other_row = 1 if row == 0 else 0
@@ -849,7 +840,6 @@ class StrikeMachine(QMainWindow):
             grid.setColumnStretch(col,       100)
             grid.setColumnStretch(other_col, 0)
 
-            # Ẩn 3 frame còn lại + tắt render timer
             for i, f in enumerate(frames):
                 if i != idx:
                     f.hide()
@@ -1034,6 +1024,7 @@ class StrikeMachine(QMainWindow):
         
         try:
             self.conn = sqlite3.connect(str(self.history_db_path), check_same_thread=False)
+            self.conn.row_factory = sqlite3.Row
             self.conn.execute("PRAGMA journal_mode=WAL")
             self.conn.execute("PRAGMA synchronous=NORMAL")
 
@@ -1048,15 +1039,23 @@ class StrikeMachine(QMainWindow):
                         "No." TEXT,
                         "Name." TEXT,
                         "Group." TEXT,
+                        "Pressure SV." TEXT,
                         "Pressure." TEXT,
+                        "Oven SV" TEXT,
                         "T-Oven." TEXT,
+                        "Temperature SV." TEXT,
                         "Front." TEXT,
                         "Middle." TEXT,
                         "End." TEXT,
                         "Date." TEXT
                     )
                 ''')
-
+            for col_name in ["Pressure SV.", "Oven SV.", "Temperature SV."]:
+                try:
+                    self.conn.execute(f'ALTER TABLE history ADD COLUMN "{col_name}" TEXT DEFAULT ""')
+                    self.logger.info(f"Migrated: added column '{col_name}'")
+                except Exception:
+                    pass
             self.conn.commit()
             self.logger.info(f"SQLite DB ready: {self.history_db_path}")
 
@@ -1069,6 +1068,19 @@ class StrikeMachine(QMainWindow):
             self.logger.error(f"SQLite init error: {e}")
             self.conn = None
 
+    def _db_row_to_ui(self, row, stt: str) -> list:
+        return [
+            stt,
+            str(row["Name."]         or ""),
+            str(row["Group."]        or ""),
+            str(row["Pressure."]     or ""),
+            str(row["T-Oven."]       or ""),
+            str(row["Front."]        or ""),
+            str(row["Middle."]       or ""),
+            str(row["End."]          or ""),
+            str(row["Date."]         or ""),
+        ]
+    
     def _init_table_list_history(self):
         """
         Tải dữ liệu từ database vào table list_history
@@ -1091,7 +1103,7 @@ class StrikeMachine(QMainWindow):
             self._all_rows_cache = []
             for idx, row in enumerate(rows):
                 stt = row[1] if row[1] else str(total_db - len(rows) + idx + 1)
-                formatted = [str(stt)] + [str(v if v is not None else "") for v in row[2:]]
+                formatted = self._db_row_to_ui(row, stt)
                 self._all_rows_cache.append(formatted)
 
             self._db_offset = total_db - len(rows)
@@ -1111,6 +1123,129 @@ class StrikeMachine(QMainWindow):
         except Exception as e:
             self.logger.error(f"Error loading history: {e}")
 
+    def add_row_to_list_history(self, product_name, groups: list[dict]):
+        """
+        groups = [
+            {"group": "Group A", ...},
+            {"group": "Group B", ...},
+            {"group": "Group C", ...},
+        ]
+        """
+        try:
+            if not hasattr(self, 'conn') or self.conn is None:
+                return
+
+            unit_suffix = "°F" if self._current_unit == 1 else "°C"
+            def fmt(v):
+                return f"{v:.1f}{unit_suffix}"
+
+            today_date = datetime.now().strftime("%H:%M - %d/%m/%Y")
+
+            sv_widget_map = {
+                "a": (self.ui.pressure_sv_a_5, self.ui.t0_sv, self.ui.pressure_sv_a_1),
+                "b": (self.ui.pressure_sv_b_5, self.ui.t0_sv, self.ui.pressure_sv_b_1),
+                "c": (self.ui.pressure_sv_c_5, self.ui.t0_sv, self.ui.pressure_sv_c_1),
+            }
+
+            for g in groups:
+                group_key = g["group"].replace("Group ", "").strip().lower()
+
+                pressure_sv_widget, oven_sv_widget, temp_sv_widget = sv_widget_map.get(group_key, (None, None, None))
+
+                pressure_sv_val = float(pressure_sv_widget.text()) if pressure_sv_widget else 0.0
+                oven_sv_val     = float(oven_sv_widget.text())     if oven_sv_widget     else 0.0
+                temp_sv_val     = float(temp_sv_widget.text())     if temp_sv_widget     else 0.0
+
+                db_row = [
+                    "",                              # [0]  batch_no
+                    product_name,                    # [1]  Name.
+                    g["group"],                      # [2]  Group.
+                    f"{pressure_sv_val:.2f} bar",    # [3]  Pressure SV.
+                    f"{g['pressure']:.2f} bar",      # [4]  Pressure.
+                    fmt(oven_sv_val),                # [5]  Oven SV.
+                    fmt(g["temp"]),                  # [6]  T-Oven.
+                    fmt(temp_sv_val),                # [7]  Temperature SV.
+                    fmt(g["front"]),                 # [8]  Front.
+                    fmt(g["mid"]),                   # [9]  Middle.
+                    fmt(g["end"]),                   # [10] End.
+                    today_date                       # [11] Date.
+                ]
+
+                ui_row = [
+                    db_row[0],   # No.
+                    db_row[1],   # Name.
+                    db_row[2],   # Group.
+                    db_row[4],   # Pressure.
+                    db_row[6],   # T-Oven.
+                    db_row[8],   # Front.
+                    db_row[9],   # Middle.
+                    db_row[10],  # End.
+                    db_row[11],  # Date.
+                ]
+
+                self._pending_rows.append((db_row, ui_row))
+
+            # Flush khi đủ 3 rows (1 batch = 3 groups)
+            if len(self._pending_rows) >= 3:
+                self._flush_history()
+
+        except Exception as e:
+            self.logger.error(f"[add_row_to_list_history] Error: {e}")
+
+    def _flush_history(self):
+        if not self._pending_rows or not self.conn:
+            return
+
+        batch = self._pending_rows[:3]
+        self._pending_rows = self._pending_rows[3:]
+
+        self._history_batch_counter += 1
+        batch_no = str(self._history_batch_counter)
+
+        db_rows = []
+        ui_rows = []
+        for db_row, ui_row in batch:
+            db_row[0] = batch_no
+            ui_row[0] = batch_no
+            db_rows.append(db_row)
+            ui_rows.append(ui_row)
+
+        try:
+            self.conn.executemany('''
+                INSERT INTO history (
+                    "No.", "Name.", "Group.",
+                    "Pressure SV.", "Pressure.",
+                    "Oven SV.", "T-Oven.", "Temperature SV.",
+                    "Front.", "Middle.", "End.", "Date."
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', db_rows)
+            self.conn.commit()
+        except Exception as e:
+            self.logger.error(f"[_flush_history][DB] {e}")
+
+        table         = self.ui.list_history
+        scrollbar     = table.verticalScrollBar()
+        was_at_bottom = scrollbar.value() >= scrollbar.maximum() - 5
+
+        table.setUpdatesEnabled(False)
+
+        for ui_row in ui_rows:
+            row_pos = table.rowCount()
+            table.insertRow(row_pos)
+            for col, value in enumerate(ui_row):
+                table.setItem(row_pos, col,
+                    self._make_colored_item(str(value), self._history_batch_counter))
+
+            if table.rowCount() > self._table_display:
+                table.removeRow(0)
+
+        table.setUpdatesEnabled(True)
+        self._apply_span(self.ui.list_history)
+
+        if was_at_bottom:
+            table.scrollToBottom()
+
     def _apply_span(self, table):
         """
         Merge các row cùng No., Name., Date.
@@ -1126,7 +1261,7 @@ class StrikeMachine(QMainWindow):
                 span += 1
 
             if span > 1:
-                for merge_col in [0, 1, 8]:  # No., Name., Date.
+                for merge_col in [0, 1, 4, 8]:  # No., Name., Date.
                     table.setSpan(row_idx, merge_col, span, 1)
 
             row_idx += span
@@ -1161,8 +1296,8 @@ class StrikeMachine(QMainWindow):
         item = QTableWidgetItem(value)
         item.setTextAlignment(Qt.AlignCenter)  # type: ignore
         color = self._COLOR_EVEN if batch_counter % 2 == 0 else self._COLOR_ODD
-        print(f"batch={batch_counter}, color={color.name()}")
-        item.setData(Qt.BackgroundRole, color)  # ← đổi từ setBackground → setData
+        # print(f"batch={batch_counter}, color={color.name()}")
+        item.setData(Qt.BackgroundRole, color)  # type: ignore
         return item
 
     def _on_history_scroll(self, value: int):
@@ -1204,8 +1339,8 @@ class StrikeMachine(QMainWindow):
 
             new_chunk = []
             for idx, row in enumerate(rows):
-                stt       = row[1] if row[1] else str(fetch_start + idx + 1)
-                formatted = [str(stt)] + [str(v if v is not None else "") for v in row[2:]]
+                stt = row[1] if row[1] else str(fetch_start + idx + 1)
+                formatted = self._db_row_to_ui(row, stt)
                 new_chunk.append(formatted)
 
             if not new_chunk:
@@ -1279,7 +1414,7 @@ class StrikeMachine(QMainWindow):
         self._all_rows_cache = []
         for idx, row in enumerate(rows):
             stt = row[1] if row[1] else str(total_db - len(rows) + idx + 1)
-            formatted = [str(stt)] + [str(v if v is not None else "") for v in row[2:]]
+            formatted = self._db_row_to_ui(row, stt)
             self._all_rows_cache.append(formatted)
 
         self._db_offset = total_db - len(rows)
@@ -1368,6 +1503,7 @@ class StrikeMachine(QMainWindow):
         def _fetch():
             try:
                 conn = sqlite3.connect(str(self.history_db_path), check_same_thread=False)
+                conn.row_factory = sqlite3.Row
 
                 total = conn.execute(
                     f'SELECT COUNT(*) FROM history WHERE {where_clause}', params
@@ -1401,7 +1537,7 @@ class StrikeMachine(QMainWindow):
             filtered = []
             for row in rows:
                 stt = str(row[1]) if row[1] and str(row[1]).strip() else str(row[0])
-                row_list = [stt] + [str(v if v is not None else "") for v in row[2:]]
+                row_list = self._db_row_to_ui(row, stt)
                 filtered.append(row_list)
 
             if getattr(self, '_search_prepend', False):
@@ -1689,6 +1825,8 @@ class StrikeMachine(QMainWindow):
     def history_page_btn(self):
         self.user = False
         self.ui.stackedWidget_2.setCurrentWidget(self.ui.history_page)
+        self._set_time_search_data_start_edit()
+        self._set_time_search_data_end_edit()
 
     # def (self):
     
@@ -2233,7 +2371,7 @@ class StrikeMachine(QMainWindow):
             {
                 "group": label,
                 "pressure": data[0],
-                "temp": pv_avg,
+                "temp": self.for_display_temp(pv_avg),
                 "front": self.for_display_temp(data[2]),
                 "mid":   self.for_display_temp(data[3]),
                 "end":   self.for_display_temp(data[4]),
@@ -2873,7 +3011,7 @@ class StrikeMachine(QMainWindow):
             str(stk_mch_file),
             "Excel Files (*.xlsx *.xls)"
         )
-        if not file_str:  # User cancel
+        if not file_str:
             return
         path = Path(file_str)
 
@@ -3284,90 +3422,6 @@ class StrikeMachine(QMainWindow):
         
         elif channel == "T0":
             self.ui.heat_btn_t0.setEnabled(status)
-
-    def add_row_to_list_history(self, product_name, groups: list[dict]):
-        """
-        groups = [
-            {"group": "Group A", ...},
-            {"group": "Group B", ...},
-            {"group": "Group C", ...},
-        ]
-        """
-        try:
-            if not hasattr(self, 'conn') or self.conn is None:
-                return
-
-            unit_suffix = "°F" if self._current_unit == 1 else "°C"
-            def fmt(v):
-                return f"{self.for_display_temp(v):.1f}{unit_suffix}"
-
-            today_date = datetime.now().strftime("%H:%M - %d/%m/%Y")
-
-            for g in groups:
-                self._pending_rows.append([
-                    "",                     # Sẽ gán batch_no sau
-                    product_name, 
-                    g["group"],
-                    f"{g['pressure']:.2f} bar",
-                    fmt(g["temp"]), 
-                    fmt(g["front"]),
-                    fmt(g["mid"]), 
-                    fmt(g["end"]),
-                    today_date
-                ])
-
-            # Tự động flush khi đủ 3 row (1 batch = 3 group)
-            if len(self._pending_rows) >= 3:
-                self._flush_history()
-
-        except Exception as e:
-            self.logger.error(f"[add_row_to_list_history] Error: {e}")
-
-
-    def _flush_history(self):
-        if not self._pending_rows or not self.conn:
-            return
-
-        rows = self._pending_rows[:3]
-        self._pending_rows = self._pending_rows[3:]
-
-        self._history_batch_counter += 1
-        batch_no = str(self._history_batch_counter)
-
-        for row_data in rows:
-            row_data[0] = batch_no
-
-        try:
-            self.conn.executemany('''
-                INSERT INTO history ("No.", "Name.", "Group.", "Pressure.", "T-Oven.",
-                                "Front.", "Middle.", "End.", "Date.")
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', rows)
-            self.conn.commit()
-        except Exception as e:
-            self.logger.error(f"[_flush_history][DB] {e}")
-
-        table         = self.ui.list_history
-        scrollbar     = table.verticalScrollBar()
-        was_at_bottom = scrollbar.value() >= scrollbar.maximum() - 5
-
-        table.setUpdatesEnabled(False)
-
-        for row_data in rows:
-            row_pos = table.rowCount()
-            table.insertRow(row_pos)
-            for col, value in enumerate(row_data):
-                table.setItem(row_pos, col,
-                    self._make_colored_item(str(value), self._history_batch_counter))
-
-            if table.rowCount() > self._table_display:
-                table.removeRow(0)
-
-        table.setUpdatesEnabled(True)
-        self._apply_span(self.ui.list_history)
-
-        if was_at_bottom:
-            table.scrollToBottom()
 
     def export_all_tables_to_excel_btn(self):
         current_date = datetime.now().strftime("%d-%m-%Y")  # dùng - thay vì /
