@@ -288,15 +288,13 @@ def _export_process(
                         start_row, end_row, prev_value = pending[col_idx]
                         group_size = end_row - start_row + 1
                         if value == prev_value and group_size < 3:
-                            # Mở rộng nhóm
                             pending[col_idx] = (start_row, row_in_sheet, prev_value)
                         else:
                             pending[col_idx] = (row_in_sheet, row_in_sheet, value)
                     else:
                         pending[col_idx] = (row_in_sheet, row_in_sheet, value)
                 else:
-                    ws.write(row_in_sheet, col_idx, value,
-                            get_fmt(fmts, group_num, col_idx))
+                    ws.write(row_in_sheet, col_idx, value, get_fmt(fmts, group_num, col_idx))
 
             row_in_sheet += 1
 
