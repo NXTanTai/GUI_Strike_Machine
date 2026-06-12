@@ -159,7 +159,7 @@ class Ui_MainWindow(object):
         font2.setPointSize(20)
         font2.setBold(True)
         self.error_display.setFont(font2)
-        self.error_display.setStyleSheet(u"padding-left: 10px;\n"
+        self.error_display.setStyleSheet(u"padding-left: 50px;\n"
 "color: #F90A0A;")
 
         self.pc_inform_label.addWidget(self.error_display)
@@ -10315,9 +10315,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(2)
+        self.stackedWidget_2.setCurrentIndex(1)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_b_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_c_1.setCurrentIndex(0)

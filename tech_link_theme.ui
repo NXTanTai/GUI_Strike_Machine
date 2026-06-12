@@ -261,7 +261,7 @@ border-radius: 8px;</string>
             </font>
            </property>
            <property name="styleSheet">
-            <string notr="true">padding-left: 10px;
+            <string notr="true">padding-left: 50px;
 color: #F90A0A;</string>
            </property>
            <property name="text">
@@ -798,7 +798,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>2</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
@@ -1409,7 +1409,7 @@ QPushButton:hover {
 }</string>
                  </property>
                  <property name="currentIndex">
-                  <number>1</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="pressure_page">
                   <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -21670,7 +21670,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="left_side_btn_group"/>
   <buttongroup name="language_btn_group"/>
+  <buttongroup name="left_side_btn_group"/>
  </buttongroups>
 </ui>

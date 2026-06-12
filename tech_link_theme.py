@@ -159,7 +159,7 @@ class Ui_MainWindow(object):
         font2.setPointSize(20)
         font2.setBold(True)
         self.error_display.setFont(font2)
-        self.error_display.setStyleSheet(u"padding-left: 10px;\n"
+        self.error_display.setStyleSheet(u"padding-left: 50px;\n"
 "color: #F90A0A;")
 
         self.pc_inform_label.addWidget(self.error_display)
@@ -7850,6 +7850,7 @@ class Ui_MainWindow(object):
         self.table_write_cycle.setAlignment(Qt.AlignCenter)
         self.table_write_cycle.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.table_write_cycle.setDecimals(1)
+        self.table_write_cycle.setSingleStep(0.200000000000000)
         self.table_write_cycle.setValue(1.000000000000000)
 
         self.gridLayout_4.addWidget(self.table_write_cycle, 2, 1, 1, 1)
@@ -10314,9 +10315,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(2)
+        self.stackedWidget_2.setCurrentIndex(1)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_b_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_c_1.setCurrentIndex(0)
@@ -10704,6 +10705,9 @@ class Ui_MainWindow(object):
         self.label_133.setText(QCoreApplication.translate("MainWindow", u"Offset Front:", None))
         self.label_134.setText(QCoreApplication.translate("MainWindow", u"Offset End:", None))
         self.heat_btn_t0.setText(QCoreApplication.translate("MainWindow", u" Heating T0", None))
+#if QT_CONFIG(tooltip)
+        self.plc_io_btn.setToolTip(QCoreApplication.translate("MainWindow", u"H\u00ea s\u1edd l\u00f4", None))
+#endif // QT_CONFIG(tooltip)
         self.plc_io_btn.setText("")
         self.connection_group.setTitle(QCoreApplication.translate("MainWindow", u"Connection Settings", None))
         self.read_plc_label.setText(QCoreApplication.translate("MainWindow", u" PLC Read:", None))

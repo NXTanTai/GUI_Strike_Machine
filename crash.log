@@ -1,9 +1,9 @@
 Startup errors:
 Traceback (most recent call last):
-  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 148, in <module>
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 147, in <module>
     from source            import StrikeMachine
-  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 1848
-    if self._current_lang == "en"
-                                 ^
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 2766
+    if not self.plc_writer_connection and not self.init_signal or (channel == "A" and any(btn.isChecked() for btn in buttons_a)) or (channel == "B" and any(btn.isChecked() for btn in buttons_b)) or (channel == "C" and any(btn.isChecked() for btn in buttons_c))
+                                                                                                                                                                                                                                                                    ^
 SyntaxError: expected ':'
 
