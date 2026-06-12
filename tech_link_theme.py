@@ -7798,7 +7798,7 @@ class Ui_MainWindow(object):
 "}")
         self.gridLayout_4 = QGridLayout(self.connection_group)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.gridLayout_4.setHorizontalSpacing(5)
+        self.gridLayout_4.setHorizontalSpacing(50)
         self.gridLayout_4.setVerticalSpacing(10)
         self.gridLayout_4.setContentsMargins(10, 15, 10, 15)
         self.read_plc_label = QPushButton(self.connection_group)
@@ -7821,114 +7821,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.read_plc_label, 0, 0, 1, 1)
 
-        self.widget_28 = QWidget(self.connection_group)
-        self.widget_28.setObjectName(u"widget_28")
-        self.horizontalLayout_31 = QHBoxLayout(self.widget_28)
-        self.horizontalLayout_31.setSpacing(10)
-        self.horizontalLayout_31.setObjectName(u"horizontalLayout_31")
-        self.horizontalLayout_31.setContentsMargins(0, 0, 0, 0)
-        self.sys_state_stacked_wid_40 = QStackedWidget(self.widget_28)
-        self.sys_state_stacked_wid_40.setObjectName(u"sys_state_stacked_wid_40")
-        sizePolicy.setHeightForWidth(self.sys_state_stacked_wid_40.sizePolicy().hasHeightForWidth())
-        self.sys_state_stacked_wid_40.setSizePolicy(sizePolicy)
-        self.sys_state_stacked_wid_40.setStyleSheet(u"")
-        self.running_light_32 = QWidget()
-        self.running_light_32.setObjectName(u"running_light_32")
-        self.running_light_32.setStyleSheet(u"")
-        self.horizontalLayout_328 = QHBoxLayout(self.running_light_32)
-        self.horizontalLayout_328.setObjectName(u"horizontalLayout_328")
-        self.horizontalLayout_328.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_4 = QPushButton(self.running_light_32)
-        self.pushButton_4.setObjectName(u"pushButton_4")
-        sizePolicy.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
-        self.pushButton_4.setSizePolicy(sizePolicy)
-        font21 = QFont()
-        font21.setPointSize(18)
-        font21.setBold(True)
-        self.pushButton_4.setFont(font21)
-        self.pushButton_4.setStyleSheet(u"QPushButton{	\n"
-"	border: 2px solid #E5E5E5; \n"
-"	border-radius: 10px;\n"
-"	color: #10B981; \n"
-"	padding-right: 3px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"	none;\n"
-"}")
-        self.pushButton_4.setIcon(icon8)
-        self.pushButton_4.setIconSize(QSize(30, 30))
-
-        self.horizontalLayout_328.addWidget(self.pushButton_4)
-
-        self.sys_state_stacked_wid_40.addWidget(self.running_light_32)
-        self.error_light_32 = QWidget()
-        self.error_light_32.setObjectName(u"error_light_32")
-        self.horizontalLayout_339 = QHBoxLayout(self.error_light_32)
-        self.horizontalLayout_339.setObjectName(u"horizontalLayout_339")
-        self.horizontalLayout_339.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_21 = QPushButton(self.error_light_32)
-        self.pushButton_21.setObjectName(u"pushButton_21")
-        sizePolicy.setHeightForWidth(self.pushButton_21.sizePolicy().hasHeightForWidth())
-        self.pushButton_21.setSizePolicy(sizePolicy)
-        self.pushButton_21.setFont(font21)
-        self.pushButton_21.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #F90A0A; \n"
-"padding-right: 3px;")
-        self.pushButton_21.setIcon(icon7)
-        self.pushButton_21.setIconSize(QSize(30, 30))
-
-        self.horizontalLayout_339.addWidget(self.pushButton_21)
-
-        self.sys_state_stacked_wid_40.addWidget(self.error_light_32)
-        self.page_4 = QWidget()
-        self.page_4.setObjectName(u"page_4")
-        self.horizontalLayout_7 = QHBoxLayout(self.page_4)
-        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-        self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_24 = QPushButton(self.page_4)
-        self.pushButton_24.setObjectName(u"pushButton_24")
-        sizePolicy.setHeightForWidth(self.pushButton_24.sizePolicy().hasHeightForWidth())
-        self.pushButton_24.setSizePolicy(sizePolicy)
-        self.pushButton_24.setFont(font21)
-        self.pushButton_24.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: orange; \n"
-"padding-right: 3px;")
-        icon19 = QIcon()
-        icon19.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_24.setIcon(icon19)
-        self.pushButton_24.setIconSize(QSize(30, 30))
-
-        self.horizontalLayout_7.addWidget(self.pushButton_24)
-
-        self.sys_state_stacked_wid_40.addWidget(self.page_4)
-
-        self.horizontalLayout_31.addWidget(self.sys_state_stacked_wid_40)
-
-        self.read_time_input = QSpinBox(self.widget_28)
-        self.read_time_input.setObjectName(u"read_time_input")
-        sizePolicy.setHeightForWidth(self.read_time_input.sizePolicy().hasHeightForWidth())
-        self.read_time_input.setSizePolicy(sizePolicy)
-        self.read_time_input.setMinimumSize(QSize(0, 0))
-        font22 = QFont()
-        font22.setFamilies([u"Segoe UI"])
-        font22.setPointSize(24)
-        font22.setBold(True)
-        self.read_time_input.setFont(font22)
-        self.read_time_input.setAlignment(Qt.AlignCenter)
-        self.read_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.read_time_input.setMinimum(100)
-        self.read_time_input.setMaximum(1000)
-        self.read_time_input.setValue(500)
-
-        self.horizontalLayout_31.addWidget(self.read_time_input)
-
-        self.horizontalLayout_31.setStretch(0, 3)
-        self.horizontalLayout_31.setStretch(1, 2)
-
-        self.gridLayout_4.addWidget(self.widget_28, 0, 1, 1, 1)
-
         self.write_plc_label = QPushButton(self.connection_group)
         self.write_plc_label.setObjectName(u"write_plc_label")
         sizePolicy.setHeightForWidth(self.write_plc_label.sizePolicy().hasHeightForWidth())
@@ -7945,104 +7837,22 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.write_plc_label, 1, 0, 1, 1)
 
-        self.widget_31 = QWidget(self.connection_group)
-        self.widget_31.setObjectName(u"widget_31")
-        self.horizontalLayout_41 = QHBoxLayout(self.widget_31)
-        self.horizontalLayout_41.setSpacing(10)
-        self.horizontalLayout_41.setObjectName(u"horizontalLayout_41")
-        self.horizontalLayout_41.setContentsMargins(0, 0, 0, 0)
-        self.sys_state_stacked_wid_42 = QStackedWidget(self.widget_31)
-        self.sys_state_stacked_wid_42.setObjectName(u"sys_state_stacked_wid_42")
-        sizePolicy.setHeightForWidth(self.sys_state_stacked_wid_42.sizePolicy().hasHeightForWidth())
-        self.sys_state_stacked_wid_42.setSizePolicy(sizePolicy)
-        self.sys_state_stacked_wid_42.setStyleSheet(u"")
-        self.running_light_34 = QWidget()
-        self.running_light_34.setObjectName(u"running_light_34")
-        self.horizontalLayout_473 = QHBoxLayout(self.running_light_34)
-        self.horizontalLayout_473.setObjectName(u"horizontalLayout_473")
-        self.horizontalLayout_473.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_6 = QPushButton(self.running_light_34)
-        self.pushButton_6.setObjectName(u"pushButton_6")
-        sizePolicy.setHeightForWidth(self.pushButton_6.sizePolicy().hasHeightForWidth())
-        self.pushButton_6.setSizePolicy(sizePolicy)
-        self.pushButton_6.setFont(font21)
-        self.pushButton_6.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: #10B981; \n"
-"padding-right: 3px;")
-        self.pushButton_6.setIcon(icon8)
-        self.pushButton_6.setIconSize(QSize(30, 30))
+        self.table_write_cycle = QDoubleSpinBox(self.connection_group)
+        self.table_write_cycle.setObjectName(u"table_write_cycle")
+        sizePolicy.setHeightForWidth(self.table_write_cycle.sizePolicy().hasHeightForWidth())
+        self.table_write_cycle.setSizePolicy(sizePolicy)
+        self.table_write_cycle.setMinimumSize(QSize(0, 0))
+        font21 = QFont()
+        font21.setFamilies([u"Segoe UI"])
+        font21.setPointSize(24)
+        font21.setBold(True)
+        self.table_write_cycle.setFont(font21)
+        self.table_write_cycle.setAlignment(Qt.AlignCenter)
+        self.table_write_cycle.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.table_write_cycle.setDecimals(1)
+        self.table_write_cycle.setValue(1.000000000000000)
 
-        self.horizontalLayout_473.addWidget(self.pushButton_6)
-
-        self.sys_state_stacked_wid_42.addWidget(self.running_light_34)
-        self.error_light_34 = QWidget()
-        self.error_light_34.setObjectName(u"error_light_34")
-        self.horizontalLayout_474 = QHBoxLayout(self.error_light_34)
-        self.horizontalLayout_474.setObjectName(u"horizontalLayout_474")
-        self.horizontalLayout_474.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_23 = QPushButton(self.error_light_34)
-        self.pushButton_23.setObjectName(u"pushButton_23")
-        sizePolicy.setHeightForWidth(self.pushButton_23.sizePolicy().hasHeightForWidth())
-        self.pushButton_23.setSizePolicy(sizePolicy)
-        self.pushButton_23.setFont(font21)
-        self.pushButton_23.setStyleSheet(u"QPushButton{	\n"
-"	border: 2px solid #E5E5E5; \n"
-"	border-radius: 10px;\n"
-"	color: #F90A0A; \n"
-"	padding-right: 3px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"	border: 2px solid #E5E5E5; \n"
-"	border-radius: 10px;\n"
-"}")
-        self.pushButton_23.setIcon(icon7)
-        self.pushButton_23.setIconSize(QSize(30, 30))
-
-        self.horizontalLayout_474.addWidget(self.pushButton_23)
-
-        self.sys_state_stacked_wid_42.addWidget(self.error_light_34)
-        self.page_3 = QWidget()
-        self.page_3.setObjectName(u"page_3")
-        self.horizontalLayout_8 = QHBoxLayout(self.page_3)
-        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
-        self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_22 = QPushButton(self.page_3)
-        self.pushButton_22.setObjectName(u"pushButton_22")
-        sizePolicy.setHeightForWidth(self.pushButton_22.sizePolicy().hasHeightForWidth())
-        self.pushButton_22.setSizePolicy(sizePolicy)
-        self.pushButton_22.setFont(font21)
-        self.pushButton_22.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
-"border-radius: 10px;\n"
-"color: orange; \n"
-"padding-right: 3px;")
-        self.pushButton_22.setIcon(icon19)
-        self.pushButton_22.setIconSize(QSize(30, 30))
-
-        self.horizontalLayout_8.addWidget(self.pushButton_22)
-
-        self.sys_state_stacked_wid_42.addWidget(self.page_3)
-
-        self.horizontalLayout_41.addWidget(self.sys_state_stacked_wid_42)
-
-        self.write_time_input = QSpinBox(self.widget_31)
-        self.write_time_input.setObjectName(u"write_time_input")
-        sizePolicy.setHeightForWidth(self.write_time_input.sizePolicy().hasHeightForWidth())
-        self.write_time_input.setSizePolicy(sizePolicy)
-        self.write_time_input.setMinimumSize(QSize(0, 0))
-        self.write_time_input.setFont(font22)
-        self.write_time_input.setAlignment(Qt.AlignCenter)
-        self.write_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.write_time_input.setMinimum(300)
-        self.write_time_input.setMaximum(1000)
-        self.write_time_input.setValue(500)
-
-        self.horizontalLayout_41.addWidget(self.write_time_input)
-
-        self.horizontalLayout_41.setStretch(0, 3)
-        self.horizontalLayout_41.setStretch(1, 2)
-
-        self.gridLayout_4.addWidget(self.widget_31, 1, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.table_write_cycle, 2, 1, 1, 1)
 
         self.write_table_label = QPushButton(self.connection_group)
         self.write_table_label.setObjectName(u"write_table_label")
@@ -8055,188 +7865,13 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/Icons/to-do-list.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.write_table_label.setIcon(icon20)
+        icon19 = QIcon()
+        icon19.addFile(u":/Icons/to-do-list.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.write_table_label.setIcon(icon19)
         self.write_table_label.setIconSize(QSize(55, 55))
         self.write_table_label.setCheckable(True)
 
         self.gridLayout_4.addWidget(self.write_table_label, 2, 0, 1, 1)
-
-        self.table_write_cycle = QDoubleSpinBox(self.connection_group)
-        self.table_write_cycle.setObjectName(u"table_write_cycle")
-        sizePolicy.setHeightForWidth(self.table_write_cycle.sizePolicy().hasHeightForWidth())
-        self.table_write_cycle.setSizePolicy(sizePolicy)
-        self.table_write_cycle.setMinimumSize(QSize(0, 0))
-        self.table_write_cycle.setFont(font22)
-        self.table_write_cycle.setAlignment(Qt.AlignCenter)
-        self.table_write_cycle.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.table_write_cycle.setDecimals(1)
-        self.table_write_cycle.setValue(1.000000000000000)
-
-        self.gridLayout_4.addWidget(self.table_write_cycle, 2, 1, 1, 1)
-
-        self.total_cycle_label = QPushButton(self.connection_group)
-        self.total_cycle_label.setObjectName(u"total_cycle_label")
-        sizePolicy.setHeightForWidth(self.total_cycle_label.sizePolicy().hasHeightForWidth())
-        self.total_cycle_label.setSizePolicy(sizePolicy)
-        self.total_cycle_label.setFont(font20)
-        self.total_cycle_label.setStyleSheet(u"QPushButton {\n"
-"    color: rgb(30, 136, 229);\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        self.total_cycle_label.setIconSize(QSize(55, 55))
-        self.total_cycle_label.setCheckable(True)
-
-        self.gridLayout_4.addWidget(self.total_cycle_label, 3, 0, 1, 1)
-
-        self.widget_35 = QWidget(self.connection_group)
-        self.widget_35.setObjectName(u"widget_35")
-        self.widget_35.setStyleSheet(u"QSpinBox\n"
-"{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QWidget\n"
-"{\n"
-"	background-color: rgb(255, 255, 255);\n"
-"	border-radius: 15px;\n"
-"}")
-        self.horizontalLayout_44 = QHBoxLayout(self.widget_35)
-        self.horizontalLayout_44.setSpacing(10)
-        self.horizontalLayout_44.setObjectName(u"horizontalLayout_44")
-        self.horizontalLayout_44.setContentsMargins(0, 0, 0, 0)
-        self.cycle_a_displ_3 = QSpinBox(self.widget_35)
-        self.cycle_a_displ_3.setObjectName(u"cycle_a_displ_3")
-        sizePolicy.setHeightForWidth(self.cycle_a_displ_3.sizePolicy().hasHeightForWidth())
-        self.cycle_a_displ_3.setSizePolicy(sizePolicy)
-        font23 = QFont()
-        font23.setFamilies([u"Segoe UI"])
-        font23.setPointSize(24)
-        font23.setBold(True)
-        font23.setItalic(False)
-        self.cycle_a_displ_3.setFont(font23)
-        self.cycle_a_displ_3.setStyleSheet(u"color: rgb(30, 136, 229);\n"
-"padding-left: 20px;")
-        self.cycle_a_displ_3.setWrapping(True)
-        self.cycle_a_displ_3.setFrame(False)
-        self.cycle_a_displ_3.setAlignment(Qt.AlignCenter)
-        self.cycle_a_displ_3.setReadOnly(True)
-        self.cycle_a_displ_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.cycle_a_displ_3.setMaximum(9999999)
-        self.cycle_a_displ_3.setValue(0)
-
-        self.horizontalLayout_44.addWidget(self.cycle_a_displ_3)
-
-        self.reset_cycle_a_btn = QPushButton(self.widget_35)
-        self.reset_cycle_a_btn.setObjectName(u"reset_cycle_a_btn")
-        sizePolicy.setHeightForWidth(self.reset_cycle_a_btn.sizePolicy().hasHeightForWidth())
-        self.reset_cycle_a_btn.setSizePolicy(sizePolicy)
-        self.reset_cycle_a_btn.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_a_btn.setFont(font13)
-        self.reset_cycle_a_btn.setStyleSheet(u"QPushButton {\n"
-"    background-color: white;\n"
-"    color: #0B7EC8;\n"
-"    border: 1px solid #0B7EC8;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #F0F9FF;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #E0F2FE;\n"
-"}")
-        icon21 = QIcon()
-        icon21.addFile(u":/Icons/broom.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.reset_cycle_a_btn.setIcon(icon21)
-        self.reset_cycle_a_btn.setIconSize(QSize(50, 50))
-
-        self.horizontalLayout_44.addWidget(self.reset_cycle_a_btn)
-
-        self.horizontalLayout_44.setStretch(0, 3)
-        self.horizontalLayout_44.setStretch(1, 2)
-
-        self.gridLayout_4.addWidget(self.widget_35, 3, 1, 1, 1)
-
-        self.total_cycle_label_2 = QPushButton(self.connection_group)
-        self.total_cycle_label_2.setObjectName(u"total_cycle_label_2")
-        sizePolicy.setHeightForWidth(self.total_cycle_label_2.sizePolicy().hasHeightForWidth())
-        self.total_cycle_label_2.setSizePolicy(sizePolicy)
-        self.total_cycle_label_2.setFont(font20)
-        self.total_cycle_label_2.setStyleSheet(u"QPushButton {\n"
-"    color: rgb(251, 140, 0);\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        self.total_cycle_label_2.setIconSize(QSize(55, 55))
-        self.total_cycle_label_2.setCheckable(True)
-
-        self.gridLayout_4.addWidget(self.total_cycle_label_2, 4, 0, 1, 1)
-
-        self.widget_36 = QWidget(self.connection_group)
-        self.widget_36.setObjectName(u"widget_36")
-        self.widget_36.setStyleSheet(u"QSpinBox\n"
-"{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QWidget\n"
-"{\n"
-"	background-color: rgb(255, 255, 255);\n"
-"	border-radius: 15px;\n"
-"}")
-        self.horizontalLayout_46 = QHBoxLayout(self.widget_36)
-        self.horizontalLayout_46.setSpacing(10)
-        self.horizontalLayout_46.setObjectName(u"horizontalLayout_46")
-        self.horizontalLayout_46.setContentsMargins(0, 0, 0, 0)
-        self.cycle_b_displ_3 = QSpinBox(self.widget_36)
-        self.cycle_b_displ_3.setObjectName(u"cycle_b_displ_3")
-        sizePolicy.setHeightForWidth(self.cycle_b_displ_3.sizePolicy().hasHeightForWidth())
-        self.cycle_b_displ_3.setSizePolicy(sizePolicy)
-        self.cycle_b_displ_3.setFont(font23)
-        self.cycle_b_displ_3.setStyleSheet(u"color: rgb(251, 140, 0);\n"
-"padding-left: 20px;")
-        self.cycle_b_displ_3.setWrapping(True)
-        self.cycle_b_displ_3.setFrame(False)
-        self.cycle_b_displ_3.setAlignment(Qt.AlignCenter)
-        self.cycle_b_displ_3.setReadOnly(True)
-        self.cycle_b_displ_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.cycle_b_displ_3.setMaximum(9999999)
-        self.cycle_b_displ_3.setValue(0)
-        self.cycle_b_displ_3.setDisplayIntegerBase(10)
-
-        self.horizontalLayout_46.addWidget(self.cycle_b_displ_3)
-
-        self.reset_cycle_b_btn = QPushButton(self.widget_36)
-        self.reset_cycle_b_btn.setObjectName(u"reset_cycle_b_btn")
-        sizePolicy.setHeightForWidth(self.reset_cycle_b_btn.sizePolicy().hasHeightForWidth())
-        self.reset_cycle_b_btn.setSizePolicy(sizePolicy)
-        self.reset_cycle_b_btn.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_b_btn.setFont(font13)
-        self.reset_cycle_b_btn.setStyleSheet(u"QPushButton {\n"
-"    background-color: white;\n"
-"    color: #0B7EC8;\n"
-"    border: 1px solid #0B7EC8;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #F0F9FF;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #E0F2FE;\n"
-"}")
-        self.reset_cycle_b_btn.setIcon(icon21)
-        self.reset_cycle_b_btn.setIconSize(QSize(50, 50))
-
-        self.horizontalLayout_46.addWidget(self.reset_cycle_b_btn)
-
-        self.horizontalLayout_46.setStretch(0, 3)
-        self.horizontalLayout_46.setStretch(1, 2)
-
-        self.gridLayout_4.addWidget(self.widget_36, 4, 1, 1, 1)
 
         self.total_cycle_label_3 = QPushButton(self.connection_group)
         self.total_cycle_label_3.setObjectName(u"total_cycle_label_3")
@@ -8253,6 +7888,22 @@ class Ui_MainWindow(object):
         self.total_cycle_label_3.setCheckable(True)
 
         self.gridLayout_4.addWidget(self.total_cycle_label_3, 5, 0, 1, 1)
+
+        self.total_cycle_label_2 = QPushButton(self.connection_group)
+        self.total_cycle_label_2.setObjectName(u"total_cycle_label_2")
+        sizePolicy.setHeightForWidth(self.total_cycle_label_2.sizePolicy().hasHeightForWidth())
+        self.total_cycle_label_2.setSizePolicy(sizePolicy)
+        self.total_cycle_label_2.setFont(font20)
+        self.total_cycle_label_2.setStyleSheet(u"QPushButton {\n"
+"    color: rgb(251, 140, 0);\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"    text-align: left;\n"
+"}")
+        self.total_cycle_label_2.setIconSize(QSize(55, 55))
+        self.total_cycle_label_2.setCheckable(True)
+
+        self.gridLayout_4.addWidget(self.total_cycle_label_2, 4, 0, 1, 1)
 
         self.widget_37 = QWidget(self.connection_group)
         self.widget_37.setObjectName(u"widget_37")
@@ -8273,7 +7924,12 @@ class Ui_MainWindow(object):
         self.cycle_c_displ_3.setObjectName(u"cycle_c_displ_3")
         sizePolicy.setHeightForWidth(self.cycle_c_displ_3.sizePolicy().hasHeightForWidth())
         self.cycle_c_displ_3.setSizePolicy(sizePolicy)
-        self.cycle_c_displ_3.setFont(font23)
+        font22 = QFont()
+        font22.setFamilies([u"Segoe UI"])
+        font22.setPointSize(24)
+        font22.setBold(True)
+        font22.setItalic(False)
+        self.cycle_c_displ_3.setFont(font22)
         self.cycle_c_displ_3.setStyleSheet(u"color: #6F00FF;\n"
 "padding-left: 20px;")
         self.cycle_c_displ_3.setLocale(QLocale(QLocale.English, QLocale.UnitedStates))
@@ -8306,7 +7962,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        self.reset_cycle_c_btn.setIcon(icon21)
+        icon20 = QIcon()
+        icon20.addFile(u":/Icons/broom.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.reset_cycle_c_btn.setIcon(icon20)
         self.reset_cycle_c_btn.setIconSize(QSize(50, 50))
 
         self.horizontalLayout_48.addWidget(self.reset_cycle_c_btn)
@@ -8315,6 +7973,348 @@ class Ui_MainWindow(object):
         self.horizontalLayout_48.setStretch(1, 2)
 
         self.gridLayout_4.addWidget(self.widget_37, 5, 1, 1, 1)
+
+        self.widget_36 = QWidget(self.connection_group)
+        self.widget_36.setObjectName(u"widget_36")
+        self.widget_36.setStyleSheet(u"QSpinBox\n"
+"{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 15px;\n"
+"}\n"
+"QWidget\n"
+"{\n"
+"	background-color: rgb(255, 255, 255);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.horizontalLayout_46 = QHBoxLayout(self.widget_36)
+        self.horizontalLayout_46.setSpacing(10)
+        self.horizontalLayout_46.setObjectName(u"horizontalLayout_46")
+        self.horizontalLayout_46.setContentsMargins(0, 0, 0, 0)
+        self.cycle_b_displ_3 = QSpinBox(self.widget_36)
+        self.cycle_b_displ_3.setObjectName(u"cycle_b_displ_3")
+        sizePolicy.setHeightForWidth(self.cycle_b_displ_3.sizePolicy().hasHeightForWidth())
+        self.cycle_b_displ_3.setSizePolicy(sizePolicy)
+        self.cycle_b_displ_3.setFont(font22)
+        self.cycle_b_displ_3.setStyleSheet(u"color: rgb(251, 140, 0);\n"
+"padding-left: 20px;")
+        self.cycle_b_displ_3.setWrapping(True)
+        self.cycle_b_displ_3.setFrame(False)
+        self.cycle_b_displ_3.setAlignment(Qt.AlignCenter)
+        self.cycle_b_displ_3.setReadOnly(True)
+        self.cycle_b_displ_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.cycle_b_displ_3.setMaximum(9999999)
+        self.cycle_b_displ_3.setValue(0)
+        self.cycle_b_displ_3.setDisplayIntegerBase(10)
+
+        self.horizontalLayout_46.addWidget(self.cycle_b_displ_3)
+
+        self.reset_cycle_b_btn = QPushButton(self.widget_36)
+        self.reset_cycle_b_btn.setObjectName(u"reset_cycle_b_btn")
+        sizePolicy.setHeightForWidth(self.reset_cycle_b_btn.sizePolicy().hasHeightForWidth())
+        self.reset_cycle_b_btn.setSizePolicy(sizePolicy)
+        self.reset_cycle_b_btn.setMinimumSize(QSize(75, 0))
+        self.reset_cycle_b_btn.setFont(font13)
+        self.reset_cycle_b_btn.setStyleSheet(u"QPushButton {\n"
+"    background-color: white;\n"
+"    color: #0B7EC8;\n"
+"    border: 1px solid #0B7EC8;\n"
+"    border-radius: 15px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #F0F9FF;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    background-color: #E0F2FE;\n"
+"}")
+        self.reset_cycle_b_btn.setIcon(icon20)
+        self.reset_cycle_b_btn.setIconSize(QSize(50, 50))
+
+        self.horizontalLayout_46.addWidget(self.reset_cycle_b_btn)
+
+        self.horizontalLayout_46.setStretch(0, 3)
+        self.horizontalLayout_46.setStretch(1, 2)
+
+        self.gridLayout_4.addWidget(self.widget_36, 4, 1, 1, 1)
+
+        self.widget_28 = QWidget(self.connection_group)
+        self.widget_28.setObjectName(u"widget_28")
+        self.horizontalLayout_31 = QHBoxLayout(self.widget_28)
+        self.horizontalLayout_31.setSpacing(10)
+        self.horizontalLayout_31.setObjectName(u"horizontalLayout_31")
+        self.horizontalLayout_31.setContentsMargins(0, 0, 0, 0)
+        self.sys_state_stacked_wid_40 = QStackedWidget(self.widget_28)
+        self.sys_state_stacked_wid_40.setObjectName(u"sys_state_stacked_wid_40")
+        sizePolicy.setHeightForWidth(self.sys_state_stacked_wid_40.sizePolicy().hasHeightForWidth())
+        self.sys_state_stacked_wid_40.setSizePolicy(sizePolicy)
+        self.sys_state_stacked_wid_40.setStyleSheet(u"")
+        self.running_light_32 = QWidget()
+        self.running_light_32.setObjectName(u"running_light_32")
+        self.running_light_32.setStyleSheet(u"")
+        self.horizontalLayout_328 = QHBoxLayout(self.running_light_32)
+        self.horizontalLayout_328.setObjectName(u"horizontalLayout_328")
+        self.horizontalLayout_328.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_4 = QPushButton(self.running_light_32)
+        self.pushButton_4.setObjectName(u"pushButton_4")
+        sizePolicy.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
+        self.pushButton_4.setSizePolicy(sizePolicy)
+        font23 = QFont()
+        font23.setPointSize(18)
+        font23.setBold(True)
+        self.pushButton_4.setFont(font23)
+        self.pushButton_4.setStyleSheet(u"QPushButton{	\n"
+"	border: 2px solid #E5E5E5; \n"
+"	border-radius: 10px;\n"
+"	color: #10B981; \n"
+"	padding-right: 3px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	none;\n"
+"}")
+        self.pushButton_4.setIcon(icon8)
+        self.pushButton_4.setIconSize(QSize(30, 30))
+
+        self.horizontalLayout_328.addWidget(self.pushButton_4)
+
+        self.sys_state_stacked_wid_40.addWidget(self.running_light_32)
+        self.error_light_32 = QWidget()
+        self.error_light_32.setObjectName(u"error_light_32")
+        self.horizontalLayout_339 = QHBoxLayout(self.error_light_32)
+        self.horizontalLayout_339.setObjectName(u"horizontalLayout_339")
+        self.horizontalLayout_339.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_21 = QPushButton(self.error_light_32)
+        self.pushButton_21.setObjectName(u"pushButton_21")
+        sizePolicy.setHeightForWidth(self.pushButton_21.sizePolicy().hasHeightForWidth())
+        self.pushButton_21.setSizePolicy(sizePolicy)
+        self.pushButton_21.setFont(font23)
+        self.pushButton_21.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 10px;\n"
+"color: #F90A0A; \n"
+"padding-right: 3px;")
+        self.pushButton_21.setIcon(icon7)
+        self.pushButton_21.setIconSize(QSize(30, 30))
+
+        self.horizontalLayout_339.addWidget(self.pushButton_21)
+
+        self.sys_state_stacked_wid_40.addWidget(self.error_light_32)
+        self.page_4 = QWidget()
+        self.page_4.setObjectName(u"page_4")
+        self.horizontalLayout_7 = QHBoxLayout(self.page_4)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_24 = QPushButton(self.page_4)
+        self.pushButton_24.setObjectName(u"pushButton_24")
+        sizePolicy.setHeightForWidth(self.pushButton_24.sizePolicy().hasHeightForWidth())
+        self.pushButton_24.setSizePolicy(sizePolicy)
+        self.pushButton_24.setFont(font23)
+        self.pushButton_24.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 10px;\n"
+"color: orange; \n"
+"padding-right: 3px;")
+        icon21 = QIcon()
+        icon21.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_24.setIcon(icon21)
+        self.pushButton_24.setIconSize(QSize(30, 30))
+
+        self.horizontalLayout_7.addWidget(self.pushButton_24)
+
+        self.sys_state_stacked_wid_40.addWidget(self.page_4)
+
+        self.horizontalLayout_31.addWidget(self.sys_state_stacked_wid_40)
+
+        self.read_time_input = QSpinBox(self.widget_28)
+        self.read_time_input.setObjectName(u"read_time_input")
+        sizePolicy.setHeightForWidth(self.read_time_input.sizePolicy().hasHeightForWidth())
+        self.read_time_input.setSizePolicy(sizePolicy)
+        self.read_time_input.setMinimumSize(QSize(0, 0))
+        self.read_time_input.setFont(font21)
+        self.read_time_input.setAlignment(Qt.AlignCenter)
+        self.read_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.read_time_input.setMinimum(100)
+        self.read_time_input.setMaximum(1000)
+        self.read_time_input.setValue(500)
+
+        self.horizontalLayout_31.addWidget(self.read_time_input)
+
+        self.horizontalLayout_31.setStretch(0, 3)
+        self.horizontalLayout_31.setStretch(1, 2)
+
+        self.gridLayout_4.addWidget(self.widget_28, 0, 1, 1, 1)
+
+        self.widget_31 = QWidget(self.connection_group)
+        self.widget_31.setObjectName(u"widget_31")
+        self.horizontalLayout_41 = QHBoxLayout(self.widget_31)
+        self.horizontalLayout_41.setSpacing(10)
+        self.horizontalLayout_41.setObjectName(u"horizontalLayout_41")
+        self.horizontalLayout_41.setContentsMargins(0, 0, 0, 0)
+        self.sys_state_stacked_wid_42 = QStackedWidget(self.widget_31)
+        self.sys_state_stacked_wid_42.setObjectName(u"sys_state_stacked_wid_42")
+        sizePolicy.setHeightForWidth(self.sys_state_stacked_wid_42.sizePolicy().hasHeightForWidth())
+        self.sys_state_stacked_wid_42.setSizePolicy(sizePolicy)
+        self.sys_state_stacked_wid_42.setStyleSheet(u"")
+        self.running_light_34 = QWidget()
+        self.running_light_34.setObjectName(u"running_light_34")
+        self.horizontalLayout_473 = QHBoxLayout(self.running_light_34)
+        self.horizontalLayout_473.setObjectName(u"horizontalLayout_473")
+        self.horizontalLayout_473.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_6 = QPushButton(self.running_light_34)
+        self.pushButton_6.setObjectName(u"pushButton_6")
+        sizePolicy.setHeightForWidth(self.pushButton_6.sizePolicy().hasHeightForWidth())
+        self.pushButton_6.setSizePolicy(sizePolicy)
+        self.pushButton_6.setFont(font23)
+        self.pushButton_6.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 10px;\n"
+"color: #10B981; \n"
+"padding-right: 3px;")
+        self.pushButton_6.setIcon(icon8)
+        self.pushButton_6.setIconSize(QSize(30, 30))
+
+        self.horizontalLayout_473.addWidget(self.pushButton_6)
+
+        self.sys_state_stacked_wid_42.addWidget(self.running_light_34)
+        self.error_light_34 = QWidget()
+        self.error_light_34.setObjectName(u"error_light_34")
+        self.horizontalLayout_474 = QHBoxLayout(self.error_light_34)
+        self.horizontalLayout_474.setObjectName(u"horizontalLayout_474")
+        self.horizontalLayout_474.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_23 = QPushButton(self.error_light_34)
+        self.pushButton_23.setObjectName(u"pushButton_23")
+        sizePolicy.setHeightForWidth(self.pushButton_23.sizePolicy().hasHeightForWidth())
+        self.pushButton_23.setSizePolicy(sizePolicy)
+        self.pushButton_23.setFont(font23)
+        self.pushButton_23.setStyleSheet(u"QPushButton{	\n"
+"	border: 2px solid #E5E5E5; \n"
+"	border-radius: 10px;\n"
+"	color: #F90A0A; \n"
+"	padding-right: 3px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"	border: 2px solid #E5E5E5; \n"
+"	border-radius: 10px;\n"
+"}")
+        self.pushButton_23.setIcon(icon7)
+        self.pushButton_23.setIconSize(QSize(30, 30))
+
+        self.horizontalLayout_474.addWidget(self.pushButton_23)
+
+        self.sys_state_stacked_wid_42.addWidget(self.error_light_34)
+        self.page_3 = QWidget()
+        self.page_3.setObjectName(u"page_3")
+        self.horizontalLayout_8 = QHBoxLayout(self.page_3)
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_22 = QPushButton(self.page_3)
+        self.pushButton_22.setObjectName(u"pushButton_22")
+        sizePolicy.setHeightForWidth(self.pushButton_22.sizePolicy().hasHeightForWidth())
+        self.pushButton_22.setSizePolicy(sizePolicy)
+        self.pushButton_22.setFont(font23)
+        self.pushButton_22.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
+"border-radius: 10px;\n"
+"color: orange; \n"
+"padding-right: 3px;")
+        self.pushButton_22.setIcon(icon21)
+        self.pushButton_22.setIconSize(QSize(30, 30))
+
+        self.horizontalLayout_8.addWidget(self.pushButton_22)
+
+        self.sys_state_stacked_wid_42.addWidget(self.page_3)
+
+        self.horizontalLayout_41.addWidget(self.sys_state_stacked_wid_42)
+
+        self.write_time_input = QSpinBox(self.widget_31)
+        self.write_time_input.setObjectName(u"write_time_input")
+        sizePolicy.setHeightForWidth(self.write_time_input.sizePolicy().hasHeightForWidth())
+        self.write_time_input.setSizePolicy(sizePolicy)
+        self.write_time_input.setMinimumSize(QSize(0, 0))
+        self.write_time_input.setFont(font21)
+        self.write_time_input.setAlignment(Qt.AlignCenter)
+        self.write_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.write_time_input.setMinimum(300)
+        self.write_time_input.setMaximum(1000)
+        self.write_time_input.setValue(500)
+
+        self.horizontalLayout_41.addWidget(self.write_time_input)
+
+        self.horizontalLayout_41.setStretch(0, 3)
+        self.horizontalLayout_41.setStretch(1, 2)
+
+        self.gridLayout_4.addWidget(self.widget_31, 1, 1, 1, 1)
+
+        self.widget_35 = QWidget(self.connection_group)
+        self.widget_35.setObjectName(u"widget_35")
+        self.widget_35.setStyleSheet(u"QSpinBox\n"
+"{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 15px;\n"
+"}\n"
+"QWidget\n"
+"{\n"
+"	background-color: rgb(255, 255, 255);\n"
+"	border-radius: 15px;\n"
+"}")
+        self.horizontalLayout_44 = QHBoxLayout(self.widget_35)
+        self.horizontalLayout_44.setSpacing(10)
+        self.horizontalLayout_44.setObjectName(u"horizontalLayout_44")
+        self.horizontalLayout_44.setContentsMargins(0, 0, 0, 0)
+        self.cycle_a_displ_3 = QSpinBox(self.widget_35)
+        self.cycle_a_displ_3.setObjectName(u"cycle_a_displ_3")
+        sizePolicy.setHeightForWidth(self.cycle_a_displ_3.sizePolicy().hasHeightForWidth())
+        self.cycle_a_displ_3.setSizePolicy(sizePolicy)
+        self.cycle_a_displ_3.setFont(font22)
+        self.cycle_a_displ_3.setStyleSheet(u"color: rgb(30, 136, 229);\n"
+"padding-left: 20px;")
+        self.cycle_a_displ_3.setWrapping(True)
+        self.cycle_a_displ_3.setFrame(False)
+        self.cycle_a_displ_3.setAlignment(Qt.AlignCenter)
+        self.cycle_a_displ_3.setReadOnly(True)
+        self.cycle_a_displ_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.cycle_a_displ_3.setMaximum(9999999)
+        self.cycle_a_displ_3.setValue(0)
+
+        self.horizontalLayout_44.addWidget(self.cycle_a_displ_3)
+
+        self.reset_cycle_a_btn = QPushButton(self.widget_35)
+        self.reset_cycle_a_btn.setObjectName(u"reset_cycle_a_btn")
+        sizePolicy.setHeightForWidth(self.reset_cycle_a_btn.sizePolicy().hasHeightForWidth())
+        self.reset_cycle_a_btn.setSizePolicy(sizePolicy)
+        self.reset_cycle_a_btn.setMinimumSize(QSize(75, 0))
+        self.reset_cycle_a_btn.setFont(font13)
+        self.reset_cycle_a_btn.setStyleSheet(u"QPushButton {\n"
+"    background-color: white;\n"
+"    color: #0B7EC8;\n"
+"    border: 1px solid #0B7EC8;\n"
+"    border-radius: 15px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #F0F9FF;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    background-color: #E0F2FE;\n"
+"}")
+        self.reset_cycle_a_btn.setIcon(icon20)
+        self.reset_cycle_a_btn.setIconSize(QSize(50, 50))
+
+        self.horizontalLayout_44.addWidget(self.reset_cycle_a_btn)
+
+        self.horizontalLayout_44.setStretch(0, 3)
+        self.horizontalLayout_44.setStretch(1, 2)
+
+        self.gridLayout_4.addWidget(self.widget_35, 3, 1, 1, 1)
+
+        self.total_cycle_label = QPushButton(self.connection_group)
+        self.total_cycle_label.setObjectName(u"total_cycle_label")
+        sizePolicy.setHeightForWidth(self.total_cycle_label.sizePolicy().hasHeightForWidth())
+        self.total_cycle_label.setSizePolicy(sizePolicy)
+        self.total_cycle_label.setFont(font20)
+        self.total_cycle_label.setStyleSheet(u"QPushButton {\n"
+"    color: rgb(30, 136, 229);\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"    text-align: left;\n"
+"}")
+        self.total_cycle_label.setIconSize(QSize(55, 55))
+        self.total_cycle_label.setCheckable(True)
+
+        self.gridLayout_4.addWidget(self.total_cycle_label, 3, 0, 1, 1)
 
         self.gridLayout_4.setRowStretch(0, 1)
         self.gridLayout_4.setRowStretch(1, 1)
@@ -10210,6 +10210,7 @@ class Ui_MainWindow(object):
         self.list_history.setAutoScrollMargin(25)
         self.list_history.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.list_history.setDragEnabled(False)
+        self.list_history.setAlternatingRowColors(False)
         self.list_history.setSortingEnabled(False)
         self.list_history.setWordWrap(False)
         self.list_history.horizontalHeader().setCascadingSectionResizes(True)
@@ -10315,7 +10316,7 @@ class Ui_MainWindow(object):
 
         self.stackedWidget_2.setCurrentIndex(2)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_b_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_c_1.setCurrentIndex(0)
@@ -10355,7 +10356,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_t0_3.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(1)
+        self.stackedWidget_3.setCurrentIndex(0)
         self.sys_state_stacked_wid_40.setCurrentIndex(2)
         self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
@@ -10706,29 +10707,29 @@ class Ui_MainWindow(object):
         self.plc_io_btn.setText("")
         self.connection_group.setTitle(QCoreApplication.translate("MainWindow", u"Connection Settings", None))
         self.read_plc_label.setText(QCoreApplication.translate("MainWindow", u" PLC Read:", None))
+        self.write_plc_label.setText(QCoreApplication.translate("MainWindow", u" PLC Write:", None))
+        self.table_write_cycle.setSuffix(QCoreApplication.translate("MainWindow", u" s", None))
+        self.write_table_label.setText(QCoreApplication.translate("MainWindow", u" History Cycle:", None))
+        self.total_cycle_label_3.setText(QCoreApplication.translate("MainWindow", u" Total Test Time C:", None))
+        self.total_cycle_label_2.setText(QCoreApplication.translate("MainWindow", u" Total Test Time B:", None))
+        self.cycle_c_displ_3.setSuffix("")
+        self.cycle_c_displ_3.setPrefix("")
+        self.reset_cycle_c_btn.setText("")
+        self.cycle_b_displ_3.setSuffix("")
+        self.cycle_b_displ_3.setPrefix("")
+        self.reset_cycle_b_btn.setText("")
         self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"Online", None))
         self.pushButton_21.setText(QCoreApplication.translate("MainWindow", u"Offline", None))
         self.pushButton_24.setText(QCoreApplication.translate("MainWindow", u"Try Connecting...", None))
         self.read_time_input.setSuffix(QCoreApplication.translate("MainWindow", u" ms", None))
-        self.write_plc_label.setText(QCoreApplication.translate("MainWindow", u" PLC Write:", None))
         self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"Online", None))
         self.pushButton_23.setText(QCoreApplication.translate("MainWindow", u"Offline", None))
         self.pushButton_22.setText(QCoreApplication.translate("MainWindow", u"Try Connecting...", None))
         self.write_time_input.setSuffix(QCoreApplication.translate("MainWindow", u" ms", None))
-        self.write_table_label.setText(QCoreApplication.translate("MainWindow", u" History Cycle:", None))
-        self.table_write_cycle.setSuffix(QCoreApplication.translate("MainWindow", u" s", None))
-        self.total_cycle_label.setText(QCoreApplication.translate("MainWindow", u" Total Test Time A:", None))
         self.cycle_a_displ_3.setSuffix("")
         self.cycle_a_displ_3.setPrefix("")
         self.reset_cycle_a_btn.setText("")
-        self.total_cycle_label_2.setText(QCoreApplication.translate("MainWindow", u" Total Test Time B:", None))
-        self.cycle_b_displ_3.setSuffix("")
-        self.cycle_b_displ_3.setPrefix("")
-        self.reset_cycle_b_btn.setText("")
-        self.total_cycle_label_3.setText(QCoreApplication.translate("MainWindow", u" Total Test Time C:", None))
-        self.cycle_c_displ_3.setSuffix("")
-        self.cycle_c_displ_3.setPrefix("")
-        self.reset_cycle_c_btn.setText("")
+        self.total_cycle_label.setText(QCoreApplication.translate("MainWindow", u" Total Test Time A:", None))
         self.i_o_group_1.setTitle(QCoreApplication.translate("MainWindow", u"DI", None))
         self.pushButton_59.setText("")
         self.pushButton_58.setText("")

@@ -1,0 +1,9 @@
+Startup errors:
+Traceback (most recent call last):
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 148, in <module>
+    from source            import StrikeMachine
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 1848
+    if self._current_lang == "en"
+                                 ^
+SyntaxError: expected ':'
+

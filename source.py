@@ -75,6 +75,22 @@ def get_exe_dir():
 
 SIMULATE = (get_exe_dir() / "simulate.txt").is_file()
 
+EXPECTED_ROW_NAMES = [
+    "Cycle Setting",
+    "Oil Start time",
+    "Oil End time",
+    "Air Filling time",
+    "Air Holding time",
+    "Air Bleeding time",
+    "Pressure Setting",
+    "Temperature Setting",
+    "High Alarm Value",
+    "Low Alarm Value",
+    "Offset Front",
+    "Offset Mid",
+    "Offset End",
+]
+
 class BackgroundDelegate(QStyledItemDelegate):
     def paint(self, painter: QPainter, option, index):
         bg = index.data(Qt.BackgroundRole)  # type: ignore
@@ -1579,12 +1595,16 @@ class StrikeMachine(QMainWindow):
         )
 
     def _count_batches(self, table) -> int:
-        seen = set()
+        count = 0
+        prev = None
         for row in range(table.rowCount()):
             item = table.item(row, 0)
             if item:
-                seen.add(item.text())
-        return len(seen)
+                val = item.text()
+                if val != prev:
+                    count += 1
+                    prev = val
+        return count
 
     def _on_search_scroll(self, value: int):
         sb = self.ui.list_history_2.verticalScrollBar()
@@ -1845,7 +1865,13 @@ class StrikeMachine(QMainWindow):
         
         if not self.db_dict:
             self.hide_loading.emit()
-            ltmessage.error(self, "Error", "DB Layout not found! Cannot start PLC threads.")
+            if self._current_lang == "en":
+                title = "Error"
+                content = "DB Layout not found! Cannot start PLC threads."
+            elif self._current_lang == "cn":
+                title = "错误"
+                content = "未找到 DB 佈局！無法啟動 PLC 執行緒."
+            ltmessage.error(self, title, content, self._current_lang)
             return 
 
         if not self._setup_write_plc_thread(
@@ -1856,7 +1882,13 @@ class StrikeMachine(QMainWindow):
             poll_ms=self.db_dict["write_time"],
             logger=self.logger
         ):
-            ltmessage.error(self, "Error", "Failed to connect to PLC! Try again later.")
+            if self._current_lang == "en":
+                title = "Error"
+                content = "Failed to connect to PLC! Try again later."
+            elif self._current_lang == "cn":
+                title = "错误"
+                content = "无法连接 PLC！请稍后再试."
+            ltmessage.error(self, title, content, self._current_lang)
 
         time.sleep(0.2)
 
@@ -1868,7 +1900,13 @@ class StrikeMachine(QMainWindow):
             poll_ms=self.db_dict["read_time"],
             logger=self.logger
         ):
-            ltmessage.error(self, "Error", "Failed to connect to PLC! Try again later.")
+            if self._current_lang == "en":
+                title = "Error"
+                content = "Failed to connect to PLC! Try again later."
+            elif self._current_lang == "cn":
+                title = "错误"
+                content = "无法连接 PLC！请稍后再试."
+            ltmessage.error(self, title, content, self._current_lang)
 
     def setup_simulate_threads(self):
         try:
@@ -2524,13 +2562,26 @@ class StrikeMachine(QMainWindow):
             
     def heating_btn(self, channel: str, checked: bool, btn=None):
         if not self.plc_writer_connection and not self.init_signal:
-            ltmessage.error(self, "Error", "PLC Writer not connected!")
+            # if self._current_lang == "en":
+            #     title = "Error"
+            #     content = "PLC Writer not connected!"
+            # elif self._current_lang == "cn":
+            #     title = "错误"
+            #     content = "PLC Writer 未连接!"
+            # ltmessage.error(self, title, content, self._current_lang)
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
                 btn.setChecked(False)
                 btn.blockSignals(False)
             return
         else:
+            if checked:
+                self.ui.new_data_btn.setEnabled(checked)
+                self.ui.clear_data_btn.setEnabled(checked)
+            else:
+                self.ui.new_data_btn.setEnabled(not checked)
+                self.ui.clear_data_btn.setEnabled(not checked)
+                
             if channel == "A":
                 if checked:
                     if not self.init_signal:
@@ -2588,13 +2639,26 @@ class StrikeMachine(QMainWindow):
 
     def pumping_btn(self, channel: str, checked: bool, btn=None):
         if not self.plc_writer_connection and not self.init_signal:
-            ltmessage.error(self, "Error", "PLC Writer not connected!")
+            # if self._current_lang == "en":
+            #     title = "Error"
+            #     content = "PLC Writer not connected!"
+            # elif self._current_lang == "cn":
+            #     title = "错误"
+            #     content = "PLC Writer 未连接!"
+            # ltmessage.error(self, title, content, self._current_lang)
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
                 btn.setChecked(False)
                 btn.blockSignals(False)
             return
         else:
+            if checked:
+                self.ui.new_data_btn.setEnabled(checked)
+                self.ui.clear_data_btn.setEnabled(checked)
+            else:
+                self.ui.new_data_btn.setEnabled(not checked)
+                self.ui.clear_data_btn.setEnabled(not checked)
+                
             if channel == "A":
                 if checked:
                     if not self.init_signal:
@@ -2637,7 +2701,13 @@ class StrikeMachine(QMainWindow):
 
     def fill_oil_btn(self, channel: str, checked: bool, btn=None):
         if not self.plc_writer_connection and not self.init_signal:
-            ltmessage.error(self, "Error", "PLC Writer not connected!")
+            # if self._current_lang == "en":
+            #     title = "Error"
+            #     content = "PLC Writer not connected!"
+            # elif self._current_lang == "cn":
+            #     title = "错误"
+            #     content = "PLC Writer 未连接!"
+            # ltmessage.error(self, title, content, self._current_lang)
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
                 btn.setChecked(False)
@@ -2685,7 +2755,13 @@ class StrikeMachine(QMainWindow):
 
     def cycle_loop_btn(self, channel: str, checked: bool, btn=None):
         if not self.plc_writer_connection and not self.init_signal:
-            ltmessage.error(self, "Error", "PLC Writer not connected!")
+            # if self._current_lang == "en":
+            #     title = "Error"
+            #     content = "PLC Writer not connected!"
+            # elif self._current_lang == "cn":
+            #     title = "错误"
+            #     content = "PLC Writer 未连接!"
+            # ltmessage.error(self, title, content, self._current_lang)
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
                 btn.setChecked(False)
@@ -2734,7 +2810,13 @@ class StrikeMachine(QMainWindow):
 
     def start_stop_btn(self, btn=None):
         if not self.plc_writer_connection and not self.init_signal:
-            ltmessage.error(self, "Error", "PLC Writer not connected!")
+            if self._current_lang == "en":
+                title = "Error"
+                content = "PLC Writer not connected!"
+            elif self._current_lang == "cn":
+                title = "错误"
+                content = "PLC Writer 未连接!"
+            ltmessage.error(self, title, content, self._current_lang)
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
                 btn.setChecked(False)
@@ -2879,8 +2961,15 @@ class StrikeMachine(QMainWindow):
             self.logger.error(f"Failed to clear C data: {e}")
 
     def clear_data_btn(self):
+        if self._current_lang == "en":
+            title = "Clear Data"
+            content = "Set all SV to 0?"
+        elif self._current_lang == "cn":
+            title = "清除数据"
+            content = "是否将所有 SV 设为 0?"
         reply = ltmessage.question(
-            self, "Clear Data", "Set all SV to 0?"
+            self, title, content, 
+            self._current_lang
         )
         if reply == ltmessage.Yes:
             try:
@@ -2980,7 +3069,13 @@ class StrikeMachine(QMainWindow):
                     self.disable_btn("C", False)
                     self.disable_btn("T0", False)
             except Exception as e:
-                ltmessage.error(self, "Error", f"Failed to clear data: {e}")
+                if self._current_lang == "en":
+                    title = "Error"
+                    content = f"Failed to clear data: {e}"
+                elif self._current_lang == "cn":
+                    title = "错误"
+                    content = f"数据清除失败: {e}"
+                ltmessage.error(self, title, content, self._current_lang)
 
     def reset_cycle_a_btn(self, channel):
         if channel == "A":
@@ -3002,6 +3097,71 @@ class StrikeMachine(QMainWindow):
             else:
                 self.logger.info(f"[Main]-[reset_cycle_c_btn]: Cannot set Total C Cycle")
 
+    def _validate_import_df(self, df) -> tuple[bool, str]:
+        """
+        Validate DataFrame from imported Excel file.
+        Returns: (is_valid: bool, error_message: str)
+        """
+        errors = []
+
+        # 1. Check minimum columns (at least 5: Param | Group A | Group B | Group C | T0)
+        if df.shape[1] < 5:
+            return False, (
+                f"File is missing columns!\n"
+            )
+
+        # 2. Check minimum rows (at least 15 rows)
+        if df.shape[0] < 15:
+            return False, (
+                f"File is missing data rows!\n"
+                f"Required at least 15 rows, current file only has {df.shape[0]} row(s)."
+            )
+
+        # 3. Check parameter names in column A (rows 2–14)
+        for i, expected_name in enumerate(EXPECTED_ROW_NAMES):
+            row_idx = i + 2
+            if row_idx >= df.shape[0]:
+                errors.append(f"• Row {row_idx + 1}: Missing parameter '{expected_name}'.")
+                continue
+            cell_val = str(df.iloc[row_idx][0]).strip() if pd.notna(df.iloc[row_idx][0]) else ""
+            if expected_name.lower() not in cell_val.lower():
+                errors.append(
+                    f"• Row {row_idx + 1}: Parameter name mismatch."
+                )
+
+        # 4. Check numeric values for Group A / B / C columns (rows 2–14)
+        group_cols = {"Group A": 1, "Group B": 2, "Group C": 3}
+        for row_idx in range(2, min(15, df.shape[0])):
+            for group_name, col_idx in group_cols.items():
+                cell = df.iloc[row_idx][col_idx]
+                if pd.isna(cell):
+                    # errors.append(f"• Row {row_idx + 1}, {group_name}: Cell is empty, a numeric value is required.")
+                    continue
+                try:
+                    float(str(cell).strip())
+                except ValueError:
+                    # errors.append(f"• Row {row_idx + 1}, {group_name}: Value '{cell}' is not a valid number.")
+                    pass
+
+        # 5. Check T0 numeric values (column E, rows 9–12 only)
+        for row_idx in range(9, 13):
+            if row_idx >= df.shape[0]:
+                break
+            cell = df.iloc[row_idx][4]
+            if pd.isna(cell):
+                # errors.append(f"• Row {row_idx + 1}, T0: Cell is empty, a numeric value is required.")
+                continue
+            try:
+                float(str(cell).strip())
+            except ValueError:
+                # errors.append(f"• Row {row_idx + 1}, T0: Value '{cell}' is not a valid number.")
+                pass
+
+        if errors:
+            return False, "File format is invalid:\n\n" + "\n".join(errors)
+
+        return True, ""
+
     def new_data_btn(self):
         stk_mch_file = Path(self.stk_mch_folder)/ "Setting File" 
         # print("Default path for data file:", stk_mch_file)s
@@ -3015,9 +3175,18 @@ class StrikeMachine(QMainWindow):
             return
         path = Path(file_str)
 
-        df = pd.read_excel(path, sheet_name='Sheet1', header=None)
+        try:
+            df = pd.read_excel(path, sheet_name=0, header=None)
+        except Exception as e:
+            ltmessage.error(self, "Import Error", f"Cannot read file!\n\nError: {e}")
+            return
+        is_valid, error_msg = self._validate_import_df(df)
+        if not is_valid:
+            ltmessage.error(self, "Invalid File Format", error_msg)
+            return
+
         self.ui.code_display.setText(str(df.iloc[0][0]).strip() if pd.notna(df.iloc[0][0]) else "")
-        for i in range(2, len(df)): # Bắt đầu từ hàng 3
+        for i in range(2, len(df)):
             column = df.iloc[i]
             name_raw = str(column[0]).strip() if pd.notna(column[0]) else ""
             if name_raw == "" or name_raw.lower() == "nan":
@@ -3431,12 +3600,17 @@ class StrikeMachine(QMainWindow):
         list_history_folder.mkdir(parents=True, exist_ok=True)  # tạo folder nếu chưa có
         filename_done = list_history_folder / f"{default_filename_done}.xlsx"
         if self.ui.stacked_list_history_page.currentIndex() == 0:
+            if self._current_lang == "en":
+                title = "Export All File"
+                content = "This might take a while. Do you want to continue?"
+            elif self._current_lang == "cn":
+                title = "导出全部文件"
+                content = "这可能需要一段时间. 是否继续?"
             reply = ltmessage.question(
-                self, "Export All File", "This might take a while. Do you want to continue?"
+                self, title, content, lang=self._current_lang
             )
             if reply == ltmessage.Yes:
                 pass
-
             else:
                 return
         self.export_table_to_excel(str(filename_done))
@@ -3454,7 +3628,11 @@ class StrikeMachine(QMainWindow):
             file_path += ".xlsx"
 
         self._exporting = True
-        self.ui.error_display.setText(" Exporting... Please wait.")
+        if self._current_lang == "en":
+            text_disp = "Exporting... Please wait."
+        elif self._current_lang == "cn":
+            text_disp = "导出中... 请等待."
+        self.ui.error_display.setText(text_disp)
         self._export_thread = QThread()
         if self.ui.stacked_list_history_page.currentIndex() == 0:
             self._export_worker = ExportWorker(self.history_db_path, file_path) # type: ignore
@@ -3482,12 +3660,26 @@ class StrikeMachine(QMainWindow):
         self._exporting = False
         self.ui.error_display.setText("")
         if error:
-            ltmessage.error(self, "Error", f"Export failed:\n{error}")
+            if self._current_lang == "en":
+                title = "Error"
+                content = f"Export failed:\n{error}"
+            elif self._current_lang == "cn":
+                title = "错误"
+                content = f"导出失败:\n{error}"
+            ltmessage.error(self, title, content, lang=self._current_lang)
         else:
+            if self._current_lang == "en":
+                title = "Export Success"
+                content = f"Go to Save Folder?"
+                button=["Yes", "No"]
+            elif self._current_lang == "cn":
+                title = "导出成功"
+                content = "是否前往保存文件夹？"
+                button=["是的", "不"]
             reply = ltmessage.custom(
-                self, "Export Success", f"Go to Save Folder?",
-                msg_type="success",      # ← icon success
-                buttons=["Yes", "No"]
+                self, title, content,
+                msg_type="success",
+                buttons=button
             )
             if reply == ltmessage.Yes:
                 folder = str(Path(file_path.split("|")[0]).parent)
@@ -3504,8 +3696,14 @@ class StrikeMachine(QMainWindow):
             QTimer.singleShot(50, self._save_grid_rects)
             
     def closeEvent(self, event):
+        if self._current_lang == "en":
+            title = "Exit Confirmation"
+            content = "Are you sure you want to exit?"
+        elif self._current_lang == "cn":
+            title = "导出成功"
+            content = "是否前往保存文件夹?"
         reply = ltmessage.question(
-            self, "Exit Confirmation", "Are you sure you want to exit?"
+            self, title, content, lang=self._current_lang
         )
 
         if reply == ltmessage.Yes:
