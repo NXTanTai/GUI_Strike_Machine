@@ -39,9 +39,9 @@ class PLCRead(QObject):
     error         = Signal(str)
     connected     = Signal(bool)
     disconnected  = Signal()
-    finished      = Signal()           # Dùng để thông báo đã dừng
+    finished      = Signal()           
 
-    _request_stop = Signal()           # Signal dùng để stop từ Main Thread
+    _stop_read    = Signal()           
 
     def __init__(
         self,
@@ -55,7 +55,7 @@ class PLCRead(QObject):
         retry_ms:  int                   = 3000,
         logger                           =None,
         parent:    Optional[QObject]     = None,
-    ):
+        ):
         super().__init__(parent)
         self._ip        = ip
         self._rack      = rack
@@ -66,12 +66,12 @@ class PLCRead(QObject):
         self._db_size   = db_size
         self._poll_ms   = poll_ms
         self._retry_ms  = retry_ms
-        self.logger = logger
+        self.logger     = logger
 
         self._client:      snap7.client.Client | None = None
         self._poll_timer:  QTimer | None = None
         self._retry_timer: QTimer | None = None
-        self._running = False
+        self._running   = False
         self._last_error_log_time = 0
 
     @Slot()
@@ -87,14 +87,14 @@ class PLCRead(QObject):
         self._retry_timer.setInterval(self._retry_ms)
         self._retry_timer.timeout.connect(self._try_connect)
 
-        self._request_stop.connect(self._do_stop, Qt.QueuedConnection) # type: ignore
+        self._stop_read.connect(self._do_stop, Qt.QueuedConnection) # type: ignore
 
         self._try_connect()
 
     @Slot()
     def stop(self):
         self._running = False
-        self._request_stop.emit()
+        self._stop_read.emit()
 
     def set_poll_interval(self, ms: int):
         self._poll_ms = ms
@@ -144,7 +144,8 @@ class PLCRead(QObject):
             if self._retry_timer and self._retry_timer.isActive():
                 self._retry_timer.stop()
             self.init_data.emit()
-            self._poll_timer.start() # type: ignore
+            if not self._poll_timer.isActive():   # type: ignore
+                self._poll_timer.start() # type: ignore
             if self.logger:
                 self.logger.info("[PLC READ]: Connected to PLC, started reading")
         else:

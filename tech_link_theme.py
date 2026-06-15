@@ -9531,18 +9531,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.db_file_path, 0, 0, 1, 1)
 
-        self.db_file_path_edit = QLineEdit(self.i_o_group_2)
-        self.db_file_path_edit.setObjectName(u"db_file_path_edit")
-        sizePolicy.setHeightForWidth(self.db_file_path_edit.sizePolicy().hasHeightForWidth())
-        self.db_file_path_edit.setSizePolicy(sizePolicy)
-        font27 = QFont()
-        font27.setPointSize(19)
-        font27.setBold(True)
-        self.db_file_path_edit.setFont(font27)
-        self.db_file_path_edit.setPlaceholderText(u"Enter Path Folder")
-
-        self.gridLayout_6.addWidget(self.db_file_path_edit, 0, 1, 1, 1)
-
         self.ip_plc_address = QPushButton(self.i_o_group_2)
         self.ip_plc_address.setObjectName(u"ip_plc_address")
         sizePolicy.setHeightForWidth(self.ip_plc_address.sizePolicy().hasHeightForWidth())
@@ -9562,15 +9550,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.ip_plc_address, 1, 0, 1, 1)
 
-        self.plc_ip_address_edit = QLineEdit(self.i_o_group_2)
-        self.plc_ip_address_edit.setObjectName(u"plc_ip_address_edit")
-        sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
-        self.plc_ip_address_edit.setSizePolicy(sizePolicy)
-        self.plc_ip_address_edit.setFont(font27)
-        self.plc_ip_address_edit.setPlaceholderText(u"Enter IP Address: 172.16.100.***")
-
-        self.gridLayout_6.addWidget(self.plc_ip_address_edit, 1, 1, 1, 1)
-
         self.db_number = QPushButton(self.i_o_group_2)
         self.db_number.setObjectName(u"db_number")
         sizePolicy.setHeightForWidth(self.db_number.sizePolicy().hasHeightForWidth())
@@ -9589,6 +9568,39 @@ class Ui_MainWindow(object):
         self.db_number.setCheckable(True)
 
         self.gridLayout_6.addWidget(self.db_number, 2, 0, 1, 1)
+
+        self.db_file_path_edit = QLineEdit(self.i_o_group_2)
+        self.db_file_path_edit.setObjectName(u"db_file_path_edit")
+        sizePolicy.setHeightForWidth(self.db_file_path_edit.sizePolicy().hasHeightForWidth())
+        self.db_file_path_edit.setSizePolicy(sizePolicy)
+        font27 = QFont()
+        font27.setPointSize(19)
+        font27.setBold(True)
+        self.db_file_path_edit.setFont(font27)
+        self.db_file_path_edit.setPlaceholderText(u"Enter Path Folder")
+
+        self.gridLayout_6.addWidget(self.db_file_path_edit, 0, 1, 1, 1)
+
+        self.plc_ip_address_edit = QLineEdit(self.i_o_group_2)
+        self.plc_ip_address_edit.setObjectName(u"plc_ip_address_edit")
+        sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
+        self.plc_ip_address_edit.setSizePolicy(sizePolicy)
+        self.plc_ip_address_edit.setFont(font27)
+        self.plc_ip_address_edit.setPlaceholderText(u"Enter IP Address: 172.16.100.***")
+
+        self.gridLayout_6.addWidget(self.plc_ip_address_edit, 1, 1, 1, 1)
+
+        self.db_data_size_input = QSpinBox(self.i_o_group_2)
+        self.db_data_size_input.setObjectName(u"db_data_size_input")
+        sizePolicy.setHeightForWidth(self.db_data_size_input.sizePolicy().hasHeightForWidth())
+        self.db_data_size_input.setSizePolicy(sizePolicy)
+        self.db_data_size_input.setMinimumSize(QSize(0, 0))
+        self.db_data_size_input.setFont(font27)
+        self.db_data_size_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.db_data_size_input.setMaximum(1024)
+        self.db_data_size_input.setValue(0)
+
+        self.gridLayout_6.addWidget(self.db_data_size_input, 3, 1, 1, 1)
 
         self.db_number_input = QSpinBox(self.i_o_group_2)
         self.db_number_input.setObjectName(u"db_number_input")
@@ -9621,17 +9633,36 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.write_plc_label_2, 3, 0, 1, 1)
 
-        self.db_data_size_input = QSpinBox(self.i_o_group_2)
-        self.db_data_size_input.setObjectName(u"db_data_size_input")
-        sizePolicy.setHeightForWidth(self.db_data_size_input.sizePolicy().hasHeightForWidth())
-        self.db_data_size_input.setSizePolicy(sizePolicy)
-        self.db_data_size_input.setMinimumSize(QSize(0, 0))
-        self.db_data_size_input.setFont(font27)
-        self.db_data_size_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.db_data_size_input.setMaximum(1024)
-        self.db_data_size_input.setValue(0)
+        self.cmd_btn = QPushButton(self.i_o_group_2)
+        self.cmd_btn.setObjectName(u"cmd_btn")
+        sizePolicy.setHeightForWidth(self.cmd_btn.sizePolicy().hasHeightForWidth())
+        self.cmd_btn.setSizePolicy(sizePolicy)
+        self.cmd_btn.setFont(font27)
+        self.cmd_btn.setStyleSheet(u"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"    padding: 12px 20px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,\n"
+"                    stop:0 #F8FAFC, stop:1 #E2E8F0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"	border-right: 5px solid #29A1D4;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	border-right: 5px solid #0AB1F9;\n"
+"	color: #0AB1F9;\n"
+"}")
+        icon26 = QIcon()
+        icon26.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.cmd_btn.setIcon(icon26)
+        self.cmd_btn.setIconSize(QSize(80, 80))
 
-        self.gridLayout_6.addWidget(self.db_data_size_input, 3, 1, 1, 1)
+        self.gridLayout_6.addWidget(self.cmd_btn, 4, 0, 1, 2)
 
         self.gridLayout_6.setColumnStretch(1, 1)
 
@@ -9744,9 +9775,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.search_icon.sizePolicy().hasHeightForWidth())
         self.search_icon.setSizePolicy(sizePolicy)
         self.search_icon.setStyleSheet(u"padding: 5px;")
-        icon26 = QIcon()
-        icon26.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.search_icon.setIcon(icon26)
+        icon27 = QIcon()
+        icon27.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.search_icon.setIcon(icon27)
         self.search_icon.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_3.addWidget(self.search_icon)
@@ -10093,9 +10124,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.clear_history_search.sizePolicy().hasHeightForWidth())
         self.clear_history_search.setSizePolicy(sizePolicy)
         self.clear_history_search.setMinimumSize(QSize(45, 0))
-        icon27 = QIcon()
-        icon27.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_history_search.setIcon(icon27)
+        icon28 = QIcon()
+        icon28.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_history_search.setIcon(icon28)
         self.clear_history_search.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_3.addWidget(self.clear_history_search)
@@ -10125,9 +10156,9 @@ class Ui_MainWindow(object):
 "    background-color: #94A3B8;\n"
 "    color: #CBD5E1;\n"
 "}")
-        icon28 = QIcon()
-        icon28.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.export_all_tables_to_excel_btn.setIcon(icon28)
+        icon29 = QIcon()
+        icon29.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.export_all_tables_to_excel_btn.setIcon(icon29)
         self.export_all_tables_to_excel_btn.setIconSize(QSize(35, 35))
 
         self.list_query_btn.addWidget(self.export_all_tables_to_excel_btn)
@@ -10315,7 +10346,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(1)
+        self.stackedWidget_2.setCurrentIndex(2)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
@@ -10357,7 +10388,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_t0_3.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(0)
+        self.stackedWidget_3.setCurrentIndex(1)
         self.sys_state_stacked_wid_40.setCurrentIndex(2)
         self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
@@ -10793,12 +10824,13 @@ class Ui_MainWindow(object):
         self.ai_name_11.setText(QCoreApplication.translate("MainWindow", u"P1:", None))
         self.i_o_group_2.setTitle(QCoreApplication.translate("MainWindow", u"Total Test Time", None))
         self.db_file_path.setText(QCoreApplication.translate("MainWindow", u" DB Path:", None))
-        self.db_file_path_edit.setText("")
         self.ip_plc_address.setText(QCoreApplication.translate("MainWindow", u" IP:", None))
-        self.plc_ip_address_edit.setText("")
         self.db_number.setText(QCoreApplication.translate("MainWindow", u" DB:", None))
-        self.write_plc_label_2.setText(QCoreApplication.translate("MainWindow", u" Size DB:", None))
+        self.db_file_path_edit.setText("")
+        self.plc_ip_address_edit.setText("")
         self.db_data_size_input.setSuffix(QCoreApplication.translate("MainWindow", u" ~ 2056", None))
+        self.write_plc_label_2.setText(QCoreApplication.translate("MainWindow", u" Size DB:", None))
+        self.cmd_btn.setText("")
         self.back_connection_page_btn.setText(QCoreApplication.translate("MainWindow", u"Connection Page", None))
         self.back_home_page_btn.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
         self.search_icon.setText("")

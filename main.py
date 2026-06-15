@@ -1,5 +1,8 @@
+# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\hose_icon.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
+
+
 # pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\hose_icon.png  --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
+# pyinstaller --onefile --noconsole --name="cmd" --icon=icons\cmd.png --add-data "icons;icons" --distpath "Apps" console_window.py
 
 import multiprocessing
 import subprocess

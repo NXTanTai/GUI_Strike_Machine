@@ -14,11 +14,13 @@ import msoffcrypto
 import logging
 import sqlite3
 import threading
+import subprocess
+import tempfile
 import webbrowser
-from PySide6.QtCore import (Qt, QTimer, QObject, 
+from PySide6.QtCore import (Qt, QTimer, QObject, Slot,
                             QTime, QSettings, QDateTime,
                             QEvent, QThread, QEasingCurve, 
-                            QTranslator)
+                            QTranslator, QMetaObject)
 from PySide6.QtGui import QFont, QFontDatabase, QPalette
 from PySide6.QtWidgets import (QHeaderView, QAbstractSpinBox, QStyledItemDelegate,
                                QMainWindow, QApplication, QLineEdit,
@@ -30,6 +32,7 @@ from tech_link_theme import Ui_MainWindow
 from Custom_Widgets import * #type: ignore
 from Custom_Chart_Widgets import CustomChartWidget
 from message_box import LightThemeMessageBox as ltmessage
+from console_window import ConsoleWindow
 from password_dialog import *
 from Data_Simulator import DataSimulator
 from query_plc_thread_V2 import PLCRead
@@ -90,6 +93,28 @@ EXPECTED_ROW_NAMES = [
     "Offset Mid",
     "Offset End",
 ]
+
+class PipeLogHandler(logging.Handler):
+    def __init__(self, process):
+        super().__init__()
+        self._process = process
+
+    def emit(self, record):
+        try:
+            if self._process and self._process.poll() is None:
+                msg = self.format(record) + "\n"
+                self._process.stdin.write(msg)
+                self._process.stdin.flush()
+        except Exception:
+            pass
+
+    def close(self):
+        try:
+            if self._process and self._process.stdin:
+                self._process.stdin.close()
+        except Exception:
+            pass
+        super().close()
 
 class BackgroundDelegate(QStyledItemDelegate):
     def paint(self, painter: QPainter, option, index):
@@ -339,17 +364,10 @@ class StrikeMachine(QMainWindow):
         file_handler.setFormatter(file_formatter)
         self.logger.addHandler(file_handler)
 
-        stream_handler = logging.StreamHandler()
-        stream_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        stream_handler.setFormatter(stream_formatter)
-        self.logger.addHandler(stream_handler)
-
-        # log_handler = QPlainTextEditLogger(self)
-        # gui_formatter = logging.Formatter(
-        #             '%(asctime)s - %(levelname)s - %(message)s'
-        #         )
-        # log_handler.setFormatter(gui_formatter)
-        # self.logger.addHandler(log_handler)
+        if not getattr(sys, 'frozen', False):
+            stream_handler = logging.StreamHandler()
+            stream_handler.setFormatter(file_formatter)
+            self.logger.addHandler(stream_handler)
 
         self.logger.setLevel(logging.INFO)
         self.logger.propagate = False
@@ -358,7 +376,8 @@ class StrikeMachine(QMainWindow):
         if event.type() == QEvent.Type.MouseButtonDblClick:
             double_click_actions = {
                 self.ui.logo_btn        :self._on_logo_clicked,
-                self.ui.plc_io_btn    : self.i_o_page_btn,
+                self.ui.plc_io_btn      :self.i_o_page_btn,
+                self.ui.cmd_btn         :self.cmd_btn,
 
                 self.ui.reset_cycle_a_btn: lambda: self.reset_cycle_btn("A"),
                 self.ui.reset_cycle_b_btn: lambda: self.reset_cycle_btn("B"),
@@ -901,6 +920,7 @@ class StrikeMachine(QMainWindow):
         self.ui.temp_unit_selection_combox.currentIndexChanged.connect(lambda: QTimer.singleShot(50, self._set_cur_unit))
 
         self.ui.plc_io_btn.installEventFilter(self)
+        self.ui.cmd_btn.installEventFilter(self)
 
         self.ui.new_data_btn.clicked.connect(self.new_data_btn)
 
@@ -3178,6 +3198,61 @@ class StrikeMachine(QMainWindow):
             else:
                 self.logger.info(f"[Main]-[reset_cycle_c_btn]: Cannot set Total C Cycle")
 
+    def cmd_btn(self):
+        if hasattr(self, '_console_process') and self._console_process.poll() is None:
+            return
+
+        if hasattr(self, '_pipe_handler'):
+            try:
+                self.logger.removeHandler(self._pipe_handler)
+                self._pipe_handler.close()
+            except Exception:
+                pass
+            self._pipe_handler = None
+
+        flag_path = os.path.join(tempfile.gettempdir(), "sm_force_quit.flag")
+        if os.path.exists(flag_path):
+            os.remove(flag_path)
+
+        if getattr(sys, 'frozen', False):
+            console_exe = os.path.join(os.path.dirname(sys.executable), "cmd.exe")
+            cmd = [console_exe]
+        else:
+            console_exe = os.path.join(os.path.dirname(__file__), "console_window.py")
+            cmd = [sys.executable, "-u", console_exe]
+
+        self._console_process = subprocess.Popen(
+            cmd,
+            stdin=subprocess.PIPE,
+            text=True,
+            encoding="utf-8"
+        )
+
+        self._pipe_handler = PipeLogHandler(self._console_process)
+        fmt = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        self._pipe_handler.setFormatter(fmt)
+        self.logger.addHandler(self._pipe_handler)
+
+        if not hasattr(self, '_force_quit_timer'):
+            self._force_quit_timer = QTimer(self)
+            self._force_quit_timer.timeout.connect(self._check_force_quit_flag)
+        self._force_quit_timer.start(500)
+
+    def _check_force_quit_flag(self):
+        flag_path = os.path.join(tempfile.gettempdir(), "sm_force_quit.flag")
+        if os.path.exists(flag_path):
+            try:
+                os.remove(flag_path)
+            except Exception:
+                pass
+            self._force_quit_timer.stop()
+            self._on_force_quit()
+
+    @Slot()
+    def _on_force_quit(self):
+        self._cleanup()
+        QApplication.instance().quit()
+
     def _validate_import_df(self, df) -> tuple[bool, str]:
         """
         Validate DataFrame from imported Excel file.
@@ -3825,6 +3900,11 @@ class StrikeMachine(QMainWindow):
             self.plc_writer_thread.wait()
         
         self.stop_simulate_threads() if SIMULATE else None
+
+    @Slot()
+    def _on_force_quit(self):
+        self._cleanup()
+        QApplication.instance().quit()
 
     def stop_simulate_threads(self):
         try:

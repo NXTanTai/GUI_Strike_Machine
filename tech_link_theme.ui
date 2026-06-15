@@ -798,7 +798,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>1</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
@@ -16094,7 +16094,7 @@ QPushButton:checked {
                  <item>
                   <widget class="QStackedWidget" name="stackedWidget_3">
                    <property name="currentIndex">
-                    <number>0</number>
+                    <number>1</number>
                    </property>
                    <widget class="QWidget" name="connection_page">
                     <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -20270,29 +20270,6 @@ QLineEdit:focus {
                                 </property>
                                </widget>
                               </item>
-                              <item row="0" column="1">
-                               <widget class="QLineEdit" name="db_file_path_edit">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
-                                </property>
-                                <property name="font">
-                                 <font>
-                                  <pointsize>19</pointsize>
-                                  <weight>75</weight>
-                                  <bold>true</bold>
-                                 </font>
-                                </property>
-                                <property name="text">
-                                 <string/>
-                                </property>
-                                <property name="placeholderText">
-                                 <string notr="true">Enter Path Folder</string>
-                                </property>
-                               </widget>
-                              </item>
                               <item row="1" column="0">
                                <widget class="QPushButton" name="ip_plc_address">
                                 <property name="sizePolicy">
@@ -20335,29 +20312,6 @@ QLineEdit:focus {
                                 </property>
                                </widget>
                               </item>
-                              <item row="1" column="1">
-                               <widget class="QLineEdit" name="plc_ip_address_edit">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
-                                </property>
-                                <property name="font">
-                                 <font>
-                                  <pointsize>19</pointsize>
-                                  <weight>75</weight>
-                                  <bold>true</bold>
-                                 </font>
-                                </property>
-                                <property name="text">
-                                 <string/>
-                                </property>
-                                <property name="placeholderText">
-                                 <string notr="true">Enter IP Address: 172.16.100.***</string>
-                                </property>
-                               </widget>
-                              </item>
                               <item row="2" column="0">
                                <widget class="QPushButton" name="db_number">
                                 <property name="sizePolicy">
@@ -20397,6 +20351,87 @@ QLineEdit:focus {
                                 </property>
                                 <property name="checkable">
                                  <bool>true</bool>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="0" column="1">
+                               <widget class="QLineEdit" name="db_file_path_edit">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>19</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="placeholderText">
+                                 <string notr="true">Enter Path Folder</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="1" column="1">
+                               <widget class="QLineEdit" name="plc_ip_address_edit">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>19</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="placeholderText">
+                                 <string notr="true">Enter IP Address: 172.16.100.***</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="3" column="1">
+                               <widget class="QSpinBox" name="db_data_size_input">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>0</width>
+                                  <height>0</height>
+                                 </size>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>19</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="buttonSymbols">
+                                 <enum>QAbstractSpinBox::NoButtons</enum>
+                                </property>
+                                <property name="suffix">
+                                 <string> ~ 2056</string>
+                                </property>
+                                <property name="maximum">
+                                 <number>1024</number>
+                                </property>
+                                <property name="value">
+                                 <number>0</number>
                                 </property>
                                </widget>
                               </item>
@@ -20474,19 +20509,13 @@ QLineEdit:focus {
                                 </property>
                                </widget>
                               </item>
-                              <item row="3" column="1">
-                               <widget class="QSpinBox" name="db_data_size_input">
+                              <item row="4" column="0" colspan="2">
+                               <widget class="QPushButton" name="cmd_btn">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
                                   <verstretch>0</verstretch>
                                  </sizepolicy>
-                                </property>
-                                <property name="minimumSize">
-                                 <size>
-                                  <width>0</width>
-                                  <height>0</height>
-                                 </size>
                                 </property>
                                 <property name="font">
                                  <font>
@@ -20495,17 +20524,39 @@ QLineEdit:focus {
                                   <bold>true</bold>
                                  </font>
                                 </property>
-                                <property name="buttonSymbols">
-                                 <enum>QAbstractSpinBox::NoButtons</enum>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    color: black;
+    background-color: transparent;
+    border: none;
+    padding: 12px 20px;
+}
+
+QPushButton:hover {
+	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #F8FAFC, stop:1 #E2E8F0);
+}
+
+QPushButton:pressed{
+	border-right: 5px solid #29A1D4;
+}
+QPushButton:checked {
+	border-right: 5px solid #0AB1F9;
+	color: #0AB1F9;
+}</string>
                                 </property>
-                                <property name="suffix">
-                                 <string> ~ 2056</string>
+                                <property name="text">
+                                 <string/>
                                 </property>
-                                <property name="maximum">
-                                 <number>1024</number>
+                                <property name="icon">
+                                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <normaloff>:/Icons/square-terminal-pressed.png</normaloff>:/Icons/square-terminal-pressed.png</iconset>
                                 </property>
-                                <property name="value">
-                                 <number>0</number>
+                                <property name="iconSize">
+                                 <size>
+                                  <width>80</width>
+                                  <height>80</height>
+                                 </size>
                                 </property>
                                </widget>
                               </item>

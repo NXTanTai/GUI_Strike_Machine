@@ -44,7 +44,7 @@ class PLCWrite(QObject):
     """
     write_bool          = Signal(str, bool)        # (tag_name, bit)
     write_value         = Signal(str, object)      # (tag_name, value)
-    write_multi         = Signal(object, str)      # (list_var[get_item(tag_name, value), ...])
+    write_multi         = Signal(object, str)      # (list_var[get_item(tag_name, value), ...], "list name")
     write_full_db       = Signal(object)           # Ghi toàn bộ DB một lần
 
     write_bool_done     = Signal()
@@ -57,7 +57,7 @@ class PLCWrite(QObject):
     disconnected        = Signal()
     finished            = Signal()
 
-    _request_stop       = Signal()
+    _stop_write         = Signal()
 
     def __init__(
         self,
@@ -88,18 +88,22 @@ class PLCWrite(QObject):
 
         self._client: snap7.client.Client | None = None
         self._queue: Queue = Queue()
-        self._timer: QTimer | None = None
+        self._poll_timer: QTimer | None = None
         self._retry_timer: QTimer | None = None
         self._running = False
         self._last_error_log_time = 0
 
     def _build_layout_dict(self) -> dict:
-        """Xử lý trường hợp tag name trùng nhau"""
+        """
+        Xử lý trường hợp tag name trùng nhau
+        \n
+        Nếu tag trùng tên, ưu tiên dùng tag Actual (_Act) nếu có
+        """
         layout = {}
         for item in self._db_layout: #type: ignore
             if len(item) >= 4:
                 name, dtype, offset, bit = item[:4]
-                # Nếu tag trùng tên, ưu tiên dùng tag Actual (_Act) nếu có
+                # 
                 if name in layout and "_Act" not in name and "Number_Test_Times" not in name:
                     continue  # Giữ tag Actual
                 layout[name] = (dtype, offset, bit)
@@ -111,9 +115,9 @@ class PLCWrite(QObject):
         if self.logger:
             self.logger.info("[PLC WRITE]: PLC Write init")
 
-        self._timer = QTimer(self)
-        self._timer.setInterval(self._write_ms)
-        self._timer.timeout.connect(self._drain_queue)
+        self._poll_timer = QTimer(self)
+        self._poll_timer.setInterval(self._write_ms)
+        self._poll_timer.timeout.connect(self._drain_queue)
 
         self._retry_timer = QTimer(self)
         self._retry_timer.setInterval(self._retry_ms)
@@ -124,20 +128,20 @@ class PLCWrite(QObject):
         self.write_multi.connect(self._enqueue_multi, Qt.QueuedConnection) #type: ignore
         self.write_full_db.connect(self._enqueue_full_db, Qt.QueuedConnection) #type: ignore
 
-        self._request_stop.connect(self._do_stop, Qt.QueuedConnection) #type: ignore
+        self._stop_write.connect(self._do_stop, Qt.QueuedConnection) #type: ignore
         
         self._try_connect()
 
     @Slot()
     def stop(self):
         self._running = False
-        self._request_stop.emit()
+        self._stop_write.emit()
 
     @Slot()
     def _do_stop(self):
-        if self._timer:
-            self._timer.stop()
-            self._timer.deleteLater()
+        if self._poll_timer:
+            self._poll_timer.stop()
+            self._poll_timer.deleteLater()
         if self._retry_timer:
             self._retry_timer.stop()
             self._retry_timer.deleteLater()
@@ -198,6 +202,7 @@ class PLCWrite(QObject):
     def _enqueue_full_db(self, data: object):
         """
         Enqueue cho khối DB\n
+        Tuy nhiên 
         """
         self._queue.put(("full_db", data))
         if self.logger:
@@ -243,8 +248,10 @@ class PLCWrite(QObject):
         if self._client and self._client.get_connected():
             if self._retry_timer and self._retry_timer.isActive():
                 self._retry_timer.stop()
-            if not self._timer.isActive():   # type: ignore
-                self._timer.start()   # type: ignore
+            if not self._poll_timer.isActive():   # type: ignore
+                self._poll_timer.start()   # type: ignore
+            if self.logger:
+                self.logger.info("[PLC WRITE]: Connected to PLC, started writing")
         else:
             if not self._retry_timer.isActive():   # type: ignore
                 self._retry_timer.start()   # type: ignore
@@ -307,7 +314,7 @@ class PLCWrite(QObject):
     def _write_bool(self, name: str, value: bool):
         """
         Ghi BOOL riêng biệt
-        Ví dụ: plc_write.write_bool.emit("Motor_Start", True)
+        \nVí dụ: plc_write.write_bool.emit("Motor_Start", True)
         """
         if not self._ensure_connected():
             return
@@ -333,7 +340,7 @@ class PLCWrite(QObject):
     def _write_value(self, name: str, value: Any):
         """
         Ghi REAL, INT, DINT, STRING
-        Ví dụ: plc_write.write_value.emit("Setpoint_Temp", 85.5)
+        \nVí dụ: plc_write.write_value.emit("Setpoint_Temp", 85.5)
         """
         if not self._ensure_connected():
             return
@@ -362,15 +369,15 @@ class PLCWrite(QObject):
     def _write_multi_vars(self, items: list, group: str = ""):
         """
         Ghi nhiều item REAL, INT, DINT 1 lần, tối đa 20 item
-        Dùng get_item func để lấy key và địa chỉ
-        Ví dụ:
-        items = [
+        \nDùng get_item func để lấy key và địa chỉ
+        \nVí dụ:
+        \nitems = [
             plc_write.get_item("Motor_Start", True),
             plc_write.get_item("Setpoint_Temp", 85.5),
             plc_write.get_item("Speed_RPM", 1500),
             ...
         ]
-        plc_write.write_multi.emit(items, "A")
+        \nplc_write.write_multi.emit(items, "A")
         """
         if not self._ensure_connected():
             return
@@ -388,14 +395,15 @@ class PLCWrite(QObject):
     def _write_full_db(self, data: dict):
         """
         Ghi toàn bộ DB 
-        Không cần thiết phải đúng thứ tự
-        datas = {
+        \nKhông cần thiết phải đúng thứ tự
+        \nVí dụ:
+        \ndatas = {
             "Motor_Start":  True,
             "Motor_Speed":   1500,
             "Setpoint_Temp": 85.5,
             ...
         }
-        plc_write.write_full_db.emit(datas)
+        \nplc_write.write_full_db.emit(datas)
         """
         if not self._ensure_connected():
             return
@@ -433,8 +441,8 @@ class PLCWrite(QObject):
     def _reconnect(self):
         if not self._running:
             return
-        if self._timer and self._timer.isActive():
-            self._timer.stop()
+        if self._poll_timer and self._poll_timer.isActive():
+            self._poll_timer.stop()
         self._disconnect_plc()
         if self._retry_timer and not self._retry_timer.isActive():
             self._retry_timer.start()
