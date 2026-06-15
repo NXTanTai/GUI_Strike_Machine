@@ -6309,7 +6309,7 @@ QSpinBox
                                      <number>2</number>
                                     </property>
                                     <property name="maximum">
-                                     <double>20.000000000000000</double>
+                                     <double>999.990000000000009</double>
                                     </property>
                                     <property name="value">
                                      <double>0.000000000000000</double>
@@ -6433,7 +6433,7 @@ QSpinBox
                                      <number>2</number>
                                     </property>
                                     <property name="maximum">
-                                     <double>20.000000000000000</double>
+                                     <double>999.990000000000009</double>
                                     </property>
                                     <property name="value">
                                      <double>0.000000000000000</double>
@@ -6557,7 +6557,7 @@ QSpinBox
                                      <number>2</number>
                                     </property>
                                     <property name="maximum">
-                                     <double>20.000000000000000</double>
+                                     <double>999.990000000000009</double>
                                     </property>
                                     <property name="value">
                                      <double>0.000000000000000</double>
@@ -6728,7 +6728,7 @@ QSpinBox
                                      <number>2</number>
                                     </property>
                                     <property name="maximum">
-                                     <double>20.000000000000000</double>
+                                     <double>999.990000000000009</double>
                                     </property>
                                     <property name="value">
                                      <double>0.000000000000000</double>
@@ -6852,7 +6852,7 @@ QSpinBox
                                      <number>2</number>
                                     </property>
                                     <property name="maximum">
-                                     <double>20.000000000000000</double>
+                                     <double>999.990000000000009</double>
                                     </property>
                                     <property name="value">
                                      <double>0.000000000000000</double>
@@ -6976,7 +6976,7 @@ QSpinBox
                                      <number>2</number>
                                     </property>
                                     <property name="maximum">
-                                     <double>20.000000000000000</double>
+                                     <double>999.990000000000009</double>
                                     </property>
                                     <property name="value">
                                      <double>0.000000000000000</double>

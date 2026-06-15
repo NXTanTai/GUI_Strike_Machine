@@ -42,21 +42,22 @@ class PLCWrite(QObject):
     \n
     Nếu chỉ định ghi 1 vùng riêng biệt thì lên cấu hình db_layout riêng
     """
-    write_bool      = Signal(str, bool)        # (tag_name, bit)
-    write_value     = Signal(str, object)      # (tag_name, value)
-    write_multi     = Signal(object, str)      # (list_var[get_item(tag_name, value), ...])
-    write_full_db   = Signal(object)           # Ghi toàn bộ DB một lần
+    write_bool          = Signal(str, bool)        # (tag_name, bit)
+    write_value         = Signal(str, object)      # (tag_name, value)
+    write_multi         = Signal(object, str)      # (list_var[get_item(tag_name, value), ...])
+    write_full_db       = Signal(object)           # Ghi toàn bộ DB một lần
 
-    write_bool_done    = Signal()
+    write_bool_done     = Signal()
     write_value_done    = Signal()
     write_multi_done    = Signal(str, bool)
-    write_full_db_done    = Signal()
-    error         = Signal(str)
-    connected     = Signal(bool)
-    disconnected  = Signal()
-    finished      = Signal()
+    write_full_db_done  = Signal()
 
-    _request_stop = Signal()
+    error               = Signal(str)
+    connected           = Signal(bool)
+    disconnected        = Signal()
+    finished            = Signal()
+
+    _request_stop       = Signal()
 
     def __init__(
         self,
@@ -104,7 +105,6 @@ class PLCWrite(QObject):
                 layout[name] = (dtype, offset, bit)
         return layout
 
-    # ── Public API ──────────────────────────────────────────────────────────
     @Slot()
     def run(self):
         self._running = True
@@ -172,28 +172,33 @@ class PLCWrite(QObject):
             raise ValueError(f"Unsupported dtype {dtype} for tag {tag_name}")
 
         return item
-    # ── Enqueue ─────────────────────────────────────────────────────────────
+
     @Slot(str, bool)
     def _enqueue_bool(self, name: str, value: bool):
+        """Enqueue cho BOOL"""
         self._queue.put(("bool", name, value))
         if self.logger:
             self.logger.info(f"[PLC WRITE]: BOOL Enqueued → {name} = {value}")
 
     @Slot(str, object)
     def _enqueue_value(self, name: str, value: object):
-        """Enqueue riêng cho REAL, INT, DINT, STRING"""
+        """Enqueue cho REAL, INT, DINT, STRING"""
         self._queue.put(("value", name, value))
         if self.logger:
-            self.logger.info(f"[PLC WRITE]: Value Enqueued → {name} = {value}")
+            self.logger.info(f"[PLC WRITE]: VALUE Enqueued → {name} = {value}")
 
     @Slot(object, str)
     def _enqueue_multi(self, items: object, group: str = ""):
+        """Enqueue cho ghi đa biến"""
         self._queue.put(("multi_vars", items, group))
         if self.logger:
-            self.logger.info(f"[PLC WRITE]: Multi vars enqueued: {len(items)} | group={group}")
+            self.logger.info(f"[PLC WRITE]: MULTI VARS enqueued: {len(items)} | group={group}")
 
     @Slot(dict)
     def _enqueue_full_db(self, data: object):
+        """
+        Enqueue cho khối DB\n
+        """
         self._queue.put(("full_db", data))
         if self.logger:
             self.logger.info(f"[PLC WRITE]: Full DB write enqueued: {len(data)} tags")

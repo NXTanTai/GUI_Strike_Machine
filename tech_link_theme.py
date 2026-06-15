@@ -3086,7 +3086,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_12.setReadOnly(True)
         self.pressure_pv_a_12.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.pressure_pv_a_12.setDecimals(2)
-        self.pressure_pv_a_12.setMaximum(20.000000000000000)
+        self.pressure_pv_a_12.setMaximum(999.990000000000009)
         self.pressure_pv_a_12.setValue(0.000000000000000)
 
         self.horizontalLayout_351.addWidget(self.pressure_pv_a_12)
@@ -3144,7 +3144,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_12.setReadOnly(True)
         self.pressure_pv_b_12.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.pressure_pv_b_12.setDecimals(2)
-        self.pressure_pv_b_12.setMaximum(20.000000000000000)
+        self.pressure_pv_b_12.setMaximum(999.990000000000009)
         self.pressure_pv_b_12.setValue(0.000000000000000)
 
         self.horizontalLayout_585.addWidget(self.pressure_pv_b_12)
@@ -3202,7 +3202,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_12.setReadOnly(True)
         self.pressure_pv_c_12.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.pressure_pv_c_12.setDecimals(2)
-        self.pressure_pv_c_12.setMaximum(20.000000000000000)
+        self.pressure_pv_c_12.setMaximum(999.990000000000009)
         self.pressure_pv_c_12.setValue(0.000000000000000)
 
         self.horizontalLayout_583.addWidget(self.pressure_pv_c_12)
@@ -3285,7 +3285,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_5.setReadOnly(True)
         self.pressure_pv_a_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.pressure_pv_a_5.setDecimals(2)
-        self.pressure_pv_a_5.setMaximum(20.000000000000000)
+        self.pressure_pv_a_5.setMaximum(999.990000000000009)
         self.pressure_pv_a_5.setValue(0.000000000000000)
 
         self.horizontalLayout_349.addWidget(self.pressure_pv_a_5)
@@ -3343,7 +3343,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_5.setReadOnly(True)
         self.pressure_pv_b_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.pressure_pv_b_5.setDecimals(2)
-        self.pressure_pv_b_5.setMaximum(20.000000000000000)
+        self.pressure_pv_b_5.setMaximum(999.990000000000009)
         self.pressure_pv_b_5.setValue(0.000000000000000)
 
         self.horizontalLayout_573.addWidget(self.pressure_pv_b_5)
@@ -3401,7 +3401,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_5.setReadOnly(True)
         self.pressure_pv_c_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.pressure_pv_c_5.setDecimals(2)
-        self.pressure_pv_c_5.setMaximum(20.000000000000000)
+        self.pressure_pv_c_5.setMaximum(999.990000000000009)
         self.pressure_pv_c_5.setValue(0.000000000000000)
 
         self.horizontalLayout_575.addWidget(self.pressure_pv_c_5)
