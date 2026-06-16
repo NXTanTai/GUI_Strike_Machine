@@ -180,12 +180,17 @@ class ConsoleWindow(QMainWindow):
     def append_log(self, msg: str, level: str):
         fmt = QTextCharFormat()
         fmt.setForeground(QColor(self._colors.get(level, "#cccccc")))
+        
+        scrollbar = self.text.verticalScrollBar()
+        was_at_bottom = scrollbar.value() >= scrollbar.maximum() - 5
+
         cursor = self.text.textCursor()
         cursor.movePosition(QTextCursor.MoveOperation.End)
         cursor.insertText(msg + "\n", fmt)
-        self.text.setTextCursor(cursor)
-        self.text.ensureCursorVisible()
 
+        if was_at_bottom:
+            self.text.ensureCursorVisible()
+            
     def closeEvent(self, event):
         self.hide()
         self._stdin_running = False

@@ -20210,7 +20210,7 @@ QLineEdit:focus {
 }</string>
                              </property>
                              <property name="title">
-                              <string>Total Test Time</string>
+                              <string>PLC Data</string>
                              </property>
                              <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,1">
                               <property name="leftMargin">
@@ -21721,7 +21721,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="language_btn_group"/>
   <buttongroup name="left_side_btn_group"/>
+  <buttongroup name="language_btn_group"/>
  </buttongroups>
 </ui>

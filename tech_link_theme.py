@@ -10822,7 +10822,7 @@ class Ui_MainWindow(object):
         self.ai_name_9.setText(QCoreApplication.translate("MainWindow", u"T3-2:", None))
         self.ai_name_10.setText(QCoreApplication.translate("MainWindow", u"T3-3:", None))
         self.ai_name_11.setText(QCoreApplication.translate("MainWindow", u"P1:", None))
-        self.i_o_group_2.setTitle(QCoreApplication.translate("MainWindow", u"Total Test Time", None))
+        self.i_o_group_2.setTitle(QCoreApplication.translate("MainWindow", u"PLC Data", None))
         self.db_file_path.setText(QCoreApplication.translate("MainWindow", u" DB Path:", None))
         self.ip_plc_address.setText(QCoreApplication.translate("MainWindow", u" IP:", None))
         self.db_number.setText(QCoreApplication.translate("MainWindow", u" DB:", None))

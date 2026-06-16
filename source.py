@@ -17,14 +17,23 @@ import threading
 import subprocess
 import tempfile
 import webbrowser
-from PySide6.QtCore import (Qt, QTimer, QObject, Slot,
-                            QTime, QSettings, QDateTime,
-                            QEvent, QThread, QEasingCurve, 
-                            QTranslator, QMetaObject)
-from PySide6.QtGui import QFont, QFontDatabase, QPalette
-from PySide6.QtWidgets import (QHeaderView, QAbstractSpinBox, QStyledItemDelegate,
-                               QMainWindow, QApplication, QLineEdit,
-                               QFileDialog, QTableWidget, QTableWidgetItem)
+import ctypes
+from PySide6.QtCore import (
+    Qt, QTimer, QObject, Slot,
+    QTime, QSettings, QDateTime,
+    QEvent, QThread, QEasingCurve, 
+    QTranslator, QMetaObject
+)
+from PySide6.QtGui import (
+    QFont, 
+    QFontDatabase, 
+    QPalette
+)
+from PySide6.QtWidgets import (
+    QHeaderView, QAbstractSpinBox, QStyledItemDelegate,
+    QMainWindow, QApplication, QLineEdit,
+    QFileDialog, QTableWidget, QTableWidgetItem
+)
 from typing import List, Optional, Tuple, Any
 from pathlib import Path
 from datetime import datetime
@@ -48,12 +57,10 @@ BASE_DIR = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Pat
 settings_path = str(BASE_DIR / "settings.ini")
 
 def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
         base_path = sys._MEIPASS # type: ignore
     except Exception:
         base_path = os.path.abspath(".")
-
     return os.path.join(base_path, relative_path)
 
 def install_clear_on_focus(widget):
@@ -3200,8 +3207,31 @@ class StrikeMachine(QMainWindow):
 
     def cmd_btn(self):
         if hasattr(self, '_console_process') and self._console_process.poll() is None:
-            return
+            try:
+                WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_int, ctypes.c_int)
+                hwnds = []
 
+                def enum_callback(hwnd, _):
+                    length = ctypes.windll.user32.GetWindowTextLengthW(hwnd)
+                    if length > 0:
+                        buf = ctypes.create_unicode_buffer(length + 1)
+                        ctypes.windll.user32.GetWindowTextW(hwnd, buf, length + 1)
+                        if "Strike Machine Console" in buf.value:
+                            hwnds.append(hwnd)
+                    return True
+
+                ctypes.windll.user32.EnumWindows(WNDENUMPROC(enum_callback), 0)
+
+                if hwnds:
+                    hwnd = hwnds[0]
+                    ctypes.windll.user32.ShowWindow(hwnd, 9)  # SW_RESTORE
+                    ctypes.windll.user32.SetForegroundWindow(hwnd)
+                else:
+                    self.logger.warning("[cmd_btn] Console window not found by title")
+            except Exception as e:
+                self.logger.warning(f"[cmd_btn] Cannot focus console window: {e}")
+            return
+        
         if hasattr(self, '_pipe_handler'):
             try:
                 self.logger.removeHandler(self._pipe_handler)

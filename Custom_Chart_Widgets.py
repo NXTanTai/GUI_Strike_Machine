@@ -19,24 +19,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-# ── Màu sắc ───────────────────────────────────────────────────────────────────
-TEMP_COLORS     = ["#E53935", "#4C1083", "#FB8C00", "#F72668"]   # tối đa 4 series
-PRESSURE_COLORS = ["#8E24AA", "#1E88E5", "#00ACC1"]              # tối đa 3 series
+TEMP_COLORS     = ["#E53935", "#4C1083", "#FB8C00", "#F72668"]    # tối đa 4 series
+PRESSURE_COLORS = ["#8E24AA", "#1E88E5", "#00ACC1"]                 # tối đa 3 series
 
-# ── Font ──────────────────────────────────────────────────────────────────────
 FONT_FAMILY  = "Segoe UI"
 FONT_SIZE_LG = 14
 FONT_SIZE_MD = 14
 FONT_SIZE_SM = 13
 
-# ── Ngưỡng skip setRange() ────────────────────────────────────────────────────
 _Y_THRESH = 0.02   # 2% — chỉ update Y khi max thay đổi > 2%
 _X_THRESH = 0.5    # 0.5 s — chỉ update X khi window dịch > 0.5 s
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Circular buffer
-# ══════════════════════════════════════════════════════════════════════════════
 
 class _CircBuf:
     """
@@ -91,11 +83,6 @@ class _CircBuf:
     def __len__(self) -> int:
         return self._cap if self._filled else self._head
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Trục tuỳ chỉnh
-# ══════════════════════════════════════════════════════════════════════════════
-
 class _FixedTickDateAxis(pg.DateAxisItem):
     """DateAxisItem với tick cố định mỗi tick_spacing giây."""
 
@@ -118,17 +105,11 @@ class _FixedTickDateAxis(pg.DateAxisItem):
                 result.append("")
         return result
 
-
 class _FixedAxis(pg.AxisItem):
     """AxisItem hiển thị 2 chữ số thập phân."""
 
     def tickStrings(self, values, scale, spacing):
         return [f"{v:.2f}" for v in values]
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# CustomChartWidget
-# ══════════════════════════════════════════════════════════════════════════════
 
 class CustomChartWidget(QWidget):
     """
@@ -169,7 +150,6 @@ class CustomChartWidget(QWidget):
     ) -> None:
         super().__init__(parent)
 
-        # ── Lưu config ────────────────────────────────────────────────────────
         self.title           = title
         self.num_temp        = min(max(num_temp, 0), len(TEMP_COLORS))
         self.num_pressure    = min(max(num_pressure, 0), len(PRESSURE_COLORS))
@@ -210,18 +190,13 @@ class CustomChartWidget(QWidget):
         self._vis_temp:     list[bool] = [True] * self.num_temp
         self._vis_pressure: list[bool] = [True] * self.num_pressure
 
-        # ── Build UI & chart ──────────────────────────────────────────────────
         self._setup_ui()
         self._setup_chart()
 
-        # ── Render timer (main thread only) ───────────────────────────────────
         self._render_timer = QTimer(self)
         self._render_timer.timeout.connect(self._render_frame)
         self._render_timer.start(render_interval)
 
-    # ══════════════════════════════════════════════════════════════════════════
-    # UI setup
-    # ══════════════════════════════════════════════════════════════════════════
     def mouseDoubleClickEvent(self, event) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
             self.clicked.emit()
@@ -251,8 +226,6 @@ class CustomChartWidget(QWidget):
         self._create_end_labels()
         self._root.addWidget(self.plot)
 
-    # ── Title ─────────────────────────────────────────────────────────────────
-
     def _create_title(self) -> None:
         font_btn = QFont(self._font_family, self._font_size_lg, QFont.Weight.Bold)
 
@@ -270,8 +243,6 @@ class CustomChartWidget(QWidget):
         row.addWidget(self.btn_setting)
         row.addStretch()
         self._root.addLayout(row)
-
-    # ── Legend ────────────────────────────────────────────────────────────────
 
     def _create_legend(self) -> None:
         bar = QHBoxLayout()
@@ -364,8 +335,6 @@ class CustomChartWidget(QWidget):
         w.mousePressEvent = _on_click
         return w
 
-    # ── Legend toggle ─────────────────────────────────────────────────────────
-
     def _on_legend_click(self, kind: str, index: int) -> None:
         """Toggle ẩn/hiện series được click — độc lập với các series khác."""
         if kind == "t":
@@ -405,8 +374,6 @@ class CustomChartWidget(QWidget):
         fx.setOpacity(0.25 if dimmed else 1.0)
         widget.setGraphicsEffect(fx)
 
-    # ── PlotWidget ────────────────────────────────────────────────────────────
-
     def _create_plot_widget(self) -> None:
         self.plot = pg.PlotWidget()
         self.plot.setBackground(None)
@@ -427,8 +394,6 @@ class CustomChartWidget(QWidget):
         self.plot.scene().setItemIndexMethod(
             pg.QtWidgets.QGraphicsScene.ItemIndexMethod.NoIndex
         )
-
-    # ── Axes ──────────────────────────────────────────────────────────────────
 
     def _create_axes(self) -> None:
         font_tick  = QFont(self._font_family, FONT_SIZE_SM)
@@ -453,8 +418,6 @@ class CustomChartWidget(QWidget):
         # self.plot.getAxis("bottom").setLabel("Time", **axis_style)
         self.plot.getAxis("left").setWidth(65)
         # self.plot.getAxis("bottom").setHeight(60)
-
-    # ── Pressure ViewBox (trục phải) ──────────────────────────────────────────
 
     def _create_pressure_viewbox(self) -> None:
         font_tick  = QFont(self._font_family, FONT_SIZE_SM)
@@ -495,8 +458,6 @@ class CustomChartWidget(QWidget):
     def _sync_views(self) -> None:
         self._vb_pressure.setGeometry(self.plot.getViewBox().sceneBoundingRect())
 
-    # ── Curves ────────────────────────────────────────────────────────────────
-
     def _create_temp_curves(self) -> None:
         self._temp_curves: list[pg.PlotDataItem] = []
         for i in range(self.num_temp):
@@ -518,8 +479,6 @@ class CustomChartWidget(QWidget):
             )
             self._vb_pressure.addItem(curve)
             self._pressure_curves.append(curve)
-
-    # ── End-of-line labels ────────────────────────────────────────────────────
 
     def _create_end_labels(self) -> None:
         self._temp_labels:     list[pg.TextItem] = []
@@ -543,17 +502,12 @@ class CustomChartWidget(QWidget):
             self._vb_pressure.addItem(item)
             self._pressure_labels.append(item)
 
-    # ══════════════════════════════════════════════════════════════════════════
-    # Render frame — chạy trên main thread mỗi render_interval ms
-    # ══════════════════════════════════════════════════════════════════════════
-
     def _render_frame(self) -> None:
         """
-        Điểm DUY NHẤT cập nhật UI.
+        Điểm render chart UI.
         Lock mutex để đọc snapshot buffer, sau đó render ngoài lock.
         """
-        # ── Snapshot buffer (lock ngắn nhất có thể) ───────────────────────────
-        if not self._mutex.tryLock(5):
+        if not self._mutex.tryLock(33):
             return  # render frame này bỏ qua, frame sau render bù
 
         try:
@@ -563,19 +517,16 @@ class CustomChartWidget(QWidget):
             py_snap = [buf.get() for buf in self._py]
         finally:
             self._mutex.unlock()
-        # ── Cập nhật temp curves ──────────────────────────────────────────────
         for i in range(self.num_temp):
             if len(tx_snap[i]) == 0:
                 continue
             self._temp_curves[i].setData(tx_snap[i], ty_snap[i])
 
-        # ── Cập nhật pressure curves ──────────────────────────────────────────
         for i in range(self.num_pressure):
             if len(px_snap[i]) == 0:
                 continue
             self._pressure_curves[i].setData(px_snap[i], py_snap[i])
 
-        # ── X-range ───────────────────────────────────────────────────────────
         now       = time.time()
         x_min     = now - self.max_seconds
         x_max     = now + self.max_seconds * 0.2
@@ -586,7 +537,6 @@ class CustomChartWidget(QWidget):
                 self._vb_pressure.setRange(xRange=(x_min, x_max), padding=0)
             self._last_x_min = x_min
 
-        # ── Y-range temp ──────────────────────────────────────────────────────
         t_max = None
         for arr in ty_snap:
             if len(arr):
@@ -601,7 +551,6 @@ class CustomChartWidget(QWidget):
                 self.plot.setRange(yRange=(new_ymin, new_ymax), padding=0)
                 self._last_temp_ymax = new_ymax
 
-        # ── Y-range pressure ──────────────────────────────────────────────────
         if self.num_pressure > 0:
             p_max = None
             for arr in py_snap:
@@ -616,7 +565,6 @@ class CustomChartWidget(QWidget):
                     self._vb_pressure.setYRange(-0.1, new_ymax, padding=0)
                     self._last_pres_ymax = new_ymax
 
-        # ── End-of-line labels ────────────────────────────────────────────────
         for i in range(self.num_temp):
             if not self._vis_temp[i] or len(tx_snap[i]) == 0:
                 self._temp_labels[i].hide()
@@ -643,10 +591,6 @@ class CustomChartWidget(QWidget):
                 self._last_pressure_label_pos[i] = (lx, ly)
             self._pressure_labels[i].show()
 
-    # ══════════════════════════════════════════════════════════════════════════
-    # Public API
-    # ══════════════════════════════════════════════════════════════════════════
-
     def append_data(
         self,
         temp_values: List[float],
@@ -656,7 +600,6 @@ class CustomChartWidget(QWidget):
         Ghi data vào buffer.
 
         Thread-safe — có thể gọi từ worker thread.
-        KHÔNG đụng bất kỳ UI object nào.
 
         Parameters
         ----------
@@ -732,7 +675,6 @@ class CustomChartWidget(QWidget):
                 self._px[i].reset()
                 self._py[i].reset()
 
-        # Reset UI trực tiếp (clear() luôn gọi từ main thread)
         for i in range(self.num_temp):
             self._temp_curves[i].setData([], [])
             self._temp_labels[i].hide()
@@ -746,29 +688,6 @@ class CustomChartWidget(QWidget):
         self._last_x_min     = None
         self._last_temp_label_pos     = [None] * self.num_temp
         self._last_pressure_label_pos = [None] * self.num_pressure
-
-    # ══════════════════════════════════════════════════════════════════════════
-    # Simulation (chỉ dùng để test)
-    # ══════════════════════════════════════════════════════════════════════════
-
-    def start_simulation(self, interval_ms: int = 500) -> None:
-        """Bật giả lập dữ liệu ngẫu nhiên."""
-        if self._sim_timer is None:
-            self._sim_timer = QTimer(self)
-            self._sim_timer.timeout.connect(self._simulate)
-        self._sim_timer.start(interval_ms)
-
-    def stop_simulation(self) -> None:
-        """Tắt giả lập."""
-        if self._sim_timer:
-            self._sim_timer.stop()
-
-    def _simulate(self) -> None:
-        import random
-        self.append_data(
-            temp_values     = [random.uniform(*self.temp_range)     for _ in range(self.num_temp)],
-            pressure_values = [random.uniform(*self.pressure_range) for _ in range(self.num_pressure)],
-        )
 
     def showEvent(self, event) -> None:
         super().showEvent(event)
