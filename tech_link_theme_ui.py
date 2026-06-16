@@ -172,9 +172,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
         self.horizontalLayout_10.setContentsMargins(-1, 3, -1, 3)
         self.eng_language = QPushButton(self.header_frame)
-        self.language_btn_group = QButtonGroup(MainWindow)
-        self.language_btn_group.setObjectName(u"language_btn_group")
-        self.language_btn_group.addButton(self.eng_language)
+        self.language_group_btn = QButtonGroup(MainWindow)
+        self.language_group_btn.setObjectName(u"language_group_btn")
+        self.language_group_btn.addButton(self.eng_language)
         self.eng_language.setObjectName(u"eng_language")
         sizePolicy.setHeightForWidth(self.eng_language.sizePolicy().hasHeightForWidth())
         self.eng_language.setSizePolicy(sizePolicy)
@@ -208,8 +208,43 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_10.addWidget(self.eng_language)
 
+        self.vn_language = QPushButton(self.header_frame)
+        self.language_group_btn.addButton(self.vn_language)
+        self.vn_language.setObjectName(u"vn_language")
+        sizePolicy.setHeightForWidth(self.vn_language.sizePolicy().hasHeightForWidth())
+        self.vn_language.setSizePolicy(sizePolicy)
+        self.vn_language.setMinimumSize(QSize(80, 0))
+        self.vn_language.setMaximumSize(QSize(80, 16777215))
+        self.vn_language.setStyleSheet(u"\n"
+"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"	border-radius: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,\n"
+"                    stop:0 #F8FAFC, stop:1 #E2E8F0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"	border: 2px solid #29A1D4;\n"
+"}\n"
+"QPushButton:checked{\n"
+"		background: rgb(173, 173, 173);\n"
+"}")
+        icon2 = QIcon()
+        icon2.addFile(u":/Icons/Viet_Nam_flag.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.vn_language.setIcon(icon2)
+        self.vn_language.setIconSize(QSize(65, 65))
+        self.vn_language.setCheckable(True)
+        self.vn_language.setChecked(False)
+
+        self.horizontalLayout_10.addWidget(self.vn_language)
+
         self.cn_language = QPushButton(self.header_frame)
-        self.language_btn_group.addButton(self.cn_language)
+        self.language_group_btn.addButton(self.cn_language)
         self.cn_language.setObjectName(u"cn_language")
         sizePolicy.setHeightForWidth(self.cn_language.sizePolicy().hasHeightForWidth())
         self.cn_language.setSizePolicy(sizePolicy)
@@ -234,9 +269,9 @@ class Ui_MainWindow(object):
 "QPushButton:checked{\n"
 "		background: rgb(173, 173, 173);\n"
 "}")
-        icon2 = QIcon()
-        icon2.addFile(u":/Icons/cn_flag.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.cn_language.setIcon(icon2)
+        icon3 = QIcon()
+        icon3.addFile(u":/Icons/cn_flag.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.cn_language.setIcon(icon3)
         self.cn_language.setIconSize(QSize(65, 65))
         self.cn_language.setCheckable(True)
 
@@ -341,10 +376,10 @@ class Ui_MainWindow(object):
         font4.setBold(True)
         self.home_page_btn.setFont(font4)
         self.home_page_btn.setStyleSheet(u"")
-        icon3 = QIcon()
-        icon3.addFile(u":/Icons/home_off.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon3.addFile(u":/Icons/home.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.home_page_btn.setIcon(icon3)
+        icon4 = QIcon()
+        icon4.addFile(u":/Icons/home_off.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon4.addFile(u":/Icons/home.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.home_page_btn.setIcon(icon4)
         self.home_page_btn.setIconSize(QSize(30, 30))
         self.home_page_btn.setCheckable(True)
 
@@ -357,10 +392,10 @@ class Ui_MainWindow(object):
         self.chart_page_btn.setSizePolicy(sizePolicy)
         self.chart_page_btn.setFont(font4)
         self.chart_page_btn.setStyleSheet(u"")
-        icon4 = QIcon()
-        icon4.addFile(u":/Icons/chart-line-up-down.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon4.addFile(u":/Icons/chart-line-up-down_blue.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.chart_page_btn.setIcon(icon4)
+        icon5 = QIcon()
+        icon5.addFile(u":/Icons/chart-line-up-down.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon5.addFile(u":/Icons/chart-line-up-down_blue.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.chart_page_btn.setIcon(icon5)
         self.chart_page_btn.setIconSize(QSize(30, 30))
         self.chart_page_btn.setCheckable(True)
 
@@ -372,10 +407,10 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.device_page_btn.sizePolicy().hasHeightForWidth())
         self.device_page_btn.setSizePolicy(sizePolicy)
         self.device_page_btn.setFont(font4)
-        icon5 = QIcon()
-        icon5.addFile(u":/Icons/settings.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon5.addFile(u":/Icons/settings (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.device_page_btn.setIcon(icon5)
+        icon6 = QIcon()
+        icon6.addFile(u":/Icons/settings.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon6.addFile(u":/Icons/settings (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.device_page_btn.setIcon(icon6)
         self.device_page_btn.setIconSize(QSize(35, 35))
         self.device_page_btn.setCheckable(True)
 
@@ -387,10 +422,10 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.history_page_btn.sizePolicy().hasHeightForWidth())
         self.history_page_btn.setSizePolicy(sizePolicy)
         self.history_page_btn.setFont(font4)
-        icon6 = QIcon()
-        icon6.addFile(u":/Icons/stats.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon6.addFile(u":/Icons/stats (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.history_page_btn.setIcon(icon6)
+        icon7 = QIcon()
+        icon7.addFile(u":/Icons/stats.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon7.addFile(u":/Icons/stats (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.history_page_btn.setIcon(icon7)
         self.history_page_btn.setIconSize(QSize(30, 30))
         self.history_page_btn.setCheckable(True)
 
@@ -617,9 +652,9 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: #F90A0A; \n"
 "padding-right: 3px;")
-        icon7 = QIcon()
-        icon7.addFile(u":/Icons/record-button (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.stop_light.setIcon(icon7)
+        icon8 = QIcon()
+        icon8.addFile(u":/Icons/record-button (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.stop_light.setIcon(icon8)
         self.stop_light.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_441.addWidget(self.stop_light)
@@ -639,9 +674,9 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: #10B981; \n"
 "padding-right: 3px;")
-        icon8 = QIcon()
-        icon8.addFile(u":/Icons/record-button.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.start_light.setIcon(icon8)
+        icon9 = QIcon()
+        icon9.addFile(u":/Icons/record-button.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.start_light.setIcon(icon9)
         self.start_light.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_439.addWidget(self.start_light)
@@ -693,9 +728,9 @@ class Ui_MainWindow(object):
         font7.setPointSize(22)
         font7.setBold(True)
         self.clear_data_btn.setFont(font7)
-        icon9 = QIcon()
-        icon9.addFile(u":/Icons/data-cleaning.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_data_btn.setIcon(icon9)
+        icon10 = QIcon()
+        icon10.addFile(u":/Icons/data-cleaning.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_data_btn.setIcon(icon10)
         self.clear_data_btn.setIconSize(QSize(35, 35))
 
         self.horizontalLayout_9.addWidget(self.clear_data_btn)
@@ -705,9 +740,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.new_data_btn.sizePolicy().hasHeightForWidth())
         self.new_data_btn.setSizePolicy(sizePolicy)
         self.new_data_btn.setFont(font7)
-        icon10 = QIcon()
-        icon10.addFile(u":/Icons/folder-upload.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.new_data_btn.setIcon(icon10)
+        icon11 = QIcon()
+        icon11.addFile(u":/Icons/folder-upload.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.new_data_btn.setIcon(icon11)
         self.new_data_btn.setIconSize(QSize(35, 35))
 
         self.horizontalLayout_9.addWidget(self.new_data_btn)
@@ -855,9 +890,9 @@ class Ui_MainWindow(object):
         self.clear_group_a.setObjectName(u"clear_group_a")
         sizePolicy.setHeightForWidth(self.clear_group_a.sizePolicy().hasHeightForWidth())
         self.clear_group_a.setSizePolicy(sizePolicy)
-        icon11 = QIcon()
-        icon11.addFile(u":/Icons/eraser_hover.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_group_a.setIcon(icon11)
+        icon12 = QIcon()
+        icon12.addFile(u":/Icons/eraser_hover.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_group_a.setIcon(icon12)
         self.clear_group_a.setIconSize(QSize(42, 42))
 
         self.header_group_layout_1.addWidget(self.clear_group_a)
@@ -939,7 +974,7 @@ class Ui_MainWindow(object):
         self.clear_group_b.setObjectName(u"clear_group_b")
         sizePolicy.setHeightForWidth(self.clear_group_b.sizePolicy().hasHeightForWidth())
         self.clear_group_b.setSizePolicy(sizePolicy)
-        self.clear_group_b.setIcon(icon11)
+        self.clear_group_b.setIcon(icon12)
         self.clear_group_b.setIconSize(QSize(42, 42))
 
         self.header_group_layout_2.addWidget(self.clear_group_b)
@@ -1021,7 +1056,7 @@ class Ui_MainWindow(object):
         self.clear_group_c.setObjectName(u"clear_group_c")
         sizePolicy.setHeightForWidth(self.clear_group_c.sizePolicy().hasHeightForWidth())
         self.clear_group_c.setSizePolicy(sizePolicy)
-        self.clear_group_c.setIcon(icon11)
+        self.clear_group_c.setIcon(icon12)
         self.clear_group_c.setIconSize(QSize(42, 42))
 
         self.header_group_layout_3.addWidget(self.clear_group_c)
@@ -1158,10 +1193,10 @@ class Ui_MainWindow(object):
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "}")
-        icon12 = QIcon()
-        icon12.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon12.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.set_cycle_a_btn.setIcon(icon12)
+        icon13 = QIcon()
+        icon13.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon13.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.set_cycle_a_btn.setIcon(icon13)
         self.set_cycle_a_btn.setIconSize(QSize(30, 30))
         self.set_cycle_a_btn.setCheckable(True)
 
@@ -1265,7 +1300,7 @@ class Ui_MainWindow(object):
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "}")
-        self.set_cycle_b_btn.setIcon(icon12)
+        self.set_cycle_b_btn.setIcon(icon13)
         self.set_cycle_b_btn.setIconSize(QSize(30, 30))
         self.set_cycle_b_btn.setCheckable(True)
 
@@ -1369,11 +1404,11 @@ class Ui_MainWindow(object):
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
 "}")
-        icon13 = QIcon()
-        icon13.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon13.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        icon13.addFile(u":/newPrefix/rotate-reverse-white.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
-        self.set_cycle_c_btn.setIcon(icon13)
+        icon14 = QIcon()
+        icon14.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon14.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        icon14.addFile(u":/newPrefix/rotate-reverse-white.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
+        self.set_cycle_c_btn.setIcon(icon14)
         self.set_cycle_c_btn.setIconSize(QSize(30, 30))
         self.set_cycle_c_btn.setCheckable(True)
 
@@ -4616,9 +4651,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        icon14 = QIcon()
-        icon14.addFile(u":/Icons/gas-pump-alt.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.refuel_btn_a.setIcon(icon14)
+        icon15 = QIcon()
+        icon15.addFile(u":/Icons/gas-pump-alt.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.refuel_btn_a.setIcon(icon15)
         self.refuel_btn_a.setIconSize(QSize(35, 35))
         self.refuel_btn_a.setCheckable(True)
 
@@ -4659,7 +4694,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        self.refuel_btn_b.setIcon(icon14)
+        self.refuel_btn_b.setIcon(icon15)
         self.refuel_btn_b.setIconSize(QSize(35, 35))
         self.refuel_btn_b.setCheckable(True)
 
@@ -4700,7 +4735,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        self.refuel_btn_c.setIcon(icon14)
+        self.refuel_btn_c.setIcon(icon15)
         self.refuel_btn_c.setIconSize(QSize(35, 35))
         self.refuel_btn_c.setCheckable(True)
 
@@ -4741,9 +4776,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        icon15 = QIcon()
-        icon15.addFile(u":/Icons/pump.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.vacuum_btn_a.setIcon(icon15)
+        icon16 = QIcon()
+        icon16.addFile(u":/Icons/pump.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.vacuum_btn_a.setIcon(icon16)
         self.vacuum_btn_a.setIconSize(QSize(35, 35))
         self.vacuum_btn_a.setCheckable(True)
 
@@ -4784,7 +4819,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        self.vacuum_btn_b.setIcon(icon15)
+        self.vacuum_btn_b.setIcon(icon16)
         self.vacuum_btn_b.setIconSize(QSize(35, 35))
         self.vacuum_btn_b.setCheckable(True)
 
@@ -4825,7 +4860,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        self.vacuum_btn_c.setIcon(icon15)
+        self.vacuum_btn_c.setIcon(icon16)
         self.vacuum_btn_c.setIconSize(QSize(35, 35))
         self.vacuum_btn_c.setCheckable(True)
 
@@ -4866,9 +4901,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        icon16 = QIcon()
-        icon16.addFile(u":/Icons/heat.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.heat_btn_a.setIcon(icon16)
+        icon17 = QIcon()
+        icon17.addFile(u":/Icons/heat.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.heat_btn_a.setIcon(icon17)
         self.heat_btn_a.setIconSize(QSize(35, 35))
         self.heat_btn_a.setCheckable(True)
 
@@ -4909,7 +4944,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        self.heat_btn_b.setIcon(icon16)
+        self.heat_btn_b.setIcon(icon17)
         self.heat_btn_b.setIconSize(QSize(35, 35))
         self.heat_btn_b.setCheckable(True)
 
@@ -4950,7 +4985,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        self.heat_btn_c.setIcon(icon16)
+        self.heat_btn_c.setIcon(icon17)
         self.heat_btn_c.setIconSize(QSize(35, 35))
         self.heat_btn_c.setCheckable(True)
 
@@ -4989,9 +5024,9 @@ class Ui_MainWindow(object):
 "	color: white;\n"
 "    background-color: #085A91;\n"
 "}")
-        icon17 = QIcon()
-        icon17.addFile(u":/Icons/play.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.start_btn.setIcon(icon17)
+        icon18 = QIcon()
+        icon18.addFile(u":/Icons/play.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.start_btn.setIcon(icon18)
         self.start_btn.setIconSize(QSize(45, 45))
         self.start_btn.setCheckable(True)
 
@@ -5024,9 +5059,9 @@ class Ui_MainWindow(object):
 "	color: white;\n"
 "    background-color: #085A91;\n"
 "}")
-        icon18 = QIcon()
-        icon18.addFile(u":/Icons/stop.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.stop_btn.setIcon(icon18)
+        icon19 = QIcon()
+        icon19.addFile(u":/Icons/stop.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.stop_btn.setIcon(icon19)
         self.stop_btn.setIconSize(QSize(35, 35))
         self.stop_btn.setCheckable(True)
 
@@ -7660,7 +7695,7 @@ class Ui_MainWindow(object):
         self.heat_btn_t0.setMaximumSize(QSize(16777215, 150))
         self.heat_btn_t0.setFont(font13)
         self.heat_btn_t0.setStyleSheet(u"")
-        self.heat_btn_t0.setIcon(icon16)
+        self.heat_btn_t0.setIcon(icon17)
         self.heat_btn_t0.setIconSize(QSize(35, 35))
         self.heat_btn_t0.setCheckable(True)
 
@@ -7866,9 +7901,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon19 = QIcon()
-        icon19.addFile(u":/Icons/to-do-list.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.write_table_label.setIcon(icon19)
+        icon20 = QIcon()
+        icon20.addFile(u":/Icons/to-do-list.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.write_table_label.setIcon(icon20)
         self.write_table_label.setIconSize(QSize(55, 55))
         self.write_table_label.setCheckable(True)
 
@@ -7963,9 +7998,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/Icons/broom.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.reset_cycle_c_btn.setIcon(icon20)
+        icon21 = QIcon()
+        icon21.addFile(u":/Icons/broom.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.reset_cycle_c_btn.setIcon(icon21)
         self.reset_cycle_c_btn.setIconSize(QSize(50, 50))
 
         self.horizontalLayout_48.addWidget(self.reset_cycle_c_btn)
@@ -8027,7 +8062,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        self.reset_cycle_b_btn.setIcon(icon20)
+        self.reset_cycle_b_btn.setIcon(icon21)
         self.reset_cycle_b_btn.setIconSize(QSize(50, 50))
 
         self.horizontalLayout_46.addWidget(self.reset_cycle_b_btn)
@@ -8071,7 +8106,7 @@ class Ui_MainWindow(object):
 "QPushButton:hover {\n"
 "	none;\n"
 "}")
-        self.pushButton_4.setIcon(icon8)
+        self.pushButton_4.setIcon(icon9)
         self.pushButton_4.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_328.addWidget(self.pushButton_4)
@@ -8091,7 +8126,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: #F90A0A; \n"
 "padding-right: 3px;")
-        self.pushButton_21.setIcon(icon7)
+        self.pushButton_21.setIcon(icon8)
         self.pushButton_21.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_339.addWidget(self.pushButton_21)
@@ -8111,9 +8146,9 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: orange; \n"
 "padding-right: 3px;")
-        icon21 = QIcon()
-        icon21.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_24.setIcon(icon21)
+        icon22 = QIcon()
+        icon22.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_24.setIcon(icon22)
         self.pushButton_24.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_7.addWidget(self.pushButton_24)
@@ -8166,7 +8201,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: #10B981; \n"
 "padding-right: 3px;")
-        self.pushButton_6.setIcon(icon8)
+        self.pushButton_6.setIcon(icon9)
         self.pushButton_6.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_473.addWidget(self.pushButton_6)
@@ -8192,7 +8227,7 @@ class Ui_MainWindow(object):
 "	border: 2px solid #E5E5E5; \n"
 "	border-radius: 10px;\n"
 "}")
-        self.pushButton_23.setIcon(icon7)
+        self.pushButton_23.setIcon(icon8)
         self.pushButton_23.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_474.addWidget(self.pushButton_23)
@@ -8212,7 +8247,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: orange; \n"
 "padding-right: 3px;")
-        self.pushButton_22.setIcon(icon21)
+        self.pushButton_22.setIcon(icon22)
         self.pushButton_22.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_8.addWidget(self.pushButton_22)
@@ -8291,7 +8326,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        self.reset_cycle_a_btn.setIcon(icon20)
+        self.reset_cycle_a_btn.setIcon(icon21)
         self.reset_cycle_a_btn.setIconSize(QSize(50, 50))
 
         self.horizontalLayout_44.addWidget(self.reset_cycle_a_btn)
@@ -8439,7 +8474,7 @@ class Ui_MainWindow(object):
         font25.setPointSize(15)
         font25.setBold(True)
         self.pushButton_59.setFont(font25)
-        self.pushButton_59.setIcon(icon7)
+        self.pushButton_59.setIcon(icon8)
         self.pushButton_59.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_487.addWidget(self.pushButton_59)
@@ -8455,7 +8490,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_58.sizePolicy().hasHeightForWidth())
         self.pushButton_58.setSizePolicy(sizePolicy)
         self.pushButton_58.setFont(font25)
-        self.pushButton_58.setIcon(icon8)
+        self.pushButton_58.setIcon(icon9)
         self.pushButton_58.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_486.addWidget(self.pushButton_58)
@@ -8481,7 +8516,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_63.sizePolicy().hasHeightForWidth())
         self.pushButton_63.setSizePolicy(sizePolicy)
         self.pushButton_63.setFont(font25)
-        self.pushButton_63.setIcon(icon7)
+        self.pushButton_63.setIcon(icon8)
         self.pushButton_63.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_491.addWidget(self.pushButton_63)
@@ -8497,7 +8532,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_62.sizePolicy().hasHeightForWidth())
         self.pushButton_62.setSizePolicy(sizePolicy)
         self.pushButton_62.setFont(font25)
-        self.pushButton_62.setIcon(icon8)
+        self.pushButton_62.setIcon(icon9)
         self.pushButton_62.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_490.addWidget(self.pushButton_62)
@@ -8523,7 +8558,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_65.sizePolicy().hasHeightForWidth())
         self.pushButton_65.setSizePolicy(sizePolicy)
         self.pushButton_65.setFont(font25)
-        self.pushButton_65.setIcon(icon7)
+        self.pushButton_65.setIcon(icon8)
         self.pushButton_65.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_493.addWidget(self.pushButton_65)
@@ -8539,7 +8574,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_64.sizePolicy().hasHeightForWidth())
         self.pushButton_64.setSizePolicy(sizePolicy)
         self.pushButton_64.setFont(font25)
-        self.pushButton_64.setIcon(icon8)
+        self.pushButton_64.setIcon(icon9)
         self.pushButton_64.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_492.addWidget(self.pushButton_64)
@@ -8565,7 +8600,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_67.sizePolicy().hasHeightForWidth())
         self.pushButton_67.setSizePolicy(sizePolicy)
         self.pushButton_67.setFont(font25)
-        self.pushButton_67.setIcon(icon7)
+        self.pushButton_67.setIcon(icon8)
         self.pushButton_67.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_495.addWidget(self.pushButton_67)
@@ -8581,7 +8616,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_66.sizePolicy().hasHeightForWidth())
         self.pushButton_66.setSizePolicy(sizePolicy)
         self.pushButton_66.setFont(font25)
-        self.pushButton_66.setIcon(icon8)
+        self.pushButton_66.setIcon(icon9)
         self.pushButton_66.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_494.addWidget(self.pushButton_66)
@@ -8607,7 +8642,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_57.sizePolicy().hasHeightForWidth())
         self.pushButton_57.setSizePolicy(sizePolicy)
         self.pushButton_57.setFont(font25)
-        self.pushButton_57.setIcon(icon7)
+        self.pushButton_57.setIcon(icon8)
         self.pushButton_57.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_485.addWidget(self.pushButton_57)
@@ -8623,7 +8658,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_56.sizePolicy().hasHeightForWidth())
         self.pushButton_56.setSizePolicy(sizePolicy)
         self.pushButton_56.setFont(font25)
-        self.pushButton_56.setIcon(icon8)
+        self.pushButton_56.setIcon(icon9)
         self.pushButton_56.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_484.addWidget(self.pushButton_56)
@@ -8658,7 +8693,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_43.sizePolicy().hasHeightForWidth())
         self.pushButton_43.setSizePolicy(sizePolicy)
         self.pushButton_43.setFont(font25)
-        self.pushButton_43.setIcon(icon7)
+        self.pushButton_43.setIcon(icon8)
         self.pushButton_43.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_471.addWidget(self.pushButton_43)
@@ -8674,7 +8709,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_42.sizePolicy().hasHeightForWidth())
         self.pushButton_42.setSizePolicy(sizePolicy)
         self.pushButton_42.setFont(font25)
-        self.pushButton_42.setIcon(icon8)
+        self.pushButton_42.setIcon(icon9)
         self.pushButton_42.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_470.addWidget(self.pushButton_42)
@@ -8700,7 +8735,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_61.sizePolicy().hasHeightForWidth())
         self.pushButton_61.setSizePolicy(sizePolicy)
         self.pushButton_61.setFont(font25)
-        self.pushButton_61.setIcon(icon7)
+        self.pushButton_61.setIcon(icon8)
         self.pushButton_61.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_489.addWidget(self.pushButton_61)
@@ -8716,7 +8751,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_60.sizePolicy().hasHeightForWidth())
         self.pushButton_60.setSizePolicy(sizePolicy)
         self.pushButton_60.setFont(font25)
-        self.pushButton_60.setIcon(icon8)
+        self.pushButton_60.setIcon(icon9)
         self.pushButton_60.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_488.addWidget(self.pushButton_60)
@@ -8754,7 +8789,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_69.sizePolicy().hasHeightForWidth())
         self.pushButton_69.setSizePolicy(sizePolicy)
         self.pushButton_69.setFont(font25)
-        self.pushButton_69.setIcon(icon7)
+        self.pushButton_69.setIcon(icon8)
         self.pushButton_69.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_497.addWidget(self.pushButton_69)
@@ -8770,7 +8805,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_68.sizePolicy().hasHeightForWidth())
         self.pushButton_68.setSizePolicy(sizePolicy)
         self.pushButton_68.setFont(font25)
-        self.pushButton_68.setIcon(icon8)
+        self.pushButton_68.setIcon(icon9)
         self.pushButton_68.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_496.addWidget(self.pushButton_68)
@@ -8832,7 +8867,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_74.sizePolicy().hasHeightForWidth())
         self.pushButton_74.setSizePolicy(sizePolicy)
         self.pushButton_74.setFont(font25)
-        self.pushButton_74.setIcon(icon7)
+        self.pushButton_74.setIcon(icon8)
         self.pushButton_74.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_590.addWidget(self.pushButton_74)
@@ -8848,7 +8883,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_75.sizePolicy().hasHeightForWidth())
         self.pushButton_75.setSizePolicy(sizePolicy)
         self.pushButton_75.setFont(font25)
-        self.pushButton_75.setIcon(icon8)
+        self.pushButton_75.setIcon(icon9)
         self.pushButton_75.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_591.addWidget(self.pushButton_75)
@@ -8892,7 +8927,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_70.sizePolicy().hasHeightForWidth())
         self.pushButton_70.setSizePolicy(sizePolicy)
         self.pushButton_70.setFont(font25)
-        self.pushButton_70.setIcon(icon7)
+        self.pushButton_70.setIcon(icon8)
         self.pushButton_70.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_586.addWidget(self.pushButton_70)
@@ -8908,7 +8943,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_71.sizePolicy().hasHeightForWidth())
         self.pushButton_71.setSizePolicy(sizePolicy)
         self.pushButton_71.setFont(font25)
-        self.pushButton_71.setIcon(icon8)
+        self.pushButton_71.setIcon(icon9)
         self.pushButton_71.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_587.addWidget(self.pushButton_71)
@@ -8934,7 +8969,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_72.sizePolicy().hasHeightForWidth())
         self.pushButton_72.setSizePolicy(sizePolicy)
         self.pushButton_72.setFont(font25)
-        self.pushButton_72.setIcon(icon7)
+        self.pushButton_72.setIcon(icon8)
         self.pushButton_72.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_588.addWidget(self.pushButton_72)
@@ -8950,7 +8985,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_73.sizePolicy().hasHeightForWidth())
         self.pushButton_73.setSizePolicy(sizePolicy)
         self.pushButton_73.setFont(font25)
-        self.pushButton_73.setIcon(icon8)
+        self.pushButton_73.setIcon(icon9)
         self.pushButton_73.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_589.addWidget(self.pushButton_73)
@@ -8982,7 +9017,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_76.sizePolicy().hasHeightForWidth())
         self.pushButton_76.setSizePolicy(sizePolicy)
         self.pushButton_76.setFont(font25)
-        self.pushButton_76.setIcon(icon7)
+        self.pushButton_76.setIcon(icon8)
         self.pushButton_76.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_592.addWidget(self.pushButton_76)
@@ -8998,7 +9033,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_77.sizePolicy().hasHeightForWidth())
         self.pushButton_77.setSizePolicy(sizePolicy)
         self.pushButton_77.setFont(font25)
-        self.pushButton_77.setIcon(icon8)
+        self.pushButton_77.setIcon(icon9)
         self.pushButton_77.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_593.addWidget(self.pushButton_77)
@@ -9024,7 +9059,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_78.sizePolicy().hasHeightForWidth())
         self.pushButton_78.setSizePolicy(sizePolicy)
         self.pushButton_78.setFont(font25)
-        self.pushButton_78.setIcon(icon7)
+        self.pushButton_78.setIcon(icon8)
         self.pushButton_78.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_594.addWidget(self.pushButton_78)
@@ -9040,7 +9075,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_79.sizePolicy().hasHeightForWidth())
         self.pushButton_79.setSizePolicy(sizePolicy)
         self.pushButton_79.setFont(font25)
-        self.pushButton_79.setIcon(icon8)
+        self.pushButton_79.setIcon(icon9)
         self.pushButton_79.setIconSize(QSize(45, 45))
 
         self.horizontalLayout_595.addWidget(self.pushButton_79)
@@ -9523,9 +9558,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon22 = QIcon()
-        icon22.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_file_path.setIcon(icon22)
+        icon23 = QIcon()
+        icon23.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.db_file_path.setIcon(icon23)
         self.db_file_path.setIconSize(QSize(55, 55))
         self.db_file_path.setCheckable(True)
 
@@ -9542,9 +9577,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon23 = QIcon()
-        icon23.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.ip_plc_address.setIcon(icon23)
+        icon24 = QIcon()
+        icon24.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.ip_plc_address.setIcon(icon24)
         self.ip_plc_address.setIconSize(QSize(55, 55))
         self.ip_plc_address.setCheckable(True)
 
@@ -9561,9 +9596,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon24 = QIcon()
-        icon24.addFile(u":/Icons/server-setting.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_number.setIcon(icon24)
+        icon25 = QIcon()
+        icon25.addFile(u":/Icons/server-setting.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.db_number.setIcon(icon25)
         self.db_number.setIconSize(QSize(55, 55))
         self.db_number.setCheckable(True)
 
@@ -9625,9 +9660,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon25 = QIcon()
-        icon25.addFile(u":/Icons/security.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.write_plc_label_2.setIcon(icon25)
+        icon26 = QIcon()
+        icon26.addFile(u":/Icons/security.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.write_plc_label_2.setIcon(icon26)
         self.write_plc_label_2.setIconSize(QSize(55, 55))
         self.write_plc_label_2.setCheckable(True)
 
@@ -9657,9 +9692,9 @@ class Ui_MainWindow(object):
 "	border-right: 5px solid #0AB1F9;\n"
 "	color: #0AB1F9;\n"
 "}")
-        icon26 = QIcon()
-        icon26.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.cmd_btn.setIcon(icon26)
+        icon27 = QIcon()
+        icon27.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.cmd_btn.setIcon(icon27)
         self.cmd_btn.setIconSize(QSize(80, 80))
 
         self.gridLayout_6.addWidget(self.cmd_btn, 4, 0, 1, 2)
@@ -9775,9 +9810,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.search_icon.sizePolicy().hasHeightForWidth())
         self.search_icon.setSizePolicy(sizePolicy)
         self.search_icon.setStyleSheet(u"padding: 5px;")
-        icon27 = QIcon()
-        icon27.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.search_icon.setIcon(icon27)
+        icon28 = QIcon()
+        icon28.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.search_icon.setIcon(icon28)
         self.search_icon.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_3.addWidget(self.search_icon)
@@ -10124,9 +10159,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.clear_history_search.sizePolicy().hasHeightForWidth())
         self.clear_history_search.setSizePolicy(sizePolicy)
         self.clear_history_search.setMinimumSize(QSize(45, 0))
-        icon28 = QIcon()
-        icon28.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_history_search.setIcon(icon28)
+        icon29 = QIcon()
+        icon29.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_history_search.setIcon(icon29)
         self.clear_history_search.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_3.addWidget(self.clear_history_search)
@@ -10156,9 +10191,9 @@ class Ui_MainWindow(object):
 "    background-color: #94A3B8;\n"
 "    color: #CBD5E1;\n"
 "}")
-        icon29 = QIcon()
-        icon29.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.export_all_tables_to_excel_btn.setIcon(icon29)
+        icon30 = QIcon()
+        icon30.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.export_all_tables_to_excel_btn.setIcon(icon30)
         self.export_all_tables_to_excel_btn.setIconSize(QSize(35, 35))
 
         self.list_query_btn.addWidget(self.export_all_tables_to_excel_btn)
@@ -10346,7 +10381,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(2)
+        self.stackedWidget_2.setCurrentIndex(0)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
@@ -10416,6 +10451,7 @@ class Ui_MainWindow(object):
         self.company_name.setText(QCoreApplication.translate("MainWindow", u"TECH-LINK", None))
         self.error_display.setText("")
         self.eng_language.setText("")
+        self.vn_language.setText("")
         self.cn_language.setText("")
         self.date_displ.setDisplayFormat(QCoreApplication.translate("MainWindow", u"dd/MM/yyyy hh:mm:ss", None))
         self.home_page_btn.setText(QCoreApplication.translate("MainWindow", u" Group", None))

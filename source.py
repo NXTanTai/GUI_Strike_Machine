@@ -3,6 +3,7 @@
 # pyside6-rcc icons.qrc -o icons_rc.py
 
 # pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_en.ts
+# pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_vn.ts
 # pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_cn.ts
 
 import sys
@@ -84,7 +85,7 @@ def get_exe_dir():
         return Path(__file__).parent
 
 SIMULATE = (get_exe_dir() / "simulate.txt").is_file()
-
+EXCEL_PASSWORD = 'tl@12345'
 EXPECTED_ROW_NAMES = [
     "Cycle Setting",
     "Oil Start time",
@@ -243,7 +244,7 @@ class StrikeMachine(QMainWindow):
                 return
             path = Path(file_str)
         
-        df = self._read_protected_excel(path, password='tl@12345')
+        df = self._read_protected_excel(path, password=EXCEL_PASSWORD)
         if df is None:
             if self.logger:
                 self.logger.error("[INIT]: Cannot read DB address file, app will not connect to PLC")
@@ -484,6 +485,12 @@ class StrikeMachine(QMainWindow):
         else:
             self.chart_timer.setInterval(200)
         self.chart_timer.start()
+
+        self._chart_render_timer = QTimer(self)
+        self.all_timer.append(self._chart_render_timer)
+        self._chart_render_timer.setInterval(100)
+        self._chart_render_timer.timeout.connect(self._render_all_charts)
+        self._chart_render_timer.start()
         
         self._history_flush_timer = QTimer(self)
         self.all_timer.append(self._history_flush_timer)
@@ -508,6 +515,25 @@ class StrikeMachine(QMainWindow):
         self.update_chart_pressure_a()
         self.update_chart_pressure_b()
         self.update_chart_pressure_c()
+
+    def _render_all_charts(self) -> None:
+        """
+        Render tuần tự 4 chart trong 1 lần gọi.
+        Adaptive FPS: tự giảm xuống 5Hz nếu render > 80ms.
+        """
+        t0 = time.perf_counter()
+
+        self.chart_temp._render_frame()
+        self.chart_pressure_a._render_frame()
+        self.chart_pressure_b._render_frame()
+        self.chart_pressure_c._render_frame()
+
+        elapsed_ms = (time.perf_counter() - t0) * 1000
+
+        if elapsed_ms > 80:
+            self._chart_render_timer.setInterval(200)
+        elif elapsed_ms < 40 and self._chart_render_timer.interval() > 100:
+            self._chart_render_timer.setInterval(100)
 
     def _init_group_object(self):
         # self.pressure_state_obj = []
@@ -840,6 +866,10 @@ class StrikeMachine(QMainWindow):
             self.ui.card_pressure_2,
             self.ui.card_pressure_3,
         ]
+        self.chart_temp._render_timer.stop()
+        self.chart_pressure_a._render_timer.stop()
+        self.chart_pressure_b._render_timer.stop()
+        self.chart_pressure_c._render_timer.stop()
 
     def _save_grid_rects(self):
         rects = [f.geometry() for f in self._chart_frames]
@@ -854,41 +884,29 @@ class StrikeMachine(QMainWindow):
         charts = [self.chart_temp, self.chart_pressure_a,
                 self.chart_pressure_b, self.chart_pressure_c]
         grid = self.ui.gridLayout_2
-
-        # idx → (row, col) trong grid 2x2
         positions = {0: (0, 0), 1: (0, 1), 2: (1, 0), 3: (1, 1)}
         row, col = positions[idx]
 
         if self._maximized_chart_idx == idx:
             self._maximized_chart_idx = -1
-
             grid.setRowStretch(0, 1)
             grid.setRowStretch(1, 1)
             grid.setColumnStretch(0, 1)
             grid.setColumnStretch(1, 1)
-
             for i, f in enumerate(frames):
                 if i != idx:
                     f.show()
-
-            for c in charts:
-                c._render_timer.start()
-
         else:
             self._maximized_chart_idx = idx
-
             other_row = 1 if row == 0 else 0
             other_col = 1 if col == 0 else 0
-
-            grid.setRowStretch(row,       100)
+            grid.setRowStretch(row, 100)
             grid.setRowStretch(other_row, 0)
-            grid.setColumnStretch(col,       100)
+            grid.setColumnStretch(col, 100)
             grid.setColumnStretch(other_col, 0)
-
             for i, f in enumerate(frames):
                 if i != idx:
                     f.hide()
-                    charts[i]._render_timer.stop()
         
     ###########################################################################################
     #############################------ Button Function Setup ------###########################
@@ -917,6 +935,7 @@ class StrikeMachine(QMainWindow):
         self.ui.history_page_btn.clicked.connect(self.history_page_btn)
 
         self.ui.eng_language.clicked.connect(self.set_language_en)
+        self.ui.vn_language.clicked.connect(self.set_language_vn)
         self.ui.cn_language.clicked.connect(self.set_language_cn)
 
         self.ui.next_group_page_btn.clicked.connect(self.next_previous_pressure_page)
@@ -1833,24 +1852,37 @@ class StrikeMachine(QMainWindow):
         webbrowser.open("https://www.techlinksilicones.com/")
 
     def _on_menu_toggle(self):
-        if self.ui.stackedWidget_2.currentIndex() == 0:
-            self._pause_charts()
-            self.ui.left_side_menu_widget.slideMenu()
-            QTimer.singleShot(220, self._resume_charts)
-        else:
-            self.ui.left_side_menu_widget.slideMenu()
+        charts = [
+            self.chart_temp,
+            self.chart_pressure_a,
+            self.chart_pressure_b,
+            self.chart_pressure_c,
+        ]
 
+        on_chart_page = self.ui.stackedWidget_2.currentIndex() == 0
+
+        if on_chart_page:
+            self._pause_charts()
+            # for c in charts:
+            #     c.hide()
+
+        self.ui.left_side_menu_widget.slideMenu()
+
+        def _restore():
+            if on_chart_page:
+                for c in charts:
+                    c.show()
+                self._resume_charts()
+
+        QTimer.singleShot(250, _restore)
+        
     def _pause_charts(self): 
-        self.chart_temp._render_timer.stop()
-        self.chart_pressure_a._render_timer.stop()
-        self.chart_pressure_b._render_timer.stop()
-        self.chart_pressure_c._render_timer.stop()
+        self._chart_render_timer.stop()
+        self.chart_timer.stop()
 
     def _resume_charts(self):
-        self.chart_temp._render_timer.start()
-        self.chart_pressure_a._render_timer.start()
-        self.chart_pressure_b._render_timer.start()
-        self.chart_pressure_c._render_timer.start()
+        self._chart_render_timer.start()
+        self.chart_timer.start()
 
     def home_page_btn(self):
         self.user = False
@@ -1906,6 +1938,9 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "cn":
                 title = "错误"
                 content = "未找到 DB 佈局！無法啟動 PLC 執行緒."
+            elif self._current_lang == "vn":
+                title = "Lỗi"
+                content = "Không tìm thấy dữ liệu DB！Không thể khởi động PLC."
             ltmessage.error(self, title, content, self._current_lang)
             return 
 
@@ -1923,6 +1958,9 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "cn":
                 title = "错误"
                 content = "无法连接 PLC！请稍后再试."
+            elif self._current_lang == "vn":
+                title = "Lỗi"
+                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
             ltmessage.error(self, title, content, self._current_lang)
 
         time.sleep(0.2)
@@ -1941,6 +1979,9 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "cn":
                 title = "错误"
                 content = "无法连接 PLC！请稍后再试."
+            elif self._current_lang == "vn":
+                title = "Lỗi"
+                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
             ltmessage.error(self, title, content, self._current_lang)
 
     def setup_simulate_threads(self):
@@ -2860,6 +2901,9 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "cn":
                 title = "错误"
                 content = "PLC Writer 未连接!"
+            elif self._current_lang == "vn":
+                title = "Lỗi"
+                content = "PLC Writer mất kết nối!"
             ltmessage.error(self, title, content, self._current_lang)
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -3073,6 +3117,9 @@ class StrikeMachine(QMainWindow):
         elif self._current_lang == "cn":
             title = "清除数据"
             content = "是否将所有 SV 设为 0?"
+        elif self._current_lang == "vn":
+            title = "Xoá dữ liệu"
+            content = "Đặt toàn bộ SV về 0?"
         reply = ltmessage.question(
             self, title, content, self._current_lang
         )
@@ -3183,6 +3230,9 @@ class StrikeMachine(QMainWindow):
                 elif self._current_lang == "cn":
                     title = "错误"
                     content = f"数据清除失败: {e}"
+                elif self._current_lang == "vn":
+                    title = "Lỗi"
+                    content = f"Không thể xoá dữ liệu: {e}"
                 ltmessage.error(self, title, content, self._current_lang)
 
     def reset_cycle_btn(self, channel):
@@ -3515,6 +3565,12 @@ class StrikeMachine(QMainWindow):
         self._translator.load(resource_path("tech_link_theme_cn.qm"))
         self._app.installTranslator(self._translator)   # type: ignore
         self._current_lang = "cn"
+
+    def set_language_vn(self):
+        self._app.removeTranslator(self._translator)    # type: ignore
+        self._translator.load(resource_path("tech_link_theme_vn.qm"))
+        self._app.installTranslator(self._translator)   # type: ignore
+        self._current_lang = "vn"
         
     def changeEvent(self, event):
         super().changeEvent(event)
@@ -3542,6 +3598,25 @@ class StrikeMachine(QMainWindow):
                 charts[3].btn_setting.setText("C组")
                 charts[3].plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else charts[3].plot.setLabel("left", "温度 (°F)")
                 charts[3].plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")    # type: ignore
+
+            elif self._current_lang == "vn":
+                self.ui.plc_ip_address_edit.setPlaceholderText("Vui lòng nhập địa chỉ IP: 172.16.100.***")
+                self.ui.db_file_path_edit.setPlaceholderText("Nhập đường dẫn thư mục")
+                
+                charts[0].btn_setting.setText("Lò")
+                charts[0].plot.setLabel("left", "Nhiệt độ (°C)") if self._current_unit == 0 else charts[0].plot.setLabel("left", "Nhiệt độ (°F)")
+                
+                charts[1].btn_setting.setText("Nhóm A")
+                charts[1].plot.setLabel("left", "Nhiệt độ (°C)") if self._current_unit == 0 else charts[1].plot.setLabel("left", "Nhiệt độ (°F)")
+                charts[1].plot.plotItem.axes["right"]["item"].setLabel("Áp suất (bar)")    # type: ignore
+                
+                charts[2].btn_setting.setText("Nhóm B")
+                charts[2].plot.setLabel("left", "Nhiệt độ (°C)") if self._current_unit == 0 else charts[2].plot.setLabel("left", "Nhiệt độ (°F)")
+                charts[2].plot.plotItem.axes["right"]["item"].setLabel("Áp suất (bar)")    # type: ignore
+                
+                charts[3].btn_setting.setText("Nhóm C")
+                charts[3].plot.setLabel("left", "Nhiệt độ (°C)") if self._current_unit == 0 else charts[3].plot.setLabel("left", "Nhiệt độ (°F)")
+                charts[3].plot.plotItem.axes["right"]["item"].setLabel("Áp suất (bar)")    # type: ignore
 
             elif self._current_lang == "en":
                 self.ui.plc_ip_address_edit.setPlaceholderText("Enter IP Address: 172.16.100.***")
@@ -3789,7 +3864,12 @@ class StrikeMachine(QMainWindow):
 
     def export_all_tables_to_excel_btn(self):
         current_date = datetime.now().strftime("%d-%m-%Y")  # dùng - thay vì /
-        name = self.ui.search_data.text().strip() or "History"
+        if self._current_lang == "cn":
+            name = self.ui.search_data.text().strip() or "历史记录"
+        elif self._current_lang == "vn":
+            name = self.ui.search_data.text().strip() or "Lịch sử"
+        else:
+            name = self.ui.search_data.text().strip() or "History"
         default_filename_done = f"{name} - Group {self.ui.select_group_name.currentText()} {current_date}"
         list_history_folder = Path(self.stk_mch_folder) / "Excel"
         list_history_folder.mkdir(parents=True, exist_ok=True)  # tạo folder nếu chưa có
@@ -3801,6 +3881,9 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "cn":
                 title = "导出全部文件"
                 content = "这可能需要一段时间. 是否继续?"
+            elif self._current_lang == "vn":
+                title = "Xuất toàn bộ lịch sử"
+                content = "Việc này sẽ mất một lúc. Tiếp tục?"
             reply = ltmessage.question(
                 self, title, content, lang=self._current_lang
             )
@@ -3827,10 +3910,16 @@ class StrikeMachine(QMainWindow):
             text_disp = "Exporting... Please wait."
         elif self._current_lang == "cn":
             text_disp = "导出中... 请等待."
+        elif self._current_lang == "vn":
+            text_disp = "Đang tạo file..."
         self.ui.error_display.setText(text_disp)
         self._export_thread = QThread()
         if self.ui.stacked_list_history_page.currentIndex() == 0:
-            self._export_worker = ExportWorker(self.history_db_path, file_path) # type: ignore
+            self._export_worker = ExportWorker(
+                self.history_db_path,  # type: ignore
+                file_path,
+                lang=self._current_lang,
+            )
         elif self.ui.stacked_list_history_page.currentIndex() == 1:
             self._export_worker = ExportWorker(
                 db_path=self.history_db_path,   # type: ignore
@@ -3839,6 +3928,7 @@ class StrikeMachine(QMainWindow):
                 group=self.ui.select_group_name.currentText(),
                 start_date=self.ui.search_data_start_edit.dateTime().toString("yyyy/MM/dd HH:mm"),
                 end_date=self.ui.search_data_end_edit.dateTime().toString("yyyy/MM/dd HH:mm"),
+                lang=self._current_lang,
             )
         self._export_worker.moveToThread(self._export_thread)
 
@@ -3861,20 +3951,23 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "cn":
                 title = "错误"
                 content = f"导出失败:\n{error}"
+            elif self._current_lang == "vn":
+                title = "Lỗi"
+                content = f"Xuất file lỗi:\n{error}"
             ltmessage.error(self, title, content, lang=self._current_lang)
         else:
             if self._current_lang == "en":
                 title = "Export Success"
                 content = f"Go to Save Folder?"
-                button=["Yes", "No"]
             elif self._current_lang == "cn":
                 title = "导出成功"
                 content = "是否前往保存文件夹？"
-                button=["是的", "不"]
+            elif self._current_lang == "vn":
+                title = "Xuất dữ liệu thành công"
+                content = "Chuyển đến thư mục lưu trữ？"
             reply = ltmessage.custom(
                 self, title, content,
-                msg_type="success",
-                buttons=button
+                msg_type="success", lang=self._current_lang
             )
             if reply == ltmessage.Yes:
                 folder = str(Path(file_path.split("|")[0]).parent)
@@ -3894,9 +3987,15 @@ class StrikeMachine(QMainWindow):
         if self._current_lang == "en":
             title = "Exit Confirmation"
             content = "Are you sure you want to exit?"
+            button=["Yes", "No"]
         elif self._current_lang == "cn":
             title = "导出成功"
             content = "是否前往保存文件夹?"
+            button=["是", "否"]
+        if self._current_lang == "vn":
+            title = "Thoát ứng dụng"
+            content = "Bạn có chắc chắn muốn thoát không?"
+            button = ["Có", "Không"]
         reply = ltmessage.question(
             self, title, content, lang=self._current_lang
         )
@@ -3930,11 +4029,6 @@ class StrikeMachine(QMainWindow):
             self.plc_writer_thread.wait()
         
         self.stop_simulate_threads() if SIMULATE else None
-
-    @Slot()
-    def _on_force_quit(self):
-        self._cleanup()
-        QApplication.instance().quit()
 
     def stop_simulate_threads(self):
         try:

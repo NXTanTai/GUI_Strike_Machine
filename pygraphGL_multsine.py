@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from pyqtgraph.Qt import QtCore, QtGui, QtWidgets
 import pyqtgraph.opengl as gl
 import pyqtgraph as pg
@@ -6,33 +5,33 @@ import numpy as np
 import sys
 import time
 
-
 class Visualizer(object):
     def __init__(self):
         self.traces = dict()
 
-        # Kiểm tra nếu QApplication đã tồn tại chưa
         self.app = QtWidgets.QApplication.instance()
         if self.app is None:
             self.app = QtWidgets.QApplication(sys.argv)
 
+        # Tạo môi trường 3D để hiển thị
         self.w = gl.GLViewWidget()
-        self.w.opts['distance'] = 40
+        self.w.opts['distance'] = 40    # type: ignore
         self.w.setWindowTitle('Animated 3D Sine Wave')
-        self.w.setGeometry(100, 100, 1280, 720)  # tránh đặt ở 0,0
+        self.w.setGeometry(100, 100, 1280, 720)
         self.w.show()
-        self.w.raise_()  # đưa cửa sổ lên trên cùng
+        self.w.raise_()
 
-        # Thêm lưới tham chiếu để xác nhận OpenGL đang render
+        # Tạo Grid để hiển thị các item bên trong
         grid = gl.GLGridItem()
         self.w.addItem(grid)
 
         self.phase = 0
-        self.lines = 50
+        self.lines = 100
         self.points = 1000
         self.y = np.linspace(-10, 10, self.lines)
         self.x = np.linspace(-10, 10, self.points)
 
+        # Tạo các đường và add vào self.w
         for i, line in enumerate(self.y):
             y = np.array([line] * self.points)
             d = np.sqrt(self.x ** 2 + y ** 2)
@@ -47,7 +46,7 @@ class Visualizer(object):
             self.w.addItem(self.traces[i])
 
     def start(self):
-        self.app.exec()  # gọi trực tiếp, đơn giản hơn
+        self.app.exec()
 
     def set_plotdata(self, name, points, color, width):
         self.traces[name].setData(pos=points, color=color, width=width)
@@ -67,16 +66,15 @@ class Visualizer(object):
                 width=3
             )
         self.phase -= .0002
-        elapsed = time.time() - stime
-        if elapsed > 0:
-            print('{:.0f} FPS'.format(1 / elapsed))
+        # elapsed = time.time() - stime
+        # if elapsed > 0:
+        #     print('{:.0f} FPS'.format(1 / elapsed))
 
     def animation(self):
         timer = QtCore.QTimer()
         timer.timeout.connect(self.update)
-        timer.start(10)
+        timer.start(16)
         self.start()
-
 
 if __name__ == '__main__':
     v = Visualizer()

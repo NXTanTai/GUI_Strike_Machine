@@ -32,6 +32,15 @@ TRANSLATIONS = {
         "Cancel": "取消",
         "Close":  "关闭",
     },
+    "vn": {
+        "OK":     "OK",
+        "Yes":    "Có",
+        "No":     "Không",
+        "Save":   "Lưu",
+        "Apply":  "Áp dụng",
+        "Cancel": "Hủy",
+        "Close":  "Đóng",
+    }
 }
 
 _PRIMARY_KEYS = {"OK", "Yes", "Save", "Apply"}
@@ -366,8 +375,6 @@ class LightThemeMessageBox(QDialog):
         buttons: list[str] | None = None,
         lang: str = "en",
     ) -> bool:
-        if buttons is None:
-            buttons = ["OK"]
-        dialog = LightThemeMessageBox(parent, title, message, msg_type, buttons, lang)
+        dialog = LightThemeMessageBox(parent, title, message, msg_type, ["Yes", "No"], lang)
         dialog.exec_()
         return dialog.result_value

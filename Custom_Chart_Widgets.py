@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import datetime
@@ -29,6 +28,8 @@ FONT_SIZE_SM = 13
 
 _Y_THRESH = 0.02   # 2% — chỉ update Y khi max thay đổi > 2%
 _X_THRESH = 0.5    # 0.5 s — chỉ update X khi window dịch > 0.5 s
+_TEMP_LABEL_THRESH  = 0.05   # °C/°F — chỉ update label nhiệt độ khi đổi > giá trị này
+_PRES_LABEL_THRESH  = 0.005  # bar   — chỉ update label áp suất khi đổi > giá trị này
 
 class _CircBuf:
     """
@@ -41,9 +42,13 @@ class _CircBuf:
 
     Capacity = max_seconds × sample_rate — caller chịu trách nhiệm
     đặt đủ lớn; buffer tự wrap-around khi đầy (oldest bị ghi đè).
+
+    TỐI ƯU: thêm dirty-flag (_dirty) — get() chỉ roll/copy lại khi có
+    append() mới kể từ lần get() trước. Tránh memcopy thừa mỗi frame
+    (10Hz) khi PLC chưa gửi data mới hoặc series đang đứng yên.
     """
 
-    __slots__ = ("_buf", "_head", "_cap", "_filled", "_out")
+    __slots__ = ("_buf", "_head", "_cap", "_filled", "_out", "_dirty", "_cached_view")
 
     def __init__(self, capacity: int) -> None:
         self._buf    = np.zeros(capacity, dtype=np.float64)
@@ -51,6 +56,8 @@ class _CircBuf:
         self._cap    = capacity
         self._filled = False
         self._out = np.empty(capacity, dtype=np.float64)
+        self._dirty = True            # lần đầu luôn cần build
+        self._cached_view: np.ndarray = self._buf[:0]
 
     def append(self, val: float) -> None:
         """Ghi val vào slot hiện tại, O(1)."""
@@ -59,14 +66,22 @@ class _CircBuf:
         if self._head >= self._cap:
             self._head   = 0
             self._filled = True
+        self._dirty = True
 
     def get(self) -> np.ndarray:
+        if not self._dirty:
+            return self._cached_view
+
         if self._filled:
             n = self._cap - self._head
             self._out[:n] = self._buf[self._head:]
             self._out[n:self._cap] = self._buf[:self._head]
-            return self._out
-        return self._buf[: self._head]
+            self._cached_view = self._out
+        else:
+            self._cached_view = self._buf[: self._head]
+
+        self._dirty = False
+        return self._cached_view
     
     def last(self) -> float | None:
         """Giá trị mới nhất, hoặc None nếu chưa có data."""
@@ -79,9 +94,63 @@ class _CircBuf:
         self._buf[:] = 0.0
         self._head   = 0
         self._filled = False
+        self._dirty  = True
+        self._cached_view = self._buf[:0]
 
     def __len__(self) -> int:
         return self._cap if self._filled else self._head
+
+class _RunningMax:
+    """
+    Running max trong cửa sổ thời gian trượt (sliding window), O(1) amortized
+    mỗi append() — thay cho việc gọi arr.max() trên toàn buffer mỗi frame
+    (O(n), chạy lại mỗi 100ms dù phần lớn data không đổi).
+
+    Dùng monotonic deque (giảm dần): mỗi điểm mới push vào, pop hết các điểm
+    cũ ở cuối deque nhỏ hơn nó (sẽ không bao giờ là max nữa). Khi cần max
+    hiện tại, đỉnh deque luôn là giá trị lớn nhất còn "sống" trong window.
+
+    Vì _CircBuf không track timestamp cùng buffer expiry chính xác theo
+    window trượt (oldest bị overwrite khi buffer đầy, không theo thời gian
+    thực), ta dùng index tăng dần (monotonic counter) làm proxy cho thời
+    gian — khi capacity bị vượt, các entry quá cũ (index < counter - cap)
+    tự động bị loại khi pop từ đầu deque.
+    """
+
+    __slots__ = ("_dq", "_counter", "_cap")
+
+    def __init__(self, capacity: int) -> None:
+        from collections import deque
+        self._dq: "deque[tuple[int, float]]" = deque()
+        self._counter = 0
+        self._cap = capacity
+
+    def push(self, val: float) -> None:
+        idx = self._counter
+        self._counter += 1
+
+        # loại các giá trị cũ đã ra ngoài window (capacity)
+        while self._dq and self._dq[0][0] <= idx - self._cap:
+            self._dq.popleft()
+
+        # loại các giá trị ở cuối nhỏ hơn val (không thể là max nữa)
+        while self._dq and self._dq[-1][1] <= val:
+            self._dq.pop()
+
+        self._dq.append((idx, val))
+
+    def current_max(self) -> float | None:
+        if not self._dq:
+            return None
+        # đảm bảo đỉnh deque chưa bị "hết hạn" (trường hợp không push gì
+        # thêm sau khi window đã trôi qua — hiếm vì append đi cùng push)
+        while self._dq and self._dq[0][0] <= self._counter - 1 - self._cap:
+            self._dq.popleft()
+        return self._dq[0][1] if self._dq else None
+
+    def reset(self) -> None:
+        self._dq.clear()
+        self._counter = 0
 
 class _FixedTickDateAxis(pg.DateAxisItem):
     """DateAxisItem với tick cố định mỗi tick_spacing giây."""
@@ -177,6 +246,10 @@ class CustomChartWidget(QWidget):
         self._ty: list[_CircBuf] = [_CircBuf(_cap) for _ in range(self.num_temp)]
         self._px: list[_CircBuf] = [_CircBuf(_cap) for _ in range(self.num_pressure)]
         self._py: list[_CircBuf] = [_CircBuf(_cap) for _ in range(self.num_pressure)]
+
+        # ── Running max (O(1) amortized) — thay cho arr.max() mỗi frame ───────
+        self._ty_runmax: list[_RunningMax] = [_RunningMax(_cap) for _ in range(self.num_temp)]
+        self._py_runmax: list[_RunningMax] = [_RunningMax(_cap) for _ in range(self.num_pressure)]
 
         # ── Mutex bảo vệ buffer khi worker thread ghi ─────────────────────────
         self._mutex = QMutex()
@@ -464,6 +537,7 @@ class CustomChartWidget(QWidget):
             curve = pg.PlotCurveItem(
                 pen=pg.mkPen(color=TEMP_COLORS[i], width=2),
                 skipFiniteCheck=True, clipToView=True,
+                autoDownsample=True, downsampleMethod="peak",
             )
             self.plot.addItem(curve)
             self._temp_curves.append(curve)
@@ -476,6 +550,8 @@ class CustomChartWidget(QWidget):
                 pen=pen,
                 skipFiniteCheck=True,
                 clipToView=True,
+                autoDownsample=True,
+                downsampleMethod="peak",
             )
             self._vb_pressure.addItem(curve)
             self._pressure_curves.append(curve)
@@ -506,6 +582,30 @@ class CustomChartWidget(QWidget):
         """
         Điểm render chart UI.
         Lock mutex để đọc snapshot buffer, sau đó render ngoài lock.
+
+        TỐI ƯU áp dụng:
+        1. Skip setData()/label update cho series đang bị ẩn (_vis_temp /
+           _vis_pressure == False) — tránh pyqtgraph rebuild path nội bộ
+           cho curve không hiển thị.
+        2. Dùng running-max (_ty_runmax/_py_runmax, O(1) amortized) thay
+           cho arr.max() (O(n)) để quyết định có cần setRange() Y hay
+           không — không phải quét lại toàn bộ buffer mỗi frame.
+        3. _CircBuf.get() có dirty-flag nên tự skip copy nếu chưa có
+           append() mới kể từ lần get() trước (transparent, không cần
+           sửa gì thêm ở đây).
+        4. LOD downsampling (autoDownsample + downsampleMethod="peak")
+           đã được set ngay tại _create_temp_curves/_create_pressure_curves
+           — pyqtgraph tự giảm số điểm thực vẽ xuống theo độ rộng pixel
+           của viewport, vẫn giữ được đỉnh/đáy (peak) để không mất spike.
+        5. Threshold riêng cho TEXT của label (_TEMP_LABEL_THRESH/
+           _PRES_LABEL_THRESH) — chỉ setText() khi giá trị đổi đủ lớn, giảm
+           việc tái tính bounding box/font metrics khi data dao động nhỏ
+           liên tục (nhiễu PLC). setPos() vẫn chạy MỖI FRAME vì toạ độ X là
+           timestamp luôn tiến theo thời gian thực — nếu threshold luôn cả
+           setPos(), label sẽ bị "neo" ở X cũ và tách rời khỏi đầu curve.
+        6. Gộp setXRange + setRange(yRange=...) thành 1 lệnh setRange() duy
+           nhất khi cả X và Y cùng cần đổi trong 1 frame — tránh trigger
+           sigRangeChanged (→ _sync_views) 2 lần liên tiếp.
         """
         if not self._mutex.tryLock(33):
             return  # render frame này bỏ qua, frame sau render bù
@@ -517,13 +617,14 @@ class CustomChartWidget(QWidget):
             py_snap = [buf.get() for buf in self._py]
         finally:
             self._mutex.unlock()
+
         for i in range(self.num_temp):
-            if len(tx_snap[i]) == 0:
+            if not self._vis_temp[i] or len(tx_snap[i]) == 0:
                 continue
             self._temp_curves[i].setData(tx_snap[i], ty_snap[i])
 
         for i in range(self.num_pressure):
-            if len(px_snap[i]) == 0:
+            if not self._vis_pressure[i] or len(px_snap[i]) == 0:
                 continue
             self._pressure_curves[i].setData(px_snap[i], py_snap[i])
 
@@ -531,39 +632,53 @@ class CustomChartWidget(QWidget):
         x_min     = now - self.max_seconds
         x_max     = now + self.max_seconds * 0.2
 
-        if self._last_x_min is None or abs(x_min - self._last_x_min) > _X_THRESH:
+        x_changed = self._last_x_min is None or abs(x_min - self._last_x_min) > _X_THRESH
+
+        # ── Y-range nhiệt độ: dùng running max O(1) thay vì arr.max() O(n) ────
+        t_max = None
+        for rm in self._ty_runmax:
+            m = rm.current_max()
+            if m is not None and (t_max is None or m > t_max):
+                t_max = m
+
+        y_changed  = False
+        new_ymin   = new_ymax = None
+        if t_max is not None:
+            candidate_ymax = t_max + max(t_max * 0.1, 1)
+            prev = self._last_temp_ymax
+            if prev is None or abs(candidate_ymax - prev) / max(abs(prev), 1.0) > _Y_THRESH:
+                new_ymax  = candidate_ymax
+                new_ymin  = -max(t_max * 0.03, 2)
+                y_changed = True
+
+        # ── Gộp X + Y thành 1 lệnh setRange() nếu cả 2 cùng đổi trong frame này ──
+        if x_changed and y_changed:
+            self.plot.setRange(xRange=(x_min, x_max), yRange=(new_ymin, new_ymax), padding=0)
+            if self.num_pressure > 0:
+                self._vb_pressure.setRange(xRange=(x_min, x_max), padding=0)
+            self._last_x_min     = x_min
+            self._last_temp_ymax = new_ymax
+        elif x_changed:
             self.plot.setXRange(x_min, x_max, padding=0)
             if self.num_pressure > 0:
                 self._vb_pressure.setRange(xRange=(x_min, x_max), padding=0)
             self._last_x_min = x_min
-
-        t_max = None
-        for arr in ty_snap:
-            if len(arr):
-                m = float(arr.max())
-                if t_max is None or m > t_max:
-                    t_max = m
-        if t_max is not None:
-            new_ymax = t_max + max(t_max * 0.1, 1)
-            new_ymin = -max(t_max * 0.03, 2)
-            prev     = self._last_temp_ymax
-            if prev is None or abs(new_ymax - prev) / max(abs(prev), 1.0) > _Y_THRESH:
-                self.plot.setRange(yRange=(new_ymin, new_ymax), padding=0)
-                self._last_temp_ymax = new_ymax
+        elif y_changed:
+            self.plot.setRange(yRange=(new_ymin, new_ymax), padding=0)
+            self._last_temp_ymax = new_ymax
 
         if self.num_pressure > 0:
             p_max = None
-            for arr in py_snap:
-                if len(arr):
-                    m = float(arr.max())
-                    if p_max is None or m > p_max:
-                        p_max = m
+            for rm in self._py_runmax:
+                m = rm.current_max()
+                if m is not None and (p_max is None or m > p_max):
+                    p_max = m
             if p_max is not None:
-                new_ymax = p_max + max(p_max * 0.25, 1)
-                prev     = self._last_pres_ymax
-                if prev is None or abs(new_ymax - prev) / max(abs(prev), 1.0) > _Y_THRESH:
-                    self._vb_pressure.setYRange(-0.1, new_ymax, padding=0)
-                    self._last_pres_ymax = new_ymax
+                new_p_ymax = p_max + max(p_max * 0.25, 1)
+                prev       = self._last_pres_ymax
+                if prev is None or abs(new_p_ymax - prev) / max(abs(prev), 1.0) > _Y_THRESH:
+                    self._vb_pressure.setYRange(-0.1, new_p_ymax, padding=0)
+                    self._last_pres_ymax = new_p_ymax
 
         for i in range(self.num_temp):
             if not self._vis_temp[i] or len(tx_snap[i]) == 0:
@@ -572,10 +687,14 @@ class CustomChartWidget(QWidget):
                 continue
             lx = float(tx_snap[i][-1])
             ly = float(ty_snap[i][-1])
-            if self._last_temp_label_pos[i] != (lx, ly):
+            prev_pos = self._last_temp_label_pos[i]
+            # Vị trí (X,Y) phải bám theo điểm cuối curve mỗi frame — X luôn
+            # tiến theo thời gian thực, không thể threshold toạ độ X.
+            # Chỉ threshold phần TEXT để tránh nhấp nháy số khi nhiễu nhỏ.
+            if prev_pos is None or abs(ly - prev_pos[1]) > _TEMP_LABEL_THRESH:
                 self._temp_labels[i].setText(f"{ly:.1f}{self._temp_unit} ")
-                self._temp_labels[i].setPos(lx - 0.1, ly)
-                self._last_temp_label_pos[i] = (lx, ly)
+            self._temp_labels[i].setPos(lx - 0.1, ly)
+            self._last_temp_label_pos[i] = (lx, ly)
             self._temp_labels[i].show()
 
         for i in range(self.num_pressure):
@@ -585,10 +704,11 @@ class CustomChartWidget(QWidget):
                 continue
             lx = float(px_snap[i][-1])
             ly = float(py_snap[i][-1])
-            if self._last_pressure_label_pos[i] != (lx, ly):
+            prev_pos = self._last_pressure_label_pos[i]
+            if prev_pos is None or abs(ly - prev_pos[1]) > _PRES_LABEL_THRESH:
                 self._pressure_labels[i].setText(f"{ly:.2f} bar ")
-                self._pressure_labels[i].setPos(lx - 0.1, ly)
-                self._last_pressure_label_pos[i] = (lx, ly)
+            self._pressure_labels[i].setPos(lx - 0.1, ly)
+            self._last_pressure_label_pos[i] = (lx, ly)
             self._pressure_labels[i].show()
 
     def append_data(
@@ -600,6 +720,10 @@ class CustomChartWidget(QWidget):
         Ghi data vào buffer.
 
         Thread-safe — có thể gọi từ worker thread.
+
+        TỐI ƯU: push giá trị mới vào _RunningMax ngay tại đây (O(1)
+        amortized), thay vì để _render_frame phải arr.max() lại toàn bộ
+        buffer mỗi 100ms.
 
         Parameters
         ----------
@@ -622,9 +746,11 @@ class CustomChartWidget(QWidget):
             for i in range(self.num_temp):
                 self._tx[i].append(now)
                 self._ty[i].append(temp_values[i])
+                self._ty_runmax[i].push(temp_values[i])
             for i in range(self.num_pressure):
                 self._px[i].append(now)
                 self._py[i].append(pressure_values[i])
+                self._py_runmax[i].push(pressure_values[i])
 
     def set_temp_series_name(self, index: int, name: str) -> None:
         """Đổi tên legend series nhiệt độ."""
@@ -671,9 +797,11 @@ class CustomChartWidget(QWidget):
             for i in range(self.num_temp):
                 self._tx[i].reset()
                 self._ty[i].reset()
+                self._ty_runmax[i].reset()
             for i in range(self.num_pressure):
                 self._px[i].reset()
                 self._py[i].reset()
+                self._py_runmax[i].reset()
 
         for i in range(self.num_temp):
             self._temp_curves[i].setData([], [])

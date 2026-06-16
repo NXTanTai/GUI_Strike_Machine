@@ -343,7 +343,72 @@ QPushButton:checked{
             <bool>true</bool>
            </property>
            <attribute name="buttonGroup">
-            <string notr="true">language_btn_group</string>
+            <string notr="true">language_group_btn</string>
+           </attribute>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="vn_language">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+QPushButton {
+    color: black;
+    background-color: transparent;
+    border: none;
+	border-radius: 5px;
+}
+
+QPushButton:hover {
+	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #F8FAFC, stop:1 #E2E8F0);
+}
+
+QPushButton:pressed{
+	border: 2px solid #29A1D4;
+}
+QPushButton:checked{
+		background: rgb(173, 173, 173);
+}</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+             <normaloff>:/Icons/Viet_Nam_flag.png</normaloff>:/Icons/Viet_Nam_flag.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>65</width>
+             <height>65</height>
+            </size>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+           <attribute name="buttonGroup">
+            <string notr="true">language_group_btn</string>
            </attribute>
           </widget>
          </item>
@@ -405,7 +470,7 @@ QPushButton:checked{
             <bool>true</bool>
            </property>
            <attribute name="buttonGroup">
-            <string notr="true">language_btn_group</string>
+            <string notr="true">language_group_btn</string>
            </attribute>
           </widget>
          </item>
@@ -798,7 +863,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>2</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
@@ -21722,6 +21787,6 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
  <connections/>
  <buttongroups>
   <buttongroup name="left_side_btn_group"/>
-  <buttongroup name="language_btn_group"/>
+  <buttongroup name="language_group_btn"/>
  </buttongroups>
 </ui>

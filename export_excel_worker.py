@@ -2,10 +2,6 @@ from PySide6.QtCore import QObject, Signal
 import concurrent.futures
 
 class ExportWorker(QObject):
-    """
-    Object sử dụng xlsxwriter để xuất dữ liệu từ file db
-    \nDùng 1 process riêng để tránh freeze UI
-    """
     finished = Signal(str, str)
 
     def __init__(
@@ -16,6 +12,7 @@ class ExportWorker(QObject):
         group: str = "",
         start_date: str = "",
         end_date: str = "",
+        lang: str = "en",
     ):
         super().__init__()
         self.db_path    = db_path
@@ -24,6 +21,7 @@ class ExportWorker(QObject):
         self.group      = group.strip()
         self.start_date = start_date.strip()
         self.end_date   = end_date.strip()
+        self.lang       = lang
 
     def run(self):
         with concurrent.futures.ProcessPoolExecutor(max_workers=1) as executor:
@@ -35,6 +33,7 @@ class ExportWorker(QObject):
                 self.group,
                 self.start_date,
                 self.end_date,
+                self.lang,
             )
             try:
                 result_paths = future.result()
@@ -49,6 +48,7 @@ def _export_process(
         group: str = "",
         start_date: str = "",
         end_date: str = "",
+        lang: str = "en",
     ) -> list[str]:
     import sqlite3
     import xlsxwriter
@@ -57,11 +57,28 @@ def _export_process(
     CHUNK_SIZE = 10_000
     MAX_ROWS   = 999_997
 
-    HEADERS    = ["No.", "Name.", "Group.", 
-                  "Pressure Setting.", "Pressure.", "Oven Setting.", 
-                  "T-Oven.", "Temperature Setting.", "Front.", 
-                  "Middle.", "End.", "Date."]
-    COL_WIDTHS = [10.0, 20.0, 11.0, 20.0, 14.0, 16.0, 14.5, 24.0, 14.5, 14.5, 14.5, 21.0]
+    HEADERS_BY_LANG = {
+        "en": ["No.", "Name.", "Group.",
+               "Pressure Setting.", "Pressure.", "Oven Setting.",
+               "T-Oven.", "Temperature Setting.", "Front.",
+               "Middle.", "End.", "Date."],
+        "cn": ["编号.", "名称.", "组别.",
+               "压力设定.", "压力.", "烤箱设定.",
+               "烤箱温度.", "温度设定.", "前.",
+               "中.", "后.", "日期."],
+        "vn": ["STT.", "Mã hàng.", "Nhóm.",
+               "Cài đặt áp suất.", "Áp suất.", "Cài đặt nhiệt lò.",
+               "Nhiệt lò.", "Cài đặt nhiệt nhóm.", "Điểm đầu.",
+               "Điểm giữa.", "Điểm cuối.", "Thời gian."],
+    }
+    HEADERS    = HEADERS_BY_LANG.get(lang, HEADERS_BY_LANG["en"])
+    REPORT_TITLE = {
+        "en": "REPORT",
+        "cn": "报告",
+        "vn": "BÁO CÁO",
+    }.get(lang, "REPORT")
+
+    COL_WIDTHS = [10.0, 20.0, 11.0, 20.0, 14.0, 18.0, 14.5, 24.0, 14.5, 14.5, 14.5, 21.0]
     LAST_COL   = len(HEADERS) - 1
     MERGE_COLS = {0, 1, 5, 6, 11}  # No., Name., Date.
 
@@ -195,7 +212,7 @@ def _export_process(
 
         ws.merge_range(
             0, 0, 0, LAST_COL,
-            f"REPORT    |   {reformat_date(actual_start_date)} - {reformat_date(actual_end_date)}",
+            f"{REPORT_TITLE}    |   {reformat_date(actual_start_date)} - {reformat_date(actual_end_date)}",
             title_fmt
         )
         ws.set_row(0, 35)

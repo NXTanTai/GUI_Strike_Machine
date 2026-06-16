@@ -1,0 +1,40 @@
+import sys
+import numpy as np
+from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QTimer
+import pyqtgraph as pg
+
+app = QApplication(sys.argv)
+
+# Tạo window
+win = pg.GraphicsLayoutWidget(show=True, title="Test Live Plot")
+win.resize(800, 600)
+
+# Thêm plot
+plot = win.addPlot(title="Live Graph Test")
+plot.setLabel('left', 'Value')
+plot.setLabel('bottom', 'Time')
+
+# Tạo curve
+curve = plot.plot(pen=pg.mkPen(color='y', width=2))
+
+# Dữ liệu ban đầu
+x = np.arange(0, 200)
+y = np.random.normal(size=200)
+curve.setData(x, y)
+
+# Update function (live)
+def update():
+    global y
+    y = np.roll(y, -5)
+    y[-5:] = np.random.normal(size=5) + np.sin(np.pi * np.arange(len(y))[-5:]/10)
+    curve.setData(x, y)   # ← Cách update nhanh nhất
+
+timer = QTimer()
+timer.timeout.connect(update)
+timer.start(30)   # ~33 FPS
+
+# Chạy ứng dụng
+if __name__ == "__main__":
+    sys.exit(app.exec())
+    
