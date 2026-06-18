@@ -1388,6 +1388,7 @@ class Ui_MainWindow(object):
         self.set_cycle_c_btn.setSizePolicy(sizePolicy)
         self.set_cycle_c_btn.setMinimumSize(QSize(0, 0))
         self.set_cycle_c_btn.setFont(font13)
+        self.set_cycle_c_btn.setToolTipDuration(-1)
         self.set_cycle_c_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #10B981;\n"
 "    color: white;\n"
@@ -5300,7 +5301,8 @@ class Ui_MainWindow(object):
         self.bt_t3_offset_value.setReadOnly(False)
         self.bt_t3_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.bt_t3_offset_value.setDecimals(1)
-        self.bt_t3_offset_value.setMaximum(999.000000000000000)
+        self.bt_t3_offset_value.setMinimum(-100.000000000000000)
+        self.bt_t3_offset_value.setMaximum(100.000000000000000)
         self.bt_t3_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_318.addWidget(self.bt_t3_offset_value)
@@ -5631,7 +5633,8 @@ class Ui_MainWindow(object):
         self.at_t3_offset_value.setReadOnly(False)
         self.at_t3_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.at_t3_offset_value.setDecimals(1)
-        self.at_t3_offset_value.setMaximum(999.000000000000000)
+        self.at_t3_offset_value.setMinimum(-100.000000000000000)
+        self.at_t3_offset_value.setMaximum(100.000000000000000)
         self.at_t3_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_301.addWidget(self.at_t3_offset_value)
@@ -5948,7 +5951,8 @@ class Ui_MainWindow(object):
         self.ct_t2_offset_value.setReadOnly(False)
         self.ct_t2_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.ct_t2_offset_value.setDecimals(1)
-        self.ct_t2_offset_value.setMaximum(999.000000000000000)
+        self.ct_t2_offset_value.setMinimum(-100.000000000000000)
+        self.ct_t2_offset_value.setMaximum(100.000000000000000)
         self.ct_t2_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_308.addWidget(self.ct_t2_offset_value)
@@ -6122,7 +6126,8 @@ class Ui_MainWindow(object):
         self.ct_t1_offset_value.setReadOnly(False)
         self.ct_t1_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.ct_t1_offset_value.setDecimals(1)
-        self.ct_t1_offset_value.setMaximum(999.000000000000000)
+        self.ct_t1_offset_value.setMinimum(-100.000000000000000)
+        self.ct_t1_offset_value.setMaximum(100.000000000000000)
         self.ct_t1_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_327.addWidget(self.ct_t1_offset_value)
@@ -6209,7 +6214,8 @@ class Ui_MainWindow(object):
         self.bt_t1_offset_value.setReadOnly(False)
         self.bt_t1_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.bt_t1_offset_value.setDecimals(1)
-        self.bt_t1_offset_value.setMaximum(999.000000000000000)
+        self.bt_t1_offset_value.setMinimum(-100.000000000000000)
+        self.bt_t1_offset_value.setMaximum(100.000000000000000)
         self.bt_t1_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_325.addWidget(self.bt_t1_offset_value)
@@ -6296,7 +6302,8 @@ class Ui_MainWindow(object):
         self.bt_t2_offset_value.setReadOnly(False)
         self.bt_t2_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.bt_t2_offset_value.setDecimals(1)
-        self.bt_t2_offset_value.setMaximum(999.000000000000000)
+        self.bt_t2_offset_value.setMinimum(-100.000000000000000)
+        self.bt_t2_offset_value.setMaximum(100.000000000000000)
         self.bt_t2_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_306.addWidget(self.bt_t2_offset_value)
@@ -6959,7 +6966,8 @@ class Ui_MainWindow(object):
         self.ct_t3_offset_value.setReadOnly(False)
         self.ct_t3_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.ct_t3_offset_value.setDecimals(1)
-        self.ct_t3_offset_value.setMaximum(999.000000000000000)
+        self.ct_t3_offset_value.setMinimum(-100.000000000000000)
+        self.ct_t3_offset_value.setMaximum(100.000000000000000)
         self.ct_t3_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_335.addWidget(self.ct_t3_offset_value)
@@ -7060,7 +7068,8 @@ class Ui_MainWindow(object):
         self.t0_offset_value.setReadOnly(False)
         self.t0_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t0_offset_value.setDecimals(1)
-        self.t0_offset_value.setMaximum(999.000000000000000)
+        self.t0_offset_value.setMinimum(-100.000000000000000)
+        self.t0_offset_value.setMaximum(100.000000000000000)
         self.t0_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_338.addWidget(self.t0_offset_value)
@@ -7495,7 +7504,8 @@ class Ui_MainWindow(object):
         self.at_t1_offset_value.setReadOnly(False)
         self.at_t1_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.at_t1_offset_value.setDecimals(1)
-        self.at_t1_offset_value.setMaximum(999.000000000000000)
+        self.at_t1_offset_value.setMinimum(-100.000000000000000)
+        self.at_t1_offset_value.setMaximum(100.000000000000000)
         self.at_t1_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_319.addWidget(self.at_t1_offset_value)
@@ -7582,7 +7592,8 @@ class Ui_MainWindow(object):
         self.at_t2_offset_value.setReadOnly(False)
         self.at_t2_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.at_t2_offset_value.setDecimals(1)
-        self.at_t2_offset_value.setMaximum(999.000000000000000)
+        self.at_t2_offset_value.setMinimum(-100.000000000000000)
+        self.at_t2_offset_value.setMaximum(100.000000000000000)
         self.at_t2_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_310.addWidget(self.at_t2_offset_value)
@@ -10279,7 +10290,7 @@ class Ui_MainWindow(object):
         self.list_history.setDragEnabled(False)
         self.list_history.setAlternatingRowColors(False)
         self.list_history.setSortingEnabled(False)
-        self.list_history.setWordWrap(False)
+        self.list_history.setWordWrap(True)
         self.list_history.horizontalHeader().setCascadingSectionResizes(True)
         self.list_history.horizontalHeader().setMinimumSectionSize(55)
         self.list_history.horizontalHeader().setStretchLastSection(True)
@@ -10381,9 +10392,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(0)
+        self.stackedWidget_2.setCurrentIndex(1)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_b_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_c_1.setCurrentIndex(0)
@@ -10480,8 +10491,17 @@ class Ui_MainWindow(object):
         self.label_175.setText(QCoreApplication.translate("MainWindow", u"SV", None))
         self.clear_group_c.setText("")
         self.label_85.setText(QCoreApplication.translate("MainWindow", u"Cycle Setting:", None))
+#if QT_CONFIG(tooltip)
+        self.set_cycle_a_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.set_cycle_a_btn.setText("")
+#if QT_CONFIG(tooltip)
+        self.set_cycle_b_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.set_cycle_b_btn.setText("")
+#if QT_CONFIG(tooltip)
+        self.set_cycle_c_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.set_cycle_c_btn.setText("")
         self.label_83.setText(QCoreApplication.translate("MainWindow", u"Oil Start time:", None))
         self.pressure_pv_a_9.setPrefix("")

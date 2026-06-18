@@ -863,7 +863,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
@@ -1474,7 +1474,7 @@ QPushButton:hover {
 }</string>
                  </property>
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>1</number>
                  </property>
                  <widget class="QWidget" name="pressure_page">
                   <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -2309,6 +2309,9 @@ QSpinBox
                                    <bold>true</bold>
                                   </font>
                                  </property>
+                                 <property name="toolTip">
+                                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable Running by Cycle&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                 </property>
                                  <property name="styleSheet">
                                   <string notr="true">QPushButton {
     background-color: #10B981;
@@ -2514,6 +2517,9 @@ QSpinBox
                                    <bold>true</bold>
                                   </font>
                                  </property>
+                                 <property name="toolTip">
+                                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable Running by Cycle&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                 </property>
                                  <property name="styleSheet">
                                   <string notr="true">QPushButton {
     background-color: #10B981;
@@ -2718,6 +2724,12 @@ QSpinBox
                                    <weight>75</weight>
                                    <bold>true</bold>
                                   </font>
+                                 </property>
+                                 <property name="toolTip">
+                                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable Running by Cycle&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                 </property>
+                                 <property name="toolTipDuration">
+                                  <number>-1</number>
                                  </property>
                                  <property name="styleSheet">
                                   <string notr="true">QPushButton {
@@ -10927,8 +10939,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -11642,8 +11657,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -12288,8 +12306,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -12672,8 +12693,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -12864,8 +12888,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -13056,8 +13083,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -14511,8 +14541,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -14731,8 +14764,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -15691,8 +15727,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -15883,8 +15922,11 @@ QSpinBox
                                  <property name="decimals">
                                   <number>1</number>
                                  </property>
+                                 <property name="minimum">
+                                  <double>-100.000000000000000</double>
+                                 </property>
                                  <property name="maximum">
-                                  <double>999.000000000000000</double>
+                                  <double>100.000000000000000</double>
                                  </property>
                                  <property name="value">
                                   <double>0.000000000000000</double>
@@ -21543,7 +21585,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
                             <bool>false</bool>
                            </property>
                            <property name="wordWrap">
-                            <bool>false</bool>
+                            <bool>true</bool>
                            </property>
                            <attribute name="horizontalHeaderCascadingSectionResizes">
                             <bool>true</bool>

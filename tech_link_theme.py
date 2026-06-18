@@ -1388,6 +1388,7 @@ class Ui_MainWindow(object):
         self.set_cycle_c_btn.setSizePolicy(sizePolicy)
         self.set_cycle_c_btn.setMinimumSize(QSize(0, 0))
         self.set_cycle_c_btn.setFont(font13)
+        self.set_cycle_c_btn.setToolTipDuration(-1)
         self.set_cycle_c_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #10B981;\n"
 "    color: white;\n"
@@ -10279,7 +10280,7 @@ class Ui_MainWindow(object):
         self.list_history.setDragEnabled(False)
         self.list_history.setAlternatingRowColors(False)
         self.list_history.setSortingEnabled(False)
-        self.list_history.setWordWrap(False)
+        self.list_history.setWordWrap(True)
         self.list_history.horizontalHeader().setCascadingSectionResizes(True)
         self.list_history.horizontalHeader().setMinimumSectionSize(55)
         self.list_history.horizontalHeader().setStretchLastSection(True)
@@ -10381,7 +10382,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(0)
+        self.stackedWidget_2.setCurrentIndex(1)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
@@ -10480,8 +10481,17 @@ class Ui_MainWindow(object):
         self.label_175.setText(QCoreApplication.translate("MainWindow", u"SV", None))
         self.clear_group_c.setText("")
         self.label_85.setText(QCoreApplication.translate("MainWindow", u"Cycle Setting:", None))
+#if QT_CONFIG(tooltip)
+        self.set_cycle_a_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.set_cycle_a_btn.setText("")
+#if QT_CONFIG(tooltip)
+        self.set_cycle_b_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.set_cycle_b_btn.setText("")
+#if QT_CONFIG(tooltip)
+        self.set_cycle_c_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
         self.set_cycle_c_btn.setText("")
         self.label_83.setText(QCoreApplication.translate("MainWindow", u"Oil Start time:", None))
         self.pressure_pv_a_9.setPrefix("")

@@ -467,6 +467,8 @@ class StrikeMachine(QMainWindow):
         self.plc_writer_thread = None
 
         self.default_temp_room = 25.0
+
+        self._sv_cycle_state("All", False)
         
     def _init_timer(self):
         self.all_timer = []
@@ -866,10 +868,10 @@ class StrikeMachine(QMainWindow):
             self.ui.card_pressure_2,
             self.ui.card_pressure_3,
         ]
-        self.chart_temp._render_timer.stop()
-        self.chart_pressure_a._render_timer.stop()
-        self.chart_pressure_b._render_timer.stop()
-        self.chart_pressure_c._render_timer.stop()
+        # self.chart_temp._render_timer.stop()
+        # self.chart_pressure_a._render_timer.stop()
+        # self.chart_pressure_b._render_timer.stop()
+        # self.chart_pressure_c._render_timer.stop()
 
     def _save_grid_rects(self):
         rects = [f.geometry() for f in self._chart_frames]
@@ -1870,19 +1872,17 @@ class StrikeMachine(QMainWindow):
 
         def _restore():
             if on_chart_page:
-                for c in charts:
-                    c.show()
+                # for c in charts:
+                #     c.show()
                 self._resume_charts()
 
         QTimer.singleShot(250, _restore)
         
     def _pause_charts(self): 
         self._chart_render_timer.stop()
-        self.chart_timer.stop()
 
     def _resume_charts(self):
         self._chart_render_timer.start()
-        self.chart_timer.start()
 
     def home_page_btn(self):
         self.user = False
@@ -2122,12 +2122,12 @@ class StrikeMachine(QMainWindow):
                     float(data.get('P2_Air_HoldingTime', 0)/1000),
                     float(data.get('P2_Air_ReleaseTime', 0)/1000),
                     float(data.get('P2_PressureSetting', 0.00)),
-                    float(data.get('P2_TemperatureSetting', 0.0)),
-                    float(data.get('P2_TempLimitHIGH', 0.0)),
-                    float(data.get('P2_TempLimitLOW', 0.0)),
-                    float(data.get('P2_Temp1Offset', 0.0)),
-                    float(data.get('P2_Temp2Offset', 0.0)),
-                    float(data.get('P2_Temp3Offset', 0.0))
+                    self.for_display_temp(float(data.get('P2_TemperatureSetting', 0.0))),
+                    self.for_display_temp(float(data.get('P2_TempLimitHIGH', 0.0))),
+                    self.for_display_temp(float(data.get('P2_TempLimitLOW', 0.0))),
+                    self.for_display_temp(float(data.get('P2_Temp1Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P2_Temp2Offset', 0.0))),
+                    self.for_display_temp(float(data.get('P2_Temp3Offset', 0.0)))
                 ],
                 [
                     int(data.get('P3_CountTimes', 0)),
@@ -2850,17 +2850,20 @@ class StrikeMachine(QMainWindow):
                 btn.blockSignals(False)
             return
         else:
+
             if channel == "A":
                 if checked:
                     if not self.init_signal:
                         self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", True)    # type: ignore
                     self.reset_cycle_btn(channel)
+                    self._sv_cycle_state(channel, True)
                     self.ui.pressure_sv_a_11.setEnabled(False)
                     self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat Off!")
                     # ltmessage.information(self, "Set Cycle A", "Group A Auto Repeat!")
                 else:
                     if not self.init_signal:
                         self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", False)   # type: ignore
+                    self._sv_cycle_state(channel, False)
                     self.ui.pressure_sv_a_11.setEnabled(True)
                     self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat On!")
                 return
@@ -2869,12 +2872,14 @@ class StrikeMachine(QMainWindow):
                     if not self.init_signal:
                         self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", True)    # type: ignore
                     self.reset_cycle_btn(channel)
+                    self._sv_cycle_state(channel, True)
                     self.ui.pressure_sv_b_11.setEnabled(False)
                     self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat Off!")
                     # ltmessage.information(self, "Set Cycle B", "Group B Auto Repeat!")
                 else:
                     if not self.init_signal:
                         self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", False)   # type: ignore
+                    self._sv_cycle_state(channel, False)
                     self.ui.pressure_sv_b_11.setEnabled(True)
                     self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat On!")
                 return
@@ -2883,15 +2888,29 @@ class StrikeMachine(QMainWindow):
                     if not self.init_signal:
                         self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", True)    # type: ignore
                     self.reset_cycle_btn(channel)
+                    self._sv_cycle_state(channel, True)
                     self.ui.pressure_sv_c_11.setEnabled(False)
                     self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat Off!")
                     # ltmessage.information(self, "Set Cycle C", "Group C Auto Repeat!")
                 else:
                     if not self.init_signal:
                         self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", False)   # type: ignore
+                    self._sv_cycle_state(channel, False)
                     self.ui.pressure_sv_c_11.setEnabled(True)
                     self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat On!")
                 return
+
+    def _sv_cycle_state(self, channel, status):
+        if channel == "All":
+            self.ui.pressure_sv_a_11.setEnabled(status)
+            self.ui.pressure_sv_b_11.setEnabled(status)
+            self.ui.pressure_sv_c_11.setEnabled(status)
+        if channel == "A":
+            self.ui.pressure_sv_a_11.setEnabled(status)
+        if channel == "B":
+            self.ui.pressure_sv_b_11.setEnabled(status)
+        if channel == "C":
+            self.ui.pressure_sv_c_11.setEnabled(status)
 
     def start_stop_btn(self, btn=None):
         if not self.plc_writer_connection and not self.init_signal:
@@ -3479,60 +3498,60 @@ class StrikeMachine(QMainWindow):
         self.ui.ct_sv.blockSignals(True)
         self.ui.ct_sv.setValue(self.ui.pressure_sv_c_1.value())
         items_a = [
-            self.plc_writer_worker.get_item("P1_CountTimes", self.list_for_import_a[0].value()),    # type: ignore
-            self.plc_writer_worker.get_item("P1_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_a[1].value()))), # type: ignore
-            self.plc_writer_worker.get_item("P1_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_a[2].value()))),   # type: ignore
-            self.plc_writer_worker.get_item("P1_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_a[3].value()))),    # type: ignore
-            self.plc_writer_worker.get_item("P1_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_a[4].value()))),    # type: ignore
-            self.plc_writer_worker.get_item("P1_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_a[5].value()))),    # type: ignore
-            self.plc_writer_worker.get_item("P1_PressureSetting", self.list_for_import_a[6].value()),   # type: ignore
-            self.plc_writer_worker.get_item("P1_TemperatureSetting", self.list_for_import_a[7].value()),    # type: ignore
-            self.plc_writer_worker.get_item("P1_TempLimitHIGH", self.list_for_import_a[8].value()), # type: ignore
-            self.plc_writer_worker.get_item("P1_TempLimitLOW", self.list_for_import_a[9].value()),  # type: ignore
-            self.plc_writer_worker.get_item("P1_Temp1Offset", self.list_for_import_a[10].value()),  # type: ignore
-            self.plc_writer_worker.get_item("P1_Temp2Offset", self.list_for_import_a[11].value()),  # type: ignore
-            self.plc_writer_worker.get_item("P1_Temp3Offset", self.list_for_import_a[12].value())   # type: ignore
+            self.plc_writer_worker.get_item("P1_CountTimes", self.list_for_import_a[0].value()),                                    # type: ignore
+            self.plc_writer_worker.get_item("P1_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_a[1].value()))),        # type: ignore
+            self.plc_writer_worker.get_item("P1_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_a[2].value()))),          # type: ignore
+            self.plc_writer_worker.get_item("P1_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_a[3].value()))),       # type: ignore
+            self.plc_writer_worker.get_item("P1_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_a[4].value()))),       # type: ignore
+            self.plc_writer_worker.get_item("P1_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_a[5].value()))),       # type: ignore
+            self.plc_writer_worker.get_item("P1_PressureSetting", self.list_for_import_a[6].value()),                               # type: ignore
+            self.plc_writer_worker.get_item("P1_TemperatureSetting", self.list_for_import_a[7].value()),                            # type: ignore
+            self.plc_writer_worker.get_item("P1_TempLimitHIGH", self.list_for_import_a[8].value()),                                 # type: ignore
+            self.plc_writer_worker.get_item("P1_TempLimitLOW", self.list_for_import_a[9].value()),                                  # type: ignore
+            self.plc_writer_worker.get_item("P1_Temp1Offset", self.list_for_import_a[10].value()),                                  # type: ignore
+            self.plc_writer_worker.get_item("P1_Temp2Offset", self.list_for_import_a[11].value()),                                  # type: ignore
+            self.plc_writer_worker.get_item("P1_Temp3Offset", self.list_for_import_a[12].value())                                   # type: ignore
         ]
         items_b = [
-            self.plc_writer_worker.get_item("P2_CountTimes", self.list_for_import_b[0].value()),    # type: ignore
-            self.plc_writer_worker.get_item("P2_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_b[1].value()))), # type: ignore
-            self.plc_writer_worker.get_item("P2_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_b[2].value()))),   # type: ignore
-            self.plc_writer_worker.get_item("P2_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_b[3].value()))),    # type: ignore
-            self.plc_writer_worker.get_item("P2_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_b[4].value()))),    # type: ignore
-            self.plc_writer_worker.get_item("P2_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_b[5].value()))),    # type: ignore
-            self.plc_writer_worker.get_item("P2_PressureSetting", self.list_for_import_b[6].value()),   # type: ignore
-            self.plc_writer_worker.get_item("P2_TemperatureSetting", self.list_for_import_b[7].value()),    # type: ignore
-            self.plc_writer_worker.get_item("P2_TempLimitHIGH", self.list_for_import_b[8].value()), # type: ignore
-            self.plc_writer_worker.get_item("P2_TempLimitLOW", self.list_for_import_b[9].value()),  # type: ignore
-            self.plc_writer_worker.get_item("P2_Temp1Offset", self.list_for_import_b[10].value()),  # type: ignore
-            self.plc_writer_worker.get_item("P2_Temp2Offset", self.list_for_import_b[11].value()),  # type: ignore
-            self.plc_writer_worker.get_item("P2_Temp3Offset", self.list_for_import_b[12].value())   # type: ignore
+            self.plc_writer_worker.get_item("P2_CountTimes", self.list_for_import_b[0].value()),                                    # type: ignore
+            self.plc_writer_worker.get_item("P2_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_b[1].value()))),        # type: ignore
+            self.plc_writer_worker.get_item("P2_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_b[2].value()))),          # type: ignore
+            self.plc_writer_worker.get_item("P2_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_b[3].value()))),       # type: ignore
+            self.plc_writer_worker.get_item("P2_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_b[4].value()))),       # type: ignore
+            self.plc_writer_worker.get_item("P2_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_b[5].value()))),       # type: ignore
+            self.plc_writer_worker.get_item("P2_PressureSetting", self.list_for_import_b[6].value()),                               # type: ignore
+            self.plc_writer_worker.get_item("P2_TemperatureSetting", self.list_for_import_b[7].value()),                            # type: ignore
+            self.plc_writer_worker.get_item("P2_TempLimitHIGH", self.list_for_import_b[8].value()),                                 # type: ignore
+            self.plc_writer_worker.get_item("P2_TempLimitLOW", self.list_for_import_b[9].value()),                                  # type: ignore
+            self.plc_writer_worker.get_item("P2_Temp1Offset", self.list_for_import_b[10].value()),                                  # type: ignore
+            self.plc_writer_worker.get_item("P2_Temp2Offset", self.list_for_import_b[11].value()),                                  # type: ignore
+            self.plc_writer_worker.get_item("P2_Temp3Offset", self.list_for_import_b[12].value())                                   # type: ignore
         ]
         items_c = [
-            self.plc_writer_worker.get_item("P3_CountTimes", self.list_for_import_c[0].value()),                                # type: ignore
-            self.plc_writer_worker.get_item("P3_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_c[1].value()))),    # type: ignore
-            self.plc_writer_worker.get_item("P3_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_c[2].value()))),      # type: ignore
-            self.plc_writer_worker.get_item("P3_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_c[3].value()))),   # type: ignore
-            self.plc_writer_worker.get_item("P3_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_c[4].value()))),   # type: ignore
-            self.plc_writer_worker.get_item("P3_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_c[5].value()))),   # type: ignore
-            self.plc_writer_worker.get_item("P3_PressureSetting", self.list_for_import_c[6].value()),   # type: ignore
-            self.plc_writer_worker.get_item("P3_TemperatureSetting", self.list_for_import_c[7].value()),    # type: ignore
-            self.plc_writer_worker.get_item("P3_TempLimitHIGH", self.list_for_import_c[8].value()), # type: ignore
-            self.plc_writer_worker.get_item("P3_TempLimitLOW", self.list_for_import_c[9].value()),  # type: ignore
-            self.plc_writer_worker.get_item("P3_Temp1Offset", self.list_for_import_c[10].value()),  # type: ignore
-            self.plc_writer_worker.get_item("P3_Temp2Offset", self.list_for_import_c[11].value()),  # type: ignore
-            self.plc_writer_worker.get_item("P3_Temp3Offset", self.list_for_import_c[12].value())   # type: ignore
+            self.plc_writer_worker.get_item("P3_CountTimes", self.list_for_import_c[0].value()),                                    # type: ignore
+            self.plc_writer_worker.get_item("P3_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_c[1].value()))),        # type: ignore
+            self.plc_writer_worker.get_item("P3_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_c[2].value()))),          # type: ignore
+            self.plc_writer_worker.get_item("P3_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_c[3].value()))),       # type: ignore
+            self.plc_writer_worker.get_item("P3_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_c[4].value()))),       # type: ignore
+            self.plc_writer_worker.get_item("P3_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_c[5].value()))),       # type: ignore
+            self.plc_writer_worker.get_item("P3_PressureSetting", self.list_for_import_c[6].value()),                               # type: ignore
+            self.plc_writer_worker.get_item("P3_TemperatureSetting", self.list_for_import_c[7].value()),                            # type: ignore
+            self.plc_writer_worker.get_item("P3_TempLimitHIGH", self.list_for_import_c[8].value()),                                 # type: ignore
+            self.plc_writer_worker.get_item("P3_TempLimitLOW", self.list_for_import_c[9].value()),                                  # type: ignore
+            self.plc_writer_worker.get_item("P3_Temp1Offset", self.list_for_import_c[10].value()),                                  # type: ignore
+            self.plc_writer_worker.get_item("P3_Temp2Offset", self.list_for_import_c[11].value()),                                  # type: ignore
+            self.plc_writer_worker.get_item("P3_Temp3Offset", self.list_for_import_c[12].value())                                   # type: ignore
         ]
         items_t0 = [
-            self.plc_writer_worker.get_item("T0_TemperatureSetting", self.list_for_import_t0[0].value()),   # type: ignore
-            self.plc_writer_worker.get_item("T0_TempLimitHIGH", self.list_for_import_t0[1].value()),    # type: ignore
-            self.plc_writer_worker.get_item("T0_TempLimitLOW", self.list_for_import_t0[2].value()), # type: ignore
-            self.plc_writer_worker.get_item("T0_TempOffset", self.list_for_import_t0[3].value())    # type: ignore
+            self.plc_writer_worker.get_item("T0_TemperatureSetting", self.list_for_import_t0[0].value()),                           # type: ignore
+            self.plc_writer_worker.get_item("T0_TempLimitHIGH", self.list_for_import_t0[1].value()),                                # type: ignore
+            self.plc_writer_worker.get_item("T0_TempLimitLOW", self.list_for_import_t0[2].value()),                                 # type: ignore
+            self.plc_writer_worker.get_item("T0_TempOffset", self.list_for_import_t0[3].value())                                    # type: ignore
         ]
-        self.plc_writer_worker.write_multi.emit(items_a, "A")   # type: ignore
-        self.plc_writer_worker.write_multi.emit(items_b, "B")   # type: ignore
-        self.plc_writer_worker.write_multi.emit(items_c, "C")   # type: ignore
-        self.plc_writer_worker.write_multi.emit(items_t0, "T0") # type: ignore
+        self.plc_writer_worker.write_multi.emit(items_a, "A")                                                                       # type: ignore
+        self.plc_writer_worker.write_multi.emit(items_b, "B")                                                                       # type: ignore
+        self.plc_writer_worker.write_multi.emit(items_c, "C")                                                                       # type: ignore
+        self.plc_writer_worker.write_multi.emit(items_t0, "T0")                                                                     # type: ignore
         
         for i in range(len(self.list_for_import_a)):
             self.list_for_import_a[i].blockSignals(False)
@@ -3545,11 +3564,11 @@ class StrikeMachine(QMainWindow):
         self.ui.bt_sv.blockSignals(False)
         self.ui.ct_sv.blockSignals(False)
         if self.plc_writer_connection:
-            if not self.ui.set_cycle_a_btn.isChecked():
+            if not self.ui.set_cycle_a_btn.isChecked() and (self.list_for_import_a[0].value() > 0):
                 self.ui.set_cycle_a_btn.click()
-            if not self.ui.set_cycle_b_btn.isChecked():
+            if not self.ui.set_cycle_b_btn.isChecked() and (self.list_for_import_b[0].value() > 0):
                 self.ui.set_cycle_b_btn.click()
-            if not self.ui.set_cycle_c_btn.isChecked():
+            if not self.ui.set_cycle_c_btn.isChecked() and (self.list_for_import_c[0].value() > 0):
                 self.ui.set_cycle_c_btn.click()
             self.disable_btn("A", False)
             self.disable_btn("B", False)
@@ -3866,11 +3885,14 @@ class StrikeMachine(QMainWindow):
         current_date = datetime.now().strftime("%d-%m-%Y")  # dùng - thay vì /
         if self._current_lang == "cn":
             name = self.ui.search_data.text().strip() or "历史记录"
+            group = "组"
         elif self._current_lang == "vn":
             name = self.ui.search_data.text().strip() or "Lịch sử"
+            group = "Nhóm"
         else:
             name = self.ui.search_data.text().strip() or "History"
-        default_filename_done = f"{name} - Group {self.ui.select_group_name.currentText()} {current_date}"
+            group = "Group"
+        default_filename_done = f"{name} - {group} {self.ui.select_group_name.currentText()} {current_date}"
         list_history_folder = Path(self.stk_mch_folder) / "Excel"
         list_history_folder.mkdir(parents=True, exist_ok=True)  # tạo folder nếu chưa có
         filename_done = list_history_folder / f"{default_filename_done}.xlsx"

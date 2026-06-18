@@ -266,9 +266,9 @@ class CustomChartWidget(QWidget):
         self._setup_ui()
         self._setup_chart()
 
-        self._render_timer = QTimer(self)
-        self._render_timer.timeout.connect(self._render_frame)
-        self._render_timer.start(render_interval)
+        # self._render_timer = QTimer(self)
+        # self._render_timer.timeout.connect(self._render_frame)
+        # self._render_timer.start(render_interval)
 
     def mouseDoubleClickEvent(self, event) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
@@ -582,34 +582,10 @@ class CustomChartWidget(QWidget):
         """
         Điểm render chart UI.
         Lock mutex để đọc snapshot buffer, sau đó render ngoài lock.
-
-        TỐI ƯU áp dụng:
-        1. Skip setData()/label update cho series đang bị ẩn (_vis_temp /
-           _vis_pressure == False) — tránh pyqtgraph rebuild path nội bộ
-           cho curve không hiển thị.
-        2. Dùng running-max (_ty_runmax/_py_runmax, O(1) amortized) thay
-           cho arr.max() (O(n)) để quyết định có cần setRange() Y hay
-           không — không phải quét lại toàn bộ buffer mỗi frame.
-        3. _CircBuf.get() có dirty-flag nên tự skip copy nếu chưa có
-           append() mới kể từ lần get() trước (transparent, không cần
-           sửa gì thêm ở đây).
-        4. LOD downsampling (autoDownsample + downsampleMethod="peak")
-           đã được set ngay tại _create_temp_curves/_create_pressure_curves
-           — pyqtgraph tự giảm số điểm thực vẽ xuống theo độ rộng pixel
-           của viewport, vẫn giữ được đỉnh/đáy (peak) để không mất spike.
-        5. Threshold riêng cho TEXT của label (_TEMP_LABEL_THRESH/
-           _PRES_LABEL_THRESH) — chỉ setText() khi giá trị đổi đủ lớn, giảm
-           việc tái tính bounding box/font metrics khi data dao động nhỏ
-           liên tục (nhiễu PLC). setPos() vẫn chạy MỖI FRAME vì toạ độ X là
-           timestamp luôn tiến theo thời gian thực — nếu threshold luôn cả
-           setPos(), label sẽ bị "neo" ở X cũ và tách rời khỏi đầu curve.
-        6. Gộp setXRange + setRange(yRange=...) thành 1 lệnh setRange() duy
-           nhất khi cả X và Y cùng cần đổi trong 1 frame — tránh trigger
-           sigRangeChanged (→ _sync_views) 2 lần liên tiếp.
         """
-        if not self._mutex.tryLock(33):
+        if not self._mutex.tryLock(5):
             return  # render frame này bỏ qua, frame sau render bù
-
+        # start = time.perf_counter()
         try:
             tx_snap = [buf.get() for buf in self._tx]
             ty_snap = [buf.get() for buf in self._ty]
@@ -710,6 +686,10 @@ class CustomChartWidget(QWidget):
             self._pressure_labels[i].setPos(lx - 0.1, ly)
             self._last_pressure_label_pos[i] = (lx, ly)
             self._pressure_labels[i].show()
+        # print(
+        #     f"{self.objectName()} "
+        #     f"{(time.perf_counter()-start)*1000:.2f} ms"
+        # )
 
     def append_data(
         self,
@@ -819,9 +799,10 @@ class CustomChartWidget(QWidget):
 
     def showEvent(self, event) -> None:
         super().showEvent(event)
-        if not self._render_timer.isActive():
-            self._render_timer.start()
+        # if not self._render_timer.isActive():
+            # self._render_timer.start()
 
     def hideEvent(self, event) -> None:
         super().hideEvent(event)
-        self._render_timer.stop()
+        # if self._render_timer.isActive():
+            # self._render_timer.stop()
