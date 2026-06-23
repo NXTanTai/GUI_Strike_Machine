@@ -34,6 +34,10 @@ def _set_string(data: bytearray, offset: int, value: str) -> None:
     data[offset + 1] = len(encoded)
     data[offset + 2: offset + 2 + len(encoded)] = encoded
 
+HEARTBEAT_INTERVAL  = 5.0    # giây — khoảng cách giữa 2 lần probe khi queue rỗng
+HEARTBEAT_DB_SIZE   = 1      # byte — đọc tối thiểu để không gây overhead
+MAX_RETRY_COUNT     = 3      # số lần retry tối đa cho 1 item trước khi bỏ
+
 class PLCWrite(QObject):
     """
     Object dùng để ghi dữ liệu xuống PLC
@@ -74,22 +78,30 @@ class PLCWrite(QObject):
     ):
         super().__init__(parent)
 
-        self._ip          = ip
-        self._rack        = rack
-        self._slot        = slot
-        self._db_number   = db_number
-        self._db_layout   = db_layout
-        self._db_size     = db_size
-        self._write_ms = write_ms
-        self._retry_ms    = retry_ms
+        self._ip            = ip
+        self._rack          = rack
+        self._slot          = slot
+        self._db_number     = db_number
+        self._db_layout     = db_layout
+        self._db_size       = db_size
+        self._write_ms      = write_ms   
+        self._retry_ms      = retry_ms
         self.logger = logger
         # print("DB Layout:", db_layout)
         self._layout_dict: dict[str, tuple[str, int, Any]] = self._build_layout_dict()
-
         self._client: snap7.client.Client | None = None
-        self._queue: Queue = Queue()
+    
+        self._queue: list[tuple] = []
+        self._queue_lock = threading.Lock()
+ 
+        self._current_item: tuple | None = None
+        self._current_item_retries: int = 0
+        
+        self._last_heartbeat: float = 0.0
+
         self._poll_timer: QTimer | None = None
         self._retry_timer: QTimer | None = None
+        
         self._running = False
         self._last_error_log_time = 0
 
@@ -142,97 +154,16 @@ class PLCWrite(QObject):
         if self._poll_timer:
             self._poll_timer.stop()
             self._poll_timer.deleteLater()
+            self._poll_timer = None
         if self._retry_timer:
             self._retry_timer.stop()
             self._retry_timer.deleteLater()
+            self._retry_timer = None
 
         self._disconnect_plc()
         self.finished.emit()
         QThread.currentThread().quit()
 
-    def get_item(self, tag_name: str, value: Any) -> dict:
-        tag = self._layout_dict.get(tag_name)
-        if not tag:
-            raise ValueError(f"Tag not found: {tag_name}")
-
-        dtype, offset, bit = tag
-
-        item = {
-            "area": Area.DB,
-            "db_number": self._db_number,
-            "start": offset,
-        }
-
-        if dtype == "BOOL":
-            mask = 1 << (7 - (bit or 0))
-            item["data"] = bytearray([mask if bool(value) else 0])
-        elif dtype == "REAL":
-            item["data"] = struct.pack(">f", float(value))
-        elif dtype == "INT":
-            item["data"] = struct.pack(">h", int(value))
-        elif dtype == "DINT":
-            item["data"] = struct.pack(">i", int(value))
-        else:
-            raise ValueError(f"Unsupported dtype {dtype} for tag {tag_name}")
-
-        return item
-
-    @Slot(str, bool)
-    def _enqueue_bool(self, name: str, value: bool):
-        """Enqueue cho BOOL"""
-        self._queue.put(("bool", name, value))
-        if self.logger:
-            self.logger.info(f"[PLC WRITE]: BOOL Enqueued → {name} = {value}")
-
-    @Slot(str, object)
-    def _enqueue_value(self, name: str, value: object):
-        """Enqueue cho REAL, INT, DINT, STRING"""
-        self._queue.put(("value", name, value))
-        if self.logger:
-            self.logger.info(f"[PLC WRITE]: VALUE Enqueued → {name} = {value}")
-
-    @Slot(object, str)
-    def _enqueue_multi(self, items: object, group: str = ""):
-        """Enqueue cho ghi đa biến"""
-        self._queue.put(("multi_vars", items, group))
-        if self.logger:
-            self.logger.info(f"[PLC WRITE]: MULTI VARS enqueued: {len(items)} | group={group}")
-
-    @Slot(dict)
-    def _enqueue_full_db(self, data: object):
-        """
-        Enqueue cho khối DB\n
-        Tuy nhiên 
-        """
-        self._queue.put(("full_db", data))
-        if self.logger:
-            self.logger.info(f"[PLC WRITE]: Full DB write enqueued: {len(data)} tags")
-
-    @Slot()
-    def _drain_queue(self):
-        if not self._running or self._queue.empty():
-            return
-
-        try:
-            item = self._queue.get_nowait()
-            cmd_type = item[0]
-
-            if cmd_type == "bool":
-                self._write_bool(item[1], item[2])
-
-            elif cmd_type == "value":
-                self._write_value(item[1], item[2])
-
-            elif cmd_type == "multi_vars":
-                self._write_multi_vars(item[1], item[2])
-
-            elif cmd_type == "full_db":
-                self._write_full_db(item[1])
-
-        except Exception as e:
-            if self.logger:
-                self.logger.error("[PLC WRITE]: Drain error: %s", e)
-                
     @Slot()
     def _try_connect(self):
         if not self._running:
@@ -250,10 +181,27 @@ class PLCWrite(QObject):
                 self._retry_timer.stop()
             if not self._poll_timer.isActive():   # type: ignore
                 self._poll_timer.start()   # type: ignore
+            if self._current_item is not None:
+                if self._current_item_retries < MAX_RETRY_COUNT:
+                    if self.logger:
+                        self.logger.info(
+                            "[PLC WRITE]: Reconnected — retrying item (attempt %d/%d)",
+                            self._current_item_retries + 1, MAX_RETRY_COUNT
+                        )
+                    with self._queue_lock:
+                        self._queue.insert(0, self._current_item)
+                else:
+                    if self.logger:
+                        self.logger.warning(
+                            "[PLC WRITE]: Dropped item after %d failed retries: %s",
+                            MAX_RETRY_COUNT, self._current_item
+                        )
+                    self._current_item = None
+                    self._current_item_retries = 0
             if self.logger:
                 self.logger.info("[PLC WRITE]: Connected to PLC, started writing")
         else:
-            if not self._retry_timer.isActive():   # type: ignore
+            if self._retry_timer and not self._retry_timer.isActive():   # type: ignore
                 self._retry_timer.start()   # type: ignore
 
     def _connect_plc(self):
@@ -292,13 +240,12 @@ class PLCWrite(QObject):
             self._client = result["client"]
             self.connected.emit(True)
         else:
-            msg = f"Connection failed: {result['error']}"
-            if self.logger:
-                now = time.time()
-                if now - self._last_error_log_time >= 5:
-                    self.logger.error("[PLC WRITE]: " + msg)
-                    self._last_error_log_time = now
-            self.error.emit(msg)
+            now = time.time()
+            if now - self._last_error_log_time >= 5:
+                if self.logger:
+                    self.logger.error("[PLC WRITE]: Connection failed: %s", result["error"])
+                self._last_error_log_time = now
+            self.error.emit(str(result["error"]))
             self.connected.emit(False)
             self._client = None
 
@@ -311,6 +258,121 @@ class PLCWrite(QObject):
             self._client = None
         self.connected.emit(False)
 
+    @Slot()
+    def _drain_queue(self):
+        if not self._running:
+            return
+ 
+        with self._queue_lock:
+            has_item = len(self._queue) > 0
+            item = self._queue.pop(0) if has_item else None
+ 
+        if item is not None:
+            self._current_item = item
+            self._dispatch(item)
+        else:
+            
+            self._heartbeat()
+        # try:
+        #     item = self._queue.get_nowait()
+        #     cmd_type = item[0]
+
+        #     if cmd_type == "bool":
+        #         self._write_bool(item[1], item[2])
+
+        #     elif cmd_type == "value":
+        #         self._write_value(item[1], item[2])
+
+        #     elif cmd_type == "multi_vars":
+        #         self._write_multi_vars(item[1], item[2])
+
+        #     elif cmd_type == "full_db":
+        #         self._write_full_db(item[1])
+
+        # except Exception as e:
+        #     if self.logger:
+        #         self.logger.error("[PLC WRITE]: Drain error: %s", e)
+
+    def _heartbeat(self):
+        """
+        Gửi db_read(1 byte) để xác nhận kết nối.
+        Nếu kết nối fail thì reconnect ngay lập tức, không chờ lần ghi tiếp theo.
+        """
+        now = time.time()
+        if now - self._last_heartbeat < HEARTBEAT_INTERVAL:
+            return
+        if not self._client or not self._client.get_connected():
+            self._reconnect()
+            return
+        try:
+            self._client.db_read(self._db_number, 0, HEARTBEAT_DB_SIZE)
+            self._last_heartbeat = now
+        except Exception as exc:
+            if self.logger:
+                self.logger.warning("[PLC WRITE]: Heartbeat failed: %s — reconnecting", exc)
+            self._reconnect()
+
+    @Slot(str, bool)
+    def _enqueue_bool(self, name: str, value: bool):
+        self._enqueue_dedup(("bool", name, value), key=f"bool:{name}")
+ 
+    @Slot(str, object)
+    def _enqueue_value(self, name: str, value: object):
+        self._enqueue_dedup(("value", name, value), key=f"value:{name}")
+ 
+    @Slot(object, str)
+    def _enqueue_multi(self, items: object, group: str = ""):
+        with self._queue_lock:
+            self._queue.append(("multi_vars", items, group))
+        if self.logger:
+            self.logger.info("[PLC WRITE]: MULTI enqueued: %d items | group=%s", len(items), group)
+ 
+    @Slot(object)
+    def _enqueue_full_db(self, data: object):
+        with self._queue_lock:
+            self._queue.append(("full_db", data))
+        if self.logger:
+            self.logger.info("[PLC WRITE]: Full DB enqueued: %d tags", len(data))
+
+    def _enqueue_dedup(self, item: tuple, key: str):
+        """
+        Nếu trong queue đã có item cùng key (cùng loại + cùng tag),
+        thay bằng giá trị mới nhất thay vì thêm vào cuối.
+        Tránh gửi hàng loạt giá trị trung gian khi người dùng kéo spinbox.
+        """
+        with self._queue_lock:
+            for i, existing in enumerate(self._queue):
+                existing_key = f"{existing[0]}:{existing[1]}" if len(existing) > 1 else ""
+                if existing_key == key:
+                    self._queue[i] = item   # thay thế tại chỗ
+                    if self.logger:
+                        self.logger.debug("[PLC WRITE]: Dedup — replaced %s in queue", key)
+                    return
+            self._queue.append(item)
+        if self.logger:
+            self.logger.info("[PLC WRITE]: Enqueued %s = %s", item[1], item[2] if len(item) > 2 else "")
+
+    def _dispatch(self, item: tuple):
+        cmd_type = item[0]
+        try:
+            if cmd_type == "bool":
+                self._write_bool(item[1], item[2])
+            elif cmd_type == "value":
+                self._write_value(item[1], item[2])
+            elif cmd_type == "multi_vars":
+                self._write_multi_vars(item[1], item[2])
+            elif cmd_type == "full_db":
+                self._write_full_db(item[1])
+
+            self._current_item = None
+            self._current_item_retries = 0
+ 
+        except Exception as e:
+            if self.logger:
+                self.logger.error("[PLC WRITE]: Dispatch error: %s", e)
+            self._current_item_retries += 1
+            self._handle_write_error(f"dispatch [{cmd_type}]", e)
+
     def _write_bool(self, name: str, value: bool):
         """
         Ghi BOOL riêng biệt
@@ -321,6 +383,7 @@ class PLCWrite(QObject):
 
         tag = self._layout_dict.get(name)
         if not tag:
+            # self.error.emit(f"Tag not found: {name}")
             return
 
         _, offset, bit = tag
@@ -334,9 +397,8 @@ class PLCWrite(QObject):
                 self.logger.info(f"[PLC WRITE]: BOOL OK → {name} = {value}")
             # self.write_done.emit(name)
         except Exception as exc:
-            self._handle_write_error(f"[PLC WRITE]: Write BOOL [{name}]", exc)
-
-
+            raise exc
+        
     def _write_value(self, name: str, value: Any):
         """
         Ghi REAL, INT, DINT, STRING
@@ -347,24 +409,29 @@ class PLCWrite(QObject):
 
         tag = self._layout_dict.get(name)
         if not tag:
-            self.error.emit(f"Tag not found: {name}")
+            # self.error.emit(f"Tag not found: {name}")
             return
 
         dtype, offset, bit = tag
 
         try:
-            size = self._get_dtype_size(dtype)
-            raw = bytearray(self._client.db_read(self._db_number, offset, size)) # type: ignore
+            if dtype == "BOOL": # BOOL vẫn cần read-modify-write để giữ các bit khác
+                size = 1
+                raw = bytearray(self._client.db_read(self._db_number, offset, size))  # type: ignore
+                self._pack(raw, dtype, bit, value, offset=0)
+            else:
+                size = self._get_dtype_size(dtype)
+                raw = bytearray(size)
+                self._pack(raw, dtype, bit, value, offset=0)
 
-            self._pack(raw, dtype, bit, value, offset=0)
             self._client.db_write(self._db_number, offset, raw) # type: ignore
 
             if self.logger:
-                self.logger.info(f"[PLC WRITE]: Value written → {name} = {value} | Offset: {offset} | DB{self._db_number}")
+                self.logger.info(f"[PLC WRITE]: Value OK → {name} = {value} | Offset: {offset} | DB{self._db_number}")
             # self.write_done.emit(name)
             
         except Exception as exc:
-            self._handle_write_error(f"[PLC WRITE]: Write value [{name}]", exc)
+            raise exc
 
     def _write_multi_vars(self, items: list, group: str = ""):
         """
@@ -386,12 +453,44 @@ class PLCWrite(QObject):
             if result == 0:
                 self.write_multi_done.emit(group, True)
                 if self.logger:
-                    self.logger.info(f"[PLC WRITE]: write_multi_vars OK: {len(items)} tags | group={group}")
+                    self.logger.info(
+                        "[PLC WRITE]: write_multi_vars OK: %d tags | group=%s",
+                        len(items), group
+                    )
             else:
-                self.error.emit(f"[PLC WRITE]: write_multi_vars returned: {result}")
+                err = f"write_multi_vars returned: {result}"
+                self.error.emit(err)
+                raise RuntimeError(err)
         except Exception as exc:
-            self._handle_write_error(f"[PLC WRITE]: write_multi_vars", exc)
-            
+            raise exc
+
+    def get_item(self, tag_name: str, value: Any) -> dict:
+        tag = self._layout_dict.get(tag_name)
+        if not tag:
+            raise ValueError(f"Tag not found: {tag_name}")
+
+        dtype, offset, bit = tag
+
+        item = {
+            "area": Area.DB,
+            "db_number": self._db_number,
+            "start": offset,
+        }
+
+        if dtype == "BOOL":
+            mask = 1 << (7 - (bit or 0))
+            item["data"] = bytearray([mask if bool(value) else 0])
+        elif dtype == "REAL":
+            item["data"] = struct.pack(">f", float(value))
+        elif dtype == "INT":
+            item["data"] = struct.pack(">h", int(value))
+        elif dtype == "DINT":
+            item["data"] = struct.pack(">i", int(value))
+        else:
+            raise ValueError(f"Unsupported dtype {dtype} for tag {tag_name}")
+
+        return item
+
     def _write_full_db(self, data: dict):
         """
         Ghi toàn bộ DB 
@@ -408,30 +507,27 @@ class PLCWrite(QObject):
         if not self._ensure_connected():
             return
         try:
-            raw = bytearray(self._client.db_read(self._db_number, 0, self._db_size))    # type: ignore
-
+            raw = bytearray(self._client.db_read(self._db_number, 0, self._db_size))  # type: ignore
             for name, value in data.items():
                 tag = self._layout_dict.get(name)
                 if not tag:
                     continue
                 dtype, offset, bit = tag
                 self._pack(raw, dtype, bit, value, offset=offset)
-
-            self._client.db_write(self._db_number, 0, raw)                              # type: ignore
-            # self.write_done.emit("full_db")
+            self._client.db_write(self._db_number, 0, raw)  # type: ignore
             if self.logger:
-                self.logger.info(f"[PLC WRITE]: Full DB write successful (%d tags)", len(data))
-
+                self.logger.info("[PLC WRITE]: Full DB OK — %d tags", len(data))
         except Exception as exc:
-            self._handle_write_error(f"[PLC WRITE]: Full DB write", exc)
-
+            raise exc
+        
     def _ensure_connected(self) -> bool:
         if not self._client or not self._client.get_connected():
+            self._reconnect()
             return False
         return True
 
     def _handle_write_error(self, context: str, exc: Exception):
-        msg = f"{context} failed: {exc}"
+        msg = f"[PLC WRITE]: {context} failed: {exc}"
         if self.logger:
             self.logger.error(msg)
         self.error.emit(msg)

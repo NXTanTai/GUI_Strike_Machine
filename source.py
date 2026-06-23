@@ -1280,10 +1280,18 @@ class StrikeMachine(QMainWindow):
         try:
             self.conn.executemany('''
                 INSERT INTO history (
-                    "No.", "Name.", "Group.",
-                    "Pressure SV.", "Pressure.",
-                    "Oven SV.", "T-Oven.", "Temperature SV.",
-                    "Front.", "Middle.", "End.", "Date."
+                    "No.", 
+                    "Name.", 
+                    "Group.",
+                    "Pressure SV.", 
+                    "Pressure.",
+                    "Oven SV.", 
+                    "T-Oven.", 
+                    "Temperature SV.",
+                    "Front.", 
+                    "Middle.", 
+                    "End.", 
+                    "Date."
                 )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', db_rows)
@@ -1941,7 +1949,7 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "vn":
                 title = "Lỗi"
                 content = "Không tìm thấy dữ liệu DB！Không thể khởi động PLC."
-            ltmessage.error(self, title, content, self._current_lang)
+            ltmessage.error(self, title, content, self._current_lang) # type: ignore
             return 
 
         if not self._setup_write_plc_thread(
@@ -1961,7 +1969,7 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "vn":
                 title = "Lỗi"
                 content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-            ltmessage.error(self, title, content, self._current_lang)
+            ltmessage.error(self, title, content, self._current_lang)  # type: ignore
 
         time.sleep(0.2)
 
@@ -1982,7 +1990,7 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "vn":
                 title = "Lỗi"
                 content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-            ltmessage.error(self, title, content, self._current_lang)
+            ltmessage.error(self, title, content, self._current_lang) # type: ignore
 
     def setup_simulate_threads(self):
         try:
@@ -2005,7 +2013,7 @@ class StrikeMachine(QMainWindow):
             db_number: Optional[int] = None, 
             db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
             db_size: Optional[int] = None, 
-            poll_ms: int = 500,
+            poll_ms: int = 250,
             logger: Optional[logging.Logger] = None
             ):
         try:
@@ -2923,7 +2931,7 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "vn":
                 title = "Lỗi"
                 content = "PLC Writer mất kết nối!"
-            ltmessage.error(self, title, content, self._current_lang)
+            ltmessage.error(self, title, content, self._current_lang)  # type: ignore
             if btn is not None:
                 btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
                 btn.setChecked(False)
@@ -3140,7 +3148,7 @@ class StrikeMachine(QMainWindow):
             title = "Xoá dữ liệu"
             content = "Đặt toàn bộ SV về 0?"
         reply = ltmessage.question(
-            self, title, content, self._current_lang
+            self, title, content, self._current_lang # type: ignore
         )
         if reply == ltmessage.Yes:
             try:
@@ -3907,7 +3915,7 @@ class StrikeMachine(QMainWindow):
                 title = "Xuất toàn bộ lịch sử"
                 content = "Việc này sẽ mất một lúc. Tiếp tục?"
             reply = ltmessage.question(
-                self, title, content, lang=self._current_lang
+                self, title, content, lang=self._current_lang  # type: ignore
             )
             if reply == ltmessage.Yes:
                 pass
@@ -3934,7 +3942,7 @@ class StrikeMachine(QMainWindow):
             text_disp = "导出中... 请等待."
         elif self._current_lang == "vn":
             text_disp = "Đang tạo file..."
-        self.ui.error_display.setText(text_disp)
+        self.ui.error_display.setText(text_disp) # type: ignore
         self._export_thread = QThread()
         if self.ui.stacked_list_history_page.currentIndex() == 0:
             self._export_worker = ExportWorker(
@@ -3976,7 +3984,7 @@ class StrikeMachine(QMainWindow):
             elif self._current_lang == "vn":
                 title = "Lỗi"
                 content = f"Xuất file lỗi:\n{error}"
-            ltmessage.error(self, title, content, lang=self._current_lang)
+            ltmessage.error(self, title, content, lang=self._current_lang) # type: ignore
         else:
             if self._current_lang == "en":
                 title = "Export Success"
@@ -3988,7 +3996,7 @@ class StrikeMachine(QMainWindow):
                 title = "Xuất dữ liệu thành công"
                 content = "Chuyển đến thư mục lưu trữ？"
             reply = ltmessage.custom(
-                self, title, content,
+                self, title, content, # type: ignore
                 msg_type="success", lang=self._current_lang
             )
             if reply == ltmessage.Yes:
@@ -4019,7 +4027,7 @@ class StrikeMachine(QMainWindow):
             content = "Bạn có chắc chắn muốn thoát không?"
             button = ["Có", "Không"]
         reply = ltmessage.question(
-            self, title, content, lang=self._current_lang
+            self, title, content, lang=self._current_lang # type: ignore
         )
 
         if reply == ltmessage.Yes:
