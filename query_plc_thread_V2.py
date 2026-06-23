@@ -39,22 +39,22 @@ class PLCRead(QObject):
     error         = Signal(str)
     connected     = Signal(bool)
     disconnected  = Signal()
-    finished      = Signal()
+    finished      = Signal()           
 
-    _stop_read    = Signal()
+    _stop_read    = Signal()           
 
     def __init__(
         self,
-        ip:        str                                               = "172.16.100.100",
-        rack:      int                                               = 0,
-        slot:      int                                               = 1,
-        db_number: int                                               = 1,
+        ip:        str                   = "172.16.100.100",
+        rack:      int                   = 0,
+        slot:      int                   = 1,
+        db_number: int                   = 1,
         db_layout: Optional[list[tuple[str, str, int, Any]]]        = None,
-        db_size:   int                                               = 584,
-        poll_ms:   int                                               = 500,
-        retry_ms:  int                                               = 3000,
-        logger                                                       = None,
-        parent:    Optional[QObject]                                 = None,
+        db_size:   int                   = 584,
+        poll_ms:   int                   = 500,
+        retry_ms:  int                   = 3000,
+        logger                           =None,
+        parent:    Optional[QObject]     = None,
         ):
         super().__init__(parent)
         self._ip        = ip
@@ -62,6 +62,7 @@ class PLCRead(QObject):
         self._slot      = slot
         self._db_number = db_number
         self._db_layout = db_layout
+        # print("DB Read Layout: ", self._db_layout)
         self._db_size   = db_size
         self._poll_ms   = poll_ms
         self._retry_ms  = retry_ms
@@ -70,8 +71,7 @@ class PLCRead(QObject):
         self._client:      snap7.client.Client | None = None
         self._poll_timer:  QTimer | None = None
         self._retry_timer: QTimer | None = None
-
-        self._running            = False
+        self._running   = False
         self._last_error_log_time = 0
 
     @Slot()
@@ -79,7 +79,6 @@ class PLCRead(QObject):
         self._running = True
         if self.logger:
             self.logger.info("[PLC READ]: PLC Read init")
-
         self._poll_timer = QTimer(self)
         self._poll_timer.setInterval(self._poll_ms)
         self._poll_timer.timeout.connect(self._poll)
@@ -132,37 +131,25 @@ class PLCRead(QObject):
     def _try_connect(self):
         if not self._running:
             return
-
+        
         if self._client and self._client.get_connected():
             return
 
         self._connect_plc()
-
         if not self._running:
             self._disconnect_plc()
             return
-
         if self._client and self._client.get_connected():
             if self._retry_timer and self._retry_timer.isActive():
                 self._retry_timer.stop()
-
-            # Đọc toàn bộ DB một lần ngay sau khi connect để kiểm tra nút nhấn
-            try:
-                raw = self._client.db_read(self._db_number, 0, self._db_size)
-                result = self._parse(raw, base_offset=0)
-                self.init_data.emit()
-                self.data_ready.emit(result)
-            except S7Error as exc:
-                if self.logger:
-                    self.logger.warning("[PLC READ]: Initial read error: %s", exc)
-
-            if not self._poll_timer.isActive(): # type: ignore
-                self._poll_timer.start()        # type: ignore
+            self.init_data.emit()
+            if not self._poll_timer.isActive():   # type: ignore
+                self._poll_timer.start() # type: ignore
             if self.logger:
                 self.logger.info("[PLC READ]: Connected to PLC, started reading")
         else:
             if not self._retry_timer.isActive(): # type: ignore
-                self._retry_timer.start()        # type: ignore
+                self._retry_timer.start()  # type: ignore
 
     def _connect_plc(self):
         if not self._running:
@@ -225,11 +212,14 @@ class PLCRead(QObject):
             return
 
         try:
-            start, end = self._calc_read_range()
-            raw = self._client.db_read(self._db_number, start, end - start)
-            result = self._parse(raw, base_offset=start)
+            t0 = time.perf_counter()
+            raw = self._client.db_read(self._db_number, 0, self._db_size)
+            result = self._parse(raw)
             self.data_ready.emit(result)
-
+            elapsed = (time.perf_counter() - t0) * 1000
+            if elapsed > 200:
+                if self.logger:
+                    self.logger.warning("[PLC READ]: Slow response %.1fms", elapsed)
         except S7Error as exc:
             if self.logger:
                 self.logger.warning("[PLC READ]: Read error: %s", exc)
@@ -240,41 +230,30 @@ class PLCRead(QObject):
     def _reconnect(self):
         if not self._running:
             return
-        self._poll_timer.stop()  # type: ignore
+        self._poll_timer.stop() # type: ignore
         self._disconnect_plc()
         self._retry_timer.start() # type: ignore
 
-    def _calc_read_range(self) -> tuple[int, int]:
-        """
-        Tính vùng offset tối thiểu cần đọc từ db_layout
-        """
-        if not self._db_layout:
-            return 0, self._db_size
-        type_size = {"REAL": 4, "DINT": 4, "INT": 2, "BOOL": 1, "STRING": 256}
-        offsets = []
-        for _, dtype, offset, _ in self._db_layout:
-            offsets.append(offset)
-            offsets.append(offset + type_size.get(dtype, 4))
-        return min(offsets), max(offsets)
-
-    def _parse(self, raw: bytes, base_offset: int = 0) -> dict:
+    def _parse(self, raw: bytes) -> dict:
         if not self._db_layout:
             return {}
 
         result: dict[str, Any] = {}
         for name, dtype, offset, bit in self._db_layout:
-            idx = offset - base_offset  # Tính lại index trong buffer
             try:
                 if dtype == "BOOL":
-                    result[name] = _get_bool(raw, idx, bit)
+                    result[name] = _get_bool(raw, offset, bit)
+                    # byte_val = raw[offset]
+                    # print(f"BOOL {name:20s} | Byte={offset} Bit={bit:1d} | "
+                    #   f"RawByte=0x{byte_val:02X} ({byte_val:08b}) → Value={result[name]}")
                 elif dtype == "REAL":
-                    result[name] = _get_real(raw, idx)
+                    result[name] = _get_real(raw, offset)
                 elif dtype == "DINT":
-                    result[name] = _get_dint(raw, idx)
+                    result[name] = _get_dint(raw, offset)
                 elif dtype == "INT":
-                    result[name] = _get_int(raw, idx)
+                    result[name] = _get_int(raw, offset)
                 elif dtype == "STRING":
-                    result[name] = _get_string(raw, idx)
+                    result[name] = _get_string(raw, offset)
                 else:
                     result[name] = None
             except Exception as exc:

@@ -2056,7 +2056,7 @@ class StrikeMachine(QMainWindow):
 
     def _setup_write_plc_thread(
             self, 
-            ip: str = "172.100.16.100", 
+            ip: str = "172.16.100.100", 
             db_number: Optional[int] = None, 
             db_layout: Optional[List] = None, 
             db_size: Optional[int] = None, 
@@ -2447,7 +2447,7 @@ class StrikeMachine(QMainWindow):
         else:
             self.ui.sys_state_stacked_wid_42.setCurrentIndex(1)
         self.plc_writer_connection = connected
-            
+
     def _data_group_filter(self, list_group_a_recv, list_group_b_recv, list_group_c_recv):
         groups_recv = [list_group_a_recv, list_group_b_recv, list_group_c_recv]
         if not all(isinstance(g, list) for g in groups_recv):
