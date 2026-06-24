@@ -1,13 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strike Machine Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #0f172a; color: #e2e8f0; padding: 24px; }
+    h1 { font-size: 20px; font-weight: 500; margin-bottom: 20px; color: #94a3b8; }
+    #status { display: inline-block; padding: 4px 10px; border-radius: 99px; font-size: 12px; margin-bottom: 24px; background: #1e293b; color: #64748b; }
+    #status.connected { background: #14532d; color: #86efac; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+    .card { background: #1e293b; border-radius: 10px; padding: 16px; }
+    .card .label { font-size: 11px; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .card .value { font-size: 28px; font-weight: 500; color: #f1f5f9; }
+    .card .unit { font-size: 13px; color: #94a3b8; margin-left: 4px; }
+    #raw { margin-top: 24px; background: #1e293b; border-radius: 10px; padding: 16px; font-size: 12px; font-family: monospace; color: #94a3b8; white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
+  </style>
+</head>
 <body>
-  <pre id="data"></pre>
+  <h1>Strike Machine - Live Monitor</h1>
+  <div id="status">Connecting...</div>
+  <div class="grid" id="cards"></div>
+  <div id="raw">Waiting for data...</div>
+
   <script>
-    const ws = new WebSocket("ws://localhost:8000/ws");
-    ws.onmessage = e => {
-      document.getElementById("data").textContent =
-        JSON.stringify(JSON.parse(e.data), null, 2);
+    const status = document.getElementById('status');
+    const cards  = document.getElementById('cards');
+    const raw    = document.getElementById('raw');
+
+    const CARD_KEYS = {
+      'P1_PressureSetting' : { label: 'Pressure P1', unit: 'bar' },
+      'P1_TemperatureSetting': { label: 'Temp P1',   unit: '°C'  },
+      'P2_PressureSetting' : { label: 'Pressure P2', unit: 'bar' },
+      'P2_TemperatureSetting': { label: 'Temp P2',   unit: '°C'  },
     };
+
+    for (const [key, meta] of Object.entries(CARD_KEYS)) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<div class="label">${meta.label}</div>
+                        <div><span class="value" id="val_${key}">—</span>
+                        <span class="unit">${meta.unit}</span></div>`;
+      cards.appendChild(card);
+    }
+
+    const wsUrl = `wss://${location.host}/ws`;
+    function connect() {
+      const ws = new WebSocket(wsUrl);
+
+      ws.onopen = () => {
+        status.textContent = 'Connected';
+        status.className = 'connected';
+      };
+
+      ws.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        for (const [key] of Object.entries(CARD_KEYS)) {
+          const el = document.getElementById('val_' + key);
+          if (el && data[key] !== undefined) {
+            const v = parseFloat(data[key]);
+            el.textContent = isNaN(v) ? data[key] : parseFloat(v.toFixed(2));
+          }
+        }
+        raw.textContent = JSON.stringify(data, null, 2);
+      };
+
+      ws.onclose = () => {
+        status.textContent = 'Disconnected - retrying...';
+        status.className = '';
+        setTimeout(connect, 3000);
+      };
+    }
+
+    connect();
   </script>
 </body>
 </html>

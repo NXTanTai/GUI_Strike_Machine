@@ -1,9 +1,8 @@
 Startup errors:
 Traceback (most recent call last):
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 147, in <module>
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 159, in <module>
     from source            import StrikeMachine
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 20
-    QTime, QSettings, QDateTime,
-    ^^^^^
-SyntaxError: invalid syntax
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 51, in <module>
+    from web_server import plc_data
+ImportError: cannot import name 'plc_data' from 'web_server' (c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\web_server.py)
 

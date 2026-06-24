@@ -48,7 +48,6 @@ from Data_Simulator import DataSimulator
 from PLC_READ_MODULE import PLCRead
 from PLC_WRITE_MODULE import PLCWrite
 from export_excel_worker import ExportWorker
-from web_server import plc_data
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
@@ -142,12 +141,13 @@ class StrikeMachine(QMainWindow):
     hide_loading            = Signal()
     show_loading            = Signal()
 
-    def __init__(self, on_hide_loading=None, on_show_loading=None, parent=None):
+    def __init__(self, on_hide_loading=None, on_show_loading=None, plc_queue=None, parent=None):
         super().__init__(parent)
         if on_hide_loading:
             self.hide_loading.connect(on_hide_loading)
         if on_show_loading:
             self.show_loading.connect(on_show_loading)
+        self._plc_queue = plc_queue
         self.app_settings = QSettings(
             settings_path,
             QSettings.Format.IniFormat
@@ -2108,7 +2108,11 @@ class StrikeMachine(QMainWindow):
             # ms = (time.perf_counter() - t) * 1000
             # if ms > 1:
                 # print(f"  [{label}] {ms:.1f}ms")
-        plc_data.update(data)
+        if self._plc_queue is not None:
+            try:
+                self._plc_queue.put_nowait(data)
+            except Exception:
+                pass
         try:
             if self.init_signal:
                 self.logger.info("[Main]-[_data_ready]: Getting PLC State")
