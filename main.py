@@ -128,6 +128,16 @@ if os.environ.get(LOADING_ENV):
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
+    from web_server import run_web_server
+
+    plc_queue = multiprocessing.Queue(maxsize=10)
+    web_process = multiprocessing.Process(
+        target=run_web_server,
+        args=(plc_queue,),
+        daemon=True
+    )
+    web_process.start()
+
     _loader_proc, _signal_file, _pause_file = _spawn_loading()
 
     def _pause_loading():
@@ -172,6 +182,7 @@ if __name__ == '__main__':
         window = StrikeMachine(
             on_hide_loading=_pause_loading,
             on_show_loading=_resume_loading,
+            plc_queue=plc_queue
         )
 
         screen = QApplication.primaryScreen().availableGeometry()

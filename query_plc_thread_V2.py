@@ -5,6 +5,8 @@ import threading
 import snap7
 from typing import Any, Optional
 from snap7.error import * # type: ignore
+from snap7.type import * # type: ignore
+from snap7.type import Parameter
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
 def _get_bool(data: bytes, byte_idx: int, bit_idx: int) -> bool:
@@ -161,6 +163,9 @@ class PLCRead(QObject):
         def _do_connect():
             try:
                 c = snap7.client.Client()
+                c.set_param(Parameter.SendTimeout, 5)         # timeout gửi (giây)
+                c.set_param(Parameter.RecvTimeout, 5)         # timeout nhận (giây)
+                # Bởi vì kết nối bị "dead silently" sau vài phút idle nên phải set Timeout để nhanh chóng phát hiện dead connection
                 c.connect(self._ip, self._rack, self._slot)
                 result["client"] = c # type: ignore
             except Exception as exc:

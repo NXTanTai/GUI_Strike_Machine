@@ -45,9 +45,10 @@ from message_box import LightThemeMessageBox as ltmessage
 from console_window import ConsoleWindow
 from password_dialog import *
 from Data_Simulator import DataSimulator
-from query_plc_thread_V2 import PLCRead
-from write_plc_thread_V2 import PLCWrite
+from PLC_READ_MODULE import PLCRead
+from PLC_WRITE_MODULE import PLCWrite
 from export_excel_worker import ExportWorker
+from web_server import plc_data
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
@@ -85,7 +86,10 @@ def get_exe_dir():
         return Path(__file__).parent
 
 SIMULATE = (get_exe_dir() / "simulate.txt").is_file()
+PLC_SIM = (get_exe_dir() / "plcsim.txt").is_file()
+
 EXCEL_PASSWORD = 'tl@12345'
+
 EXPECTED_ROW_NAMES = [
     "Cycle Setting",
     "Oil Start time",
@@ -301,7 +305,7 @@ class StrikeMachine(QMainWindow):
             db_total_bytes = max_byte + 4
         
         self.db_dict =  {
-            "ip_plc": str(df.iloc[0, 1]).strip(),
+            "ip_plc": str(df.iloc[0, 1]).strip() if not PLC_SIM else "172.16.100.50",
             "read_time": int(str(df.iloc[1, 1]).strip()), # iloc[collumn, row]
             "write_time": int(str(df.iloc[2, 1]).strip()), 
             "db_name": int(str(df.iloc[3, 0]).strip().replace("DB", "")),
@@ -1960,7 +1964,7 @@ class StrikeMachine(QMainWindow):
             poll_ms=self.db_dict["write_time"],
             logger=self.logger
         ):
-            if self._current_lang == "en":
+            if self._current_lang == "en":  
                 title = "Error"
                 content = "Failed to connect to PLC! Try again later."
             elif self._current_lang == "cn":
@@ -2104,6 +2108,7 @@ class StrikeMachine(QMainWindow):
             # ms = (time.perf_counter() - t) * 1000
             # if ms > 1:
                 # print(f"  [{label}] {ms:.1f}ms")
+        plc_data.update(data)
         try:
             if self.init_signal:
                 self.logger.info("[Main]-[_data_ready]: Getting PLC State")
@@ -2218,15 +2223,9 @@ class StrikeMachine(QMainWindow):
                     if groups:
                         self.add_row_to_list_history(self.ui.code_display.text(), groups)
 
-            # _t("t0_input_heat", lambda: 
-            self._t0_input_heat_filter([
-                bool(data.get('T0_Start_Heat', False)),
-                bool(data.get('T0_Stop_Heat', False))
-            ])
-            # )
-
             # _t("input_data", lambda: 
             self._input_data_filter([
+                bool(data.get('T0_Start_Heat', False)),
                 bool(data.get('P1_Start_Heat', False)),
                 bool(data.get('P1_Start_Pressure', False)),
                 bool(data.get('P1_Start_Oil', False)),
@@ -2960,9 +2959,12 @@ class StrikeMachine(QMainWindow):
         self.ui.refuel_btn_b.blockSignals(True)
         self.ui.refuel_btn_c.blockSignals(True)
 
-        self.ui.refuel_btn_a.setChecked(False)
-        self.ui.refuel_btn_b.setChecked(False)
-        self.ui.refuel_btn_c.setChecked(False)
+        self.ui.refuel_btn_a.setChecked(False)        
+        self.disable_oil_group("A", True)          
+        self.ui.refuel_btn_b.setChecked(False)   
+        self.disable_oil_group("B", True)  
+        self.ui.refuel_btn_c.setChecked(False) 
+        self.disable_oil_group("C", True)
 
         self.ui.refuel_btn_a.blockSignals(True)
         self.ui.refuel_btn_b.blockSignals(True)
@@ -2973,9 +2975,12 @@ class StrikeMachine(QMainWindow):
         self.ui.vacuum_btn_b.blockSignals(True)
         self.ui.vacuum_btn_c.blockSignals(True)
 
-        self.ui.vacuum_btn_a.setChecked(False)
-        self.ui.vacuum_btn_b.setChecked(False)
-        self.ui.vacuum_btn_c.setChecked(False)
+        self.ui.vacuum_btn_a.setChecked(False)        
+        self.disable_pressure_group("A", True)
+        self.ui.vacuum_btn_b.setChecked(False)        
+        self.disable_pressure_group("B", True)
+        self.ui.vacuum_btn_c.setChecked(False)        
+        self.disable_pressure_group("C", True)
 
         self.ui.vacuum_btn_a.blockSignals(False)
         self.ui.vacuum_btn_b.blockSignals(False)
@@ -2987,10 +2992,14 @@ class StrikeMachine(QMainWindow):
         self.ui.heat_btn_c.blockSignals(True)
         self.ui.heat_btn_t0.blockSignals(True)
 
-        self.ui.heat_btn_a.setChecked(False)
-        self.ui.heat_btn_b.setChecked(False)
-        self.ui.heat_btn_c.setChecked(False)
-        self.ui.heat_btn_t0.setChecked(False)
+        self.ui.heat_btn_a.setChecked(False)        
+        self.disable_heat_group("A", True)
+        self.ui.heat_btn_b.setChecked(False)        
+        self.disable_heat_group("B", True)
+        self.ui.heat_btn_c.setChecked(False)        
+        self.disable_heat_group("C", True)
+        self.ui.heat_btn_t0.setChecked(False)        
+        self.disable_heat_group("T0", True)
 
         self.ui.heat_btn_a.blockSignals(False)
         self.ui.heat_btn_b.blockSignals(False)

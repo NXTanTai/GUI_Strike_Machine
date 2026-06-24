@@ -863,7 +863,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>1</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="menu_page">
               <property name="styleSheet">
@@ -1474,7 +1474,7 @@ QPushButton:hover {
 }</string>
                  </property>
                  <property name="currentIndex">
-                  <number>1</number>
+                  <number>0</number>
                  </property>
                  <widget class="QWidget" name="pressure_page">
                   <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -16201,7 +16201,7 @@ QPushButton:checked {
                  <item>
                   <widget class="QStackedWidget" name="stackedWidget_3">
                    <property name="currentIndex">
-                    <number>1</number>
+                    <number>0</number>
                    </property>
                    <widget class="QWidget" name="connection_page">
                     <layout class="QVBoxLayout" name="verticalLayout_27">
@@ -16568,7 +16568,7 @@ QLineEdit:focus {
                                </widget>
                               </item>
                               <item row="5" column="0">
-                               <widget class="QPushButton" name="total_cycle_label_3">
+                               <widget class="QPushButton" name="total_cycle_label_c">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -16606,7 +16606,7 @@ QLineEdit:focus {
                                </widget>
                               </item>
                               <item row="4" column="0">
-                               <widget class="QPushButton" name="total_cycle_label_2">
+                               <widget class="QPushButton" name="total_cycle_label_b">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -17147,7 +17147,7 @@ padding-right: 3px;</string>
                                     <string> ms</string>
                                    </property>
                                    <property name="minimum">
-                                    <number>100</number>
+                                    <number>16</number>
                                    </property>
                                    <property name="maximum">
                                     <number>1000</number>
@@ -17388,7 +17388,7 @@ padding-right: 3px;</string>
                                     <string> ms</string>
                                    </property>
                                    <property name="minimum">
-                                    <number>300</number>
+                                    <number>16</number>
                                    </property>
                                    <property name="maximum">
                                     <number>1000</number>
@@ -17536,7 +17536,7 @@ QPushButton:pressed {
                                </widget>
                               </item>
                               <item row="3" column="0">
-                               <widget class="QPushButton" name="total_cycle_label">
+                               <widget class="QPushButton" name="total_cycle_label_a">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                                   <horstretch>0</horstretch>
@@ -21828,7 +21828,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="left_side_btn_group"/>
   <buttongroup name="language_group_btn"/>
+  <buttongroup name="left_side_btn_group"/>
  </buttongroups>
 </ui>

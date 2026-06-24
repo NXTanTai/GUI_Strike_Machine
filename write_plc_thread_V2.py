@@ -6,7 +6,8 @@ import snap7
 from typing import Any, Optional
 from queue import Queue
 from snap7.error import * # type: ignore
-from snap7.type import Area
+from snap7.type import * # type: ignore
+from snap7.type import Parameter
 from snap7.util import set_bool, set_real, set_dint, set_int, set_string
 
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
@@ -35,7 +36,7 @@ def _set_string(data: bytearray, offset: int, value: str) -> None:
     data[offset + 2: offset + 2 + len(encoded)] = encoded
 
 HEARTBEAT_INTERVAL  = 5.0    # giây — khoảng cách giữa 2 lần probe khi queue rỗng
-HEARTBEAT_DB_SIZE   = 1      # byte — đọc tối thiểu để không gây overhead
+HEARTBEAT_DB_SIZE   = 4      # byte — đọc tối thiểu để không gây overhead
 MAX_RETRY_COUNT     = 3      # số lần retry tối đa cho 1 item trước khi bỏ
 
 class PLCWrite(QObject):
@@ -214,6 +215,8 @@ class PLCWrite(QObject):
         def _do_connect():
             try:
                 c = snap7.client.Client()
+                c.set_param(Parameter.SendTimeout, 5)
+                c.set_param(Parameter.RecvTimeout, 5)
                 c.connect(self._ip, self._rack, self._slot)
                 result["client"] = c    # type: ignore
             except Exception as exc:
@@ -305,7 +308,7 @@ class PLCWrite(QObject):
             self._reconnect()
             return
         try:
-            self._client.db_read(self._db_number, 0, HEARTBEAT_DB_SIZE)
+            self._client.db_read(self._db_number, 2, HEARTBEAT_DB_SIZE)
             self._last_heartbeat = now
         except Exception as exc:
             if self.logger:
@@ -338,7 +341,7 @@ class PLCWrite(QObject):
         """
         Nếu trong queue đã có item cùng key (cùng loại + cùng tag),
         thay bằng giá trị mới nhất thay vì thêm vào cuối.
-        Tránh gửi hàng loạt giá trị trung gian khi người dùng kéo spinbox.
+        Tránh gửi hàng loạt giá trị trung gian.
         """
         with self._queue_lock:
             for i, existing in enumerate(self._queue):

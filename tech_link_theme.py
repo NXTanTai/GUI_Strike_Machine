@@ -5301,7 +5301,8 @@ class Ui_MainWindow(object):
         self.bt_t3_offset_value.setReadOnly(False)
         self.bt_t3_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.bt_t3_offset_value.setDecimals(1)
-        self.bt_t3_offset_value.setMaximum(999.000000000000000)
+        self.bt_t3_offset_value.setMinimum(-100.000000000000000)
+        self.bt_t3_offset_value.setMaximum(100.000000000000000)
         self.bt_t3_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_318.addWidget(self.bt_t3_offset_value)
@@ -5632,7 +5633,8 @@ class Ui_MainWindow(object):
         self.at_t3_offset_value.setReadOnly(False)
         self.at_t3_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.at_t3_offset_value.setDecimals(1)
-        self.at_t3_offset_value.setMaximum(999.000000000000000)
+        self.at_t3_offset_value.setMinimum(-100.000000000000000)
+        self.at_t3_offset_value.setMaximum(100.000000000000000)
         self.at_t3_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_301.addWidget(self.at_t3_offset_value)
@@ -5949,7 +5951,8 @@ class Ui_MainWindow(object):
         self.ct_t2_offset_value.setReadOnly(False)
         self.ct_t2_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.ct_t2_offset_value.setDecimals(1)
-        self.ct_t2_offset_value.setMaximum(999.000000000000000)
+        self.ct_t2_offset_value.setMinimum(-100.000000000000000)
+        self.ct_t2_offset_value.setMaximum(100.000000000000000)
         self.ct_t2_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_308.addWidget(self.ct_t2_offset_value)
@@ -6123,7 +6126,8 @@ class Ui_MainWindow(object):
         self.ct_t1_offset_value.setReadOnly(False)
         self.ct_t1_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.ct_t1_offset_value.setDecimals(1)
-        self.ct_t1_offset_value.setMaximum(999.000000000000000)
+        self.ct_t1_offset_value.setMinimum(-100.000000000000000)
+        self.ct_t1_offset_value.setMaximum(100.000000000000000)
         self.ct_t1_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_327.addWidget(self.ct_t1_offset_value)
@@ -6210,7 +6214,8 @@ class Ui_MainWindow(object):
         self.bt_t1_offset_value.setReadOnly(False)
         self.bt_t1_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.bt_t1_offset_value.setDecimals(1)
-        self.bt_t1_offset_value.setMaximum(999.000000000000000)
+        self.bt_t1_offset_value.setMinimum(-100.000000000000000)
+        self.bt_t1_offset_value.setMaximum(100.000000000000000)
         self.bt_t1_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_325.addWidget(self.bt_t1_offset_value)
@@ -6297,7 +6302,8 @@ class Ui_MainWindow(object):
         self.bt_t2_offset_value.setReadOnly(False)
         self.bt_t2_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.bt_t2_offset_value.setDecimals(1)
-        self.bt_t2_offset_value.setMaximum(999.000000000000000)
+        self.bt_t2_offset_value.setMinimum(-100.000000000000000)
+        self.bt_t2_offset_value.setMaximum(100.000000000000000)
         self.bt_t2_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_306.addWidget(self.bt_t2_offset_value)
@@ -6960,7 +6966,8 @@ class Ui_MainWindow(object):
         self.ct_t3_offset_value.setReadOnly(False)
         self.ct_t3_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.ct_t3_offset_value.setDecimals(1)
-        self.ct_t3_offset_value.setMaximum(999.000000000000000)
+        self.ct_t3_offset_value.setMinimum(-100.000000000000000)
+        self.ct_t3_offset_value.setMaximum(100.000000000000000)
         self.ct_t3_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_335.addWidget(self.ct_t3_offset_value)
@@ -7061,7 +7068,8 @@ class Ui_MainWindow(object):
         self.t0_offset_value.setReadOnly(False)
         self.t0_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.t0_offset_value.setDecimals(1)
-        self.t0_offset_value.setMaximum(999.000000000000000)
+        self.t0_offset_value.setMinimum(-100.000000000000000)
+        self.t0_offset_value.setMaximum(100.000000000000000)
         self.t0_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_338.addWidget(self.t0_offset_value)
@@ -7496,7 +7504,8 @@ class Ui_MainWindow(object):
         self.at_t1_offset_value.setReadOnly(False)
         self.at_t1_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.at_t1_offset_value.setDecimals(1)
-        self.at_t1_offset_value.setMaximum(999.000000000000000)
+        self.at_t1_offset_value.setMinimum(-100.000000000000000)
+        self.at_t1_offset_value.setMaximum(100.000000000000000)
         self.at_t1_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_319.addWidget(self.at_t1_offset_value)
@@ -7583,7 +7592,8 @@ class Ui_MainWindow(object):
         self.at_t2_offset_value.setReadOnly(False)
         self.at_t2_offset_value.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.at_t2_offset_value.setDecimals(1)
-        self.at_t2_offset_value.setMaximum(999.000000000000000)
+        self.at_t2_offset_value.setMinimum(-100.000000000000000)
+        self.at_t2_offset_value.setMaximum(100.000000000000000)
         self.at_t2_offset_value.setValue(0.000000000000000)
 
         self.horizontalLayout_310.addWidget(self.at_t2_offset_value)
@@ -7910,37 +7920,37 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.write_table_label, 2, 0, 1, 1)
 
-        self.total_cycle_label_3 = QPushButton(self.connection_group)
-        self.total_cycle_label_3.setObjectName(u"total_cycle_label_3")
-        sizePolicy.setHeightForWidth(self.total_cycle_label_3.sizePolicy().hasHeightForWidth())
-        self.total_cycle_label_3.setSizePolicy(sizePolicy)
-        self.total_cycle_label_3.setFont(font20)
-        self.total_cycle_label_3.setStyleSheet(u"QPushButton {\n"
+        self.total_cycle_label_c = QPushButton(self.connection_group)
+        self.total_cycle_label_c.setObjectName(u"total_cycle_label_c")
+        sizePolicy.setHeightForWidth(self.total_cycle_label_c.sizePolicy().hasHeightForWidth())
+        self.total_cycle_label_c.setSizePolicy(sizePolicy)
+        self.total_cycle_label_c.setFont(font20)
+        self.total_cycle_label_c.setStyleSheet(u"QPushButton {\n"
 "    color: #6F00FF;\n"
 "    background-color: transparent;\n"
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        self.total_cycle_label_3.setIconSize(QSize(55, 55))
-        self.total_cycle_label_3.setCheckable(True)
+        self.total_cycle_label_c.setIconSize(QSize(55, 55))
+        self.total_cycle_label_c.setCheckable(True)
 
-        self.gridLayout_4.addWidget(self.total_cycle_label_3, 5, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.total_cycle_label_c, 5, 0, 1, 1)
 
-        self.total_cycle_label_2 = QPushButton(self.connection_group)
-        self.total_cycle_label_2.setObjectName(u"total_cycle_label_2")
-        sizePolicy.setHeightForWidth(self.total_cycle_label_2.sizePolicy().hasHeightForWidth())
-        self.total_cycle_label_2.setSizePolicy(sizePolicy)
-        self.total_cycle_label_2.setFont(font20)
-        self.total_cycle_label_2.setStyleSheet(u"QPushButton {\n"
+        self.total_cycle_label_b = QPushButton(self.connection_group)
+        self.total_cycle_label_b.setObjectName(u"total_cycle_label_b")
+        sizePolicy.setHeightForWidth(self.total_cycle_label_b.sizePolicy().hasHeightForWidth())
+        self.total_cycle_label_b.setSizePolicy(sizePolicy)
+        self.total_cycle_label_b.setFont(font20)
+        self.total_cycle_label_b.setStyleSheet(u"QPushButton {\n"
 "    color: rgb(251, 140, 0);\n"
 "    background-color: transparent;\n"
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        self.total_cycle_label_2.setIconSize(QSize(55, 55))
-        self.total_cycle_label_2.setCheckable(True)
+        self.total_cycle_label_b.setIconSize(QSize(55, 55))
+        self.total_cycle_label_b.setCheckable(True)
 
-        self.gridLayout_4.addWidget(self.total_cycle_label_2, 4, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.total_cycle_label_b, 4, 0, 1, 1)
 
         self.widget_37 = QWidget(self.connection_group)
         self.widget_37.setObjectName(u"widget_37")
@@ -8166,7 +8176,7 @@ class Ui_MainWindow(object):
         self.read_time_input.setFont(font21)
         self.read_time_input.setAlignment(Qt.AlignCenter)
         self.read_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.read_time_input.setMinimum(100)
+        self.read_time_input.setMinimum(16)
         self.read_time_input.setMaximum(1000)
         self.read_time_input.setValue(500)
 
@@ -8265,7 +8275,7 @@ class Ui_MainWindow(object):
         self.write_time_input.setFont(font21)
         self.write_time_input.setAlignment(Qt.AlignCenter)
         self.write_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.write_time_input.setMinimum(300)
+        self.write_time_input.setMinimum(16)
         self.write_time_input.setMaximum(1000)
         self.write_time_input.setValue(500)
 
@@ -8337,21 +8347,21 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.widget_35, 3, 1, 1, 1)
 
-        self.total_cycle_label = QPushButton(self.connection_group)
-        self.total_cycle_label.setObjectName(u"total_cycle_label")
-        sizePolicy.setHeightForWidth(self.total_cycle_label.sizePolicy().hasHeightForWidth())
-        self.total_cycle_label.setSizePolicy(sizePolicy)
-        self.total_cycle_label.setFont(font20)
-        self.total_cycle_label.setStyleSheet(u"QPushButton {\n"
+        self.total_cycle_label_a = QPushButton(self.connection_group)
+        self.total_cycle_label_a.setObjectName(u"total_cycle_label_a")
+        sizePolicy.setHeightForWidth(self.total_cycle_label_a.sizePolicy().hasHeightForWidth())
+        self.total_cycle_label_a.setSizePolicy(sizePolicy)
+        self.total_cycle_label_a.setFont(font20)
+        self.total_cycle_label_a.setStyleSheet(u"QPushButton {\n"
 "    color: rgb(30, 136, 229);\n"
 "    background-color: transparent;\n"
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        self.total_cycle_label.setIconSize(QSize(55, 55))
-        self.total_cycle_label.setCheckable(True)
+        self.total_cycle_label_a.setIconSize(QSize(55, 55))
+        self.total_cycle_label_a.setCheckable(True)
 
-        self.gridLayout_4.addWidget(self.total_cycle_label, 3, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.total_cycle_label_a, 3, 0, 1, 1)
 
         self.gridLayout_4.setRowStretch(0, 1)
         self.gridLayout_4.setRowStretch(1, 1)
@@ -10382,7 +10392,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(1)
+        self.stackedWidget_2.setCurrentIndex(2)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
@@ -10424,7 +10434,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_t0_3.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(1)
+        self.stackedWidget_3.setCurrentIndex(0)
         self.sys_state_stacked_wid_40.setCurrentIndex(2)
         self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
@@ -10791,8 +10801,8 @@ class Ui_MainWindow(object):
         self.write_plc_label.setText(QCoreApplication.translate("MainWindow", u" PLC Write:", None))
         self.table_write_cycle.setSuffix(QCoreApplication.translate("MainWindow", u" s", None))
         self.write_table_label.setText(QCoreApplication.translate("MainWindow", u" History Cycle:", None))
-        self.total_cycle_label_3.setText(QCoreApplication.translate("MainWindow", u" Total Test Time C:", None))
-        self.total_cycle_label_2.setText(QCoreApplication.translate("MainWindow", u" Total Test Time B:", None))
+        self.total_cycle_label_c.setText(QCoreApplication.translate("MainWindow", u" Total Test Time C:", None))
+        self.total_cycle_label_b.setText(QCoreApplication.translate("MainWindow", u" Total Test Time B:", None))
         self.cycle_c_displ_3.setSuffix("")
         self.cycle_c_displ_3.setPrefix("")
         self.reset_cycle_c_btn.setText("")
@@ -10810,7 +10820,7 @@ class Ui_MainWindow(object):
         self.cycle_a_displ_3.setSuffix("")
         self.cycle_a_displ_3.setPrefix("")
         self.reset_cycle_a_btn.setText("")
-        self.total_cycle_label.setText(QCoreApplication.translate("MainWindow", u" Total Test Time A:", None))
+        self.total_cycle_label_a.setText(QCoreApplication.translate("MainWindow", u" Total Test Time A:", None))
         self.i_o_group_1.setTitle(QCoreApplication.translate("MainWindow", u"DI", None))
         self.pushButton_59.setText("")
         self.pushButton_58.setText("")
