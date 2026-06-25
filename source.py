@@ -105,6 +105,74 @@ EXPECTED_ROW_NAMES = [
     "Offset End",
 ]
 
+SPINBOX_PLC_MAP = {
+    # ── Group A ───────────────────────────────────────────────────────────────
+    "pressure_sv_a_5":  ("P1_PressureSetting",  None),
+    "pressure_sv_a_6":  ("P1_Air_FillingTime",  "sec_to_msec"),
+    "pressure_sv_a_7":  ("P1_Air_HoldingTime",  "sec_to_msec"),
+    "pressure_sv_a_8":  ("P1_Air_ReleaseTime",  "sec_to_msec"),
+    "pressure_sv_a_9":  ("P1_Oil_Start_Time",   "sec_to_msec"),
+    "pressure_sv_a_10": ("P1_Oil_End_Time",      "sec_to_msec"),
+    "pressure_sv_a_11": ("P1_CountTimes",        None),
+ 
+    # ── Group B ───────────────────────────────────────────────────────────────
+    "pressure_sv_b_5":  ("P2_PressureSetting",  None),
+    "pressure_sv_b_6":  ("P2_Air_FillingTime",  "sec_to_msec"),
+    "pressure_sv_b_7":  ("P2_Air_HoldingTime",  "sec_to_msec"),
+    "pressure_sv_b_8":  ("P2_Air_ReleaseTime",  "sec_to_msec"),
+    "pressure_sv_b_9":  ("P2_Oil_Start_Time",   "sec_to_msec"),
+    "pressure_sv_b_10": ("P2_Oil_End_Time",      "sec_to_msec"),
+    "pressure_sv_b_11": ("P2_CountTimes",        None),
+ 
+    # ── Group C ───────────────────────────────────────────────────────────────
+    "pressure_sv_c_5":  ("P3_PressureSetting",  None),
+    "pressure_sv_c_6":  ("P3_Air_FillingTime",  "sec_to_msec"),
+    "pressure_sv_c_7":  ("P3_Air_HoldingTime",  "sec_to_msec"),
+    "pressure_sv_c_8":  ("P3_Air_ReleaseTime",  "sec_to_msec"),
+    "pressure_sv_c_9":  ("P3_Oil_Start_Time",   "sec_to_msec"),
+    "pressure_sv_c_10": ("P3_Oil_End_Time",      "sec_to_msec"),
+    "pressure_sv_c_11": ("P3_CountTimes",        None),
+ 
+    # ── Temperature SV ────────────────────────────────────────────────────────
+    "t0_sv":            ("T0_TemperatureSetting", "fah_to_cel"),
+ 
+    # ── High Alarm ────────────────────────────────────────────────────────────
+    "t0_h_alm_value":   ("T0_TempLimitHIGH",    "fah_to_cel"),
+    "at_h_alm_value":   ("P1_TempLimitHIGH",    "fah_to_cel"),
+    "bt_h_alm_value":   ("P2_TempLimitHIGH",    "fah_to_cel"),
+    "ct_h_alm_value":   ("P3_TempLimitHIGH",    "fah_to_cel"),
+ 
+    # ── Low Alarm ─────────────────────────────────────────────────────────────
+    "t0_l_alm_value":   ("T0_TempLimitLOW",     "fah_to_cel"),
+    "at_l_alm_value":   ("P1_TempLimitLOW",     "fah_to_cel"),
+    "bt_l_alm_value":   ("P2_TempLimitLOW",     "fah_to_cel"),
+    "ct_l_alm_value":   ("P3_TempLimitLOW",     "fah_to_cel"),
+ 
+    # ── Offset ────────────────────────────────────────────────────────────────
+    "t0_offset_value":      ("T0_TempOffset",   "fah_to_cel"),
+    "at_t1_offset_value":   ("P1_Temp1Offset",  "fah_to_cel"),
+    "at_t2_offset_value":   ("P1_Temp2Offset",  "fah_to_cel"),
+    "at_t3_offset_value":   ("P1_Temp3Offset",  "fah_to_cel"),
+    "bt_t1_offset_value":   ("P2_Temp1Offset",  "fah_to_cel"),
+    "bt_t2_offset_value":   ("P2_Temp2Offset",  "fah_to_cel"),
+    "bt_t3_offset_value":   ("P2_Temp3Offset",  "fah_to_cel"),
+    "ct_t1_offset_value":   ("P3_Temp1Offset",  "fah_to_cel"),
+    "ct_t2_offset_value":   ("P3_Temp2Offset",  "fah_to_cel"),
+    "ct_t3_offset_value":   ("P3_Temp3Offset",  "fah_to_cel"),
+}
+
+TEMP_SV_MIRROR = {
+    "pressure_sv_a_1": ("P1_TemperatureSetting", "at_sv"),
+    "pressure_sv_b_1": ("P2_TemperatureSetting", "bt_sv"),
+    "pressure_sv_c_1": ("P3_TemperatureSetting", "ct_sv"),
+}
+
+TEMP_SV_REVERSE_MIRROR = {
+    "at_sv": "pressure_sv_a_1",
+    "bt_sv": "pressure_sv_b_1",
+    "ct_sv": "pressure_sv_c_1",
+}
+
 class PipeLogHandler(logging.Handler):
     def __init__(self, process):
         super().__init__()
@@ -1085,6 +1153,101 @@ class StrikeMachine(QMainWindow):
             spinbox.valueChanged.connect(handler)
 
         self.ui.error_display._speed = 50
+
+    def _get_transform(self, key: str):
+        """Trả về hàm transform tương ứng với key chuỗi."""
+        if key == "sec_to_msec":
+            return self.cal_sec_to_msec
+        if key == "fah_to_cel":
+            return self.cal_fah_to_cel
+        return None
+    
+    def _make_plc_handler(self, widget_name: str, plc_key: str, transform_key):
+        """
+        Factory tạo handler cho 1 spinbox thông thường.
+        Trả về một closure ghi thẳng xuống PLC (có transform nếu cần).
+        """
+        def handler(value):
+            if not self.plc_writer_connection:
+                return
+            transform = self._get_transform(transform_key)
+            v = transform(value) if transform else value
+            self.plc_writer_worker.write_value.emit(plc_key, v)  # type: ignore
+        return handler
+    
+    def _make_temp_sv_handler(self, widget_name: str, plc_key: str, mirror_widget: str):
+        """
+        Factory đặc biệt cho pressure_sv_a/b/c_1 (Temperature Setting).
+        Ngoài việc ghi PLC, còn đồng bộ sang at_sv / bt_sv / ct_sv.
+        """
+        def handler(value):
+            # Ghi PLC
+            if self.plc_writer_connection:
+                self.plc_writer_worker.write_value.emit(  # type: ignore
+                    plc_key, self.cal_fah_to_cel(value)
+                )
+            # Đồng bộ sang widget kép (at_sv / bt_sv / ct_sv)
+            mirror = getattr(self.ui, mirror_widget)
+            mirror.blockSignals(True)
+            mirror.setValue(value)
+            mirror.blockSignals(False)
+        return handler
+    
+    def _make_mirror_sv_handler(self, widget_name: str, target_widget: str):
+        """
+        Factory cho at_sv / bt_sv / ct_sv.
+        Chỉ đồng bộ ngược sang pressure_sv_X_1 (không ghi PLC trực tiếp,
+        vì pressure_sv_X_1.valueChanged sẽ lo phần đó).
+        """
+        def handler(value):
+            target = getattr(self.ui, target_widget)
+            target.setValue(value)   # trigger pressure_sv_X_1 handler → ghi PLC
+        return handler
+    
+    def _on_table_write_cycle_changed(self, value: float):
+        """Đảm bảo table_write_cycle không nhỏ hơn read_time."""
+        if (value * 1000) < self.ui.read_time_input.value():
+            self.ui.table_write_cycle.setValue(
+                float(self.ui.read_time_input.value()) / 1000
+            )
+    
+    def _setup_spinbox_handlers(self):
+        """
+        Gọi hàm này 1 lần trong _setup_btn_signals() để đăng ký
+        toàn bộ valueChanged handlers — thay thế ~40 hàm on_*_changed cũ.
+        """
+        # ── Handlers thông thường (từ SPINBOX_PLC_MAP) ────────────────────────
+        for widget_name, (plc_key, transform_key) in SPINBOX_PLC_MAP.items():
+            spinbox = getattr(self.ui, widget_name)
+            install_clear_on_focus(spinbox)
+            spinbox.setKeyboardTracking(False)
+            spinbox.valueChanged.connect(
+                self._make_plc_handler(widget_name, plc_key, transform_key)
+            )
+    
+        # ── Handlers đặc biệt: pressure_sv_X_1 (Temperature Setting + mirror) ─
+        for widget_name, (plc_key, mirror_widget) in TEMP_SV_MIRROR.items():
+            spinbox = getattr(self.ui, widget_name)
+            install_clear_on_focus(spinbox)
+            spinbox.setKeyboardTracking(False)
+            spinbox.valueChanged.connect(
+                self._make_temp_sv_handler(widget_name, plc_key, mirror_widget)
+            )
+    
+        # ── Handlers mirror ngược: at_sv / bt_sv / ct_sv ─────────────────────
+        for widget_name, target_widget in TEMP_SV_REVERSE_MIRROR.items():
+            spinbox = getattr(self.ui, widget_name)
+            install_clear_on_focus(spinbox)
+            spinbox.setKeyboardTracking(False)
+            spinbox.valueChanged.connect(
+                self._make_mirror_sv_handler(widget_name, target_widget)
+            )
+    
+        # ── table_write_cycle (logic đặc biệt, không ghi PLC) ────────────────
+        self.ui.table_write_cycle.setKeyboardTracking(False)
+        self.ui.table_write_cycle.valueChanged.connect(
+            self._on_table_write_cycle_changed
+        )
 
     def _init_history_database(self):
         """Khởi tạo SQLite Database - Không xóa bảng cũ"""
@@ -4030,15 +4193,12 @@ class StrikeMachine(QMainWindow):
         if self._current_lang == "en":
             title = "Exit Confirmation"
             content = "Are you sure you want to exit?"
-            button=["Yes", "No"]
         elif self._current_lang == "cn":
             title = "导出成功"
             content = "是否前往保存文件夹?"
-            button=["是", "否"]
-        if self._current_lang == "vn":
+        elif self._current_lang == "vn":
             title = "Thoát ứng dụng"
             content = "Bạn có chắc chắn muốn thoát không?"
-            button = ["Có", "Không"]
         reply = ltmessage.question(
             self, title, content, lang=self._current_lang # type: ignore
         )

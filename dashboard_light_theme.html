@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>Strike Machine Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #0f172a; padding: 24px; min-height: 100vh; }
+
+    .hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 34px; height: 34px; border-radius: 8px; background: #0ea5e9; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; flex-shrink: 0; }
+    .logo h1 { font-size: 16px; font-weight: 600; color: #0f172a; }
+    .logo h1 span { color: #0ea5e9; }
+    .logo small { font-size: 10px; color: #94a3b8; display: block; margin-top: 1px; }
+
+    #status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; background: #f1f5f9; color: #94a3b8; border: 1px solid #e2e8f0; transition: all 0.3s; }
+    #status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; transition: all 0.3s; }
+    #status.connected { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+    #status.connected::before { background: #16a34a; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .section-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #94a3b8; margin: 20px 0 8px; display: flex; align-items: center; gap: 8px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+
+    .card { background: #fff; border-radius: 10px; padding: 14px; border: 1px solid #e2e8f0; position: relative; overflow: hidden; }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .card.pres::before { background: #0ea5e9; }
+    .card.oven::before { background: #f59e0b; }
+    .card.temp::before { background: #f97316; }
+
+    .card-lbl { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+    .card.pres .card-lbl { color: #0284c7; }
+    .card.oven .card-lbl { color: #d97706; }
+    .card.temp .card-lbl { color: #ea580c; }
+
+    .pv-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px; }
+    .badge { font-size: 9px; font-weight: 800; border-radius: 4px; padding: 1px 5px; letter-spacing: .05em; flex-shrink: 0; }
+    .pv-badge { color: #0369a1; background: #e0f2fe; }
+    .sv-badge { color: #92400e; background: #fef3c7; }
+    .pv-val { font-size: 26px; font-weight: 700; color: #0f172a; line-height: 1; font-variant-numeric: tabular-nums; }
+    .pv-unit { font-size: 11px; color: #94a3b8; }
+
+    .divider { height: 1px; background: #f1f5f9; margin: 6px 0; }
+
+    .sv-row { display: flex; align-items: center; gap: 5px; }
+    .sv-val { font-size: 13px; font-weight: 500; color: #64748b; font-variant-numeric: tabular-nums; }
+    .sv-unit { font-size: 11px; color: #cbd5e1; }
+    .delta { font-size: 10px; font-weight: 600; margin-left: auto; padding: 1px 6px; border-radius: 4px; }
+    .delta.ok { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .delta.hi { background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; }
+
+    .footer { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; padding-top: 14px; border-top: 1px solid #e2e8f0; flex-wrap: wrap; gap: 8px; }
+    .footer-time { font-size: 10px; color: #94a3b8; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: .05em; }
+    .tag.a { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .tag.b { background: #ede9fe; color: #6d28d9; border: 1px solid #ddd6fe; }
+    .tag.c { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+
+    #raw-wrap { margin-top: 24px; }
+    #raw-wrap summary { font-size: 10px; color: #94a3b8; cursor: pointer; user-select: none; letter-spacing: .05em; text-transform: uppercase; }
+    #raw { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; font-size: 11px; font-family: 'Consolas', monospace; color: #64748b; white-space: pre-wrap; max-height: 260px; overflow-y: auto; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="hdr">
+    <div class="logo">
+      <div class="logo-icon">⚙</div>
+      <div>
+        <h1>Strike Machine <span>Live Monitor</span></h1>
+        <small>Author: Nguyen Xuan Tan Tai</small>
+      </div>
+    </div>
+    <div id="status">Connecting...</div>
+  </div>
+
+  <div id="groups"></div>
+
+  <div class="footer">
+    <span class="footer-time" id="last-update">—</span>
+    <div class="tags">
+      <span class="tag a">GROUP A</span>
+      <span class="tag b">GROUP B</span>
+      <span class="tag c">GROUP C</span>
+    </div>
+  </div>
+
+  <details id="raw-wrap">
+    <summary>Raw PLC data</summary>
+    <div id="raw">Waiting for data...</div>
+  </details>
+
+  <script>
+    const GROUPS = [
+      {
+        label: 'Group A', color: '#0ea5e9', labelColor: '#0ea5e9',
+        cards: [
+          { title: 'Pressure A',        cls: 'pres', pvKey: 'P1_Current_PressureHose', svKey: 'P1_PressureSetting',    unit: 'bar', threshold: 0.5 },
+          { title: 'Oven',              cls: 'oven', pvKey: 'T0_Current_Temp',         svKey: 'T0_TemperatureSetting', unit: '°C',  threshold: 3   },
+          { title: 'Temp A Front',      cls: 'temp', pvKey: 'P1_Current_Temp1',        svKey: 'P1_TemperatureSetting', unit: '°C',  threshold: 3   },
+          { title: 'Temp A Mid',        cls: 'temp', pvKey: 'P1_Current_Temp2',        svKey: 'P1_TemperatureSetting', unit: '°C',  threshold: 3   },
+          { title: 'Temp A End',        cls: 'temp', pvKey: 'P1_Current_Temp3',        svKey: 'P1_TemperatureSetting', unit: '°C',  threshold: 3   },
+        ]
+      },
+      {
+        label: 'Group B', color: '#7c3aed', labelColor: '#7c3aed',
+        cards: [
+          { title: 'Pressure B',        cls: 'pres', pvKey: 'P2_Current_PressureHose', svKey: 'P2_PressureSetting',    unit: 'bar', threshold: 0.5 },
+          { title: 'Oven',              cls: 'oven', pvKey: 'T0_Current_Temp',         svKey: 'T0_TemperatureSetting', unit: '°C',  threshold: 3   },
+          { title: 'Temp B Front',      cls: 'temp', pvKey: 'P2_Current_Temp1',        svKey: 'P2_TemperatureSetting', unit: '°C',  threshold: 3   },
+          { title: 'Temp B Mid',        cls: 'temp', pvKey: 'P2_Current_Temp2',        svKey: 'P2_TemperatureSetting', unit: '°C',  threshold: 3   },
+          { title: 'Temp B End',        cls: 'temp', pvKey: 'P2_Current_Temp3',        svKey: 'P2_TemperatureSetting', unit: '°C',  threshold: 3   },
+        ]
+      },
+      {
+        label: 'Group C', color: '#15803d', labelColor: '#15803d',
+        cards: [
+          { title: 'Pressure C',        cls: 'pres', pvKey: 'P3_Current_PressureHose', svKey: 'P3_PressureSetting',    unit: 'bar', threshold: 0.5 },
+          { title: 'Oven',              cls: 'oven', pvKey: 'T0_Current_Temp',         svKey: 'T0_TemperatureSetting', unit: '°C',  threshold: 3   },
+          { title: 'Temp C Front',      cls: 'temp', pvKey: 'P3_Current_Temp1',        svKey: 'P3_TemperatureSetting', unit: '°C',  threshold: 3   },
+          { title: 'Temp C Mid',        cls: 'temp', pvKey: 'P3_Current_Temp2',        svKey: 'P3_TemperatureSetting', unit: '°C',  threshold: 3   },
+          { title: 'Temp C End',        cls: 'temp', pvKey: 'P3_Current_Temp3',        svKey: 'P3_TemperatureSetting', unit: '°C',  threshold: 3   },
+        ]
+      },
+    ];
+
+    // Gán id duy nhất bằng index
+    GROUPS.forEach((g, gi) => g.cards.forEach((c, ci) => {
+      c._pvId    = `pv_${gi}_${ci}`;
+      c._svId    = `sv_${gi}_${ci}`;
+      c._deltaId = `delta_${gi}_${ci}`;
+    }));
+
+    // Render
+    const groupsEl = document.getElementById('groups');
+    GROUPS.forEach((group, gi) => {
+      const labelEl = document.createElement('div');
+      labelEl.className = 'section-label';
+      labelEl.innerHTML = `<span style="color:${group.labelColor}">${group.label}</span>`;
+      groupsEl.appendChild(labelEl);
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+
+      group.cards.forEach(card => {
+        const el = document.createElement('div');
+        el.className = `card ${card.cls}`;
+        el.innerHTML = `
+          <div class="card-lbl">${card.title}</div>
+          <div class="pv-row">
+            <span class="badge pv-badge">PV</span>
+            <span class="pv-val" id="${card._pvId}">—</span>
+            <span class="pv-unit">${card.unit}</span>
+          </div>
+          <div class="divider"></div>
+          <div class="sv-row">
+            <span class="badge sv-badge">SV</span>
+            <span class="sv-val" id="${card._svId}">—</span>
+            <span class="sv-unit">${card.unit}</span>
+            <span class="delta ok" id="${card._deltaId}">—</span>
+          </div>`;
+        grid.appendChild(el);
+      });
+
+      groupsEl.appendChild(grid);
+    });
+
+    // WebSocket
+    const statusEl    = document.getElementById('status');
+    const rawEl       = document.getElementById('raw');
+    const lastUpdateEl = document.getElementById('last-update');
+    const fmt = v => isNaN(v) ? '—' : parseFloat(v.toFixed(2));
+
+    function updateDelta(el, pv, sv, threshold) {
+      if (isNaN(pv) || isNaN(sv)) { el.textContent = '—'; el.className = 'delta ok'; return; }
+      const diff = pv - sv;
+      const absDiff = Math.abs(diff);
+      el.textContent = diff > 0 ? `▴${fmt(absDiff)}` : diff < 0 ? `▾${fmt(absDiff)}` : '▪ 0';
+      el.className = absDiff > threshold ? 'delta hi' : 'delta ok';
+    }
+
+    function connect() {
+      const ws = new WebSocket(`wss://${location.host}/ws`);
+
+      ws.onopen = () => {
+        statusEl.textContent = 'Connected';
+        statusEl.className = 'connected';
+      };
+
+      ws.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+
+        GROUPS.forEach(group => {
+          group.cards.forEach(card => {
+            const pv = parseFloat(data[card.pvKey] ?? 'NaN');
+            const sv = parseFloat(data[card.svKey] ?? 'NaN');
+
+            const pvEl    = document.getElementById(card._pvId);
+            const svEl    = document.getElementById(card._svId);
+            const deltaEl = document.getElementById(card._deltaId);
+
+            if (pvEl) pvEl.textContent = fmt(pv);
+            if (svEl) svEl.textContent = fmt(sv);
+            if (deltaEl) updateDelta(deltaEl, pv, sv, card.threshold);
+          });
+        });
+
+        // Cập nhật thời gian
+        const now = new Date();
+        lastUpdateEl.textContent = `Last update: ${now.toLocaleTimeString()}`;
+
+        rawEl.textContent = JSON.stringify(data, null, 2);
+      };
+
+      ws.onclose = () => {
+        statusEl.textContent = 'Disconnected – retrying...';
+        statusEl.className = '';
+        setTimeout(connect, 3000);
+      };
+    }
+
+    connect();
+  </script>
+</body>
+</html>

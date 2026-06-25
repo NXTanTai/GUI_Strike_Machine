@@ -80,6 +80,7 @@ class ConnectionManager:
     def count(self) -> int:
         return len(self._clients)
 
+
 manager = ConnectionManager()
 
 @app.get("/")
@@ -91,6 +92,7 @@ async def index():
             )
     except FileNotFoundError:
         return HTMLResponse("<h2>dashboard.html không tìm thấy</h2>", status_code=404)
+
 
 @app.websocket("/ws")
 async def ws_endpoint(ws: WebSocket):
@@ -171,12 +173,7 @@ def run_web_server(queue: multiprocessing.Queue) -> None:
         sys.stderr = open(os.devnull, "w")
 
     logger = _setup_logger()
-
-    logging.getLogger("websockets").setLevel(logging.CRITICAL)
-    logging.getLogger("asyncio").setLevel(logging.CRITICAL)
-    
-    import warnings
-    warnings.filterwarnings("ignore", category=DeprecationWarning)
+    logger.info("Web server starting...")
 
     threading.Thread(target=_start_cloudflare, args=(logger,), daemon=True).start()
 
