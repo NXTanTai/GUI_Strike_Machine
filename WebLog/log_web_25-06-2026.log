@@ -1,0 +1,4 @@
+2026-06-25 07:57:14 - INFO - Web server starting...
+2026-06-25 07:57:14 - INFO - Uvicorn listening on port 8000
+2026-06-25 07:57:19 - INFO - Dashboard URL: https://gibraltar-wells-daughters-greatly.trycloudflare.com
+2026-06-25 08:09:30 - INFO - Client connected: Address(host='113.185.73.185', port=0)
