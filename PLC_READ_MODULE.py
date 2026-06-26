@@ -7,26 +7,8 @@ from typing import Any, Optional
 from snap7.error import * # type: ignore
 from snap7.type import * # type: ignore
 from snap7.type import Parameter
+from snap7.util import get_bool, get_real, get_dint, get_int, get_string
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
-
-def _get_bool(data: bytes, byte_idx: int, bit_idx: int) -> bool:
-    if byte_idx >= len(data) or bit_idx < 0 or bit_idx > 7:
-        return False
-    return bool((data[byte_idx] >> bit_idx) & 1)
-
-def _get_real(data: bytes, offset: int) -> float:
-    return struct.unpack_from(">f", data, offset)[0]
-
-def _get_dint(data: bytes, offset: int) -> int:
-    return struct.unpack_from(">i", data, offset)[0]
-
-def _get_int(data: bytes, offset: int) -> int:
-    return struct.unpack_from(">h", data, offset)[0]
-
-def _get_string(data: bytes, offset: int) -> str:
-    act_len = data[offset + 1]
-    raw = data[offset + 2: offset + 2 + act_len]
-    return raw.decode("utf-8", errors="replace")
 
 class PLCRead(QObject):
     """
@@ -247,18 +229,18 @@ class PLCRead(QObject):
         for name, dtype, offset, bit in self._db_layout:
             try:
                 if dtype == "BOOL":
-                    result[name] = _get_bool(raw, offset, bit)
+                    result[name] = get_bool(raw, offset, bit)
                     # byte_val = raw[offset]
                     # print(f"BOOL {name:20s} | Byte={offset} Bit={bit:1d} | "
                     #   f"RawByte=0x{byte_val:02X} ({byte_val:08b}) → Value={result[name]}")
                 elif dtype == "REAL":
-                    result[name] = _get_real(raw, offset)
+                    result[name] = get_real(raw, offset)
                 elif dtype == "DINT":
-                    result[name] = _get_dint(raw, offset)
+                    result[name] = get_dint(raw, offset)
                 elif dtype == "INT":
-                    result[name] = _get_int(raw, offset)
+                    result[name] = get_int(raw, offset)
                 elif dtype == "STRING":
-                    result[name] = _get_string(raw, offset)
+                    result[name] = get_string(raw, offset)
                 else:
                     result[name] = None
             except Exception as exc:
