@@ -221,7 +221,7 @@ class PLCRead(QObject):
         self._disconnect_plc()
         self._retry_timer.start() # type: ignore
 
-    def _parse(self, raw: bytes) -> dict:
+    def _parse(self, raw: bytearray) -> dict:
         if not self._db_layout:
             return {}
 
@@ -230,9 +230,6 @@ class PLCRead(QObject):
             try:
                 if dtype == "BOOL":
                     result[name] = get_bool(raw, offset, bit)
-                    # byte_val = raw[offset]
-                    # print(f"BOOL {name:20s} | Byte={offset} Bit={bit:1d} | "
-                    #   f"RawByte=0x{byte_val:02X} ({byte_val:08b}) → Value={result[name]}")
                 elif dtype == "REAL":
                     result[name] = get_real(raw, offset)
                 elif dtype == "DINT":

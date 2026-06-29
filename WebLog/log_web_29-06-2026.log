@@ -1,0 +1,28 @@
+2026-06-29 08:09:55 - INFO - Web server starting...
+2026-06-29 08:09:55 - INFO - Uvicorn listening on port 8000
+2026-06-29 08:10:00 - INFO - Dashboard URL: https://bit-votes-placing-paris.trycloudflare.com
+2026-06-29 08:15:16 - INFO - Client connected: Address(host='113.185.79.226', port=0)  (total: 1)
+2026-06-29 08:23:00 - INFO - Client disconnected normally: Address(host='113.185.79.226', port=0)
+2026-06-29 08:23:00 - INFO - Client removed: Address(host='113.185.79.226', port=0)  (remaining: 0)
+2026-06-29 08:23:00 - INFO - Client connected: Address(host='113.185.79.226', port=0)  (total: 1)
+2026-06-29 08:32:30 - INFO - Client disconnected normally: Address(host='113.185.79.226', port=0)
+2026-06-29 08:32:30 - INFO - Client removed: Address(host='113.185.79.226', port=0)  (remaining: 0)
+2026-06-29 08:32:30 - INFO - Client connected: Address(host='113.185.79.226', port=0)  (total: 1)
+2026-06-29 09:00:20 - INFO - Client disconnected normally: Address(host='113.185.79.226', port=0)
+2026-06-29 09:00:20 - INFO - Client removed: Address(host='113.185.79.226', port=0)  (remaining: 0)
+2026-06-29 09:00:20 - INFO - Client connected: Address(host='113.185.79.226', port=0)  (total: 1)
+2026-06-29 09:18:24 - INFO - Client disconnected normally: Address(host='113.185.79.226', port=0)
+2026-06-29 09:18:24 - INFO - Client removed: Address(host='113.185.79.226', port=0)  (remaining: 0)
+2026-06-29 09:18:24 - INFO - Client connected: Address(host='113.185.79.226', port=0)  (total: 1)
+2026-06-29 09:43:07 - INFO - Client disconnected normally: Address(host='113.185.79.226', port=0)
+2026-06-29 09:43:07 - INFO - Client removed: Address(host='113.185.79.226', port=0)  (remaining: 0)
+2026-06-29 10:41:09 - INFO - Web server starting...
+2026-06-29 10:41:09 - INFO - Uvicorn listening on port 8000
+2026-06-29 10:41:14 - INFO - Dashboard URL: https://exposed-apartments-mil-passport.trycloudflare.com
+2026-06-29 10:55:34 - INFO - Client connected: Address(host='113.185.79.226', port=0)  (total: 1)
+2026-06-29 11:04:38 - INFO - Client disconnected normally: Address(host='113.185.79.226', port=0)
+2026-06-29 11:04:38 - INFO - Client removed: Address(host='113.185.79.226', port=0)  (remaining: 0)
+2026-06-29 11:04:38 - INFO - Client connected: Address(host='113.185.79.226', port=0)  (total: 1)
+2026-06-29 11:05:35 - INFO - Client disconnected normally: Address(host='113.185.79.226', port=0)
+2026-06-29 11:05:35 - INFO - Client removed: Address(host='113.185.79.226', port=0)  (remaining: 0)
+2026-06-29 11:05:35 - INFO - Client connected: Address(host='113.185.79.226', port=0)  (total: 1)

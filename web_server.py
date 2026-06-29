@@ -13,11 +13,17 @@ from pathlib import Path
 
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from websockets.exceptions import ConnectionClosedError, ConnectionClosedOK
 
 app = FastAPI()
 _plc_data: dict = {}
+
+def resource_path(relative_path: str) -> str:
+    if hasattr(sys, '_MEIPASS'):
+        exe_dir = os.path.dirname(sys.executable)
+        return os.path.join(exe_dir, relative_path)
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), relative_path)
 
 def _setup_logger() -> logging.Logger:
     log_dir = Path("WebLog")
@@ -80,17 +86,27 @@ class ConnectionManager:
     def count(self) -> int:
         return len(self._clients)
 
+
 manager = ConnectionManager()
+
+@app.get("/favicon.png")
+async def favicon():
+    icon_path = resource_path(os.path.join("icons", "strike_machine.png"))
+    return FileResponse(icon_path, media_type="image/png")
 
 @app.get("/")
 async def index():
+    html_path = resource_path("dashboard.html")
     try:
-        with open("dashboard.html", encoding="utf-8") as f:
+        with open(html_path, encoding="utf-8") as f:
             return HTMLResponse(
                 f.read(), headers={"Content-Type": "text/html; charset=utf-8"}
             )
     except FileNotFoundError:
-        return HTMLResponse("<h2>dashboard.html không tìm thấy</h2>", status_code=404)
+        return HTMLResponse(
+            f"<h2>dashboard.html not found at: {html_path}</h2>",
+            status_code=404
+        )
 
 @app.websocket("/ws")
 async def ws_endpoint(ws: WebSocket):
@@ -106,7 +122,7 @@ async def ws_endpoint(ws: WebSocket):
             try:
                 await asyncio.wait_for(ws.receive_text(), timeout=0.5)
             except asyncio.TimeoutError:
-                pass  # Bình thường — client không gửi gì, tiếp tục vòng lặp
+                pass
 
     except (WebSocketDisconnect, ConnectionClosedOK):
         logger.info("Client disconnected normally: %s", client_id)
@@ -147,11 +163,15 @@ async def _queue_reader(queue: multiprocessing.Queue) -> None:
 
 def _start_cloudflare(logger: logging.Logger) -> None:
     try:
+        kwargs = {}
+        if sys.platform == "win32":
+            kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
         proc = subprocess.Popen(
             ["cloudflared", "tunnel", "--url", "http://localhost:8000"],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
+            **kwargs
         )
         for line in proc.stdout:  # type: ignore
             match = re.search(r"https://[a-z0-9\-]+\.trycloudflare\.com", line)
@@ -159,7 +179,7 @@ def _start_cloudflare(logger: logging.Logger) -> None:
                 logger.info("Dashboard URL: %s", match.group())
     except FileNotFoundError:
         logger.warning(
-            "cloudflared không tìm thấy — cài bằng: winget install Cloudflare.cloudflared"
+            "cloudflared not found — Install by: winget install Cloudflare.cloudflared"
         )
     except Exception as e:
         logger.error("Cloudflare tunnel error: %s", e)
@@ -171,12 +191,12 @@ def run_web_server(queue: multiprocessing.Queue) -> None:
         sys.stderr = open(os.devnull, "w")
 
     logger = _setup_logger()
-
-    logging.getLogger("websockets").setLevel(logging.CRITICAL)
-    logging.getLogger("asyncio").setLevel(logging.CRITICAL)
     
-    import warnings
-    warnings.filterwarnings("ignore", category=DeprecationWarning)
+    logging.getLogger("websockets").setLevel(logging.CRITICAL)
+    logging.getLogger("websockets.protocol").setLevel(logging.CRITICAL)
+    logging.getLogger("asyncio").setLevel(logging.CRITICAL)
+
+    logger.info("Web server starting...")
 
     threading.Thread(target=_start_cloudflare, args=(logger,), daemon=True).start()
 

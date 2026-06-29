@@ -337,12 +337,12 @@
     <message>
         <location filename="tech_link_theme.ui" line="11463"/>
         <source>PV:</source>
-        <translation></translation>
+        <translation>PV:</translation>
     </message>
     <message>
         <location filename="tech_link_theme.ui" line="11491"/>
         <source>SV:</source>
-        <translation></translation>
+        <translation>SV:</translation>
     </message>
     <message>
         <location filename="tech_link_theme.ui" line="11519"/>

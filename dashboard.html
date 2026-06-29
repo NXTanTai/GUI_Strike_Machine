@@ -7,158 +7,304 @@
   <title>Strike Machine Dashboard</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: #ffffff; color: #e2e8f0; padding: 24px; min-height: 100vh; }
+    body { font-family: 'Segoe UI', sans-serif; background: #ffffff; color: #e2e8f0; padding: 24px; min-height: 85vh; }
+
     .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
     .header h1 { font-size: 18px; font-weight: 600; color: #0080ff; letter-spacing: 0.01em; }
     .header h1 span { color: #38bdf8; }
     .header small { font-size: 11px; color: #063678; display: block; margin-top: 2px; }
-    #status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px; font-size: 12px; font-weight: 500; background: #1e293b; color: #64748b; transition: all 0.3s; }
-    #status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #475569; transition: background 0.3s; }
+
+    #status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px; font-size: 12px; font-weight: 500; background: #1e293b; color: #ff8000; transition: all 0.3s; }
+    #status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #ff8000; transition: background 0.3s; }
     #status.connected { background: #0f2a1e; color: #4ade80; }
-    #status.connected::before { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+    #status.connected::before { background: #4ade80; box-shadow: 0 0 6px #4ade80; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 4px; }
+    .stat-card { background: #2f4668; border: 1px solid #21262d; border-radius: 8px; padding: 10px 12px; }
+    .stat-lbl { font-size: 10px; font-weight: 700; color: #e6edf3; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .06em; }
+    .stat-val { font-size: 20px; font-weight: 600; color: #e6edf3; font-variant-numeric: tabular-nums; }
+    .stat-unit { font-size: 15px; color: #e6edf3; }
+    .stat-sub { font-size: 12px; font-weight: 600; color: #3fb950; margin-top: 2px; }
+    .stat-sub.warn { color: #f85149; }
+
     .group-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #475569; margin: 24px 0 10px; padding-left: 2px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
-    .card { background: #efefef; border-radius: 12px; padding: 16px; border: 1px solid #263348; transition: border-color 0.2s; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+
+    .card { background: #f5f3f3; border-radius: 12px; padding: 16px; border: 1px solid #263348; transition: border-color 0.2s; }
     .card:hover { border-color: #334155; }
-    .card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #64748b; margin-bottom: 14px; }
+    .card.alarm-active { border-color: #da3633; animation: alarm-border 1.5s infinite; }
+    @keyframes alarm-border { 0%,100%{border-color:#da3633} 50%{border-color:#f87171} }
+    .card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #64748b; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+
     .pv-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 10px; }
     .pv-badge { font-size: 10px; font-weight: 700; color: #38bdf8; background: #0c2336; border-radius: 4px; padding: 1px 5px; letter-spacing: 0.04em; flex-shrink: 0; }
     .pv-value { font-size: 30px; font-weight: 600; color: #38bdf8; line-height: 1; font-variant-numeric: tabular-nums; }
-    .pv-unit { font-size: 13px; color: #271d07; }
+    .pv-value.alarm { color: #f85149; }
+    .pv-unit { font-size: 13px; font-weight: 500; color: #271d07; }
+
     .sv-row { display: flex; align-items: center; gap: 6px; padding-top: 10px; border-top: 1px solid #263348; }
     .sv-badge { font-size: 10px; font-weight: 700; color: #f59e0b; background: #271d07; border-radius: 4px; padding: 1px 5px; letter-spacing: 0.04em; flex-shrink: 0; }
-    .sv-value { font-size: 14px; font-weight: 500; color: #f59e0b; font-variant-numeric: tabular-nums; }
-    .sv-unit { font-size: 12px; color: #271d07; }
+    .sv-value { font-size: 18px; font-weight: 500; color: #f59e0b; font-variant-numeric: tabular-nums; }
+    .sv-unit { font-size: 14px; font-weight: 500; color: #271d07; }
+    .delta { font-size: 14px; font-weight: 600; margin-left: auto; padding: 1px 6px; border-radius: 4px; }
+    .delta.ok { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .delta.warn { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+    .delta.alarm { background: #fff1f2; color: #e11d48; border: 1px solid #fecdd3; }
+
     #raw-wrap { margin-top: 28px; }
     #raw-wrap summary { font-size: 11px; color: #475569; cursor: pointer; user-select: none; margin-bottom: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
     #raw { background: #1e293b; border-radius: 10px; padding: 14px 16px; font-size: 13px; font-family: 'Consolas', monospace; color: #ffffff; white-space: pre-wrap; max-height: 260px; overflow-y: auto; margin-top: 8px; }
+
+    @media(max-width:600px) {
+      .stats-row { grid-template-columns: repeat(2,1fr); }
+    }
   </style>
 </head>
 <body>
 
-  <div class="header">
+<div class="header">
+  <div style="display:flex;align-items:center;gap:10px">
+    <img src="/favicon.png" width="32" height="32" style="border-radius:6px">
     <div>
       <h1>Strike Machine <span>- Live Monitor</span></h1>
       <small>Author: Nguyen Xuan Tan Tai</small>
     </div>
-    <div id="status">Connecting...</div>
   </div>
+  <div id="status">Connecting...</div>
+</div>
 
-  <div id="groups"></div>
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-lbl">Total Cycles</div>
+    <div class="stat-val"><span id="st-cycles">—</span></div>
+    <div class="stat-sub" id="st-cycles-sub">A+B+C</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-lbl">Active alarms</div>
+    <div class="stat-val" id="st-alarm-count" style="color:#3fb950">0</div>
+    <div class="stat-sub" id="st-alarm-sub">No alarms</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-lbl">Avg oven temp</div>
+    <div class="stat-val"><span id="st-oven">—</span> <span class="stat-unit">°C</span></div>
+    <div class="stat-sub">SV <span id="st-oven-sv">—</span>°C</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-lbl">Last update</div>
+    <div class="stat-val" id="st-update">—</div>
+    <div class="stat-sub" id="st-update-sub">Waiting for data</div>
+  </div>
+</div>
+<div id="groups"></div>
 
-  <details id="raw-wrap">
-    <summary>Raw PLC data</summary>
-    <div id="raw">Waiting for data...</div>
-  </details>
+<details id="raw-wrap">
+  <summary>Raw PLC data</summary>
+  <div id="raw">Waiting for data...</div>
+</details>
 
-  <script>
-    const GROUPS = [
-      {
-        label: 'Group A — Pressure & Temperature',
-        cards: [
-          { title: 'Pressure A',          pvKey: 'P1_Current_PressureHose', svKey: 'P1_PressureSetting',    unit: 'bar' },
-          { title: 'Oven',                pvKey: 'T0_Current_Temp',         svKey: 'T0_TemperatureSetting', unit: '°C'  },
-          { title: 'Temperature A Front', pvKey: 'P1_Current_Temp1',        svKey: 'P1_TemperatureSetting', unit: '°C'  },
-          { title: 'Temperature A Mid',   pvKey: 'P1_Current_Temp2',        svKey: 'P1_TemperatureSetting', unit: '°C'  },
-          { title: 'Temperature A End',   pvKey: 'P1_Current_Temp3',        svKey: 'P1_TemperatureSetting', unit: '°C'  },
-        ]
-      },
-      {
-        label: 'Group B — Pressure & Temperature',
-        cards: [
-          { title: 'Pressure B',          pvKey: 'P2_Current_PressureHose', svKey: 'P2_PressureSetting',    unit: 'bar' },
-          { title: 'Oven',                pvKey: 'T0_Current_Temp',         svKey: 'T0_TemperatureSetting', unit: '°C'  },
-          { title: 'Temperature B Front', pvKey: 'P2_Current_Temp1',        svKey: 'P2_TemperatureSetting', unit: '°C'  },
-          { title: 'Temperature B Mid',   pvKey: 'P2_Current_Temp2',        svKey: 'P2_TemperatureSetting', unit: '°C'  },
-          { title: 'Temperature B End',   pvKey: 'P2_Current_Temp3',        svKey: 'P2_TemperatureSetting', unit: '°C'  },
-        ]
-      },
-      {
-        label: 'Group C — Pressure & Temperature',
-        cards: [
-          { title: 'Pressure C',          pvKey: 'P3_Current_PressureHose', svKey: 'P3_PressureSetting',    unit: 'bar' },
-          { title: 'Oven',                pvKey: 'T0_Current_Temp',         svKey: 'T0_TemperatureSetting', unit: '°C'  },
-          { title: 'Temperature C Front', pvKey: 'P3_Current_Temp1',        svKey: 'P3_TemperatureSetting', unit: '°C'  },
-          { title: 'Temperature C Mid',   pvKey: 'P3_Current_Temp2',        svKey: 'P3_TemperatureSetting', unit: '°C'  },
-          { title: 'Temperature C End',   pvKey: 'P3_Current_Temp3',        svKey: 'P3_TemperatureSetting', unit: '°C'  },
-        ]
-      },
-    ];
+<script>
+  // const THRESHOLD = { bar: 1.0, '°C': 3, times: Infinity };
 
-    GROUPS.forEach((group, gi) => {
-      group.cards.forEach((card, ci) => {
-        card._pvId = `pv_${gi}_${ci}`;
-        card._svId = `sv_${gi}_${ci}`;
-      });
+  const GROUPS = [
+    // Nếu có giá trị nào mà không cần phải kiểm tra alarm thì thêm noAlarm: true ở cuối cùng
+
+    {
+      label: 'Group A — Pressure & Temperature',
+      cards: [
+        { title: 'Total Cycle A',       pvKey: 'P1_Number_Test_Times',    svKey: 'P1_CountTimes',         unit: 'times', noAlarm: true},
+        { title: 'Pressure A',          pvKey: 'P1_Current_PressureHose', svKey: 'P1_PressureSetting',    unit: 'bar'   },
+        { title: 'Temperature A Front', pvKey: 'P1_Current_Temp1',        svKey: 'P1_TemperatureSetting', unit: '°C'    },
+        { title: 'Temperature A Mid',   pvKey: 'P1_Current_Temp2',        svKey: 'P1_TemperatureSetting', unit: '°C'    },
+        { title: 'Temperature A End',   pvKey: 'P1_Current_Temp3',        svKey: 'P1_TemperatureSetting', unit: '°C'    },
+      ]
+    },
+    {
+      label: 'Group B — Pressure & Temperature',
+      cards: [
+        { title: 'Total Cycle B',       pvKey: 'P2_Number_Test_Times',    svKey: 'P2_CountTimes',         unit: 'times', noAlarm: true},
+        { title: 'Pressure B',          pvKey: 'P2_Current_PressureHose', svKey: 'P2_PressureSetting',    unit: 'bar'   },
+        { title: 'Temperature B Front', pvKey: 'P2_Current_Temp1',        svKey: 'P2_TemperatureSetting', unit: '°C'    },
+        { title: 'Temperature B Mid',   pvKey: 'P2_Current_Temp2',        svKey: 'P2_TemperatureSetting', unit: '°C'    },
+        { title: 'Temperature B End',   pvKey: 'P2_Current_Temp3',        svKey: 'P2_TemperatureSetting', unit: '°C'    },
+      ]
+    },
+    {
+      label: 'Group C — Pressure & Temperature',
+      cards: [
+        { title: 'Total Cycle C',       pvKey: 'P3_Number_Test_Times',    svKey: 'P3_CountTimes',         unit: 'times', noAlarm: true},
+        { title: 'Pressure C',          pvKey: 'P3_Current_PressureHose', svKey: 'P3_PressureSetting',    unit: 'bar'   },
+        { title: 'Temperature C Front', pvKey: 'P3_Current_Temp1',        svKey: 'P3_TemperatureSetting', unit: '°C'    },
+        { title: 'Temperature C Mid',   pvKey: 'P3_Current_Temp2',        svKey: 'P3_TemperatureSetting', unit: '°C'    },
+        { title: 'Temperature C End',   pvKey: 'P3_Current_Temp3',        svKey: 'P3_TemperatureSetting', unit: '°C'    },
+      ]
+    },
+  ];
+
+  GROUPS.forEach((group, gi) => {
+    group.cards.forEach((card, ci) => {
+      card._pvId    = `pv_${gi}_${ci}`;
+      card._svId    = `sv_${gi}_${ci}`;
+      card._deltaId = `delta_${gi}_${ci}`;
+      card._cardId  = `card_${gi}_${ci}`;
+    });
+  });
+
+  const groupsEl = document.getElementById('groups');
+
+  GROUPS.forEach((group, gi) => {
+    const labelEl = document.createElement('div');
+    labelEl.className = 'group-label';
+    labelEl.textContent = group.label;
+    groupsEl.appendChild(labelEl);
+
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+
+    group.cards.forEach((card, ci) => {
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.id = card._cardId;
+      el.innerHTML = `
+        <div class="card-title">
+          <span>${card.title}</span>
+        </div>
+        <div class="pv-row">
+          <span class="pv-badge">PV</span>
+          <span class="pv-value" id="${card._pvId}">—</span>
+          <span class="pv-unit">${card.unit}</span>
+          <span class="delta ok" id="${card._deltaId}">—</span>
+        </div>
+        <div class="sv-row">
+          <span class="sv-badge">SV</span>
+          <span class="sv-value" id="${card._svId}">—</span>
+          <span class="sv-unit">${card.unit}</span>
+        </div>`;
+      grid.appendChild(el);
     });
 
-    const groupsEl = document.getElementById('groups');
+    groupsEl.appendChild(grid);
+  });
 
-    GROUPS.forEach((group, gi) => {
-      const labelEl = document.createElement('div');
-      labelEl.className = 'group-label';
-      labelEl.textContent = group.label;
-      groupsEl.appendChild(labelEl);
+  const statusEl = document.getElementById('status');
+  const rawEl    = document.getElementById('raw');
+  const fmt      = v => isNaN(v) ? '—' : parseFloat(v.toFixed(2));
+  const fmtInt   = v => isNaN(v) ? '—' : Math.round(v);
+  const now      = () => new Date().toLocaleTimeString('vi-VN', {hour12: false});
 
-      const grid = document.createElement('div');
-      grid.className = 'grid';
+  function updateCard(card, pv, sv) {
 
-      group.cards.forEach((card, ci) => {
-        const el = document.createElement('div');
-        el.className = 'card';
-        el.innerHTML = `
-          <div class="card-title">${card.title}</div>
-          <div class="pv-row">
-            <span class="pv-badge">PV</span>
-            <span class="pv-value" id="${card._pvId}">—</span>
-            <span class="pv-unit">${card.unit}</span>
-          </div>
-          <div class="sv-row">
-            <span class="sv-badge">SV</span>
-            <span class="sv-value" id="${card._svId}">—</span>
-            <span class="sv-unit">${card.unit}</span>
-          </div>`;
-        grid.appendChild(el);
-      });
-
-      groupsEl.appendChild(grid);
-    });
-
-    const statusEl = document.getElementById('status');
-    const rawEl    = document.getElementById('raw');
-    const fmt      = v => isNaN(v) ? '—' : parseFloat(v.toFixed(2));
-
-    function connect() {
-      const ws = new WebSocket(`wss://${location.host}/ws`);
-
-      ws.onopen = () => {
-        statusEl.textContent = 'Connected';
-        statusEl.className = 'connected';
-      };
-
-      ws.onmessage = (e) => {
-        const data = JSON.parse(e.data);
-
-        GROUPS.forEach(group => {
-          group.cards.forEach(card => {
-            const pvEl = document.getElementById(card._pvId);
-            const svEl = document.getElementById(card._svId);
-            if (pvEl) pvEl.textContent = fmt(parseFloat(data[card.pvKey] ?? 'NaN'));
-            if (svEl) svEl.textContent = fmt(parseFloat(data[card.svKey] ?? 'NaN'));
-          });
-        });
-
-        rawEl.textContent = JSON.stringify(data, null, 2);
-      };
-
-      ws.onclose = () => {
-        statusEl.textContent = 'Disconnected – retrying...';
-        statusEl.className = '';
-        setTimeout(connect, 3000);
-      };
+    if (card.noAlarm) {
+      document.getElementById(card._pvId).textContent = fmt(pv);
+      document.getElementById(card._svId).textContent = fmt(sv);
+      document.getElementById(card._deltaId).textContent = '';
+      return false;  // không tính vào alarmCount
     }
 
-    connect();
-  </script>
+    const threshold = sv * 0.10; // Ngưỡng chênh lệch
+    const diff      = pv - sv;  // Giá trị chênh lệch
+    const absDiff   = Math.abs(diff);
+    const isAlarm   = absDiff > threshold;
+    const isWarn    = absDiff > threshold * 0.6 && !isAlarm; // Nếu giá trị vượt ra khoảng ngưỡng cho phép thì sẽ hiển thị đỏ còn không thì màu xanh
+
+    document.getElementById(card._pvId).textContent = fmt(pv);
+    document.getElementById(card._svId).textContent = fmt(sv);
+
+    const pvEl    = document.getElementById(card._pvId);
+    const deltaEl = document.getElementById(card._deltaId);
+    const cardEl  = document.getElementById(card._cardId);
+
+    const deltaText = isNaN(diff) ? '—'
+      : diff > 0  ? `▴${fmt(absDiff)}`
+      : diff < 0  ? `▾${fmt(absDiff)}`
+      : '▪ 0';
+    deltaEl.textContent = deltaText;
+
+    if (isAlarm) {
+      pvEl.className    = 'pv-value alarm';
+      deltaEl.className = 'delta alarm';
+      cardEl.classList.add('alarm-active');
+    } else if (isWarn) {
+      pvEl.className    = 'pv-value';
+      deltaEl.className = 'delta warn';
+      cardEl.classList.remove('alarm-active');
+    } else {
+      pvEl.className    = 'pv-value';
+      deltaEl.className = 'delta ok';
+      cardEl.classList.remove('alarm-active');
+    }
+
+    return isAlarm;
+  }
+
+  function updateStats(data) {
+    const ca = parseFloat(data['P1_Number_Test_Times'] ?? 'NaN');
+    const cb = parseFloat(data['P2_Number_Test_Times'] ?? 'NaN');
+    const cc = parseFloat(data['P3_Number_Test_Times'] ?? 'NaN');
+    const totalCycles = [ca, cb, cc].filter(v => !isNaN(v)).reduce((a, b) => a + b, 0);
+    document.getElementById('st-cycles').textContent     = isNaN(totalCycles) ? '—' : Math.round(totalCycles);
+    document.getElementById('st-cycles-sub').textContent = `A:${fmtInt(ca)}  B:${fmtInt(cb)}  C:${fmtInt(cc)}`;
+
+    const ovenPv = parseFloat(data['T0_Current_Temp'] ?? 'NaN');
+    const ovenSv = parseFloat(data['T0_TemperatureSetting'] ?? 'NaN');
+    document.getElementById('st-oven').textContent    = fmtInt(ovenPv);
+    document.getElementById('st-oven-sv').textContent = fmtInt(ovenSv);
+
+    document.getElementById('st-update').textContent     = now();
+    document.getElementById('st-update-sub').textContent = 'Live';
+  }
+
+  function updateAlarmStats(alarmCount) {
+    const countEl = document.getElementById('st-alarm-count');
+    const subEl   = document.getElementById('st-alarm-sub');
+    countEl.textContent = alarmCount;
+    countEl.style.color = alarmCount > 0 ? '#f85149' : '#3fb950';
+    subEl.textContent   = alarmCount > 0 ? `${alarmCount} active` : 'No alarms';
+    subEl.className     = alarmCount > 0 ? 'stat-sub warn' : 'stat-sub';
+  }
+
+  function connect() {
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    const ws    = new WebSocket(`${proto}://${location.host}/ws`);
+
+    ws.onopen = () => {
+      statusEl.textContent = 'Connected';
+      statusEl.className   = 'connected';
+    };
+
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      let alarmCount = 0;
+
+      GROUPS.forEach(group => {
+        group.cards.forEach(card => {
+          const pv = parseFloat(data[card.pvKey] ?? 'NaN');
+          const sv = parseFloat(data[card.svKey] ?? 'NaN');
+          if (updateCard(card, pv, sv)) alarmCount++;
+        });
+      });
+
+      updateStats(data);
+      updateAlarmStats(alarmCount);
+      rawEl.textContent = JSON.stringify(data, null, 2);
+    };
+
+    ws.onclose = () => {
+      statusEl.textContent = 'Disconnected – retrying...';
+      statusEl.className   = '';
+      setTimeout(connect, 3000);
+    };
+  }
+
+  connect();
+
+  (function() {
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    const hr    = new WebSocket(`${proto}://${location.host}/hot-reload`);
+    hr.onmessage = () => location.reload();
+    hr.onclose   = () => {};
+  })();
+</script>
 </body>
 </html>

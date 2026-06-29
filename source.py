@@ -2040,15 +2040,15 @@ class StrikeMachine(QMainWindow):
 
         if on_chart_page:
             self._pause_charts()
-            # for c in charts:
-            #     c.hide()
+            for c in charts:
+                c.hide()
 
         self.ui.left_side_menu_widget.slideMenu()
 
         def _restore():
             if on_chart_page:
-                # for c in charts:
-                #     c.show()
+                for c in charts:
+                    c.show()
                 self._resume_charts()
 
         QTimer.singleShot(250, _restore)

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>Strike Machine SCADA</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0d1117;color:#c9d1d9;font-family:'Segoe UI',monospace;min-height:100vh}
+
+    .topbar{background:#161b22;border-bottom:1px solid #21262d;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:10}
+    .topbar-left{display:flex;align-items:center;gap:10px}
+    .logo-sq{width:28px;height:28px;background:#1f6feb;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+    .topbar h1{font-size:13px;font-weight:500;color:#e6edf3;letter-spacing:.02em}
+    .topbar small{font-size:11px;color:#484f58;display:block;margin-top:1px}
+    .topbar-right{display:flex;align-items:center;gap:10px}
+    .conn-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:600;background:#161b22;color:#484f58;border:1px solid #21262d;transition:all .3s}
+    .conn-pill.connected{background:#0d1f0d;color:#3fb950;border-color:#238636}
+    .dot{width:6px;height:6px;border-radius:50%;background:#484f58;transition:all .3s}
+    .conn-pill.connected .dot{background:#3fb950;animation:blink 2s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .clock{font-size:11px;color:#484f58;font-variant-numeric:tabular-nums;min-width:60px;text-align:right}
+
+    .sidebar{background:#161b22;border-bottom:1px solid #21262d;padding:6px 16px;display:flex;align-items:center;gap:4px;overflow-x:auto}
+    .nav-item{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:4px;cursor:pointer;color:#484f58;white-space:nowrap;border:none;background:none}
+    .nav-item.active{color:#1f6feb;background:#0d1926}
+
+    .body{padding:12px 14px;display:grid;gap:12px}
+
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .stat-card{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:10px 12px}
+    .stat-lbl{font-size:10px;color:#484f58;margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+    .stat-val{font-size:20px;font-weight:600;color:#e6edf3;font-variant-numeric:tabular-nums}
+    .stat-unit{font-size:11px;color:#484f58}
+    .stat-sub{font-size:10px;color:#3fb950;margin-top:2px}
+    .stat-sub.warn{color:#f85149}
+
+    .section-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .section-head-line{flex:1;height:1px;background:#21262d}
+    .section-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:4px;flex-shrink:0}
+
+    .machine-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+
+    .cell{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:10px 12px;position:relative;overflow:hidden;transition:border-color .3s}
+    .cell::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+    .cell.pres::before{background:#1f6feb}
+    .cell.oven::before{background:#d29922}
+    .cell.temp::before{background:#e05252}
+    .cell.alarm-active{border-color:#6e1f1f;animation:alarm-pulse 1.5s infinite}
+    @keyframes alarm-pulse{0%,100%{border-color:#6e1f1f}50%{border-color:#da3633}}
+
+    .cell-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#484f58;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+    .badge{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:700}
+    .b-ok{background:#0d1f0d;color:#3fb950;border:1px solid #1a4721}
+    .b-warn{background:#271a00;color:#d29922;border:1px solid #5c3d00}
+    .b-alarm{background:#2a0d0d;color:#f85149;border:1px solid #6e1f1f}
+
+    .pv-row{display:flex;align-items:baseline;gap:4px;margin-bottom:6px}
+    .pv-tag{font-size:9px;font-weight:800;color:#1f6feb;background:#0d1926;border-radius:3px;padding:1px 4px;flex-shrink:0;transition:all .3s}
+    .pv-tag.alarm{color:#f85149;background:#2a0d0d}
+    .pv-val{font-size:22px;font-weight:700;color:#e6edf3;line-height:1;font-variant-numeric:tabular-nums;transition:color .3s}
+    .pv-val.alarm{color:#f85149}
+    .pv-unit{font-size:10px;color:#484f58}
+    .divider{height:1px;background:#21262d;margin:5px 0}
+    .sv-row{display:flex;align-items:center;gap:4px}
+    .sv-tag{font-size:9px;font-weight:800;color:#d29922;background:#1a1200;border-radius:3px;padding:1px 4px;flex-shrink:0}
+    .sv-val{font-size:12px;color:#6e7681;font-variant-numeric:tabular-nums}
+    .sv-unit{font-size:10px;color:#30363d}
+    .delta{font-size:10px;font-weight:700;margin-left:auto;padding:1px 5px;border-radius:3px}
+    .d-ok{background:#0d1f0d;color:#3fb950;border:1px solid #1a4721}
+    .d-warn{background:#271a00;color:#d29922;border:1px solid #5c3d00}
+    .d-alarm{background:#2a0d0d;color:#f85149;border:1px solid #6e1f1f}
+
+    .bar-wrap{margin-top:6px;height:3px;background:#21262d;border-radius:2px}
+    .bar-fill{height:100%;border-radius:2px;transition:width .5s}
+    .bar-blue{background:#1f6feb}
+    .bar-amber{background:#d29922}
+    .bar-red{background:#da3633}
+
+    .machine-offline{opacity:.4}
+    .machine-offline .section-badge{border-color:#30363d!important;color:#484f58!important;background:#161b22!important}
+
+    .alarm-panel{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:10px 12px}
+    .alarm-panel.has-alarm{border-color:#6e1f1f}
+    .alarm-panel-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#484f58;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .alarm-panel-lbl.has-alarm{color:#f85149}
+    .alarm-list{display:grid;gap:0}
+    .alarm-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #21262d;font-size:11px}
+    .alarm-row:last-child{border-bottom:none}
+    .alarm-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .alarm-dot.red{background:#f85149;animation:blink .8s infinite}
+    .alarm-dot.yellow{background:#d29922}
+    .alarm-time{color:#484f58;font-size:10px;font-variant-numeric:tabular-nums;flex-shrink:0;min-width:48px}
+    .alarm-msg{color:#c9d1d9;flex:1}
+    .alarm-src{color:#484f58;font-size:10px;text-align:right;flex-shrink:0}
+    .no-alarm{font-size:11px;color:#484f58;padding:6px 0}
+
+    @media(max-width:600px){
+      .machine-row{grid-template-columns:repeat(2,1fr)}
+      .stats-row{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <img src="/favicon.png" width="32" height="32" style="border-radius:6px">
+    <div>
+      <h1>Strike Machine SCADA</h1>
+      <small id="sub-status">Connecting...</small>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="conn-pill" id="conn-pill"><span class="dot"></span><span id="conn-text">Disconnected</span></div>
+    <div class="clock" id="clk">--:--:--</div>
+  </div>
+</div>
+
+<div class="sidebar">
+  <button class="nav-item active">Overview</button>
+  <button class="nav-item">Trends</button>
+  <button class="nav-item">Alarms</button>
+  <button class="nav-item">History</button>
+</div>
+
+<div class="body">
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-lbl">Machines online</div>
+      <div class="stat-val"><span id="st-online">0</span> <span class="stat-unit">/ 3</span></div>
+      <div class="stat-sub" id="st-online-sub">Waiting...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Active alarms</div>
+      <div class="stat-val" id="st-alarm-count" style="color:#3fb950">0</div>
+      <div class="stat-sub" id="st-alarm-sub">No alarms</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Avg oven temp</div>
+      <div class="stat-val"><span id="st-oven">—</span> <span class="stat-unit">°C</span></div>
+      <div class="stat-sub">SV <span id="st-oven-sv">—</span>°C</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Last update</div>
+      <div class="stat-val" style="font-size:14px" id="st-update">—</div>
+      <div class="stat-sub" id="st-update-sub">—</div>
+    </div>
+  </div>
+
+  <div id="machines-container"></div>
+
+  <div class="alarm-panel" id="alarm-panel">
+    <div class="alarm-panel-lbl" id="alarm-panel-lbl">
+      <i style="font-size:13px">🔔</i> Active alarms
+    </div>
+    <div class="alarm-list" id="alarm-list">
+      <div class="no-alarm">No active alarms</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const MACHINES = [
+  {
+    id: 'machine_a',
+    label: 'Machine A',
+    badgeStyle: 'background:#0d1926;color:#1f6feb;border:1px solid #1f4068',
+    pillStyle:  'background:#0d1926;color:#1f6feb;border:1px solid #1f4068',
+    cards: [
+      { title:'Pressure A',   cls:'pres', pvKey:'P1_Current_PressureHose', svKey:'P1_PressureSetting',    unit:'bar', threshold:0.5,  maxPct:10  },
+      { title:'Oven',         cls:'oven', pvKey:'T0_Current_Temp',         svKey:'T0_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+      { title:'Temp A Front', cls:'temp', pvKey:'P1_Current_Temp1',        svKey:'P1_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+      { title:'Temp A Mid',   cls:'temp', pvKey:'P1_Current_Temp2',        svKey:'P1_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+      { title:'Temp A End',   cls:'temp', pvKey:'P1_Current_Temp3',        svKey:'P1_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+    ]
+  },
+  {
+    id: 'machine_b',
+    label: 'Machine B',
+    badgeStyle: 'background:#1a0d26;color:#8b5cf6;border:1px solid #44296b',
+    pillStyle:  'background:#1a0d26;color:#8b5cf6;border:1px solid #44296b',
+    cards: [
+      { title:'Pressure B',   cls:'pres', pvKey:'P2_Current_PressureHose', svKey:'P2_PressureSetting',    unit:'bar', threshold:0.5,  maxPct:10  },
+      { title:'Oven',         cls:'oven', pvKey:'T0_Current_Temp',         svKey:'T0_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+      { title:'Temp B Front', cls:'temp', pvKey:'P2_Current_Temp1',        svKey:'P2_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+      { title:'Temp B Mid',   cls:'temp', pvKey:'P2_Current_Temp2',        svKey:'P2_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+      { title:'Temp B End',   cls:'temp', pvKey:'P2_Current_Temp3',        svKey:'P2_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+    ]
+  },
+  {
+    id: 'machine_c',
+    label: 'Machine C',
+    badgeStyle: 'background:#0d1f0d;color:#3fb950;border:1px solid #1a4721',
+    pillStyle:  'background:#0d1f0d;color:#3fb950;border:1px solid #1a4721',
+    cards: [
+      { title:'Pressure C',   cls:'pres', pvKey:'P3_Current_PressureHose', svKey:'P3_PressureSetting',    unit:'bar', threshold:0.5,  maxPct:10  },
+      { title:'Oven',         cls:'oven', pvKey:'T0_Current_Temp',         svKey:'T0_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+      { title:'Temp C Front', cls:'temp', pvKey:'P3_Current_Temp1',        svKey:'P3_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+      { title:'Temp C Mid',   cls:'temp', pvKey:'P3_Current_Temp2',        svKey:'P3_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+      { title:'Temp C End',   cls:'temp', pvKey:'P3_Current_Temp3',        svKey:'P3_TemperatureSetting', unit:'°C',  threshold:3,    maxPct:200 },
+    ]
+  },
+];
+
+const fmt    = v  => isNaN(v) ? '—' : parseFloat(v.toFixed(2));
+const fmtInt = v  => isNaN(v) ? '—' : Math.round(v);
+const now    = () => new Date().toLocaleTimeString('vi-VN', {hour12:false});
+
+// ── Build DOM ──────────────────────────────────────────────────────────────
+const container = document.getElementById('machines-container');
+container.style.display = 'grid';
+container.style.gap = '12px';
+
+MACHINES.forEach((machine, mi) => {
+  const wrap = document.createElement('div');
+  wrap.id = `m_${machine.id}`;
+
+  const head = document.createElement('div');
+  head.className = 'section-head';
+  head.innerHTML = `
+    <span class="section-badge" style="${machine.badgeStyle}">${machine.label}</span>
+    <div class="section-head-line"></div>
+    <span class="conn-pill" id="pill_${machine.id}" style="${machine.pillStyle};font-size:10px;padding:2px 8px">
+      <span class="dot" id="dot_${machine.id}" style="background:currentColor"></span>
+      <span id="ip_${machine.id}">Offline</span>
+    </span>`;
+
+  const grid = document.createElement('div');
+  grid.className = 'machine-row';
+
+  machine.cards.forEach((card, ci) => {
+    card._id = `c_${mi}_${ci}`;
+    const el = document.createElement('div');
+    el.className = `cell ${card.cls}`;
+    el.id = card._id;
+    el.innerHTML = `
+      <div class="cell-lbl">
+        <span>${card.title}</span>
+        <span class="badge b-ok" id="${card._id}_badge">—</span>
+      </div>
+      <div class="pv-row">
+        <span class="pv-tag" id="${card._id}_pvtag">PV</span>
+        <span class="pv-val" id="${card._id}_pv">—</span>
+        <span class="pv-unit">${card.unit}</span>
+      </div>
+      <div class="divider"></div>
+      <div class="sv-row">
+        <span class="sv-tag">SV</span>
+        <span class="sv-val" id="${card._id}_sv">—</span>
+        <span class="sv-unit">${card.unit}</span>
+        <span class="delta d-ok" id="${card._id}_delta">—</span>
+      </div>
+      <div class="bar-wrap"><div class="bar-fill bar-blue" id="${card._id}_bar" style="width:0%"></div></div>`;
+    grid.appendChild(el);
+  });
+
+  wrap.appendChild(head);
+  wrap.appendChild(grid);
+  container.appendChild(wrap);
+});
+
+// ── Update helpers ──────────────────────────────────────────────────────────
+function updateCard(card, pv, sv) {
+  const diff     = pv - sv;
+  const absDiff  = Math.abs(diff);
+  const isAlarm  = absDiff > card.threshold;
+  const isWarn   = absDiff > card.threshold * 0.6;
+
+  const el       = document.getElementById(card._id);
+  const pvEl     = document.getElementById(card._id + '_pv');
+  const pvTagEl  = document.getElementById(card._id + '_pvtag');
+  const svEl     = document.getElementById(card._id + '_sv');
+  const deltaEl  = document.getElementById(card._id + '_delta');
+  const badgeEl  = document.getElementById(card._id + '_badge');
+  const barEl    = document.getElementById(card._id + '_bar');
+
+  pvEl.textContent    = fmt(pv);
+  svEl.textContent    = fmt(sv);
+
+  const deltaText = isNaN(diff) ? '—' : diff > 0 ? `▴${fmt(absDiff)}` : diff < 0 ? `▾${fmt(absDiff)}` : '▪ 0';
+  deltaEl.textContent = deltaText;
+
+  if (isAlarm) {
+    pvEl.className    = 'pv-val alarm';
+    pvTagEl.className = 'pv-tag alarm';
+    deltaEl.className = 'delta d-alarm';
+    badgeEl.className = 'badge b-alarm';
+    badgeEl.textContent = 'HIGH';
+    el.classList.add('alarm-active');
+    barEl.className   = 'bar-fill bar-red';
+  } else if (isWarn) {
+    pvEl.className    = 'pv-val';
+    pvTagEl.className = 'pv-tag';
+    deltaEl.className = 'delta d-warn';
+    badgeEl.className = 'badge b-warn';
+    badgeEl.textContent = `±${fmt(absDiff)}`;
+    el.classList.remove('alarm-active');
+    barEl.className   = 'bar-fill bar-amber';
+  } else {
+    pvEl.className    = 'pv-val';
+    pvTagEl.className = 'pv-tag';
+    deltaEl.className = 'delta d-ok';
+    badgeEl.className = 'badge b-ok';
+    badgeEl.textContent = 'OK';
+    el.classList.remove('alarm-active');
+    barEl.className   = 'bar-fill bar-blue';
+  }
+
+  const pct = isNaN(sv) || sv === 0 ? 0 : Math.min(100, (pv / sv) * 100);
+  barEl.style.width = pct.toFixed(1) + '%';
+
+  return isAlarm;
+}
+
+// ── Alarm log ──────────────────────────────────────────────────────────────
+const _alarmLog = [];
+
+function pushAlarm(msg, src, level) {
+  _alarmLog.unshift({ time: now(), msg, src, level });
+  if (_alarmLog.length > 20) _alarmLog.pop();
+  renderAlarms();
+}
+
+function renderAlarms() {
+  const listEl  = document.getElementById('alarm-list');
+  const panelEl = document.getElementById('alarm-panel');
+  const lblEl   = document.getElementById('alarm-panel-lbl');
+  const countEl = document.getElementById('st-alarm-count');
+  const subEl   = document.getElementById('st-alarm-sub');
+
+  const active = _alarmLog.filter(a => a.level === 'alarm');
+
+  countEl.textContent = active.length;
+  countEl.style.color = active.length > 0 ? '#f85149' : '#3fb950';
+  subEl.textContent   = active.length > 0 ? active[0].src : 'No alarms';
+  subEl.className     = active.length > 0 ? 'stat-sub warn' : 'stat-sub';
+
+  panelEl.classList.toggle('has-alarm', active.length > 0);
+  lblEl.classList.toggle('has-alarm', active.length > 0);
+
+  if (_alarmLog.length === 0) {
+    listEl.innerHTML = '<div class="no-alarm">No active alarms</div>';
+    return;
+  }
+
+  listEl.innerHTML = _alarmLog.slice(0, 8).map(a => `
+    <div class="alarm-row">
+      <span class="alarm-dot ${a.level === 'alarm' ? 'red' : 'yellow'}"></span>
+      <span class="alarm-time">${a.time}</span>
+      <span class="alarm-msg">${a.msg}</span>
+      <span class="alarm-src">${a.src}</span>
+    </div>`).join('');
+}
+
+// ── Process incoming data ──────────────────────────────────────────────────
+const _prevAlarms = {};
+
+function processData(allData) {
+  let onlineCount  = 0;
+  let ovenSum      = 0;
+  let ovenCount    = 0;
+  let ovenSvSum    = 0;
+
+  MACHINES.forEach(machine => {
+    const mData = allData[machine.id];
+    const wrapEl = document.getElementById(`m_${machine.id}`);
+    const pillEl = document.getElementById(`pill_${machine.id}`);
+    const ipEl   = document.getElementById(`ip_${machine.id}`);
+
+    if (!mData) {
+      wrapEl.classList.add('machine-offline');
+      pillEl.style.opacity = '.4';
+      ipEl.textContent = 'Offline';
+      return;
+    }
+
+    onlineCount++;
+    wrapEl.classList.remove('machine-offline');
+    pillEl.style.opacity = '1';
+    ipEl.textContent = mData._ip || 'Online';
+
+    machine.cards.forEach(card => {
+      const pv = parseFloat(mData[card.pvKey] ?? 'NaN');
+      const sv = parseFloat(mData[card.svKey] ?? 'NaN');
+      const isAlarm = updateCard(card, pv, sv);
+
+      if (card.pvKey.includes('Temp') || card.pvKey.includes('T0')) {
+        if (!isNaN(pv)) { ovenSum += pv; ovenCount++; }
+        if (!isNaN(sv)) { ovenSvSum += sv; }
+      }
+
+      const key = `${machine.id}_${card._id}`;
+      if (isAlarm && !_prevAlarms[key]) {
+        pushAlarm(`${card.title} exceeded setpoint`, `${machine.label}`, 'alarm');
+      } else if (!isAlarm && _prevAlarms[key]) {
+        pushAlarm(`${card.title} back to normal`, `${machine.label}`, 'warn');
+      }
+      _prevAlarms[key] = isAlarm;
+    });
+  });
+
+  document.getElementById('st-online').textContent = onlineCount;
+  document.getElementById('st-online-sub').textContent = onlineCount === 3 ? 'All running' : onlineCount === 0 ? 'All offline' : `${3 - onlineCount} offline`;
+  document.getElementById('st-oven').textContent   = ovenCount > 0 ? fmtInt(ovenSum / ovenCount) : '—';
+  document.getElementById('st-oven-sv').textContent = ovenCount > 0 ? fmtInt(ovenSvSum / ovenCount) : '—';
+  document.getElementById('st-update').textContent  = now();
+  document.getElementById('st-update-sub').textContent = `${onlineCount} machine${onlineCount !== 1 ? 's' : ''} sending data`;
+}
+
+// ── WebSocket ──────────────────────────────────────────────────────────────
+const pillEl = document.getElementById('conn-pill');
+const textEl = document.getElementById('conn-text');
+const subEl2 = document.getElementById('sub-status');
+
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  const ws = new WebSocket(`${proto}://${location.host}/ws`);
+
+  ws.onopen = () => {
+    pillEl.className = 'conn-pill connected';
+    textEl.textContent = 'Connected';
+    subEl2.textContent = 'Live data';
+  };
+
+  ws.onmessage = e => {
+    try { processData(JSON.parse(e.data)); } catch(_) {}
+  };
+
+  ws.onclose = () => {
+    pillEl.className = 'conn-pill';
+    textEl.textContent = 'Disconnected';
+    subEl2.textContent = 'Retrying in 3s...';
+    setTimeout(connect, 3000);
+  };
+}
+
+connect();
+
+// ── Clock ──────────────────────────────────────────────────────────────────
+setInterval(() => {
+  document.getElementById('clk').textContent = now();
+}, 1000);
+
+// ── Nav tabs (visual only) ──────────────────────────────────────────────────
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

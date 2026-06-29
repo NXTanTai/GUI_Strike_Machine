@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[('lib\\snap7.dll', '.')],
-    datas=[('gifs', 'gifs'), ('tech_link_theme_vn.qm', '.'), ('tech_link_theme_cn.qm', '.'), ('dashboard.html', '.')],
+    datas=[('gifs', 'gifs'), ('tech_link_theme_vn.qm', '.'), ('tech_link_theme_cn.qm', '.')],
     hiddenimports=['web_server', 'uvicorn', 'uvicorn.logging', 'uvicorn.loops', 'uvicorn.loops.auto', 'uvicorn.protocols', 'uvicorn.protocols.http', 'uvicorn.protocols.http.auto', 'uvicorn.protocols.websockets', 'uvicorn.protocols.websockets.auto', 'uvicorn.lifespan', 'uvicorn.lifespan.on', 'fastapi', 'anyio', 'anyio.backends.asyncio'],
     hookspath=[],
     hooksconfig={},
