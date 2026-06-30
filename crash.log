@@ -2,8 +2,8 @@ Startup errors:
 Traceback (most recent call last):
   File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 161, in <module>
     from source            import StrikeMachine
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 2185
-    offsets: int = 198
-                   ^^^
-SyntaxError: invalid syntax. Perhaps you forgot a comma?
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 2263
+    self.plc_read_data_thread = QThread()
+                                ^^^^^^^
+SyntaxError: invalid syntax. Did you mean 'True'?
 

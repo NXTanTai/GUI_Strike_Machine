@@ -326,7 +326,7 @@ class StrikeMachine(QMainWindow):
         db_layout: List[Tuple[str, str, int, Any]] = []
         max_byte = 0
         
-        for i in range(11, len(df)):
+        for i in range(8, len(df)):
             row = df.iloc[i]
             # Cột B: Name
             name_raw = str(row[1]).strip() if pd.notna(row[1]) else ""
@@ -376,13 +376,10 @@ class StrikeMachine(QMainWindow):
             "ip_plc": str(df.iloc[0, 1]).strip() if not PLC_SIM else "172.16.100.50",
             "read_time": int(str(df.iloc[1, 1]).strip()), # iloc[collumn, row]
             "write_time": int(str(df.iloc[2, 1]).strip()), 
-            "db_name": int(str(df.iloc[9, 0]).strip().replace("DB", "")),
+            "db_name": int(str(df.iloc[6, 0]).strip().replace("DB", "")),
             "offsets_data": int(str(df.iloc[3, 1]).strip()), 
-            "data_size": int(str(df.iloc[4, 1]).strip()), 
-            "offsets_input": int(str(df.iloc[5, 1]).strip()), 
-            "input_size": int(str(df.iloc[6, 1]).strip()), 
-            "offsets_error": int(str(df.iloc[7, 1]).strip()), 
-            "error_size": int(str(df.iloc[8, 1]).strip()), 
+            "offsets_input": int(str(df.iloc[4, 1]).strip()), 
+            "offsets_error": int(str(df.iloc[5, 1]).strip()), 
             "DB_LAYOUT": db_layout,
             "DB_TOTAL_BYTES": db_total_bytes
         }
@@ -552,17 +549,6 @@ class StrikeMachine(QMainWindow):
         
     def _init_timer(self):
         self.all_timer = []
-
-        self.data_plc_timer = QTimer()
-        self.all_timer.append(self.data_plc_timer)
-
-        if self.db_dict is not None:
-            self.data_plc_timer.setInterval(self.db_dict["read_time"])
-        else:
-            self.data_plc_timer.setInterval(200)
-
-        self.data_plc_timer.timeout.connect(self._data_ready)
-        self.data_plc_timer.start()
 
         self.timer_alarm = QTimer()
         self.all_timer.append(self.timer_alarm)
@@ -2157,16 +2143,15 @@ class StrikeMachine(QMainWindow):
                 content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
             ltmessage.error(self, title, content, self._current_lang)  # type: ignore
 
-        time.sleep(0.1)
+        time.sleep(0.2)
 
         if not self._setup_read_data_plc_thread(
-            name_module="ACTUAL DATA",
             ip=self.db_dict["ip_plc"],
             db_number=self.db_dict["db_name"],
             db_layout=self.db_dict["DB_LAYOUT"],
-            db_size=self.db_dict["data_size"],
+            db_size=self.db_dict["DB_TOTAL_BYTES"],
             offsets=self.db_dict["offsets_data"],
-            poll_ms=197,    #self.db_dict["read_time"],
+            poll_ms=self.db_dict["read_time"],
             logger=self.logger
         ):
             if self._current_lang == "en":
@@ -2180,15 +2165,13 @@ class StrikeMachine(QMainWindow):
                 content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
             ltmessage.error(self, title, content, self._current_lang) # type: ignore
 
-        time.sleep(0.1)
         if not self._setup_read_input_plc_thread(
-            name_module="INPUT DATA",
             ip=self.db_dict["ip_plc"],
             db_number=self.db_dict["db_name"],
             db_layout=self.db_dict["DB_LAYOUT"],
-            db_size=self.db_dict["input_size"],
+            db_size=self.db_dict["DB_TOTAL_BYTES"],
             offsets=self.db_dict["offsets_input"],
-            poll_ms=263, #self.db_dict["read_time"],
+            poll_ms=self.db_dict["read_time"],
             logger=self.logger
         ):
             if self._current_lang == "en":
@@ -2202,15 +2185,14 @@ class StrikeMachine(QMainWindow):
                 content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
             ltmessage.error(self, title, content, self._current_lang) # type: ignore
 
-        time.sleep(0.1)
+
         if not self._setup_read_error_plc_thread(
-            name_module="ERROR DATA",
             ip=self.db_dict["ip_plc"],
             db_number=self.db_dict["db_name"],
             db_layout=self.db_dict["DB_LAYOUT"],
-            db_size=self.db_dict["error_size"],
+            db_size=(self.db_dict["DB_TOTAL_BYTES"] - self.db_dict["offsets_error"]),
             offsets=self.db_dict["offsets_error"],
-            poll_ms=521, #self.db_dict["read_time"],
+            poll_ms=self.db_dict["read_time"],
             logger=self.logger
         ):
             if self._current_lang == "en":
@@ -2238,63 +2220,9 @@ class StrikeMachine(QMainWindow):
 
         except Exception as e:
             return 
-    def _setup_read_plc_thread(
-            self, 
-            name_module: str    = "READ 1",
-            ip: str = "172.16.100.100", 
-            db_number: Optional[int] = None, 
-            db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
-            db_size: Optional[int] = None, 
-            offsets: int = 198,
-            poll_ms: int = 250,
-            logger: Optional[logging.Logger] = None
-            ):
-        try:
-            if db_number is None:
-                raise ValueError("DB number is not defined. Cannot start PLC read thread.")
-            elif db_layout is None:
-                raise ValueError("DB layout is not defined. Cannot start PLC read thread.")
-            elif db_size is None:
-                raise ValueError("DB size is not defined. Cannot start PLC read thread.")
-            
-            self.plc_read_thread = QThread()
-            self.plc_read_worker = PLCRead(
-                ip=self.db_dict["IP"],
-                rack=0,
-                slot=1,
-                db_number=1,
-                db_layout=self.db_dict["db_layout"],   # toàn bộ 101 tag, không chia nhỏ
-                regions=[
-                    ("ACTUAL", 0,   198),
-                    ("INPUT",  198, 138),
-                    ("STRING", 336, 256),
-                ],
-                poll_ms=250,
-                logger=self.logger,
-            )
-            self.plc_read_worker.moveToThread(self.plc_read_thread)
-
-            self.plc_read_thread.started.connect(self.plc_read_worker.run)
-            self.plc_read_worker.data_ready.connect(self._data_ready)
-            self.plc_read_worker.connected.connect(self._read_status_plc)
-            
-            self.plc_read_worker.finished.connect(self.plc_read_thread.quit)
-            self.plc_read_worker.finished.connect(self.plc_read_worker.deleteLater)
-            self.plc_read_thread.finished.connect(self.plc_read_thread.deleteLater)
-
-            self.plc_read_thread.start()
-            if not self.plc_read_thread.isRunning():
-                raise Exception("plc_read_thread failed to start")
-        except Exception as e:
-            self.logger.info("PLC Reader gone wrong:", e)
-            return False
-        
-        self.worker_dict["plc_read_worker"] = self.plc_read_worker
-        return True
 
     def _setup_read_data_plc_thread(
             self, 
-            name_module: str    = "READ 1",
             ip: str = "172.16.100.100", 
             db_number: Optional[int] = None, 
             db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
@@ -2313,7 +2241,6 @@ class StrikeMachine(QMainWindow):
             
             self.plc_read_data_thread = QThread()
             self.plc_read_data_worker = PLCRead(
-                name_module=name_module,
                 ip=ip,
                 db_number=db_number,
                 db_layout=db_layout,
@@ -2325,8 +2252,9 @@ class StrikeMachine(QMainWindow):
             self.plc_read_data_worker.moveToThread(self.plc_read_data_thread)
 
             self.plc_read_data_thread.started.connect(self.plc_read_data_worker.run)
-            self.plc_read_data_worker.data_ready.connect(self._data_actual)
+            self.plc_read_data_worker.data_ready.connect(self._data_ready)
             self.plc_read_data_worker.connected.connect(self._read_status_plc)
+            self.plc_read_data_worker.init_data.connect(self._set_system_data)
             
             self.plc_read_data_worker.finished.connect(self.plc_read_data_thread.quit)
             self.plc_read_data_worker.finished.connect(self.plc_read_data_worker.deleteLater)
@@ -2344,12 +2272,11 @@ class StrikeMachine(QMainWindow):
     
     def _setup_read_input_plc_thread(
             self, 
-            name_module: str    = "READ 2",
             ip: str = "172.16.100.100", 
             db_number: Optional[int] = None, 
             db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
             db_size: Optional[int] = None, 
-            offsets: int = 0,
+            offsets: int = 198,
             poll_ms: int = 250,
             logger: Optional[logging.Logger] = None
             ):
@@ -2363,7 +2290,6 @@ class StrikeMachine(QMainWindow):
             
             self.plc_read_input_thread = QThread()
             self.plc_read_input_worker = PLCRead(
-                name_module=name_module,
                 ip=ip,
                 db_number=db_number,
                 db_layout=db_layout,
@@ -2375,7 +2301,8 @@ class StrikeMachine(QMainWindow):
             self.plc_read_input_worker.moveToThread(self.plc_read_input_thread)
 
             self.plc_read_input_thread.started.connect(self.plc_read_input_worker.run)
-            self.plc_read_input_worker.data_ready.connect(self._data_input)
+            self.plc_read_input_worker.data_ready.connect(self._data_ready)
+            self.plc_read_input_worker.connected.connect(self._read_status_plc)
             self.plc_read_input_worker.init_data.connect(self._set_system_data)
             
             self.plc_read_input_worker.finished.connect(self.plc_read_input_thread.quit)
@@ -2394,12 +2321,11 @@ class StrikeMachine(QMainWindow):
 
     def _setup_read_error_plc_thread(
             self, 
-            name_module: str    = "READ 3",
             ip: str = "172.16.100.100", 
             db_number: Optional[int] = None, 
             db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
             db_size: Optional[int] = None, 
-            offsets: int = 336,
+            offsets: int = 198,
             poll_ms: int = 250,
             logger: Optional[logging.Logger] = None
             ):
@@ -2413,7 +2339,6 @@ class StrikeMachine(QMainWindow):
             
             self.plc_read_error_thread = QThread()
             self.plc_read_error_worker = PLCRead(
-                name_module=name_module,
                 ip=ip,
                 db_number=db_number,
                 db_layout=db_layout,
@@ -2425,7 +2350,9 @@ class StrikeMachine(QMainWindow):
             self.plc_read_error_worker.moveToThread(self.plc_read_error_thread)
 
             self.plc_read_error_thread.started.connect(self.plc_read_error_worker.run)
-            self.plc_read_error_worker.data_ready.connect(self._data_error)
+            self.plc_read_error_worker.data_ready.connect(self._data_ready)
+            self.plc_read_error_worker.connected.connect(self._read_status_plc)
+            self.plc_read_error_worker.init_data.connect(self._set_system_data)
             
             self.plc_read_error_worker.finished.connect(self.plc_read_error_thread.quit)
             self.plc_read_error_worker.finished.connect(self.plc_read_error_worker.deleteLater)
@@ -2441,19 +2368,12 @@ class StrikeMachine(QMainWindow):
         self.worker_dict["plc_read_error_worker"] = self.plc_read_error_worker
         return True
 
-    def _data_actual(self, data: dict):
+    def on_critical(self, data: dict):
         with self._data_lock:
-            # print("Actual: ", len(data))
             self.all_data.update(data)
 
-    def _data_input(self, data: dict):
+    def on_secondary(self, data: dict):
         with self._data_lock:
-            # print("Input: ", len(data))
-            self.all_data.update(data)
-
-    def _data_error(self, data: dict):
-        with self._data_lock:
-            # print("Error: ", len(data))
             self.all_data.update(data)
 
     def _setup_write_plc_thread(
@@ -2499,14 +2419,13 @@ class StrikeMachine(QMainWindow):
         self.thread_dict["plc_writer_thread"] = self.plc_writer_thread
         return True
     
-    def _data_ready(self):
+    def _data_ready(self, data: dict):
         # def _t(label, fn):
             # t = time.perf_counter()
             # fn()
             # ms = (time.perf_counter() - t) * 1000
             # if ms > 1:
                 # print(f"  [{label}] {ms:.1f}ms")
-        data = self.all_data
         if self._plc_queue is not None:
             try:
                 self._plc_queue.put_nowait(data)
@@ -2632,15 +2551,15 @@ class StrikeMachine(QMainWindow):
                 self.ui.heat_btn_a.isChecked(),
                 self.ui.vacuum_btn_a.isChecked(),
                 self.ui.refuel_btn_a.isChecked(),
-                self.ui.set_cycle_a_btn.isChecked(),
+                not self.ui.set_cycle_a_btn.isChecked(),
                 self.ui.heat_btn_b.isChecked(),
                 self.ui.vacuum_btn_b.isChecked(),
                 self.ui.refuel_btn_b.isChecked(),
-                self.ui.set_cycle_b_btn.isChecked(),
+                not self.ui.set_cycle_b_btn.isChecked(),
                 self.ui.heat_btn_c.isChecked(),
                 self.ui.vacuum_btn_c.isChecked(),
                 self.ui.refuel_btn_c.isChecked(),
-                self.ui.set_cycle_c_btn.isChecked(),
+                not self.ui.set_cycle_c_btn.isChecked(),
             ])
             # )
 
@@ -4456,31 +4375,15 @@ class StrikeMachine(QMainWindow):
         self.all_timer.clear()
         self.hide()
 
-        workers = [
-            getattr(self, 'plc_read_data_worker', None),
-            getattr(self, 'plc_read_input_worker', None),
-            getattr(self, 'plc_read_error_worker', None),
-            getattr(self, 'plc_writer_worker', None)
-        ]
-        for worker in workers:
-            if worker:
-                try:
-                    worker.stop()
-                except:
-                    pass
+        if self.plc_read_worker:
+            self.plc_read_worker.stop()
+        if self.plc_writer_worker:
+            self.plc_writer_worker.stop()
 
-        threads = [
-            getattr(self, 'plc_read_data_thread', None),
-            getattr(self, 'plc_read_input_thread', None),
-            getattr(self, 'plc_read_error_thread', None),
-            getattr(self, 'plc_writer_thread', None)
-        ]
-        for thread in threads:
-            if thread and thread.isRunning():
-                try:
-                    thread.wait()
-                except:
-                    pass
+        if self.plc_read_thread:
+            self.plc_read_thread.wait()
+        if self.plc_writer_thread:
+            self.plc_writer_thread.wait()
         
         self.stop_simulate_threads() if SIMULATE else None
 

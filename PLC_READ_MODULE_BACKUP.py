@@ -11,6 +11,9 @@ from snap7.type import Parameter
 from snap7.util import get_bool, get_real, get_dint, get_int, get_string
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
+FULL_DB_INIT_READS  = 5
+SLOW_THRESHOLD_MS   = 150
+
 class PLCRead(QObject):
     """
     Object dùng để lấy dữ liệu từ PLC
@@ -30,7 +33,6 @@ class PLCRead(QObject):
 
     def __init__(
         self,
-        name_module: str                                        = "No 1.",
         ip:        str                                          = "172.16.100.100",
         rack:      int                                          = 0,
         slot:      int                                          = 1,
@@ -44,7 +46,6 @@ class PLCRead(QObject):
         parent:    Optional[QObject]                            = None,
     ):
         super().__init__(parent)
-        self._name_module = name_module
         self._ip        = ip
         self._rack      = rack
         self._slot      = slot
@@ -61,13 +62,14 @@ class PLCRead(QObject):
         self._retry_timer: QTimer | None = None
         self._running   = False
 
+        self._init_reads_left:    int   = 0
         self._last_error_log_time: float = 0.0
 
     @Slot()
     def run(self):
         self._running = True
         if self.logger:
-            self.logger.info(f"[PLC READ {self._name_module}]: PLC Read {self._name_module} init")
+            self.logger.info("[PLC READ]: PLC Read init")
 
         self._poll_timer = QTimer(self)
         self._poll_timer.setInterval(self._poll_ms)
@@ -137,7 +139,7 @@ class PLCRead(QObject):
             if self._poll_timer and not self._poll_timer.isActive():
                 self._poll_timer.start()
             if self.logger:
-                self.logger.info(f"[PLC READ {self._name_module}]: Connected to PLC, started reading {self._name_module}")
+                self.logger.info("[PLC READ]: Connected to PLC, started reading")
         else:
             if self._retry_timer and not self._retry_timer.isActive():
                 self._retry_timer.start()
@@ -155,9 +157,9 @@ class PLCRead(QObject):
 
                 c.set_param(Parameter.PDURequest,    960)  # max PDU size
                 c.set_param(Parameter.SendTimeout,     3) 
-                c.set_param(Parameter.RecvTimeout,     2)
+                c.set_param(Parameter.RecvTimeout,     2)  # ← giảm từ 5 → 2s
                 c.set_param(Parameter.PingTimeout,     2)
-                c.set_param(Parameter.KeepAliveTime,  10)
+                c.set_param(Parameter.KeepAliveTime,  10)  # ← giảm từ 30 → 10s
 
                 c.connect(self._ip, self._rack, self._slot)
                 result["client"] = c                # type: ignore
@@ -183,12 +185,13 @@ class PLCRead(QObject):
         if result["client"]:
             self._client = result["client"]
             self.connected.emit(True)
+            self._init_reads_left = FULL_DB_INIT_READS
         else:
             msg = f"Connection failed: {result['error']}"
             now = time.time()
             if now - self._last_error_log_time >= 5:
                 if self.logger:
-                    self.logger.error(f"[PLC READ {self._name_module}]: %s", msg)
+                    self.logger.error("[PLC READ]: %s", msg)
                 self._last_error_log_time = now
             self.error.emit(msg)
             self.connected.emit(False)
@@ -212,26 +215,35 @@ class PLCRead(QObject):
 
         try:
             t0 = time.perf_counter()
-            raw       = self._client.db_read(self._db_number, self._offsets, self._db_size)
-            result    = self._parse(raw, base_offset=self._offsets)
+            if self._init_reads_left > 0:
+                raw    = self._client.db_read(self._db_number, 0, (self._db_size - 256))
+                result = self._parse(raw, base_offset=0)
+                self._init_reads_left -= 1
+                # print(len(raw))
+            else:
+                read_size = self._db_size - self._offsets - 256
+                raw       = self._client.db_read(self._db_number, self._offsets, read_size)
+                result    = self._parse(raw, base_offset=self._offsets)
+                # print(len(raw))
+
             self.data_ready.emit(result)
 
             elapsed_ms = (time.perf_counter() - t0) * 1000
-            if elapsed_ms > (self._poll_ms * 1.5):
+            if elapsed_ms > SLOW_THRESHOLD_MS:
                 if self.logger:
                     self.logger.warning(
-                        f"[PLC READ {self._name_module}]: Slow response %.1fms (size=%d)",
+                        "[PLC READ]: Slow response %.1fms (size=%d)",
                         elapsed_ms, len(raw),
                     )
 
         except S7Error as exc:
             if self.logger:
-                self.logger.warning(f"[PLC READ {self._name_module}]: Read error: %s", exc)
+                self.logger.warning("[PLC READ]: Read error: %s", exc)
             self.error.emit(f"Read error: {exc}")
             self._reconnect()
         except Exception as exc:
             if self.logger:
-                self.logger.error(f"[PLC READ {self._name_module}]: Unexpected error: %s", exc)
+                self.logger.error("[PLC READ]: Unexpected error: %s", exc)
             self.error.emit(str(exc))
             self._reconnect()
 
@@ -250,13 +262,13 @@ class PLCRead(QObject):
             return {}
 
         result:  dict[str, Any] = {}
-        raw_len = len(raw)
+        raw_len: int            = len(raw)
 
         for name, dtype, offset, bit in self._db_layout:
             rel_offset = offset - base_offset
 
             if rel_offset < 0 or rel_offset >= raw_len:
-                # result[name] = None
+                result[name] = None
                 continue
 
             try:
@@ -276,7 +288,7 @@ class PLCRead(QObject):
                 result[name] = None
                 if self.logger:
                     self.logger.error(
-                        f"[PLC READ {self._name_module}]: Parse error [%s] offset=%d: %s",
+                        "[PLC READ]: Parse error [%s] offset=%d: %s",
                         name, offset, exc,
                     )
 

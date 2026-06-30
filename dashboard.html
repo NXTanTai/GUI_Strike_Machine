@@ -40,10 +40,10 @@
     .card.alarm-active { border: 2px solid #da3633; border-color: #da3633; animation: alarm-border 1.5s infinite; }
     @keyframes alarm-border { 0%,100%{border-color:#da3633} 50%{border-color:#f87171} }
 
-    .card.warning-active { border-color: #da7933; animation: warning-border 1.5s infinite; }
+    .card.warning-active { border: 1px solid #da7933; border-color: #da7933; animation: warning-border 1.5s infinite; }
     @keyframes warning-border { 0%,100%{border-color:#da7933} 50%{border-color:#da7933} }
 
-    .card.oke-active { border-color: #16a34a; animation: oke-border 1.5s infinite; }
+    .card.oke-active { border: 1px solid #16a34a; border-color: #16a34a; animation: oke-border 1.5s infinite; }
     @keyframes oke-border { 0%,100%{border-color:#16a34a} 50%{border-color:#16a34a} }
 
     .pv-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 10px; }
@@ -217,9 +217,9 @@
     const threshold = sv * 0.10; // Ngưỡng chênh lệch
     const diff      = pv - sv;  // Giá trị chênh lệch
     const absDiff   = Math.abs(diff);
-    const isAlarm   = absDiff > threshold;
-    const isWarn    = absDiff > threshold * 0.6 && !isAlarm; // Nếu giá trị vượt ra khoảng ngưỡng cho phép thì sẽ hiển thị đỏ còn không thì màu xanh
-
+    // const isOke     = 
+    const isAlarm   = absDiff > threshold; // Nếu giá trị vượt ra khoảng ngưỡng cho phép thì sẽ hiển thị đỏ còn không thì màu xanh
+    const isWarn    = absDiff > threshold * 0.6 && !isAlarm; // Nếu giá trị vượt ra khoảng ngưỡng cho phép và trong vùng cảnh báo thì sẽ hiển thị màu vàng
     document.getElementById(card._pvId).textContent = fmt(pv);
     document.getElementById(card._svId).textContent = fmt(sv);
 
@@ -237,6 +237,7 @@
     if (isAlarm) {
       pvEl.className    = 'pv-value alarm';
       deltaEl.className = 'delta alarm';
+      cardEl.classList.remove('oke-active');
       cardEl.classList.add('alarm-active');
     } else if (isWarn) {
       pvEl.className    = 'pv-value';
