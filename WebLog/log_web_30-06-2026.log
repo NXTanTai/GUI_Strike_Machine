@@ -1,0 +1,4 @@
+2026-06-30 08:06:04 - INFO - Web server starting...
+2026-06-30 08:06:04 - INFO - Uvicorn listening on port 8000
+2026-06-30 08:06:08 - INFO - Dashboard URL: https://enabling-edmonton-precipitation-honest.trycloudflare.com
+2026-06-30 08:12:04 - INFO - Client connected: Address(host='113.185.79.226', port=0)  (total: 1)

@@ -10,6 +10,8 @@ from snap7.type import Parameter
 from snap7.util import get_bool, get_real, get_dint, get_int, get_string
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
+FULL_DB_INIT_READS = 5
+
 class PLCRead(QObject):
     """
     Object dùng để lấy dữ liệu từ PLC
@@ -35,6 +37,7 @@ class PLCRead(QObject):
         db_number: int                   = 1,
         db_layout: Optional[list[tuple[str, str, int, Any]]]        = None,
         db_size:   int                   = 584,
+        offsets:   int                   = 198,
         poll_ms:   int                   = 500,
         retry_ms:  int                   = 3000,
         logger                           =None,
@@ -49,6 +52,7 @@ class PLCRead(QObject):
         # print("DB Read Layout: ", self._db_layout)
         self._db_size   = db_size
         self._poll_ms   = poll_ms
+        self._offsets   = offsets
         self._retry_ms  = retry_ms
         self.logger     = logger
 
@@ -56,6 +60,8 @@ class PLCRead(QObject):
         self._poll_timer:  QTimer | None = None
         self._retry_timer: QTimer | None = None
         self._running   = False
+
+        self._init_reads_left: int = 0
         self._last_error_log_time = 0
 
     @Slot()
@@ -145,8 +151,12 @@ class PLCRead(QObject):
         def _do_connect():
             try:
                 c = snap7.client.Client()
+                
+                c.set_param(Parameter.PDURequest,  960)
                 c.set_param(Parameter.SendTimeout, 5)         # timeout gửi (giây)
                 c.set_param(Parameter.RecvTimeout, 5)         # timeout nhận (giây)
+                c.set_param(Parameter.PingTimeout, 5)
+                c.set_param(Parameter.KeepAliveTime, 30)
                 # Bởi vì kết nối bị "dead silently" sau vài phút idle nên phải set Timeout để nhanh chóng phát hiện dead connection
                 c.connect(self._ip, self._rack, self._slot)
                 result["client"] = c # type: ignore
@@ -172,6 +182,7 @@ class PLCRead(QObject):
         if result["client"]:
             self._client = result["client"]
             self.connected.emit(True)
+            self._init_reads_left = FULL_DB_INIT_READS
         else:
             msg = f"Connection failed: {result['error']}"
             if self.logger:
@@ -190,6 +201,7 @@ class PLCRead(QObject):
             except Exception:
                 pass
             self._client = None
+        self._init_reads_left = 0
         self.connected.emit(False)
 
     @Slot()
@@ -200,17 +212,35 @@ class PLCRead(QObject):
 
         try:
             t0 = time.perf_counter()
-            raw = self._client.db_read(self._db_number, 0, self._db_size)
-            result = self._parse(raw)
+
+            if self._init_reads_left > 0:
+                raw = self._client.db_read(self._db_number, 0, self._db_size)
+                self._init_reads_left -= 1
+                result = self._parse(raw, base_offset=0)
+                
+                # if self.logger and self._init_reads_left > 0:
+                #     self.logger.info("[PLC READ]: Init full DB read — còn %d lần", self._init_reads_left)
+            else:
+                read_size = self._db_size - self._offsets 
+                raw = self._client.db_read(self._db_number, self._offsets, read_size)
+                result = self._parse(raw, base_offset=self._offsets)
+                
             self.data_ready.emit(result)
+            # print(len(raw))
             elapsed = (time.perf_counter() - t0) * 1000
-            if elapsed > 200:
+            if elapsed > (self._poll_ms * 1.6):
                 if self.logger:
-                    self.logger.warning("[PLC READ]: Slow response %.1fms", elapsed)
+                    self.logger.warning("[PLC READ]: Slow response %.1fms (size=%d)", elapsed, len(raw))
+
         except S7Error as exc:
             if self.logger:
                 self.logger.warning("[PLC READ]: Read error: %s", exc)
             self.error.emit(f"Read error: {exc}")
+            self._reconnect()
+        except Exception as exc:
+            if self.logger:
+                self.logger.error("[PLC READ]: Unexpected error: %s", exc)
+            self.error.emit(str(exc))
             self._reconnect()
 
     @Slot()
@@ -221,28 +251,37 @@ class PLCRead(QObject):
         self._disconnect_plc()
         self._retry_timer.start() # type: ignore
 
-    def _parse(self, raw: bytearray) -> dict:
+    def _parse(self, raw: bytearray, base_offset: int = 0) -> dict:
         if not self._db_layout:
             return {}
 
         result: dict[str, Any] = {}
+        raw_len = len(raw)
+
         for name, dtype, offset, bit in self._db_layout:
+            rel_offset = offset - base_offset
+
+            if rel_offset < 0 or rel_offset >= raw_len:
+                result[name] = None
+                continue
+
             try:
                 if dtype == "BOOL":
-                    result[name] = get_bool(raw, offset, bit)
+                    result[name] = get_bool(raw, rel_offset, bit)
                 elif dtype == "REAL":
-                    result[name] = get_real(raw, offset)
+                    result[name] = get_real(raw, rel_offset)
                 elif dtype == "DINT":
-                    result[name] = get_dint(raw, offset)
+                    result[name] = get_dint(raw, rel_offset)
                 elif dtype == "INT":
-                    result[name] = get_int(raw, offset)
+                    result[name] = get_int(raw, rel_offset)
                 elif dtype == "STRING":
-                    result[name] = get_string(raw, offset)
+                    result[name] = get_string(raw, rel_offset)
                 else:
                     result[name] = None
             except Exception as exc:
                 result[name] = None
                 if self.logger:
-                    self.logger.error("[PLC READ]: Parse error [%s]: %s", name, exc)
+                    self.logger.error("[PLC READ]: Parse error [%s] offset=%d: %s", 
+                                    name, offset, exc)
 
         return result

@@ -326,7 +326,7 @@ class StrikeMachine(QMainWindow):
         db_layout: List[Tuple[str, str, int, Any]] = []
         max_byte = 0
         
-        for i in range(5, len(df)):
+        for i in range(6, len(df)):
             row = df.iloc[i]
             # Cột B: Name
             name_raw = str(row[1]).strip() if pd.notna(row[1]) else ""
@@ -376,7 +376,8 @@ class StrikeMachine(QMainWindow):
             "ip_plc": str(df.iloc[0, 1]).strip() if not PLC_SIM else "172.16.100.50",
             "read_time": int(str(df.iloc[1, 1]).strip()), # iloc[collumn, row]
             "write_time": int(str(df.iloc[2, 1]).strip()), 
-            "db_name": int(str(df.iloc[3, 0]).strip().replace("DB", "")),
+            "db_name": int(str(df.iloc[4, 0]).strip().replace("DB", "")),
+            "offsets": int(str(df.iloc[3, 1]).strip()), 
             "DB_LAYOUT": db_layout,
             "DB_TOTAL_BYTES": db_total_bytes
         }
@@ -2145,6 +2146,7 @@ class StrikeMachine(QMainWindow):
             db_number=self.db_dict["db_name"],
             db_layout=self.db_dict["DB_LAYOUT"],
             db_size=self.db_dict["DB_TOTAL_BYTES"],
+            offsets=self.db_dict["offsets"],
             poll_ms=self.db_dict["read_time"],
             logger=self.logger
         ):
@@ -2180,6 +2182,7 @@ class StrikeMachine(QMainWindow):
             db_number: Optional[int] = None, 
             db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
             db_size: Optional[int] = None, 
+            offsets: int = 198,
             poll_ms: int = 250,
             logger: Optional[logging.Logger] = None
             ):
@@ -2197,6 +2200,7 @@ class StrikeMachine(QMainWindow):
                 db_number=db_number,
                 db_layout=db_layout,
                 db_size=db_size,
+                offsets=offsets,
                 poll_ms=poll_ms,
                 logger=logger
             )
@@ -2359,7 +2363,7 @@ class StrikeMachine(QMainWindow):
                 self._last_history_time = now
                 if self.ui.start_stop_stacked.currentIndex() == 1:
                     groups = []
-                    if bool(data.get('P1_Start_Heat')) or bool(data.get('P1_Start_Pressure')):
+                    if self.ui.heat_btn_a.isChecked() or self.ui.vacuum_btn_a.isChecked():
                         groups.append({
                             "group": "Group A",
                             "pressure": float(data.get('P1_Current_PressureHose', 0.0)),
@@ -2368,7 +2372,7 @@ class StrikeMachine(QMainWindow):
                             "mid": float(data.get('P1_Current_Temp2', 0.0)),
                             "end": float(data.get('P1_Current_Temp3', 0.0))
                         })
-                    if bool(data.get('P2_Start_Heat')) or bool(data.get('P2_Start_Pressure')):
+                    if self.ui.heat_btn_b.isChecked() or self.ui.vacuum_btn_b.isChecked():
                         groups.append({
                             "group": "Group B",
                             "pressure": float(data.get('P2_Current_PressureHose', 0.0)),
@@ -2377,7 +2381,7 @@ class StrikeMachine(QMainWindow):
                             "mid": float(data.get('P2_Current_Temp2', 0.0)),
                             "end": float(data.get('P2_Current_Temp3', 0.0))
                         })
-                    if bool(data.get('P3_Start_Heat')) or bool(data.get('P3_Start_Pressure')):
+                    if self.ui.heat_btn_c.isChecked() or self.ui.vacuum_btn_c.isChecked():
                         groups.append({
                             "group": "Group C",
                             "pressure": float(data.get('P3_Current_PressureHose', 0.0)),
@@ -2392,19 +2396,19 @@ class StrikeMachine(QMainWindow):
 
             # _t("input_data", lambda: 
             self._input_data_filter([
-                bool(data.get('T0_Start_Heat', False)),
-                bool(data.get('P1_Start_Heat', False)),
-                bool(data.get('P1_Start_Pressure', False)),
-                bool(data.get('P1_Start_Oil', False)),
-                bool(data.get('P1_BitCountTimes', False)),
-                bool(data.get('P2_Start_Heat', False)),
-                bool(data.get('P2_Start_Pressure', False)),
-                bool(data.get('P2_Start_Oil', False)),
-                bool(data.get('P2_BitCountTimes', False)),
-                bool(data.get('P3_Start_Heat', False)),
-                bool(data.get('P3_Start_Pressure', False)),
-                bool(data.get('P3_Start_Oil', False)),
-                bool(data.get('P3_BitCountTimes', False)),
+                self.ui.heat_btn_t0.isChecked(),
+                self.ui.heat_btn_a.isChecked(),
+                self.ui.vacuum_btn_a.isChecked(),
+                self.ui.refuel_btn_a.isChecked(),
+                not self.ui.set_cycle_a_btn.isChecked(),
+                self.ui.heat_btn_b.isChecked(),
+                self.ui.vacuum_btn_b.isChecked(),
+                self.ui.refuel_btn_b.isChecked(),
+                not self.ui.set_cycle_b_btn.isChecked(),
+                self.ui.heat_btn_c.isChecked(),
+                self.ui.vacuum_btn_c.isChecked(),
+                self.ui.refuel_btn_c.isChecked(),
+                not self.ui.set_cycle_c_btn.isChecked(),
             ])
             # )
 
@@ -2431,7 +2435,6 @@ class StrikeMachine(QMainWindow):
 
             # _t("t0_data", lambda: 
             self._t0_data_filter([
-                float(data.get('T0_TemperatureSetting', 0.0)),
                 float(data.get('T0_Current_Temp', 0.0))
             ])
             # )
@@ -2735,7 +2738,7 @@ class StrikeMachine(QMainWindow):
             self.logger.error("C err: %s", e)
 
     def _t0_data_filter(self, list_group_t0_recv):
-        v = round(self.for_display_temp(list_group_t0_recv[1]), 2)
+        v = round(self.for_display_temp(list_group_t0_recv[0]), 2)
         if v != self._last_t0_pv:
             self.temp_pv_obj[0].setValue(v)
             self._last_t0_pv = v

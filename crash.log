@@ -1,8 +1,9 @@
 Startup errors:
 Traceback (most recent call last):
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 159, in <module>
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 161, in <module>
     from source            import StrikeMachine
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 51, in <module>
-    from web_server import plc_data
-ImportError: cannot import name 'plc_data' from 'web_server' (c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\web_server.py)
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 2185
+    offsets: int = 198
+                   ^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
 

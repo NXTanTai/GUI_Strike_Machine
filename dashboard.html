@@ -17,7 +17,7 @@
     #status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px; font-size: 12px; font-weight: 500; background: #1e293b; color: #ff8000; transition: all 0.3s; }
     #status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #ff8000; transition: background 0.3s; }
     #status.connected { background: #0f2a1e; color: #4ade80; }
-    #status.connected::before { background: #4ade80; box-shadow: 0 0 6px #4ade80; animation: pulse 2s infinite; }
+    #status.connected::before { background: #4ade80; box-shadow: 0 0 6px #4ade80; animation: pulse 2s infinite; } /* Hiệu ứng nhấp nháy cho trạng thái kết nối */
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
     .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 4px; }
@@ -33,16 +33,24 @@
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
 
     .card { background: #f5f3f3; border-radius: 12px; padding: 16px; border: 1px solid #263348; transition: border-color 0.2s; }
-    .card:hover { border-color: #334155; }
-    .card.alarm-active { border-color: #da3633; animation: alarm-border 1.5s infinite; }
-    @keyframes alarm-border { 0%,100%{border-color:#da3633} 50%{border-color:#f87171} }
     .card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #64748b; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .card:hover { border-color: #334155; }
+
+    /* 1.5s là chu kì, set infinite để chạy vô tận */
+    .card.alarm-active { border: 2px solid #da3633; border-color: #da3633; animation: alarm-border 1.5s infinite; }
+    @keyframes alarm-border { 0%,100%{border-color:#da3633} 50%{border-color:#f87171} }
+
+    .card.warning-active { border-color: #da7933; animation: warning-border 1.5s infinite; }
+    @keyframes warning-border { 0%,100%{border-color:#da7933} 50%{border-color:#da7933} }
+
+    .card.oke-active { border-color: #16a34a; animation: oke-border 1.5s infinite; }
+    @keyframes oke-border { 0%,100%{border-color:#16a34a} 50%{border-color:#16a34a} }
 
     .pv-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 10px; }
     .pv-badge { font-size: 10px; font-weight: 700; color: #38bdf8; background: #0c2336; border-radius: 4px; padding: 1px 5px; letter-spacing: 0.04em; flex-shrink: 0; }
     .pv-value { font-size: 30px; font-weight: 600; color: #38bdf8; line-height: 1; font-variant-numeric: tabular-nums; }
     .pv-value.alarm { color: #f85149; }
-    .pv-unit { font-size: 13px; font-weight: 500; color: #271d07; }
+    .pv-unit { font-size: 16px; font-weight: 500; color: #271d07; }
 
     .sv-row { display: flex; align-items: center; gap: 6px; padding-top: 10px; border-top: 1px solid #263348; }
     .sv-badge { font-size: 10px; font-weight: 700; color: #f59e0b; background: #271d07; border-radius: 4px; padding: 1px 5px; letter-spacing: 0.04em; flex-shrink: 0; }
@@ -76,26 +84,31 @@
 </div>
 
 <div class="stats-row">
+
   <div class="stat-card">
     <div class="stat-lbl">Total Cycles</div>
     <div class="stat-val"><span id="st-cycles">—</span></div>
     <div class="stat-sub" id="st-cycles-sub">A+B+C</div>
   </div>
+
   <div class="stat-card">
     <div class="stat-lbl">Active alarms</div>
     <div class="stat-val" id="st-alarm-count" style="color:#3fb950">0</div>
     <div class="stat-sub" id="st-alarm-sub">No alarms</div>
   </div>
+
   <div class="stat-card">
     <div class="stat-lbl">Avg oven temp</div>
     <div class="stat-val"><span id="st-oven">—</span> <span class="stat-unit">°C</span></div>
     <div class="stat-sub">SV <span id="st-oven-sv">—</span>°C</div>
   </div>
+
   <div class="stat-card">
     <div class="stat-lbl">Last update</div>
     <div class="stat-val" id="st-update">—</div>
     <div class="stat-sub" id="st-update-sub">Waiting for data</div>
   </div>
+
 </div>
 <div id="groups"></div>
 
@@ -171,7 +184,6 @@
           <span>${card.title}</span>
         </div>
         <div class="pv-row">
-          <span class="pv-badge">PV</span>
           <span class="pv-value" id="${card._pvId}">—</span>
           <span class="pv-unit">${card.unit}</span>
           <span class="delta ok" id="${card._deltaId}">—</span>
@@ -215,6 +227,7 @@
     const deltaEl = document.getElementById(card._deltaId);
     const cardEl  = document.getElementById(card._cardId);
 
+    // Hiển thị xu hướng tăng giảm của giá trị
     const deltaText = isNaN(diff) ? '—'
       : diff > 0  ? `▴${fmt(absDiff)}`
       : diff < 0  ? `▾${fmt(absDiff)}`
@@ -232,7 +245,7 @@
     } else {
       pvEl.className    = 'pv-value';
       deltaEl.className = 'delta ok';
-      cardEl.classList.remove('alarm-active');
+      cardEl.classList.add('oke-active');
     }
 
     return isAlarm;
