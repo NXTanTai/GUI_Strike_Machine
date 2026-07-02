@@ -213,16 +213,18 @@ class PLCRead(QObject):
         try:
             t0 = time.perf_counter()
             raw       = self._client.db_read(self._db_number, self._offsets, self._db_size)
+            elapsed_ms = (time.perf_counter() - t0) * 1000
+            
+            if self.logger:
+                respond = "Response"
+                if elapsed_ms > (self._poll_ms * 1.5):
+                    respond = "Slow response"
+                self.logger.warning(
+                    f"[PLC READ {self._name_module}]: {respond} %.1fms (size=%d)",
+                    elapsed_ms, len(raw),
+                )
             result    = self._parse(raw, base_offset=self._offsets)
             self.data_ready.emit(result)
-
-            elapsed_ms = (time.perf_counter() - t0) * 1000
-            if elapsed_ms > (self._poll_ms * 1.5):
-                if self.logger:
-                    self.logger.warning(
-                        f"[PLC READ {self._name_module}]: Slow response %.1fms (size=%d)",
-                        elapsed_ms, len(raw),
-                    )
 
         except S7Error as exc:
             if self.logger:

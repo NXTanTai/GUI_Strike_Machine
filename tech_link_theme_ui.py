@@ -8177,7 +8177,7 @@ class Ui_MainWindow(object):
         self.read_time_input.setAlignment(Qt.AlignCenter)
         self.read_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.read_time_input.setMinimum(16)
-        self.read_time_input.setMaximum(1000)
+        self.read_time_input.setMaximum(2000)
         self.read_time_input.setValue(500)
 
         self.horizontalLayout_31.addWidget(self.read_time_input)
@@ -8276,7 +8276,7 @@ class Ui_MainWindow(object):
         self.write_time_input.setAlignment(Qt.AlignCenter)
         self.write_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.write_time_input.setMinimum(16)
-        self.write_time_input.setMaximum(1000)
+        self.write_time_input.setMaximum(2000)
         self.write_time_input.setValue(500)
 
         self.horizontalLayout_41.addWidget(self.write_time_input)

@@ -46,6 +46,7 @@ from console_window import ConsoleWindow
 from password_dialog import *
 from Data_Simulator import DataSimulator
 from PLC_READ_MODULE import PLCRead
+from PLC_READ_MODULE_OPTIM import PLCReader
 from PLC_WRITE_MODULE import PLCWrite
 from export_excel_worker import ExportWorker
 
@@ -537,6 +538,18 @@ class StrikeMachine(QMainWindow):
         self._last_ct:          float | None = None
         self._last_itv:         list = [None] * 3
 
+        self._last_cur_temp_a:         list = [None] * 3
+        self._last_cur_temp_b:         list = [None] * 3
+        self._last_cur_temp_c:         list = [None] * 3
+
+        self._last_cur_pressure_a:         list = [None] * 5
+        self._last_cur_pressure_b:         list = [None] * 5
+        self._last_cur_pressure_c:         list = [None] * 5
+
+        self._last_cur_cycle_a:         list = [None] * 3
+        self._last_cur_cycle_b:         list = [None] * 3
+        self._last_cur_cycle_c:         list = [None] * 3
+
         self.init_signal = False
 
         self.plc_read_worker = None
@@ -553,35 +566,63 @@ class StrikeMachine(QMainWindow):
     def _init_timer(self):
         self.all_timer = []
 
-        self.data_plc_timer = QTimer()
+        self.data_plc_timer = QTimer(self)
         self.all_timer.append(self.data_plc_timer)
-
-        if self.db_dict is not None:
-            self.data_plc_timer.setInterval(self.db_dict["read_time"])
-        else:
-            self.data_plc_timer.setInterval(200)
-
-        self.data_plc_timer.timeout.connect(self._data_ready)
+        self.data_plc_timer.setInterval(200)
+        self.data_plc_timer.timeout.connect(lambda: self._data_ready(self.all_data))
         self.data_plc_timer.start()
 
-        self.timer_alarm = QTimer()
+        self.data_table = QTimer(self)
+        self.all_timer.append(self.data_table)
+        self.data_table.setInterval(1000)
+        self.data_table.timeout.connect(lambda: self._data_table(self.all_data))
+        self.data_table.start()
+
+        self.data_web_socket = QTimer(self)
+        self.all_timer.append(self.data_web_socket)
+        self.data_web_socket.setInterval(200)
+        self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.all_data))
+        self.data_web_socket.start()
+
+        self.data_temp_timer = QTimer(self)
+        self.all_timer.append(self.data_temp_timer)
+        self.data_temp_timer.setInterval(500)
+        self.data_temp_timer.timeout.connect(lambda: self._data_temp(self.all_data))
+        self.data_temp_timer.start()
+
+        self.data_pressure_timer = QTimer(self)
+        self.all_timer.append(self.data_pressure_timer)
+        self.data_pressure_timer.setInterval(125)
+        self.data_pressure_timer.timeout.connect(lambda: self._data_pressure(self.all_data))
+        self.data_pressure_timer.start()
+
+        self.data_cycle_timer = QTimer(self)
+        self.all_timer.append(self.data_cycle_timer)
+        self.data_cycle_timer.setInterval(250)
+        self.data_cycle_timer.timeout.connect(lambda: self._data_cycle(self.all_data))
+        self.data_cycle_timer.start()
+
+        self.data_temp_group = QTimer(self)
+        self.all_timer.append(self.data_temp_group)
+        self.data_temp_group.setInterval(250)
+        self.data_temp_group.timeout.connect(lambda: self._data_temp_group(self.all_data))
+        self.data_temp_group.start()
+
+        self.timer_alarm = QTimer(self)
         self.all_timer.append(self.timer_alarm)
 
-        self.timer_stacked_pressure_page = QTimer()
+        self.timer_stacked_pressure_page = QTimer(self)
         self.all_timer.append(self.timer_stacked_pressure_page)
         
-        self.chart_timer = QTimer()
+        self.chart_timer = QTimer(self)
         self.all_timer.append(self.chart_timer)
         self.chart_timer.timeout.connect(self._update_all_charts)
-        if self.db_dict is not None: # type: ignore
-            self.chart_timer.setInterval(self.db_dict["read_time"]) # type: ignore
-        else:
-            self.chart_timer.setInterval(200)
+        self.chart_timer.setInterval(125)
         self.chart_timer.start()
 
         self._chart_render_timer = QTimer(self)
         self.all_timer.append(self._chart_render_timer)
-        self._chart_render_timer.setInterval(100)
+        self._chart_render_timer.setInterval(250)
         self._chart_render_timer.timeout.connect(self._render_all_charts)
         self._chart_render_timer.start()
         
@@ -612,27 +653,23 @@ class StrikeMachine(QMainWindow):
     def _render_all_charts(self) -> None:
         """
         Render tuần tự 4 chart trong 1 lần gọi.
-        Adaptive FPS: tự giảm xuống 5Hz nếu render > 80ms.
+        Adaptive FPS: tự giảm xuống 5Hz nếu render > 80ms. (Loại bỏ)
         """
-        t0 = time.perf_counter()
+        # t0 = time.perf_counter()
 
         self.chart_temp._render_frame()
         self.chart_pressure_a._render_frame()
         self.chart_pressure_b._render_frame()
         self.chart_pressure_c._render_frame()
 
-        elapsed_ms = (time.perf_counter() - t0) * 1000
+        # elapsed_ms = (time.perf_counter() - t0) * 1000
 
-        if elapsed_ms > 80:
-            self._chart_render_timer.setInterval(200)
-        elif elapsed_ms < 40 and self._chart_render_timer.interval() > 100:
-            self._chart_render_timer.setInterval(100)
+        # if elapsed_ms > 80:
+        #     self._chart_render_timer.setInterval(200)
+        # elif elapsed_ms < 40 and self._chart_render_timer.interval() > 100:
+        #     self._chart_render_timer.setInterval(100)
 
     def _init_group_object(self):
-        # self.pressure_state_obj = []
-        # for i in range(10):
-        #     obj = getattr(self.ui, f"pressure_sv_a_{i}")
-        #     self.pressure_state_obj.append(obj)
         """
         [0] = [2]
         [1] = [3]
@@ -685,6 +722,66 @@ class StrikeMachine(QMainWindow):
         self.pressure_c_sv_obj = tuple(
             getattr(self.ui, f"pressure_sv_c_{i}") 
             for i in range(1, 12) if i not in skip_value
+        )
+
+        self.current_temp_a_pv_obj = (
+            self.ui.pressure_pv_a_2,
+            self.ui.pressure_pv_a_3,
+            self.ui.pressure_pv_a_4
+        )
+
+        self.current_temp_b_pv_obj = (
+            self.ui.pressure_pv_b_2,
+            self.ui.pressure_pv_b_3,
+            self.ui.pressure_pv_b_4
+        )
+
+        self.current_temp_c_pv_obj = (
+            self.ui.pressure_pv_c_2,
+            self.ui.pressure_pv_c_3,
+            self.ui.pressure_pv_c_4
+        )
+
+        self.current_pressure_a_pv_obj = (
+            self.ui.pressure_pv_a_5,
+            self.ui.pressure_pv_a_6,
+            self.ui.pressure_pv_a_7,
+            self.ui.pressure_pv_a_8,
+            self.ui.pressure_pv_a_12
+        )
+
+        self.current_pressure_b_pv_obj = (
+            self.ui.pressure_pv_b_5,
+            self.ui.pressure_pv_b_6,
+            self.ui.pressure_pv_b_7,
+            self.ui.pressure_pv_b_8,
+            self.ui.pressure_pv_b_12
+        )
+
+        self.current_pressure_c_pv_obj = (
+            self.ui.pressure_pv_c_5,
+            self.ui.pressure_pv_c_6,
+            self.ui.pressure_pv_c_7,
+            self.ui.pressure_pv_c_8,
+            self.ui.pressure_pv_c_12
+        )
+
+        self.current_cycle_a_pv_obj = (
+            self.ui.pressure_pv_a_9,
+            self.ui.pressure_pv_a_10,
+            self.ui.pressure_pv_a_11
+        )
+
+        self.current_cycle_b_pv_obj = (
+            self.ui.pressure_pv_b_9,
+            self.ui.pressure_pv_b_10,
+            self.ui.pressure_pv_b_11
+        )
+
+        self.current_cycle_c_pv_obj = (
+            self.ui.pressure_pv_c_9,
+            self.ui.pressure_pv_c_10,
+            self.ui.pressure_pv_c_11
         )
 
         self.temp_pv_obj = (
@@ -1043,48 +1140,35 @@ class StrikeMachine(QMainWindow):
 
         self.ui.new_data_btn.clicked.connect(self.new_data_btn)
 
-        if SIMULATE:
-            self.ui.heat_btn_a.toggled.connect(lambda checked: self.simu_heat_btn("A", checked)) 
-            self.ui.heat_btn_b.toggled.connect(lambda checked: self.simu_heat_btn("B", checked))
-            self.ui.heat_btn_c.toggled.connect(lambda checked: self.simu_heat_btn("C", checked))
+        self.ui.start_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.start_btn))
+        self.ui.stop_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.stop_btn))
 
-            self.ui.vacuum_btn_a.toggled.connect(lambda checked: self.simu_pressure_btn("A", checked))
-            self.ui.vacuum_btn_b.toggled.connect(lambda checked: self.simu_pressure_btn("B", checked))
-            self.ui.vacuum_btn_c.toggled.connect(lambda checked: self.simu_pressure_btn("C", checked))
+        self.ui.heat_btn_a.toggled.connect(lambda checked: self.heating_btn("A", checked, self.ui.heat_btn_a)) 
+        self.ui.heat_btn_b.toggled.connect(lambda checked: self.heating_btn("B", checked, self.ui.heat_btn_b))
+        self.ui.heat_btn_c.toggled.connect(lambda checked: self.heating_btn("C", checked, self.ui.heat_btn_c))
+        self.ui.heat_btn_t0.toggled.connect(lambda checked: self.heating_btn("T0", checked, self.ui.heat_btn_t0))
 
-            # self.ui.refuel_btn_a.toggled.connect(lambda checked: self.simu_oil_btn("A", checked))
-            # self.ui.refuel_btn_b.toggled.connect(lambda checked: self.simu_oil_btn("B", checked))
-            # self.ui.refuel_btn_c.toggled.connect(lambda checked: self.simu_oil_btn("C", checked))
-        else:
-            self.ui.start_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.start_btn))
-            self.ui.stop_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.stop_btn))
+        self.ui.vacuum_btn_a.toggled.connect(lambda checked: self.pumping_btn("A", checked, self.ui.vacuum_btn_a))
+        self.ui.vacuum_btn_b.toggled.connect(lambda checked: self.pumping_btn("B", checked, self.ui.vacuum_btn_b))
+        self.ui.vacuum_btn_c.toggled.connect(lambda checked: self.pumping_btn("C", checked, self.ui.vacuum_btn_c))
 
-            self.ui.heat_btn_a.toggled.connect(lambda checked: self.heating_btn("A", checked, self.ui.heat_btn_a)) 
-            self.ui.heat_btn_b.toggled.connect(lambda checked: self.heating_btn("B", checked, self.ui.heat_btn_b))
-            self.ui.heat_btn_c.toggled.connect(lambda checked: self.heating_btn("C", checked, self.ui.heat_btn_c))
-            self.ui.heat_btn_t0.toggled.connect(lambda checked: self.heating_btn("T0", checked, self.ui.heat_btn_t0))
+        self.ui.refuel_btn_a.toggled.connect(lambda checked: self.fill_oil_btn("A", checked, self.ui.refuel_btn_a))
+        self.ui.refuel_btn_b.toggled.connect(lambda checked: self.fill_oil_btn("B", checked, self.ui.refuel_btn_b))
+        self.ui.refuel_btn_c.toggled.connect(lambda checked: self.fill_oil_btn("C", checked, self.ui.refuel_btn_c))
 
-            self.ui.vacuum_btn_a.toggled.connect(lambda checked: self.pumping_btn("A", checked, self.ui.vacuum_btn_a))
-            self.ui.vacuum_btn_b.toggled.connect(lambda checked: self.pumping_btn("B", checked, self.ui.vacuum_btn_b))
-            self.ui.vacuum_btn_c.toggled.connect(lambda checked: self.pumping_btn("C", checked, self.ui.vacuum_btn_c))
+        self.ui.set_cycle_a_btn.toggled.connect(lambda checked: self.cycle_loop_btn("A", checked, self.ui.set_cycle_a_btn))
+        self.ui.set_cycle_b_btn.toggled.connect(lambda checked: self.cycle_loop_btn("B", checked, self.ui.set_cycle_b_btn))
+        self.ui.set_cycle_c_btn.toggled.connect(lambda checked: self.cycle_loop_btn("C", checked, self.ui.set_cycle_c_btn))
 
-            self.ui.refuel_btn_a.toggled.connect(lambda checked: self.fill_oil_btn("A", checked, self.ui.refuel_btn_a))
-            self.ui.refuel_btn_b.toggled.connect(lambda checked: self.fill_oil_btn("B", checked, self.ui.refuel_btn_b))
-            self.ui.refuel_btn_c.toggled.connect(lambda checked: self.fill_oil_btn("C", checked, self.ui.refuel_btn_c))
+        self.ui.clear_data_btn.clicked.connect(self.clear_data_btn)
 
-            self.ui.set_cycle_a_btn.toggled.connect(lambda checked: self.cycle_loop_btn("A", checked, self.ui.set_cycle_a_btn))
-            self.ui.set_cycle_b_btn.toggled.connect(lambda checked: self.cycle_loop_btn("B", checked, self.ui.set_cycle_b_btn))
-            self.ui.set_cycle_c_btn.toggled.connect(lambda checked: self.cycle_loop_btn("C", checked, self.ui.set_cycle_c_btn))
-
-            self.ui.clear_data_btn.clicked.connect(self.clear_data_btn)
-
-            self.ui.reset_cycle_a_btn.installEventFilter(self)
-            self.ui.reset_cycle_b_btn.installEventFilter(self)
-            self.ui.reset_cycle_c_btn.installEventFilter(self)
-            
-            self.ui.clear_group_a.installEventFilter(self)
-            self.ui.clear_group_b.installEventFilter(self)
-            self.ui.clear_group_c.installEventFilter(self)
+        self.ui.reset_cycle_a_btn.installEventFilter(self)
+        self.ui.reset_cycle_b_btn.installEventFilter(self)
+        self.ui.reset_cycle_c_btn.installEventFilter(self)
+        
+        self.ui.clear_group_a.installEventFilter(self)
+        self.ui.clear_group_b.installEventFilter(self)
+        self.ui.clear_group_c.installEventFilter(self)
 
         self.ui.search_data.textChanged.connect(self._on_search_changed)
         self.ui.select_group_name.currentTextChanged.connect(self._on_search_changed)
@@ -2159,60 +2243,83 @@ class StrikeMachine(QMainWindow):
 
         time.sleep(0.1)
 
-        if not self._setup_read_data_plc_thread(
-            name_module="ACTUAL DATA",
-            ip=self.db_dict["ip_plc"],
-            db_number=self.db_dict["db_name"],
-            db_layout=self.db_dict["DB_LAYOUT"],
-            db_size=self.db_dict["data_size"],
-            offsets=self.db_dict["offsets_data"],
-            poll_ms=197,    #self.db_dict["read_time"],
-            logger=self.logger
-        ):
-            if self._current_lang == "en":
-                title = "Error"
-                content = "Failed to connect to PLC! Try again later."
-            elif self._current_lang == "cn":
-                title = "错误"
-                content = "无法连接 PLC！请稍后再试."
-            elif self._current_lang == "vn":
-                title = "Lỗi"
-                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-            ltmessage.error(self, title, content, self._current_lang) # type: ignore
+        # if not self._setup_read_data_plc_thread(
+        #     name_module="ACTUAL DATA",
+        #     ip=self.db_dict["ip_plc"],
+        #     db_number=self.db_dict["db_name"],
+        #     db_layout=self.db_dict["DB_LAYOUT"],
+        #     db_size=self.db_dict["data_size"],
+        #     offsets=self.db_dict["offsets_data"],
+        #     poll_ms=197,    #self.db_dict["read_time"],
+        #     logger=self.logger
+        # ):
+        #     if self._current_lang == "en":
+        #         title = "Error"
+        #         content = "Failed to connect to PLC! Try again later."
+        #     elif self._current_lang == "cn":
+        #         title = "错误"
+        #         content = "无法连接 PLC！请稍后再试."
+        #     elif self._current_lang == "vn":
+        #         title = "Lỗi"
+        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
+        # time.sleep(0.1)
+        # if not self._setup_read_input_plc_thread(
+        #     name_module="INPUT DATA",
+        #     ip=self.db_dict["ip_plc"],
+        #     db_number=self.db_dict["db_name"],
+        #     db_layout=self.db_dict["DB_LAYOUT"],
+        #     db_size=self.db_dict["input_size"],
+        #     offsets=self.db_dict["offsets_input"],
+        #     poll_ms=263, #self.db_dict["read_time"],
+        #     logger=self.logger
+        # ):
+        #     if self._current_lang == "en":
+        #         title = "Error"
+        #         content = "Failed to connect to PLC! Try again later."
+        #     elif self._current_lang == "cn":
+        #         title = "错误"
+        #         content = "无法连接 PLC！请稍后再试."
+        #     elif self._current_lang == "vn":
+        #         title = "Lỗi"
+        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
+        # time.sleep(0.1)
+        # if not self._setup_read_error_plc_thread(
+        #     name_module="ERROR DATA",
+        #     ip=self.db_dict["ip_plc"],
+        #     db_number=self.db_dict["db_name"],
+        #     db_layout=self.db_dict["DB_LAYOUT"],
+        #     db_size=self.db_dict["error_size"],
+        #     offsets=self.db_dict["offsets_error"],
+        #     poll_ms=521, #self.db_dict["read_time"],
+        #     logger=self.logger
+        # ):
+        #     if self._current_lang == "en":
+        #         title = "Error"
+        #         content = "Failed to connect to PLC! Try again later."
+        #     elif self._current_lang == "cn":
+        #         title = "错误"
+        #         content = "无法连接 PLC！请稍后再试."
+        #     elif self._current_lang == "vn":
+        #         title = "Lỗi"
+        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
 
         time.sleep(0.1)
-        if not self._setup_read_input_plc_thread(
-            name_module="INPUT DATA",
+        success = self._setup_read_plc_thread(
+            name_module="READ_MULTI",
             ip=self.db_dict["ip_plc"],
             db_number=self.db_dict["db_name"],
             db_layout=self.db_dict["DB_LAYOUT"],
-            db_size=self.db_dict["input_size"],
-            offsets=self.db_dict["offsets_input"],
-            poll_ms=263, #self.db_dict["read_time"],
+            regions=[("ACTUAL", 0, 198), ("INPUT", 198, 138), ("STRING", 336, 50)],
+            poll_ms=100,
             logger=self.logger
-        ):
-            if self._current_lang == "en":
-                title = "Error"
-                content = "Failed to connect to PLC! Try again later."
-            elif self._current_lang == "cn":
-                title = "错误"
-                content = "无法连接 PLC！请稍后再试."
-            elif self._current_lang == "vn":
-                title = "Lỗi"
-                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-            ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-        time.sleep(0.1)
-        if not self._setup_read_error_plc_thread(
-            name_module="ERROR DATA",
-            ip=self.db_dict["ip_plc"],
-            db_number=self.db_dict["db_name"],
-            db_layout=self.db_dict["DB_LAYOUT"],
-            db_size=self.db_dict["error_size"],
-            offsets=self.db_dict["offsets_error"],
-            poll_ms=521, #self.db_dict["read_time"],
-            logger=self.logger
-        ):
+        )
+        if not success:
             if self._current_lang == "en":
                 title = "Error"
                 content = "Failed to connect to PLC! Try again later."
@@ -2238,59 +2345,120 @@ class StrikeMachine(QMainWindow):
 
         except Exception as e:
             return 
+        
     def _setup_read_plc_thread(
-            self, 
-            name_module: str    = "READ 1",
-            ip: str = "172.16.100.100", 
-            db_number: Optional[int] = None, 
-            db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
-            db_size: Optional[int] = None, 
-            offsets: int = 198,
-            poll_ms: int = 250,
-            logger: Optional[logging.Logger] = None
-            ):
+        self,
+        name_module: str,
+        ip: str = "172.16.100.100",
+        db_number: Optional[int] = None,
+        db_layout: Optional[list[tuple[str, str, int, Any]]] = None,
+        regions: Optional[list[tuple[str, int, int]]] = None,
+        poll_ms: int = 250,
+        logger: Optional[logging.Logger] = None,
+    ) -> bool:
+        """
+        Khởi tạo PLCRead worker + QThread cho một Module.
+        
+        Args:
+            name_module: Tên module (ví dụ: "ACTUAL", "INPUT", "ROBOT", ...)
+            db_number, db_layout, regions: Thông tin cấu hình DB
+        """
+        logger = logger or self.logger
+
         try:
+            if not name_module:
+                raise ValueError("name_module is required")
             if db_number is None:
-                raise ValueError("DB number is not defined. Cannot start PLC read thread.")
-            elif db_layout is None:
-                raise ValueError("DB layout is not defined. Cannot start PLC read thread.")
-            elif db_size is None:
-                raise ValueError("DB size is not defined. Cannot start PLC read thread.")
+                raise ValueError(f"DB number is not defined for module '{name_module}'")
+            if db_layout is None:
+                raise ValueError(f"DB layout is not defined for module '{name_module}'")
+
+            # Tự động tạo region bao trọn nếu người gọi không truyền
+            if regions is None:
+                # Giả sử bạn có self.offsets và self.db_size theo module
+                offsets = getattr(self, 'offsets', {}).get(name_module, 0)
+                db_size = getattr(self, 'db_size', {}).get(name_module, 0) or 1024
+                
+                if db_size <= 0:
+                    raise ValueError(f"db_size chưa được định nghĩa cho module '{name_module}'")
+                
+                regions = [(name_module, offsets, db_size)]
+
+            # Kiểm tra tính hợp lệ của regions
+            total_region_size = sum(size for (_, _, size) in regions)
+            max_db_size = getattr(self, 'db_size', {}).get(name_module, 8192)
             
+            if total_region_size > max_db_size:
+                raise ValueError(
+                    f"Tổng size các region ({total_region_size}) vượt quá "
+                    f"db_size tối đa ({max_db_size}) cho module '{name_module}'."
+                )
+
+            # ── Tạo Thread + Worker ─────────────────────────────────────
             self.plc_read_thread = QThread()
-            self.plc_read_worker = PLCRead(
-                ip=self.db_dict["IP"],
+            self.plc_read_worker = PLCReader(
+                ip=ip,
                 rack=0,
                 slot=1,
-                db_number=1,
-                db_layout=self.db_dict["db_layout"],   # toàn bộ 101 tag, không chia nhỏ
-                regions=[
-                    ("ACTUAL", 0,   198),
-                    ("INPUT",  198, 138),
-                    ("STRING", 336, 256),
-                ],
-                poll_ms=250,
-                logger=self.logger,
+                db_number=db_number,
+                db_layout=db_layout,
+                regions=regions,
+                poll_ms=poll_ms,
+                logger=logger,
+                # Các tham số optimizer
+                use_optimizer=True,
+                multi_read_max_gap=5,
             )
+
             self.plc_read_worker.moveToThread(self.plc_read_thread)
 
+            # Kết nối signals
             self.plc_read_thread.started.connect(self.plc_read_worker.run)
-            self.plc_read_worker.data_ready.connect(self._data_ready)
+
+            self.plc_read_worker.data_ready.connect(self._data_get)
+            self.plc_read_worker.init_data.connect(self._set_system_data)
             self.plc_read_worker.connected.connect(self._read_status_plc)
-            
+            self.plc_read_worker.error.connect(self._on_plc_read_error)
+            self.plc_read_worker.disconnected.connect(self._on_plc_read_disconnected)
+            self.plc_read_worker.elapsed_time.connect(self._performance_communication)
             self.plc_read_worker.finished.connect(self.plc_read_thread.quit)
             self.plc_read_worker.finished.connect(self.plc_read_worker.deleteLater)
             self.plc_read_thread.finished.connect(self.plc_read_thread.deleteLater)
 
+            if not hasattr(self, "worker_dict"):
+                self.worker_dict: dict[str, Any] = {}
+
+            self.worker_dict["plc_read_worker"] = self.plc_read_worker
+
             self.plc_read_thread.start()
-            if not self.plc_read_thread.isRunning():
-                raise Exception("plc_read_thread failed to start")
+            logger.info(f"[{name_module}] PLC Read thread started successfully")
+
+            return True
+
         except Exception as e:
-            self.logger.info("PLC Reader gone wrong:", e)
+            logger.exception(f"[{name_module}] PLC Reader setup failed")
             return False
+    
+    def _on_plc_read_error(self, message: str):
+        self.logger.warning("PLC Read error: %s", message)
+
+    def _on_plc_read_disconnected(self):
+        self.logger.warning("PLC Read disconnected")
+
+    def _performance_communication(self, elapsed_time: float):
+        """Cập nhật thời gian đọc PLC lên UI, nhưng chỉ 1 lần mỗi giây"""
+        current_time = time.time()
         
-        self.worker_dict["plc_read_worker"] = self.plc_read_worker
-        return True
+        if not hasattr(self, '_last_ui_update_time'):
+            self._last_ui_update_time = 0.0
+
+        if current_time - self._last_ui_update_time >= 1.0:   # 1 giây
+            try:
+                self.ui.read_time_input.setValue(elapsed_time)  # type: ignore
+                self._last_ui_update_time = current_time
+            except Exception as e:
+                if hasattr(self, 'logger'):
+                    self.logger.warning(f"Cannot update read_time_input: {e}")
 
     def _setup_read_data_plc_thread(
             self, 
@@ -2327,7 +2495,8 @@ class StrikeMachine(QMainWindow):
             self.plc_read_data_thread.started.connect(self.plc_read_data_worker.run)
             self.plc_read_data_worker.data_ready.connect(self._data_actual)
             self.plc_read_data_worker.connected.connect(self._read_status_plc)
-            
+            self.plc_read_data_worker.error.connect(self._on_plc_read_error)
+            self.plc_read_data_worker.disconnected.connect(self._on_plc_read_disconnected)
             self.plc_read_data_worker.finished.connect(self.plc_read_data_thread.quit)
             self.plc_read_data_worker.finished.connect(self.plc_read_data_worker.deleteLater)
             self.plc_read_data_thread.finished.connect(self.plc_read_data_thread.deleteLater)
@@ -2441,6 +2610,11 @@ class StrikeMachine(QMainWindow):
         self.worker_dict["plc_read_error_worker"] = self.plc_read_error_worker
         return True
 
+    def _data_get(self, data: dict):
+        with self._data_lock:
+            # print("Get: ", len(data))
+            self.all_data.update(data)
+
     def _data_actual(self, data: dict):
         with self._data_lock:
             # print("Actual: ", len(data))
@@ -2499,19 +2673,119 @@ class StrikeMachine(QMainWindow):
         self.thread_dict["plc_writer_thread"] = self.plc_writer_thread
         return True
     
-    def _data_ready(self):
+    def _data_temp(self, data: dict):
         # def _t(label, fn):
             # t = time.perf_counter()
             # fn()
             # ms = (time.perf_counter() - t) * 1000
             # if ms > 1:
                 # print(f"  [{label}] {ms:.1f}ms")
-        data = self.all_data
+        try:
+            # _t("t0_data", lambda: 
+            self._t0_data_filter([
+                float(data.get('T0_Current_Temp', 0.0))
+            ])
+            # )
+            # _t("i_o_group_3", lambda: 
+            self._current_temp_display_P1([
+                float(data.get('P1_Current_Temp1', 0.0)),
+                float(data.get('P1_Current_Temp2', 0.0)),
+                float(data.get('P1_Current_Temp3', 0.0)),
+            ])
+            self._current_temp_display_P2([
+                float(data.get('P2_Current_Temp1', 0.0)),
+                float(data.get('P2_Current_Temp2', 0.0)),
+                float(data.get('P2_Current_Temp3', 0.0)),
+            ])
+            self._current_temp_display_P3([
+                float(data.get('P3_Current_Temp1', 0.0)),
+                float(data.get('P3_Current_Temp2', 0.0)),
+                float(data.get('P3_Current_Temp3', 0.0)),
+            ])
+        except Exception as e:
+            self.logger.error("[Main]-[_data_temp]:PLC Data Processing Error: %s", e)
+
+    def _data_pressure(self, data: dict):
+        # def _t(label, fn):
+            # t = time.perf_counter()
+            # fn()
+            # ms = (time.perf_counter() - t) * 1000
+            # if ms > 1:
+                # print(f"  [{label}] {ms:.1f}ms")
+        try:
+            self._current_pressure_display_P1([
+                float(data.get('P1_Current_PressureHose', 0.00)),
+                float(data.get('P1_Current_Air_FillingTime', 0)/1000),
+                float(data.get('P1_Current_Air_HoldingTime', 0)/1000),
+                float(data.get('P1_Current_Air_ReleaseTime', 0)/1000),
+                float(data.get('P1_Current_PressureITV', 0.00)),
+            ])
+            self._current_pressure_display_P2([
+                float(data.get('P2_Current_PressureITV', 0.00)),
+                float(data.get('P2_Current_Air_FillingTime', 0)/1000),
+                float(data.get('P2_Current_Air_HoldingTime', 0)/1000),
+                float(data.get('P2_Current_Air_ReleaseTime', 0)/1000),
+                float(data.get('P2_Current_PressureHose', 0.00)),
+            ])
+            self._current_pressure_display_P3([
+                float(data.get('P3_Current_PressureITV', 0.00)),
+                float(data.get('P3_Current_Air_FillingTime', 0)/1000),
+                float(data.get('P3_Current_Air_HoldingTime', 0)/1000),
+                float(data.get('P3_Current_Air_ReleaseTime', 0)/1000),
+                float(data.get('P3_Current_PressureHose', 0.00)),
+            ])
+        except Exception as e:
+            self.logger.error("[Main]-[_data_pressure]:PLC Data Processing Error: %s", e)
+
+    def _data_cycle(self, data: dict):
+        # def _t(label, fn):
+            # t = time.perf_counter()
+            # fn()
+            # ms = (time.perf_counter() - t) * 1000
+            # if ms > 1:
+                # print(f"  [{label}] {ms:.1f}ms")
+        try:
+            # _t("group_a", lambda: 
+            self._current_cycle_display_P1([
+                float(data.get('P1_Current_Oil_Start_Time', 0)/1000),
+                float(data.get('P1_Current_Oil_End_Time', 0)/1000),
+                int(data.get('P1_Number_Test_Times', 0)),
+            ])
+            # )
+
+            # _t("group_b", lambda: 
+            self._current_cycle_display_P2([
+                float(data.get('P2_Current_Oil_Start_Time', 0)/1000),
+                float(data.get('P2_Current_Oil_End_Time', 0)/1000),
+                int(data.get('P2_Number_Test_Times', 0)),
+            ])
+            # )
+
+            # _t("group_c", lambda: 
+            self._current_cycle_display_P3([
+                float(data.get('P3_Current_Oil_Start_Time', 0)/1000),
+                float(data.get('P3_Current_Oil_End_Time', 0)/1000),
+                int(data.get('P3_Number_Test_Times', 0)),
+            ])
+            # )
+        except Exception as e:
+            self.logger.error("[Main]-[_data_cycle]:PLC Data Processing Error: %s", e)
+            
+    def _data_web_socket(self, data: dict):
         if self._plc_queue is not None:
             try:
                 self._plc_queue.put_nowait(data)
             except Exception:
                 pass
+
+    def _data_ready(self, data: dict):
+        # def _t(label, fn):
+            # t = time.perf_counter()
+            # fn()
+            # ms = (time.perf_counter() - t) * 1000
+            # if ms > 1:
+                # print(f"  [{label}] {ms:.1f}ms")
+        # print(data)
         try:
             if self.init_signal:
                 self.logger.info("[Main]-[_data_ready]: Getting PLC State")
@@ -2590,42 +2864,6 @@ class StrikeMachine(QMainWindow):
                 print("Init Button Done")
                 self.init_signal = False
 
-            now = time.time()
-            if now - self._last_history_time >= self.ui.table_write_cycle.value():
-                self._last_history_time = now
-                if self.ui.start_stop_stacked.currentIndex() == 1:
-                    groups = []
-                    if self.ui.heat_btn_a.isChecked() or self.ui.vacuum_btn_a.isChecked():
-                        groups.append({
-                            "group": "Group A",
-                            "pressure": float(data.get('P1_Current_PressureHose', 0.0)),
-                            "temp": float(data.get('T0_Current_Temp', 0.0)),
-                            "front": float(data.get('P1_Current_Temp1', 0.0)),
-                            "mid": float(data.get('P1_Current_Temp2', 0.0)),
-                            "end": float(data.get('P1_Current_Temp3', 0.0))
-                        })
-                    if self.ui.heat_btn_b.isChecked() or self.ui.vacuum_btn_b.isChecked():
-                        groups.append({
-                            "group": "Group B",
-                            "pressure": float(data.get('P2_Current_PressureHose', 0.0)),
-                            "temp": float(data.get('T0_Current_Temp', 0.0)),
-                            "front": float(data.get('P2_Current_Temp1', 0.0)),
-                            "mid": float(data.get('P2_Current_Temp2', 0.0)),
-                            "end": float(data.get('P2_Current_Temp3', 0.0))
-                        })
-                    if self.ui.heat_btn_c.isChecked() or self.ui.vacuum_btn_c.isChecked():
-                        groups.append({
-                            "group": "Group C",
-                            "pressure": float(data.get('P3_Current_PressureHose', 0.0)),
-                            "temp": float(data.get('T0_Current_Temp', 0.0)),
-                            "front": float(data.get('P3_Current_Temp1', 0.0)),
-                            "mid": float(data.get('P3_Current_Temp2', 0.0)),
-                            "end": float(data.get('P3_Current_Temp3', 0.0))
-                        })
-
-                    if groups:
-                        self.add_row_to_list_history(self.ui.code_display.text(), groups)
-
             # _t("input_data", lambda: 
             self._input_data_filter([
                 self.ui.heat_btn_t0.isChecked(),
@@ -2665,68 +2903,11 @@ class StrikeMachine(QMainWindow):
             ])
             # )
 
-            # _t("t0_data", lambda: 
-            self._t0_data_filter([
-                float(data.get('T0_Current_Temp', 0.0))
-            ])
-            # )
+        except Exception as e:
+            self.logger.error("[Main]-[_data_ready]:PLC Data Processing Error: %s", e)
 
-            # _t("group_a", lambda: 
-            self._group_a_data_filter([
-                float(data.get('P1_Current_Temp1', 0.0)),
-                float(data.get('P1_Current_Temp2', 0.0)),
-                float(data.get('P1_Current_Temp3', 0.0)),
-                float(data.get('P1_Current_PressureHose', 0.00)),
-                float(data.get('P1_Current_Air_FillingTime', 0)/1000),
-                float(data.get('P1_Current_Air_HoldingTime', 0)/1000),
-                float(data.get('P1_Current_Air_ReleaseTime', 0)/1000),
-                float(data.get('P1_Current_Oil_Start_Time', 0)/1000),
-                float(data.get('P1_Current_Oil_End_Time', 0)/1000),
-                int(data.get('P1_Number_Test_Times', 0)),
-                float(data.get('P1_Current_PressureITV', 0.0))
-            ])
-            # )
-
-            # _t("group_b", lambda: 
-            self._group_b_data_filter([
-                float(data.get('P2_Current_Temp1', 0.0)),
-                float(data.get('P2_Current_Temp2', 0.0)),
-                float(data.get('P2_Current_Temp3', 0.0)),
-                float(data.get('P2_Current_PressureHose', 0.00)),
-                float(data.get('P2_Current_Air_FillingTime', 0)/1000),
-                float(data.get('P2_Current_Air_HoldingTime', 0)/1000),
-                float(data.get('P2_Current_Air_ReleaseTime', 0)/1000),
-                float(data.get('P2_Current_Oil_Start_Time', 0)/1000),
-                float(data.get('P2_Current_Oil_End_Time', 0)/1000),
-                int(data.get('P2_Number_Test_Times', 0)),
-                float(data.get('P2_Current_PressureITV', 0.0))
-            ])
-            # )
-
-            # _t("group_c", lambda: 
-            self._group_c_data_filter([
-                float(data.get('P3_Current_Temp1', 0.0)),
-                float(data.get('P3_Current_Temp2', 0.0)),
-                float(data.get('P3_Current_Temp3', 0.0)),
-                float(data.get('P3_Current_PressureHose', 0.00)),
-                float(data.get('P3_Current_Air_FillingTime', 0)/1000),
-                float(data.get('P3_Current_Air_HoldingTime', 0)/1000),
-                float(data.get('P3_Current_Air_ReleaseTime', 0)/1000),
-                float(data.get('P3_Current_Oil_Start_Time', 0)/1000),
-                float(data.get('P3_Current_Oil_End_Time', 0)/1000),
-                int(data.get('P3_Number_Test_Times', 0)),
-                float(data.get('P3_Current_PressureITV', 0.0))
-            ])
-            # )
-
-            # _t("cycle_time", lambda: 
-            self._set_cycle_time_unit([
-                int(data.get('P1_Number_Test_Times', 0)),
-                int(data.get('P2_Number_Test_Times', 0)),
-                int(data.get('P3_Number_Test_Times', 0))
-            ])
-            # )
-
+    def _data_temp_group(self, data: dict):
+        try:
             # _t("at_data", lambda: 
             self._at_data_filter([
                 float(data.get('P1_Current_Temp1', 0.0)),
@@ -2749,17 +2930,53 @@ class StrikeMachine(QMainWindow):
                 float(data.get('P3_Current_Temp2', 0.0)),
                 float(data.get('P3_Current_Temp3', 0.0))
             ])
-            # )
+        except Exception as e:
+            self.logger.error("[Main]-[_data_ready]:PLC Data Processing Error: %s", e)
 
-            # _t("alarm", lambda: 
+    def _data_table(self, data: dict):
+        if self.ui.start_stop_stacked.currentIndex() == 1:
+            groups = []
+            if self.ui.heat_btn_a.isChecked() or self.ui.vacuum_btn_a.isChecked():
+                groups.append({
+                    "group": "Group A",
+                    "pressure": float(data.get('P1_Current_PressureHose', 0.0)),
+                    "temp": float(data.get('T0_Current_Temp', 0.0)),
+                    "front": float(data.get('P1_Current_Temp1', 0.0)),
+                    "mid": float(data.get('P1_Current_Temp2', 0.0)),
+                    "end": float(data.get('P1_Current_Temp3', 0.0))
+                })
+            if self.ui.heat_btn_b.isChecked() or self.ui.vacuum_btn_b.isChecked():
+                groups.append({
+                    "group": "Group B",
+                    "pressure": float(data.get('P2_Current_PressureHose', 0.0)),
+                    "temp": float(data.get('T0_Current_Temp', 0.0)),
+                    "front": float(data.get('P2_Current_Temp1', 0.0)),
+                    "mid": float(data.get('P2_Current_Temp2', 0.0)),
+                    "end": float(data.get('P2_Current_Temp3', 0.0))
+                })
+            if self.ui.heat_btn_c.isChecked() or self.ui.vacuum_btn_c.isChecked():
+                groups.append({
+                    "group": "Group C",
+                    "pressure": float(data.get('P3_Current_PressureHose', 0.0)),
+                    "temp": float(data.get('T0_Current_Temp', 0.0)),
+                    "front": float(data.get('P3_Current_Temp1', 0.0)),
+                    "mid": float(data.get('P3_Current_Temp2', 0.0)),
+                    "end": float(data.get('P3_Current_Temp3', 0.0))
+                })
+
+            if groups:
+                self.add_row_to_list_history(self.ui.code_display.text(), groups)
+
+    def _data_alarm(self, data: dict):
+        try:
             self._alarm_data_filter([
                 bool(data.get('Bit_Alarm', False)),
                 str(data.get('Alarm_Info', ""))
             ])
             # )
         except Exception as e:
-            self.logger.error("[Main]-[_data_ready]:PLC Data Processing Error: %s", e)
-            
+            self.logger.error("[Main]-[_data_alarm]:PLC Data Processing Error: %s", e)
+
     def _set_system_data(self):
         self.init_signal = True
         
@@ -2911,30 +3128,6 @@ class StrikeMachine(QMainWindow):
                 self.ui.i_o_group_1_switch_1.setCurrentIndex(0)
 
     def _input_data_filter(self, list_input_recv):
-        # button_map = [
-        #     (self.ui.heat_btn_a,    0,  "HEAT A"),
-        #     (self.ui.vacuum_btn_a,  1,  "PRESSURE A"),
-        #     (self.ui.refuel_btn_a,  2,  "OIL A"),
-        #     (self.ui.set_cycle_a_btn, 3, "CYCLE A"),
-
-        #     (self.ui.heat_btn_b,    4,  "HEAT B"),
-        #     (self.ui.vacuum_btn_b,  5,  "PRESSURE B"),
-        #     (self.ui.refuel_btn_b,  6, "OIL B"),
-        #     (self.ui.set_cycle_b_btn, 7, "CYCLE B"),
-
-        #     (self.ui.heat_btn_c,    8, "HEAT C"),
-        #     (self.ui.vacuum_btn_c,  9, "PRESSURE C"),
-        #     (self.ui.refuel_btn_c,  10, "OIL C"),
-        #     (self.ui.set_cycle_c_btn, 11, "CYCLE C"),
-        # ]
-
-        # for btn, idx, label in button_map:
-        #     new_val = list_input_recv[idx]
-        #     if btn.isChecked() != new_val:
-        #         self.logger.info(f"[Main]-[_button_changed]: {label} BOOL: {not new_val} -> {new_val}")
-        #         btn.blockSignals(True)
-        #         btn.setChecked(new_val)
-        #         btn.blockSignals(False)
         for obj, value in zip(self.io_group_1_switch_obj, list_input_recv):
             obj.setCurrentIndex(value)
 
@@ -2975,6 +3168,96 @@ class StrikeMachine(QMainWindow):
             self.temp_pv_obj[0].setValue(v)
             self._last_t0_pv = v
 
+    def _current_temp_display_P1(self, list_temp_a_recv):
+        try:
+            for i, val_a in enumerate(list_temp_a_recv):
+                if val_a != self._last_cur_temp_a:
+                    val_a = round(self.for_display_temp(val_a), 1)
+                    self.current_temp_a_pv_obj[i].setValue(val_a)
+                    self._last_cur_temp_a = val_a
+        except Exception as e:
+            self.logger.error("A Temperature Display err: %s", e)
+
+    def _current_temp_display_P2(self, list_temp_b_recv):
+        try:
+            for i, val_b in enumerate(list_temp_b_recv):
+                if val_b != self._last_cur_temp_b:
+                    val_b = round(self.for_display_temp(val_b), 1)
+                    self.current_temp_b_pv_obj[i].setValue(val_b)
+                    self._last_cur_temp_b = val_b
+        except Exception as e:
+            self.logger.error("B Temperature Display err: %s", e)
+
+    def _current_temp_display_P3(self, list_temp_c_recv):
+        try:
+            for i, val_c in enumerate(list_temp_c_recv):
+                if val_c != self._last_cur_temp_c:
+                    val_c = round(self.for_display_temp(val_c), 1)
+                    self.current_temp_c_pv_obj[i].setValue(val_c)
+                    self._last_cur_temp_c = val_c
+        except Exception as e:
+            self.logger.error("C Temperature Display err: %s", e)
+
+    def _current_pressure_display_P1(self, list_pressure_a_recv):
+        try:
+            for i, val_a in enumerate(list_pressure_a_recv):
+                if val_a != self._last_cur_pressure_a:
+                    val_a = round(self.for_display_temp(val_a), 1)
+                    self.current_pressure_a_pv_obj[i].setValue(val_a)
+                    self._last_cur_pressure_a = val_a
+        except Exception as e:
+            self.logger.error("A Pressure Display err: %s", e)
+
+    def _current_pressure_display_P2(self, list_pressure_b_recv):
+        try:
+            for i, val_b in enumerate(list_pressure_b_recv):
+                if val_b != self._last_cur_pressure_b:
+                    val_b = round(self.for_display_temp(val_b), 1)
+                    self.current_pressure_b_pv_obj[i].setValue(val_b)
+                    self._last_cur_pressure_b = val_b
+        except Exception as e:
+            self.logger.error("B Pressure Display err: %s", e)
+
+    def _current_pressure_display_P3(self, list_pressure_c_recv):
+        try:
+            for i, val_c in enumerate(list_pressure_c_recv):
+                if val_c != self._last_cur_pressure_c:
+                    val_c = round(self.for_display_temp(val_c), 1)
+                    self.current_pressure_c_pv_obj[i].setValue(val_c)
+                    self._last_cur_pressure_c = val_c
+        except Exception as e:
+            self.logger.error("C Pressure Display err: %s", e)
+
+    def _current_cycle_display_P1(self, list_cycle_a_recv):
+        try:
+            for i, val_c in enumerate(list_cycle_a_recv):
+                if val_c != self._last_cur_cycle_a:
+                    val_c = round(self.for_display_temp(val_c), 1)
+                    self.current_cycle_a_pv_obj[i].setValue(val_c)
+                    self._last_cur_cycle_a = val_c
+        except Exception as e:
+            self.logger.error("A Cycle Display err: %s", e)
+
+    def _current_cycle_display_P2(self, list_cycle_b_recv):
+        try:
+            for i, val_c in enumerate(list_cycle_b_recv):
+                if val_c != self._last_cur_cycle_c:
+                    val_c = round(self.for_display_temp(val_c), 1)
+                    self.current_cycle_c_pv_obj[i].setValue(val_c)
+                    self._last_cur_cycle_c = val_c
+        except Exception as e:
+            self.logger.error("B Cycle Display err: %s", e)
+
+    def _current_cycle_display_P3(self, list_cycle_c_recv):
+        try:
+            for i, val_c in enumerate(list_cycle_c_recv):
+                if val_c != self._last_cur_cycle_c:
+                    val_c = round(self.for_display_temp(val_c), 1)
+                    self.current_cycle_c_pv_obj[i].setValue(val_c)
+                    self._last_cur_cycle_c = val_c
+        except Exception as e:
+            self.logger.error("C Cycle Display err: %s", e)
+
     def _set_cycle_time_unit(self, list_cycle_recv):
         for i, (displ_obj, val) in enumerate(zip(
             [self.ui.cycle_a_displ_3,  self.ui.cycle_b_displ_3,  self.ui.cycle_c_displ_3],
@@ -3013,41 +3296,6 @@ class StrikeMachine(QMainWindow):
             if self.ui.error_display.text() != "":
                 self.ui.error_display.setText("")
 
-    def simu_heat_btn(self, channel: str, checked: bool):
-        simulator = self.thread_dict.get("data_simulator")
-        if simulator is None:
-            return
-        
-        if checked:
-            if channel == "A":
-                sv_obj = self.ui.pressure_sv_a_1
-            if channel == "B":
-                sv_obj = self.ui.pressure_sv_b_1
-            if channel == "C":
-                sv_obj = self.ui.pressure_sv_c_1
-            temp_sv = max(sv_obj.value(), self.default_temp_room)  # type: ignore
-            simulator.set_heat_active(channel, temp_sv)  # type: ignore
-        else:
-            simulator.set_heat_active(channel, 25.0)
-
-    def simu_pressure_btn(self, channel: str, checked: bool):
-        simulator = self.thread_dict.get("data_simulator")
-        if simulator is None:
-            return
-
-        if checked:
-            if channel == "A":
-                sv_obj = self.ui.pressure_sv_a_5
-            if channel == "B":
-                sv_obj = self.ui.pressure_sv_b_5
-            if channel == "C":
-                sv_obj = self.ui.pressure_sv_c_5
-            pressure_itv_sv = sv_obj.value()  # type: ignore
-            pressure_sv = sv_obj.value()  # type: ignore
-            simulator.set_pressure_active(channel, pressure_sv, pressure_itv_sv)  # type: ignore
-        else:
-            simulator.set_pressure_active(channel, 0.0, 0.0)
-            
     def heating_btn(self, channel: str, checked: bool, btn=None):
         if not self.plc_writer_connection and not self.init_signal or self.ui.start_stop_stacked.currentIndex() == 0:
             # if self._current_lang == "en":
@@ -4455,8 +4703,8 @@ class StrikeMachine(QMainWindow):
             timer.deleteLater()
         self.all_timer.clear()
         self.hide()
-
         workers = [
+            getattr(self, 'plc_read_worker', None),
             getattr(self, 'plc_read_data_worker', None),
             getattr(self, 'plc_read_input_worker', None),
             getattr(self, 'plc_read_error_worker', None),
@@ -4470,6 +4718,7 @@ class StrikeMachine(QMainWindow):
                     pass
 
         threads = [
+            getattr(self, 'plc_read_thread', None),
             getattr(self, 'plc_read_data_thread', None),
             getattr(self, 'plc_read_input_thread', None),
             getattr(self, 'plc_read_error_thread', None),

@@ -1,11 +1,12 @@
 import time
-import logging
+import bisect
 import threading
+from ctypes import c_uint8, cast, POINTER
 import snap7
 from typing import Any, Optional
 from snap7.error import *  # type: ignore
 from snap7.type import *   # type: ignore
-from snap7.type import Parameter, Area
+from snap7.type import Parameter, Area, WordLen, S7DataItem
 from snap7.util import get_bool, get_real, get_dint, get_int, get_string
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
@@ -17,7 +18,7 @@ SLOW_THRESHOLD_MS = 150   # log warning nếu 1 lần read vượt ngưỡng nà
 # (sort -> merge -> packetize -> parallel dispatch trên 1 PDU/connection)
 
 
-class PLCRead(QObject):
+class PLCReader(QObject):
     """
     Object dùng để lấy TOÀN BỘ dữ liệu từ PLC qua 1 connection duy nhất,
     dùng read_multi_vars() (multi-variable read optimizer) để gộp nhiều
@@ -32,6 +33,7 @@ class PLCRead(QObject):
     connected    = Signal(bool)
     disconnected = Signal()
     finished     = Signal()
+    elapsed_time = Signal(float)
 
     _stop_read   = Signal()
 
@@ -59,7 +61,16 @@ class PLCRead(QObject):
         self._rack      = rack
         self._slot      = slot
         self._db_number = db_number
-        self._db_layout = db_layout
+
+        # FIX: sort theo offset 1 lần để _parse() dùng bisect thay vì quét
+        # toàn bộ db_layout cho từng region ở mỗi vòng poll (250ms).
+        self._db_layout: Optional[list[tuple[str, str, int, Any]]] = (
+            sorted(db_layout, key=lambda t: t[2]) if db_layout else None
+        )
+        self._layout_offsets: list[int] = (
+            [t[2] for t in self._db_layout] if self._db_layout else []
+        )
+
         self._regions   = regions or []
         self._poll_ms   = poll_ms
         self._retry_ms  = retry_ms
@@ -75,6 +86,11 @@ class PLCRead(QObject):
         self._running   = False
 
         self._last_error_log_time: float = 0.0
+
+        # FIX: cache S7DataItem + buffer ctypes, build 1 lần sau khi connect
+        # thành công thay vì dựng lại dict mỗi vòng poll.
+        self._items:   list[S7DataItem] = []
+        self._buffers: list             = []
 
     # ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -145,6 +161,11 @@ class PLCRead(QObject):
         if self._client and self._client.get_connected():
             if self._retry_timer and self._retry_timer.isActive():
                 self._retry_timer.stop()
+
+            # FIX: dựng sẵn item/buffer 1 lần ngay sau khi connect thành công
+            if self._regions:
+                self._build_read_items()
+
             self.init_data.emit()
             if self._poll_timer and not self._poll_timer.isActive():
                 self._poll_timer.start()
@@ -170,23 +191,21 @@ class PLCRead(QObject):
                 c = snap7.client.Client()
 
                 # ── snap7 application-level params ────────────────────────
-                c.set_param(Parameter.PDURequest,    960)
-                c.set_param(Parameter.SendTimeout,     3)
-                c.set_param(Parameter.RecvTimeout,     2)
-                c.set_param(Parameter.PingTimeout,     2)
+                c.set_param(Parameter.PDURequest,    1024)
+                c.set_param(Parameter.SendTimeout,     8)
+                c.set_param(Parameter.RecvTimeout,     5)
+                c.set_param(Parameter.PingTimeout,     5)
                 c.set_param(Parameter.KeepAliveTime,  10)
 
                 c.connect(self._ip, self._rack, self._slot)
 
                 # ── Cấu hình optimizer (chỉ tồn tại trên bản đã cài optimizer) ──
                 if hasattr(c, "use_optimizer"):
-                    c.use_optimizer = self._use_optimizer
+                    c.use_optimizer = True
                 if hasattr(c, "multi_read_max_gap"):
-                    c.multi_read_max_gap = self._multi_read_max_gap
-                if self._max_parallel is not None and hasattr(c, "max_parallel"):
-                    c.max_parallel = self._max_parallel
-                # Nếu max_parallel=None, để optimizer tự auto-tune theo PDU
-                # (đã xảy ra ngay trong c.connect() ở bản đã verify)
+                    c.multi_read_max_gap = 12
+                if hasattr(c, "max_parallel"):
+                    c.max_parallel = 4
 
                 result["client"] = c  # type: ignore
             except Exception as exc:
@@ -196,11 +215,20 @@ class PLCRead(QObject):
 
         t = threading.Thread(target=_do_connect, daemon=True)
         t.start()
+
+        # FIX: Nếu self._running trở thành False trong lúc đang chờ,
+        # code cũ `return` ngay lập tức trong khi thread `_do_connect` vẫn
+        # chạy nền. Nếu sau đó thread connect thành công, socket sẽ không
+        # bao giờ được disconnect() -> rò rỉ kết nối/tài nguyên.
+        # Cách sửa: vẫn CHỜ thread hoàn tất (SendTimeout/RecvTimeout đã set
+        # nên connect() bị chặn có giới hạn thời gian), chỉ đánh dấu để xử lý
+        # dọn dẹp sau khi thread xong, không return giữa chừng.
+        stop_requested = False
         while not done.wait(timeout=0.1):
             if not self._running:
-                return
+                stop_requested = True
 
-        if not self._running:
+        if stop_requested or not self._running:
             if result["client"]:
                 try:
                     result["client"].disconnect()
@@ -218,7 +246,7 @@ class PLCRead(QObject):
                 if self.logger:
                     self.logger.error("[PLC READ]: %s", msg)
                 self._last_error_log_time = now
-            self.error.emit(msg)
+            # self.error.emit(msg)
             self.connected.emit(False)
             self._client = None
 
@@ -231,7 +259,24 @@ class PLCRead(QObject):
             self._client = None
         self.connected.emit(False)
 
-    # ── Poll loop ─────────────────────────────────────────────────────────────
+    def _build_read_items(self):
+        self._items = []
+        self._buffers = []
+
+        for name, start, size in self._regions:
+            buf = (c_uint8 * size)()
+            item_dict = {
+                "area": Area.DB,
+                "db_number": self._db_number,
+                "start": start,
+                "size": size,
+                "pData": cast(buf, POINTER(c_uint8))
+            }
+            self._items.append(item_dict)
+            self._buffers.append(buf)
+
+        if self.logger:
+            self.logger.info(f"Built Area: {[(n, s, sz) for n,s,sz in self._regions]}")
 
     @Slot()
     def _poll(self):
@@ -239,55 +284,54 @@ class PLCRead(QObject):
             self._reconnect()
             return
 
-        if not self._regions:
+        if not self._items or not self._buffers:
             return
 
         try:
             t0 = time.perf_counter()
+            total_bytes = 0
 
-            # Xây danh sách item cho read_multi_vars() — mỗi region = 1 item.
-            # Optimizer sẽ tự sort/merge/packetize các item này.
-            items = [
-                {
-                    "area":      Area.DB,
-                    "db_number": self._db_number,
-                    "start":     start,
-                    "size":      size,
-                }
-                for (_name, start, size) in self._regions
-            ]
-
-            result_code, data_list = self._client.read_multi_vars(items)
+            ret = self._client.read_multi_vars(self._items)
+            if isinstance(ret, (list, tuple)) and len(ret) >= 2:
+                result_code = ret[0]
+                data_buffers = ret[1]
+            else:
+                result_code = ret if isinstance(ret, int) else 0
+                data_buffers = None
 
             if result_code != 0:
-                raise S7Error(f"read_multi_vars returned non-zero: {result_code}")
+                raise S7Error(f"read_multi_vars error code: {result_code}")
 
-            # data_list là list[bytearray], cùng thứ tự với self._regions
+            # Parse
             parsed: dict[str, Any] = {}
-            total_bytes = 0
-            for (name, start, size), raw in zip(self._regions, data_list):
+
+            for i, (name, start, size) in enumerate(self._regions):
+                if data_buffers and i < len(data_buffers):
+                    raw = bytearray(data_buffers[i])
+                else:
+                    raw = bytearray(self._buffers[i])
+
                 total_bytes += len(raw)
-                parsed.update(self._parse(raw, base_offset=start))
+                region_data = self._parse(raw, base_offset=start)
+                parsed.update(region_data)
 
             self.data_ready.emit(parsed)
-
             elapsed_ms = (time.perf_counter() - t0) * 1000
-            if elapsed_ms > SLOW_THRESHOLD_MS:
+            self.elapsed_time.emit(elapsed_ms)
+            if elapsed_ms > (self._poll_ms * 1.5):
                 if self.logger:
-                    self.logger.warning(
-                        "[PLC READ]: Slow response %.1fms (size=%d, regions=%d)",
-                        elapsed_ms, total_bytes, len(self._regions),
+                    respond = "Slow response"
+                    self.logger.info(
+                        f"[PLC READ]: {respond} %.1fms (size=%d)",
+                        elapsed_ms, total_bytes,
                     )
+            if not parsed and self.logger:
+                self.logger.warning(f"[PLC READ] Emitted empty dict! Check db_layout alignment.")
 
-        except S7Error as exc:
-            if self.logger:
-                self.logger.warning("[PLC READ]: Read error: %s", exc)
-            self.error.emit(f"Read error: {exc}")
-            self._reconnect()
         except Exception as exc:
             if self.logger:
-                self.logger.error("[PLC READ]: Unexpected error: %s", exc)
-            self.error.emit(str(exc))
+                self.logger.error("[PLC READ]: Error in _poll", exc_info=True)
+            # self.error.emit(f"Read error: {exc}")
             self._reconnect()
 
     @Slot()
@@ -297,45 +341,61 @@ class PLCRead(QObject):
         if self._poll_timer:
             self._poll_timer.stop()
         self._disconnect_plc()
+        # FIX: sau khi mất kết nối, item/buffer cũ không còn hợp lệ để tái sử
+        # dụng lâu dài (PLC có thể đổi PDU khi reconnect) -> xoá, sẽ dựng lại
+        # trong _try_connect() khi connect thành công lần sau.
+        self._items = []
+        self._buffers = []
         if self._retry_timer:
             self._retry_timer.start()
 
+
     def _parse(self, raw: bytearray, base_offset: int = 0) -> dict:
-        """
-        Parse 1 vùng raw bytes thành dict các tag theo db_layout.
-        Chỉ parse những tag có offset thuộc vùng [base_offset, base_offset+len(raw)).
-        """
         if not self._db_layout:
+            if self.logger:
+                self.logger.warning(f"[_parse] db_layout is empty for base={base_offset}")
             return {}
 
-        result:  dict[str, Any] = {}
-        raw_len: int            = len(raw)
+        raw_len = len(raw)
+        lo = bisect.bisect_left(self._layout_offsets, base_offset)
+        hi = bisect.bisect_right(self._layout_offsets, base_offset + raw_len - 1)
 
-        for name, dtype, offset, bit in self._db_layout:
+        result = {}
+        found = 0
+
+        for name, dtype, offset, bit in self._db_layout[lo:hi]:
             rel_offset = offset - base_offset
-
             if rel_offset < 0 or rel_offset >= raw_len:
-                continue  # tag này không thuộc vùng raw hiện tại, bỏ qua
+                continue
 
             try:
                 if dtype == "BOOL":
-                    result[name] = get_bool(raw, rel_offset, bit)
+                    value = get_bool(raw, rel_offset, bit)
                 elif dtype == "REAL":
-                    result[name] = get_real(raw, rel_offset)
+                    value = get_real(raw, rel_offset)
                 elif dtype == "DINT":
-                    result[name] = get_dint(raw, rel_offset)
+                    value = get_dint(raw, rel_offset)
                 elif dtype == "INT":
-                    result[name] = get_int(raw, rel_offset)
+                    value = get_int(raw, rel_offset)
                 elif dtype == "STRING":
-                    result[name] = get_string(raw, rel_offset)
+                    value = get_string(raw, rel_offset)        # ← Chỉ 2 tham số
                 else:
-                    result[name] = None
-            except Exception as exc:
+                    value = None
+
+                result[name] = value
+                found += 1
+
+            except Exception as e:
                 result[name] = None
                 if self.logger:
-                    self.logger.error(
-                        "[PLC READ]: Parse error [%s] offset=%d: %s",
-                        name, offset, exc,
-                    )
+                    self.logger.error(f"Parse fail {name} (offset={offset}, dtype={dtype}): {e}")
+
+        # if found == 0 and self.logger:
+        #     self.logger.warning(
+        #         f"[_parse] NO TAGS FOUND in region base={base_offset}, size={raw_len} | "
+        #         f"slice {lo}:{hi} / total tags={len(self._db_layout)}"
+        #     )
+        # elif found > 0 and self.logger:
+        #     self.logger.info(f"[_parse] Found {found} tags in region base={base_offset}")
 
         return result
