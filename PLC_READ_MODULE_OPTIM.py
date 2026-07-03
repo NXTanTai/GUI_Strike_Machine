@@ -206,7 +206,9 @@ class PLCReader(QObject):
                     c.multi_read_max_gap = 12
                 if hasattr(c, "max_parallel"):
                     c.max_parallel = 4
-
+                optimizer_active = getattr(c, "use_optimizer", False)
+                if self.logger:
+                    self.logger.info(f"[PLC READ]: Optimizer active = {optimizer_active}")
                 result["client"] = c  # type: ignore
             except Exception as exc:
                 result["error"] = exc  # type: ignore
@@ -291,7 +293,7 @@ class PLCReader(QObject):
             t0 = time.perf_counter()
             total_bytes = 0
 
-            ret = self._client.read_multi_vars(self._items)
+            ret = self._client._read_multi_vars_optimized(self._items)
             if isinstance(ret, (list, tuple)) and len(ret) >= 2:
                 result_code = ret[0]
                 data_buffers = ret[1]
@@ -302,7 +304,6 @@ class PLCReader(QObject):
             if result_code != 0:
                 raise S7Error(f"read_multi_vars error code: {result_code}")
 
-            # Parse
             parsed: dict[str, Any] = {}
 
             for i, (name, start, size) in enumerate(self._regions):
@@ -331,7 +332,6 @@ class PLCReader(QObject):
         except Exception as exc:
             if self.logger:
                 self.logger.error("[PLC READ]: Error in _poll", exc_info=True)
-            # self.error.emit(f"Read error: {exc}")
             self._reconnect()
 
     @Slot()
@@ -348,7 +348,6 @@ class PLCReader(QObject):
         self._buffers = []
         if self._retry_timer:
             self._retry_timer.start()
-
 
     def _parse(self, raw: bytearray, base_offset: int = 0) -> dict:
         if not self._db_layout:
@@ -389,13 +388,5 @@ class PLCReader(QObject):
                 result[name] = None
                 if self.logger:
                     self.logger.error(f"Parse fail {name} (offset={offset}, dtype={dtype}): {e}")
-
-        # if found == 0 and self.logger:
-        #     self.logger.warning(
-        #         f"[_parse] NO TAGS FOUND in region base={base_offset}, size={raw_len} | "
-        #         f"slice {lo}:{hi} / total tags={len(self._db_layout)}"
-        #     )
-        # elif found > 0 and self.logger:
-        #     self.logger.info(f"[_parse] Found {found} tags in region base={base_offset}")
 
         return result

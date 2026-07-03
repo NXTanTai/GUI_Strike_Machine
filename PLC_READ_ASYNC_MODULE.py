@@ -1,153 +1,183 @@
-import asyncio
 import time
-import logging
-import threading
-from typing import Any, Optional, Dict
-import snap7
-from snap7.error import S7Error
-from snap7.type import Parameter
-from snap7.util import get_bool, get_real, get_dint, get_int, get_string
+import bisect
+import asyncio
+from typing import Any, Optional
+
+from s7 import AsyncClient
+from s7.util import get_bool, get_real, get_dint, get_int, get_string
 from PySide6.QtCore import QObject, Signal
 
-class PLCAreaRead(QObject):
 
-    data_ready = Signal(dict)   # (area_name, data_dict)
-    error      = Signal(str, str)    # (area_name, error_msg)
-    connected  = Signal(str, bool)   # (area_name, status)
+SLOW_THRESHOLD_MS = 200
 
-    def __init__(self, 
-                 area_name: str,
-                 start_offset: int,
-                 read_size: int,
-                 db_layout: list,
-                 ip: str = "172.16.100.100",
-                 rack: int = 0,
-                 slot: int = 1,
-                 db_number: int = 1,
-                 poll_ms: int = 500,
-                 logger=None,
-                 parent=None):
-        
+
+class PLCReaderAsync(QObject):
+    init_data    = Signal()
+    data_ready   = Signal(dict)
+    error        = Signal(str)
+    connected    = Signal(bool)
+    disconnected = Signal()
+    finished     = Signal()
+    elapsed_time = Signal(float)
+
+    def __init__(self, ip="172.16.100.100", rack=0, slot=1, db_number=1,
+                 db_layout=None, regions=None, poll_ms=250, retry_ms=3000,
+                 logger=None, parent=None):
         super().__init__(parent)
-        self.area_name = area_name
-        self.start_offset = start_offset
-        self.read_size = read_size
-        self.db_layout = db_layout
+
         self._ip = ip
         self._rack = rack
         self._slot = slot
         self._db_number = db_number
+
+        self._db_layout = sorted(db_layout, key=lambda t: t[2]) if db_layout else None
+        self._layout_offsets = [t[2] for t in self._db_layout] if self._db_layout else []
+
+        self._regions = regions or []
         self._poll_ms = poll_ms
+        self._retry_ms = retry_ms
         self.logger = logger
 
-        self._client: snap7.client.Client | None = None
+        self._client: Optional[AsyncClient] = None
+        self._task: Optional[asyncio.Task] = None
         self._running = False
-        self._task: asyncio.Task | None = None
 
-    async def _connect(self):
-        try:
-            c = snap7.client.Client()
-            c.set_param(Parameter.PDURequest, 1024)
-            c.set_param(Parameter.SendTimeout, 5)
-            c.set_param(Parameter.RecvTimeout, 5)
-            c.set_param(Parameter.KeepAliveTime, 15)
-            c.connect(self._ip, self._rack, self._slot)
-            self._client = c
-            self.connected.emit(self.area_name, True)
-            if self.logger:
-                self.logger.info(f"[PLC {self.area_name}]: Connected")
-            return True
-        except Exception as e:
-            self.error.emit(self.area_name, f"Connect failed: {e}")
-            return False
+        self._last_error_log_time = 0.0
 
-    async def _read_loop(self):
+    def start(self):
+        if self._running:
+            return
+        self._running = True
+        self._task = asyncio.create_task(self._run_loop())
+
+    async def stop(self):
+        self._running = False
+        if self._task:
+            try:
+                await asyncio.wait_for(self._task, timeout=5.0)
+            except (asyncio.TimeoutError, asyncio.CancelledError):
+                pass
+            self._task = None
+
+    async def _run_loop(self):
+        if self.logger:
+            self.logger.info("[PLC READ Async]: Starting...")
+
         while self._running:
             try:
-                if not self._client:
-                    await asyncio.sleep(1)
-                    continue
+                async with AsyncClient() as client:
+                    self._client = client
 
-                raw = self._client.db_read(self._db_number, self.start_offset, self.read_size)
-                data = self._parse(raw, self.start_offset)
-                self.data_ready.emit(self.area_name, data)
+                    if self.logger:
+                        self.logger.info(f"[PLC READ Async]: Connecting to {self._ip} (rack={self._rack}, slot={self._slot})")
 
-            except Exception as e:
-                self.error.emit(self.area_name, str(e))
-                await asyncio.sleep(2)
-                if self._client:
-                    try:
-                        self._client.disconnect()
-                    except:
-                        pass
-                    self._client = None
+                    # Cấu hình timeout qua underlying client (cách chuẩn của s7)
+                    if hasattr(client, 'client'):
+                        client.client.set_param(1, 1024)   # PDURequest
+                        client.client.set_param(2, 10000)  # SendTimeout (ms)
+                        client.client.set_param(3, 10000)  # RecvTimeout (ms)
 
-            await asyncio.sleep(self._poll_ms / 1000)
+                    # Connect với timeout
+                    await asyncio.wait_for(
+                        client.connect(self._ip, self._rack, self._slot),
+                        timeout=10.0
+                    )
 
-    def _parse(self, raw: bytearray, base_offset: int) -> dict:
-        result: Dict[str, Any] = {}
+                    self.connected.emit(True)
+                    self.init_data.emit()
+
+                    if self.logger:
+                        self.logger.info("[PLC READ Async]: Connected successfully")
+
+                    await self._poll_loop(client)
+
+            except asyncio.TimeoutError:
+                self._log_error("Connect timeout (10s)")
+                self.error.emit("PLC connect timeout")
+            except Exception as exc:
+                self._log_error(str(exc))
+                self.error.emit(str(exc))
+            finally:
+                self._client = None
+                self.connected.emit(False)
+
+            if not self._running:
+                break
+
+            await asyncio.sleep(self._retry_ms / 1000.0)
+
+        self.disconnected.emit()
+        self.finished.emit()
+
+    async def _poll_loop(self, client: AsyncClient):
+        items = [(self._db_number, start, size) for _, start, size in self._regions]
+
+        while self._running:
+            t0 = time.perf_counter()
+
+            try:
+                buffers = await client.db_read_multi(items)
+
+                parsed: dict[str, Any] = {}
+                total_bytes = 0
+
+                for (name, start, size), raw in zip(self._regions, buffers):
+                    total_bytes += len(raw)
+                    parsed.update(self._parse(raw, start))
+
+                self.data_ready.emit(parsed)
+                self.elapsed_time.emit((time.perf_counter() - t0) * 1000)
+
+                if total_bytes == 0 and self.logger:
+                    self.logger.warning("[PLC READ Async] Received empty data!")
+
+            except Exception as exc:
+                if self.logger:
+                    self.logger.error("[PLC READ Async] Poll error", exc_info=True)
+                raise  # thoát ra reconnect
+
+            try:
+                await asyncio.sleep(self._poll_ms / 1000.0)
+            except asyncio.CancelledError:
+                raise
+
+    def _parse(self, raw: bytearray, base_offset: int = 0) -> dict:
+        # (giữ nguyên hàm _parse trước đó của bạn)
+        if not self._db_layout:
+            return {}
+
         raw_len = len(raw)
+        lo = bisect.bisect_left(self._layout_offsets, base_offset)
+        hi = bisect.bisect_right(self._layout_offsets, base_offset + raw_len - 1)
 
-        for name, dtype, offset, bit in self.db_layout:
-            rel = offset - base_offset
-            if rel < 0 or rel >= raw_len:
-                result[name] = None
+        result = {}
+        for name, dtype, offset, bit in self._db_layout[lo:hi]:
+            rel_offset = offset - base_offset
+            if rel_offset < 0 or rel_offset >= raw_len:
                 continue
             try:
                 if dtype == "BOOL":
-                    result[name] = get_bool(raw, rel, bit)
+                    value = get_bool(raw, rel_offset, bit)
                 elif dtype == "REAL":
-                    result[name] = get_real(raw, rel)
+                    value = get_real(raw, rel_offset)
                 elif dtype == "DINT":
-                    result[name] = get_dint(raw, rel)
+                    value = get_dint(raw, rel_offset)
                 elif dtype == "INT":
-                    result[name] = get_int(raw, rel)
+                    value = get_int(raw, rel_offset)
                 elif dtype == "STRING":
-                    result[name] = get_string(raw, rel)
+                    value = get_string(raw, rel_offset)
                 else:
-                    result[name] = None
-            except:
+                    value = None
+                result[name] = value
+            except Exception as e:
                 result[name] = None
+                if self.logger:
+                    self.logger.error(f"Parse fail {name} @ {offset}: {e}")
         return result
 
-    def start(self):
-        self._running = True
-        self._task = asyncio.create_task(self._read_loop())
-
-    def stop(self):
-        self._running = False
-        if self._task:
-            self._task.cancel()
-        if self._client:
-            try:
-                self._client.disconnect()
-            except:
-                pass
-
-class PLCRead(QObject):
-
-    area_1_ready = Signal(dict)
-    area_2_ready = Signal(dict)
-    area_3_ready = Signal(dict)
-
-    def __init__(self, full_db_layout: list, ip: str = "172.16.100.100", logger=None, parent=None):
-        super().__init__(parent)
-        self.logger = logger
-
-        self.a1 = PLCAreaRead("A1_0-194",     0, 195, ip=ip, db_layout = full_db_layout, poll_ms=200, logger=logger, parent=self)
-        self.a2 = PLCAreaRead("A2_198-332", 198, 135, ip=ip, db_layout = full_db_layout, poll_ms=100, logger=logger, parent=self)
-        self.a3 = PLCAreaRead("A3_336-end", 336, 256, ip=ip, db_layout = full_db_layout, poll_ms=500, logger=logger, parent=self)
-
-        self.a1.data_ready.connect(self.area_1_ready)
-        self.a2.data_ready.connect(self.area_2_ready)
-        self.a3.data_ready.connect(self.area_3_ready)
-
-    def start(self):
-        self.a1.start()
-        self.a2.start()
-        self.a3.start()
-
-    def stop(self):
-        self.a1.stop()
-        self.a2.stop()
-        self.a3.stop()
+    def _log_error(self, msg: str):
+        now = time.time()
+        if now - self._last_error_log_time >= 5:
+            if self.logger:
+                self.logger.error("[PLC READ Async]: %s", msg)
+            self._last_error_log_time = now

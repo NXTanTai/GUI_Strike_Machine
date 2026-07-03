@@ -5,8 +5,6 @@
 
 # pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --hidden-import=web_server --hidden-import=uvicorn --hidden-import=uvicorn.logging --hidden-import=uvicorn.loops --hidden-import=uvicorn.loops.auto --hidden-import=uvicorn.protocols --hidden-import=uvicorn.protocols.http --hidden-import=uvicorn.protocols.http.auto --hidden-import=uvicorn.protocols.websockets --hidden-import=uvicorn.protocols.websockets.auto --hidden-import=uvicorn.lifespan --hidden-import=uvicorn.lifespan.on --hidden-import=fastapi --hidden-import=anyio --hidden-import=anyio.backends.asyncio --distpath "Apps" main.py
 
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
-
 import multiprocessing
 import subprocess
 import tempfile
@@ -134,13 +132,13 @@ if __name__ == '__main__':
     multiprocessing.freeze_support()
     from web_server import run_web_server
 
-    # plc_queue = multiprocessing.Queue(maxsize=10)
-    # web_process = multiprocessing.Process(
-    #     target=run_web_server,
-    #     args=(plc_queue,),
-    #     daemon=True
-    # )
-    # web_process.start()
+    plc_queue = multiprocessing.Queue(maxsize=10)
+    web_process = multiprocessing.Process(
+        target=run_web_server,
+        args=(plc_queue,),
+        daemon=True
+    )
+    web_process.start()
 
     _loader_proc, _signal_file, _pause_file = _spawn_loading()
 
@@ -157,12 +155,19 @@ if __name__ == '__main__':
             pass
 
     app = None
+    loop = None
     try:
+        import asyncio
+        import qasync
         from PySide6.QtWidgets import QApplication, QMessageBox
         from PySide6.QtCore    import QLocale, QSharedMemory, QSystemSemaphore, QTimer
         from source            import StrikeMachine
 
         app = QApplication(sys.argv)
+        # Gắn event loop asyncio vào Qt event loop -- bắt buộc để
+        # PLCReaderAsync (dùng asyncio.create_task/AsyncClient) hoạt động.
+        loop = qasync.QEventLoop(app)
+        asyncio.set_event_loop(loop)
         QLocale.setDefault(QLocale(QLocale.Language.C))
 
         semaphore = QSystemSemaphore('StrikeMachine_Instance', 1)
@@ -186,7 +191,7 @@ if __name__ == '__main__':
         window = StrikeMachine(
             on_hide_loading=_pause_loading,
             on_show_loading=_resume_loading,
-            # plc_queue=plc_queue
+            plc_queue=plc_queue
         )
 
         screen = QApplication.primaryScreen().availableGeometry()
@@ -214,4 +219,8 @@ if __name__ == '__main__':
         _close_loading(_loader_proc, _signal_file, _pause_file)
 
     if app is not None:
-        sys.exit(app.exec())
+        if loop is not None:
+            with loop:
+                loop.run_forever()
+        else:
+            sys.exit(app.exec())

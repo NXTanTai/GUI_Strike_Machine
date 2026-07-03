@@ -1,9 +1,9 @@
 Startup errors:
 Traceback (most recent call last):
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 161, in <module>
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 163, in <module>
     from source            import StrikeMachine
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 2263
-    self.plc_read_data_thread = QThread()
-                                ^^^^^^^
-SyntaxError: invalid syntax. Did you mean 'True'?
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 2949
+    if self.ui.start_stop_stacked.currentIndex() == 1:
+    ^^
+SyntaxError: invalid syntax
 
