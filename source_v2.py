@@ -45,7 +45,7 @@ from console_window import ConsoleWindow
 from password_dialog import *
 from Data_Simulator import DataSimulator
 from PLC_READ_MODULE import PLCRead
-from PLC_READ_MODULE_OPTIM import PLCReader
+# from PLC_READ_MODULE_OPTIM import PLCReader
 from PLC_WRITE_MODULE import PLCWrite
 from export_excel_worker import ExportWorker
 
@@ -595,7 +595,7 @@ class StrikeMachine(QMainWindow):
 
         self.data_pressure_timer = QTimer(self)
         self.all_timer.append(self.data_pressure_timer)
-        self.data_pressure_timer.setInterval(200)
+        self.data_pressure_timer.setInterval(100)
         self.data_pressure_timer.timeout.connect(lambda: self._data_pressure(self.all_data))
 
 
@@ -2249,82 +2249,16 @@ class StrikeMachine(QMainWindow):
 
         time.sleep(0.1)
 
-        # if not self._setup_read_data_plc_thread(
-        #         name_module="ACTUAL DATA",
-        #         ip=self.db_dict["ip_plc"],
-        #         db_number=self.db_dict["db_name"],
-        #         db_layout=self.db_dict["DB_LAYOUT"],
-        #         db_size=self.db_dict["data_size"],
-        #         offsets=self.db_dict["offsets_data"],
-        #         poll_ms=self.db_dict["data_read"],
-        #         logger_parent=self.stk_mch_folder
-        #     ):
-        #     if self._current_lang == "en":
-        #         title = "Error"
-        #         content = "Failed to connect to PLC! Try again later."
-        #     elif self._current_lang == "cn":
-        #         title = "错误"
-        #         content = "无法连接 PLC！请稍后再试."
-        #     elif self._current_lang == "vn":
-        #         title = "Lỗi"
-        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-        # time.sleep(0.1)
-        # if not self._setup_read_input_plc_thread(
-        #         name_module="INPUT DATA",
-        #         ip=self.db_dict["ip_plc"],
-        #         db_number=self.db_dict["db_name"],
-        #         db_layout=self.db_dict["DB_LAYOUT"],
-        #         db_size=self.db_dict["input_size"],
-        #         offsets=self.db_dict["offsets_input"],
-        #         poll_ms=self.db_dict["input_read"],
-        #         logger_parent=self.stk_mch_folder
-        #     ):
-        #     if self._current_lang == "en":
-        #         title = "Error"
-        #         content = "Failed to connect to PLC! Try again later."
-        #     elif self._current_lang == "cn":
-        #         title = "错误"
-        #         content = "无法连接 PLC！请稍后再试."
-        #     elif self._current_lang == "vn":
-        #         title = "Lỗi"
-        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-        # time.sleep(0.1)
-        # if not self._setup_read_error_plc_thread(
-        #         name_module="ERROR DATA",
-        #         ip=self.db_dict["ip_plc"],
-        #         db_number=self.db_dict["db_name"],
-        #         db_layout=self.db_dict["DB_LAYOUT"],
-        #         db_size=self.db_dict["error_size"],
-        #         offsets=self.db_dict["offsets_error"],
-        #         poll_ms=self.db_dict["error_read"],
-        #         logger_parent=self.stk_mch_folder
-        #     ):
-        #     if self._current_lang == "en":
-        #         title = "Error"
-        #         content = "Failed to connect to PLC! Try again later."
-        #     elif self._current_lang == "cn":
-        #         title = "错误"
-        #         content = "无法连接 PLC！请稍后再试."
-        #     elif self._current_lang == "vn":
-        #         title = "Lỗi"
-        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-    #     time.sleep(0.1)
-        success = self._setup_read_plc_thread(
-            name_module="READ_MULTI",
-            ip=self.db_dict["ip_plc"],
-            db_number=self.db_dict["db_name"],
-            db_layout=self.db_dict["DB_LAYOUT"],
-            regions=[("ACTUAL", 0, 198), ("INPUT", 198, 138), ("STRING", 336, 50)],
-            poll_ms=200,
-            logger_parent=self.stk_mch_folder
-        )
-        if not success:
+        if not self._setup_read_data_plc_thread(
+                name_module="ACTUAL DATA",
+                ip=self.db_dict["ip_plc"],
+                db_number=self.db_dict["db_name"],
+                db_layout=self.db_dict["DB_LAYOUT"],
+                db_size=self.db_dict["data_size"],
+                offsets=self.db_dict["offsets_data"],
+                poll_ms=self.db_dict["data_read"],
+                logger_parent=self.stk_mch_folder
+            ):
             if self._current_lang == "en":
                 title = "Error"
                 content = "Failed to connect to PLC! Try again later."
@@ -2335,6 +2269,72 @@ class StrikeMachine(QMainWindow):
                 title = "Lỗi"
                 content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
             ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
+        time.sleep(0.1)
+        if not self._setup_read_input_plc_thread(
+                name_module="INPUT DATA",
+                ip=self.db_dict["ip_plc"],
+                db_number=self.db_dict["db_name"],
+                db_layout=self.db_dict["DB_LAYOUT"],
+                db_size=self.db_dict["input_size"],
+                offsets=self.db_dict["offsets_input"],
+                poll_ms=self.db_dict["input_read"],
+                logger_parent=self.stk_mch_folder
+            ):
+            if self._current_lang == "en":
+                title = "Error"
+                content = "Failed to connect to PLC! Try again later."
+            elif self._current_lang == "cn":
+                title = "错误"
+                content = "无法连接 PLC！请稍后再试."
+            elif self._current_lang == "vn":
+                title = "Lỗi"
+                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+            ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
+        time.sleep(0.1)
+        if not self._setup_read_error_plc_thread(
+                name_module="ERROR DATA",
+                ip=self.db_dict["ip_plc"],
+                db_number=self.db_dict["db_name"],
+                db_layout=self.db_dict["DB_LAYOUT"],
+                db_size=self.db_dict["error_size"],
+                offsets=self.db_dict["offsets_error"],
+                poll_ms=self.db_dict["error_read"],
+                logger_parent=self.stk_mch_folder
+            ):
+            if self._current_lang == "en":
+                title = "Error"
+                content = "Failed to connect to PLC! Try again later."
+            elif self._current_lang == "cn":
+                title = "错误"
+                content = "无法连接 PLC！请稍后再试."
+            elif self._current_lang == "vn":
+                title = "Lỗi"
+                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+            ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
+    #     time.sleep(0.1)
+    #     success = self._setup_read_plc_thread(
+    #         name_module="READ_MULTI",
+    #         ip=self.db_dict["ip_plc"],
+    #         db_number=self.db_dict["db_name"],
+    #         db_layout=self.db_dict["DB_LAYOUT"],
+    #         regions=[("ACTUAL", 0, 198), ("INPUT", 198, 138), ("STRING", 336, 50)],
+    #         poll_ms=100,
+    #         logger_parent=self.stk_mch_folder
+    #     )
+    #     if not success:
+    #         if self._current_lang == "en":
+    #             title = "Error"
+    #             content = "Failed to connect to PLC! Try again later."
+    #         elif self._current_lang == "cn":
+    #             title = "错误"
+    #             content = "无法连接 PLC！请稍后再试."
+    #         elif self._current_lang == "vn":
+    #             title = "Lỗi"
+    #             content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+    #         ltmessage.error(self, title, content, self._current_lang) # type: ignore
 
     # def setup_simulate_threads(self):
     #     try:

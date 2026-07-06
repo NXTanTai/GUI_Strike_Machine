@@ -1,7 +1,10 @@
+import sys
+import os
 import struct
 import time
 import socket
 import logging
+import logging.handlers
 import threading
 import snap7
 from typing import Any, Optional
@@ -25,6 +28,7 @@ class PLCRead(QObject):
     connected    = Signal(bool)
     disconnected = Signal()
     finished     = Signal()
+    elapsed_time = Signal(float)
 
     _stop_read   = Signal()
 
@@ -40,7 +44,7 @@ class PLCRead(QObject):
         offsets:   int                                          = 198,
         poll_ms:   int                                          = 500,
         retry_ms:  int                                          = 3000,
-        logger                                                  = None,
+        logger_parent                                           = None,
         parent:    Optional[QObject]                            = None,
     ):
         super().__init__(parent)
@@ -54,7 +58,8 @@ class PLCRead(QObject):
         self._poll_ms   = poll_ms
         self._offsets   = offsets
         self._retry_ms  = retry_ms
-        self.logger     = logger
+        self.logger     = None
+        self.folder     = logger_parent
 
         self._client:      snap7.client.Client | None = None
         self._poll_timer:  QTimer | None = None
@@ -63,9 +68,44 @@ class PLCRead(QObject):
 
         self._last_error_log_time: float = 0.0
 
+    def _init_logger(self):
+        if not self.folder:
+            self.logger = None
+            return
+
+        self.logger = logging.getLogger(__name__)
+        for handler in self.logger.handlers[:]:
+            self.logger.removeHandler(handler)
+
+        # Tạo thư mục log nếu chưa có
+        log_dir = self.folder / "PLC Log"
+        os.makedirs(log_dir, exist_ok=True)
+        log_date = datetime.now().strftime("%d_%m_%Y")
+        log_filename = os.path.join(log_dir, f'PLC_READ_{self._name_module}_{log_date}.log')
+
+        file_handler = logging.handlers.RotatingFileHandler(
+            log_filename,
+            maxBytes=5 * 1024 * 1024,
+            backupCount=5,
+            encoding='utf-8'
+        )
+
+        file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        file_handler.setFormatter(file_formatter)
+        self.logger.addHandler(file_handler)
+
+        if not getattr(sys, 'frozen', False):
+            stream_handler = logging.StreamHandler()
+            stream_handler.setFormatter(file_formatter)
+            self.logger.addHandler(stream_handler)
+
+        self.logger.setLevel(logging.INFO)
+        self.logger.propagate = False
+
     @Slot()
     def run(self):
         self._running = True
+        self._init_logger()
         if self.logger:
             self.logger.info(f"[PLC READ {self._name_module}]: PLC Read {self._name_module} init")
 
@@ -137,7 +177,7 @@ class PLCRead(QObject):
             if self._poll_timer and not self._poll_timer.isActive():
                 self._poll_timer.start()
             if self.logger:
-                self.logger.info(f"[PLC READ {self._name_module}]: Connected to PLC, started reading {self._name_module}")
+                self.logger.info(f"[PLC READ {self._name_module}]: Connected to PLC, started reading {self._name_module} - {self._db_size} bytes every {self._poll_ms} ms")
         else:
             if self._retry_timer and not self._retry_timer.isActive():
                 self._retry_timer.start()
@@ -216,15 +256,16 @@ class PLCRead(QObject):
             elapsed_ms = (time.perf_counter() - t0) * 1000
             
             if self.logger:
-                respond = "Response"
-                if elapsed_ms > (self._poll_ms * 1.5):
+                # respond = "Response"
+                if elapsed_ms > (self._poll_ms * 1.3):
                     respond = "Slow response"
-                self.logger.warning(
-                    f"[PLC READ {self._name_module}]: {respond} %.1fms (size=%d)",
-                    elapsed_ms, len(raw),
-                )
+                    self.logger.warning(
+                        f"[PLC READ {self._name_module}]: {respond} %.1fms (size=%d)",
+                        elapsed_ms, len(raw),
+                    )
             result    = self._parse(raw, base_offset=self._offsets)
             self.data_ready.emit(result)
+            self.elapsed_time.emit(elapsed_ms)
 
         except S7Error as exc:
             if self.logger:

@@ -3,7 +3,7 @@
 # pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
 # pyinstaller --onefile --noconsole --name="cmd" --icon=icons\cmd.png --add-data "icons;icons" --distpath "Apps" console_window.py
 
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --hidden-import=web_server --hidden-import=uvicorn --hidden-import=uvicorn.logging --hidden-import=uvicorn.loops --hidden-import=uvicorn.loops.auto --hidden-import=uvicorn.protocols --hidden-import=uvicorn.protocols.http --hidden-import=uvicorn.protocols.http.auto --hidden-import=uvicorn.protocols.websockets --hidden-import=uvicorn.protocols.websockets.auto --hidden-import=uvicorn.lifespan --hidden-import=uvicorn.lifespan.on --hidden-import=fastapi --hidden-import=anyio --hidden-import=anyio.backends.asyncio --distpath "Apps" main.py
+# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --hidden-import=web_server --hidden-import=uvicorn --hidden-import=uvicorn.logging --hidden-import=uvicorn.loops --hidden-import=uvicorn.loops.auto --hidden-import=uvicorn.protocols --hidden-import=uvicorn.protocols.http --hidden-import=uvicorn.protocols.http.auto --hidden-import=uvicorn.protocols.websockets --hidden-import=uvicorn.protocols.websockets.auto --hidden-import=uvicorn.lifespan --hidden-import=uvicorn.lifespan.on --hidden-import=fastapi --hidden-import=anyio --hidden-import=anyio.backends.asyncio --distpath "Apps" main.py
 
 # pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
 
@@ -13,6 +13,7 @@ import tempfile
 import traceback
 import os
 import sys
+from pathlib import Path
 
 LOADING_ENV   = 'STRIKE_MACHINE_LOADING'
 LOADING_PAUSE = 'STRIKE_MACHINE_LOADING_PAUSE'
@@ -46,6 +47,15 @@ def _close_loading(proc, signal_file, pause_file=None):
         proc.wait(timeout=2)
     except subprocess.TimeoutExpired:
         proc.terminate()
+
+def get_exe_dir():
+    """Lấy thư mục chứa file .exe (hoặc .py khi dev)"""
+    if getattr(sys, 'frozen', False):
+        return Path(sys.executable).parent
+    else:
+        return Path(__file__).parent
+
+WEB_INIT = (get_exe_dir() / "web_on.txt").is_file()
 
 if os.environ.get(LOADING_ENV):
     signal_file = os.environ[LOADING_ENV]
@@ -132,15 +142,16 @@ if os.environ.get(LOADING_ENV):
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
-    from web_server import run_web_server
+    if WEB_INIT:
+        from web_server import run_web_server
 
-    # plc_queue = multiprocessing.Queue(maxsize=10)
-    # web_process = multiprocessing.Process(
-    #     target=run_web_server,
-    #     args=(plc_queue,),
-    #     daemon=True
-    # )
-    # web_process.start()
+        plc_queue = multiprocessing.Queue(maxsize=10)
+        web_process = multiprocessing.Process(
+            target=run_web_server,
+            args=(plc_queue,),
+            daemon=True
+        )
+        web_process.start()
 
     _loader_proc, _signal_file, _pause_file = _spawn_loading()
 
@@ -160,7 +171,8 @@ if __name__ == '__main__':
     try:
         from PySide6.QtWidgets import QApplication, QMessageBox
         from PySide6.QtCore    import QLocale, QSharedMemory, QSystemSemaphore, QTimer
-        from source            import StrikeMachine
+        # from source            import StrikeMachine
+        from source_v2            import StrikeMachine
 
         app = QApplication(sys.argv)
         QLocale.setDefault(QLocale(QLocale.Language.C))
@@ -183,11 +195,17 @@ if __name__ == '__main__':
             _close_loading(_loader_proc, _signal_file, _pause_file)
             sys.exit(1)
 
-        window = StrikeMachine(
-            on_hide_loading=_pause_loading,
-            on_show_loading=_resume_loading,
-            # plc_queue=plc_queue
-        )
+        if WEB_INIT:
+            window = StrikeMachine(
+                on_hide_loading=_pause_loading,
+                on_show_loading=_resume_loading,
+                plc_queue=plc_queue  # type: ignore
+            )
+        else:
+            window = StrikeMachine(
+                on_hide_loading=_pause_loading,
+                on_show_loading=_resume_loading
+            )
 
         screen = QApplication.primaryScreen().availableGeometry()
         window.move(

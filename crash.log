@@ -1,9 +1,9 @@
 Startup errors:
 Traceback (most recent call last):
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 163, in <module>
-    from source            import StrikeMachine
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 2949
-    if self.ui.start_stop_stacked.currentIndex() == 1:
-    ^^
-SyntaxError: invalid syntax
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 175, in <module>
+    from source_v2            import StrikeMachine
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source_v2.py", line 3100
+    if self.data_temp_timer.isActive()
+                                      ^
+SyntaxError: expected ':'
 

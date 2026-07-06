@@ -1,10 +1,15 @@
+import os
+import sys
 import struct
 import time
 import socket
 import logging
 import threading
-import snap7
+import logging
+import logging.handlers
+from datetime import datetime
 from typing import Any, Optional
+import snap7
 from snap7.error import * # type: ignore
 from snap7.type import * # type: ignore
 from snap7.type import Parameter
@@ -52,7 +57,7 @@ class PLCWrite(QObject):
         db_size:   int                                         = 592,
         write_ms:  int                                         = 300,
         retry_ms:  int                                         = 3000,
-        logger                                                 = None,
+        logger_parent                                          = None,
         parent:    Optional[QObject]                           = None,
     ):
         super().__init__(parent)
@@ -65,7 +70,8 @@ class PLCWrite(QObject):
         self._db_size   = db_size
         self._write_ms  = write_ms
         self._retry_ms  = retry_ms
-        self.logger     = logger
+        self.logger     = None
+        self.folder     = logger_parent
 
         self._layout_dict: dict[str, tuple[str, int, Any]] = self._build_layout_dict()
         self._client: snap7.client.Client | None = None
@@ -84,6 +90,40 @@ class PLCWrite(QObject):
 
         self._running = False
 
+    def _init_logger(self):
+        if not self.folder:
+            self.logger = None
+            return
+
+        self.logger = logging.getLogger(__name__)
+        for handler in self.logger.handlers[:]:
+            self.logger.removeHandler(handler)
+
+        # Tạo thư mục log nếu chưa có
+        log_dir = self.folder / "PLC Log"
+        os.makedirs(log_dir, exist_ok=True)
+        log_date = datetime.now().strftime("%d_%m_%Y")
+        log_filename = os.path.join(log_dir, f'PLC_WRITE_{log_date}.log')
+
+        file_handler = logging.handlers.RotatingFileHandler(
+            log_filename,
+            maxBytes=5 * 1024 * 1024,
+            backupCount=5,
+            encoding='utf-8'
+        )
+
+        file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        file_handler.setFormatter(file_formatter)
+        self.logger.addHandler(file_handler)
+
+        if not getattr(sys, 'frozen', False):
+            stream_handler = logging.StreamHandler()
+            stream_handler.setFormatter(file_formatter)
+            self.logger.addHandler(stream_handler)
+
+        self.logger.setLevel(logging.INFO)
+        self.logger.propagate = False
+
     def _build_layout_dict(self) -> dict:
         """
         Xử lý trường hợp tag name trùng nhau.
@@ -98,11 +138,10 @@ class PLCWrite(QObject):
                 layout[name] = (dtype, offset, bit)
         return layout
 
-    # ── Lifecycle ─────────────────────────────────────────────────────────────
-
     @Slot()
     def run(self):
         self._running = True
+        self._init_logger()
         if self.logger:
             self.logger.info("[PLC WRITE]: PLC Write init")
 

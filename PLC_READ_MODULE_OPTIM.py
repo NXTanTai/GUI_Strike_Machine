@@ -1,6 +1,11 @@
+import sys
+import os
 import time
 import bisect
 import threading
+import logging
+import logging.handlers
+from datetime import datetime
 from ctypes import c_uint8, cast, POINTER
 import snap7
 from typing import Any, Optional
@@ -10,13 +15,7 @@ from snap7.type import Parameter, Area, WordLen, S7DataItem
 from snap7.util import get_bool, get_real, get_dint, get_int, get_string
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
-SLOW_THRESHOLD_MS = 150   # log warning nếu 1 lần read vượt ngưỡng này
-
-# ── snap7 yêu cầu cài bản có optimizer (chưa release lên PyPI) ──────────────
-# pip install "git+https://github.com/gijzelaerr/python-snap7.git@7637ab254e42577ad9872cdeea56456dcd2ee91f"
-# Đã verify: dict_items >= 2 item tự động dùng _read_multi_vars_optimized()
-# (sort -> merge -> packetize -> parallel dispatch trên 1 PDU/connection)
-
+SLOW_THRESHOLD_MS = 150
 
 class PLCReader(QObject):
     """
@@ -45,15 +44,13 @@ class PLCReader(QObject):
         db_number:  int                                       = 1,
         db_layout:  Optional[list[tuple[str, str, int, Any]]] = None,
         regions:    Optional[list[tuple[str, int, int]]]      = None,
-        # regions: list các vùng cần đọc, mỗi vùng (name, start_offset, size)
         # VD: [("ACTUAL", 0, 198), ("INPUT", 198, 138), ("STRING", 336, 256)]
-        poll_ms:    int                                       = 250,
-        retry_ms:   int                                       = 3000,
-        use_optimizer:       bool                             = True,
+        poll_ms:    int                                        = 250,
+        retry_ms:   int                                        = 3000,
+        use_optimizer:       bool                              = True,
         multi_read_max_gap:  int                               = 5,
         max_parallel:        Optional[int]                     = None,
-        # None = để optimizer tự auto-tune theo PDU size sau khi connect
-        logger                                                 = None,
+        logger_parent                                          = None,
         parent:     Optional[QObject]                          = None,
     ):
         super().__init__(parent)
@@ -62,8 +59,6 @@ class PLCReader(QObject):
         self._slot      = slot
         self._db_number = db_number
 
-        # FIX: sort theo offset 1 lần để _parse() dùng bisect thay vì quét
-        # toàn bộ db_layout cho từng region ở mỗi vòng poll (250ms).
         self._db_layout: Optional[list[tuple[str, str, int, Any]]] = (
             sorted(db_layout, key=lambda t: t[2]) if db_layout else None
         )
@@ -74,7 +69,8 @@ class PLCReader(QObject):
         self._regions   = regions or []
         self._poll_ms   = poll_ms
         self._retry_ms  = retry_ms
-        self.logger     = logger
+        self.logger     = None
+        self.folder     = logger_parent
 
         self._use_optimizer      = use_optimizer
         self._multi_read_max_gap = multi_read_max_gap
@@ -87,16 +83,47 @@ class PLCReader(QObject):
 
         self._last_error_log_time: float = 0.0
 
-        # FIX: cache S7DataItem + buffer ctypes, build 1 lần sau khi connect
-        # thành công thay vì dựng lại dict mỗi vòng poll.
         self._items:   list[S7DataItem] = []
         self._buffers: list             = []
 
-    # ── Lifecycle ─────────────────────────────────────────────────────────────
+    def _init_logger(self):
+        if not self.folder:
+            self.logger = None
+            return
+
+        self.logger = logging.getLogger(__name__)
+        for handler in self.logger.handlers[:]:
+            self.logger.removeHandler(handler)
+
+        # Tạo thư mục log nếu chưa có
+        log_dir = self.folder / "PLC Log"
+        os.makedirs(log_dir, exist_ok=True)
+        log_date = datetime.now().strftime("%d_%m_%Y")
+        log_filename = os.path.join(log_dir, f'PLC_READ_{log_date}.log')
+
+        file_handler = logging.handlers.RotatingFileHandler(
+            log_filename,
+            maxBytes=5 * 1024 * 1024,
+            backupCount=5,
+            encoding='utf-8'
+        )
+
+        file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        file_handler.setFormatter(file_formatter)
+        self.logger.addHandler(file_handler)
+
+        if not getattr(sys, 'frozen', False):
+            stream_handler = logging.StreamHandler()
+            stream_handler.setFormatter(file_formatter)
+            self.logger.addHandler(stream_handler)
+
+        self.logger.setLevel(logging.INFO)
+        self.logger.propagate = False
 
     @Slot()
     def run(self):
         self._running = True
+        self._init_logger()
         if self.logger:
             self.logger.info("[PLC READ]: PLC Read init (multi-region, optimized)")
 
@@ -143,8 +170,6 @@ class PLCReader(QObject):
         self.finished.emit()
         QThread.currentThread().quit()
 
-    # ── Connection ────────────────────────────────────────────────────────────
-
     @Slot()
     def _try_connect(self):
         if not self._running:
@@ -162,7 +187,6 @@ class PLCReader(QObject):
             if self._retry_timer and self._retry_timer.isActive():
                 self._retry_timer.stop()
 
-            # FIX: dựng sẵn item/buffer 1 lần ngay sau khi connect thành công
             if self._regions:
                 self._build_read_items()
 
@@ -190,7 +214,6 @@ class PLCReader(QObject):
             try:
                 c = snap7.client.Client()
 
-                # ── snap7 application-level params ────────────────────────
                 c.set_param(Parameter.PDURequest,    1024)
                 c.set_param(Parameter.SendTimeout,     8)
                 c.set_param(Parameter.RecvTimeout,     5)
@@ -199,7 +222,6 @@ class PLCReader(QObject):
 
                 c.connect(self._ip, self._rack, self._slot)
 
-                # ── Cấu hình optimizer (chỉ tồn tại trên bản đã cài optimizer) ──
                 if hasattr(c, "use_optimizer"):
                     c.use_optimizer = True
                 if hasattr(c, "multi_read_max_gap"):
@@ -294,6 +316,15 @@ class PLCReader(QObject):
             total_bytes = 0
 
             ret = self._client._read_multi_vars_optimized(self._items)
+            elapsed_ms = (time.perf_counter() - t0) * 1000
+            self.elapsed_time.emit(elapsed_ms)
+            if elapsed_ms > (self._poll_ms * 1.5):
+                if self.logger:
+                    respond = "Slow response"
+                    self.logger.info(
+                        f"[PLC READ]: {respond} %.1fms (size=%d)",
+                        elapsed_ms, total_bytes,
+                    )
             if isinstance(ret, (list, tuple)) and len(ret) >= 2:
                 result_code = ret[0]
                 data_buffers = ret[1]
@@ -317,15 +348,6 @@ class PLCReader(QObject):
                 parsed.update(region_data)
 
             self.data_ready.emit(parsed)
-            elapsed_ms = (time.perf_counter() - t0) * 1000
-            self.elapsed_time.emit(elapsed_ms)
-            if elapsed_ms > (self._poll_ms * 1.5):
-                if self.logger:
-                    respond = "Slow response"
-                    self.logger.info(
-                        f"[PLC READ]: {respond} %.1fms (size=%d)",
-                        elapsed_ms, total_bytes,
-                    )
             if not parsed and self.logger:
                 self.logger.warning(f"[PLC READ] Emitted empty dict! Check db_layout alignment.")
 
@@ -377,7 +399,7 @@ class PLCReader(QObject):
                 elif dtype == "INT":
                     value = get_int(raw, rel_offset)
                 elif dtype == "STRING":
-                    value = get_string(raw, rel_offset)        # ← Chỉ 2 tham số
+                    value = get_string(raw, rel_offset)
                 else:
                     value = None
 
