@@ -14,6 +14,7 @@ import io
 import msoffcrypto
 import logging
 import sqlite3
+import queue
 import threading
 import subprocess
 import tempfile
@@ -23,7 +24,7 @@ from PySide6.QtCore import (
     Qt, QTimer, QObject, Slot,
     QTime, QSettings, QDateTime,
     QEvent, QThread, QEasingCurve, 
-    QTranslator, QMetaObject
+    QTranslator, QMetaObject, QProcess
 )
 from PySide6.QtGui import (
     QFont, 
@@ -45,7 +46,7 @@ from console_window import ConsoleWindow
 from password_dialog import *
 from Data_Simulator import DataSimulator
 from PLC_READ_MODULE import PLCRead
-from PLC_READ_MODULE_OPTIM import PLCReader
+# from PLC_READ_MODULE_OPTIM import PLCReader
 from PLC_WRITE_MODULE import PLCWrite
 from export_excel_worker import ExportWorker
 
@@ -173,25 +174,50 @@ TEMP_SV_REVERSE_MIRROR = {
     "ct_sv": "pressure_sv_c_1",
 }
 
-class PipeLogHandler(logging.Handler):
+class SafePipeLogHandler(logging.Handler):
     def __init__(self, process):
         super().__init__()
         self._process = process
+        self._queue = queue.Queue(maxsize=500)
+        self._broken = False
+        self._worker = threading.Thread(target=self._worker_thread, daemon=True)
+        self._worker.start()
 
-    def emit(self, record):
-        try:
-            if self._process and self._process.poll() is None:
+    def _worker_thread(self):
+        while True:
+            try:
+                record = self._queue.get(timeout=0.5)
+                if record is None:  # Stop signal
+                    break
+                if self._broken or not self._process or self._process.poll() is not None:
+                    continue
+
                 msg = self.format(record) + "\n"
                 self._process.stdin.write(msg)
                 self._process.stdin.flush()
-        except Exception:
-            pass
+            except queue.Empty:
+                continue
+            except Exception:
+                self._broken = True
+
+    def emit(self, record):
+        try:
+            if not self._broken:
+                self._queue.put_nowait(record)
+        except queue.Full:
+            pass  # Bỏ qua nếu queue đầy
 
     def close(self):
         try:
+            self._queue.put(None, timeout=0.5)  # Stop worker
+            if self._worker.is_alive():
+                self._worker.join(timeout=1)
+        except:
+            pass
+        try:
             if self._process and self._process.stdin:
                 self._process.stdin.close()
-        except Exception:
+        except:
             pass
         super().close()
 
@@ -209,12 +235,13 @@ class StrikeMachine(QMainWindow):
     hide_loading            = Signal()
     show_loading            = Signal()
 
-    def __init__(self, on_hide_loading=None, on_show_loading=None, plc_queue=None, parent=None):
+    def __init__(self, on_hide_loading=None, on_show_loading=None, info_system=None, plc_queue=None, parent=None):
         super().__init__(parent)
         if on_hide_loading:
             self.hide_loading.connect(on_hide_loading)
         if on_show_loading:
             self.show_loading.connect(on_show_loading)
+        self._info_system = info_system
         self._plc_queue = plc_queue
         self.app_settings = QSettings(
             settings_path,
@@ -228,6 +255,7 @@ class StrikeMachine(QMainWindow):
         self.ui.setupUi(self)
         self._init_app_data()
         self._init_db_layout_and_size()
+        self._init_AI_actual_db()
         self._init_timer()
         self._init_group_object()
         self._init_list_unit()
@@ -240,6 +268,11 @@ class StrikeMachine(QMainWindow):
         self._setup_btn_signals()
         self._setup_plc_threads(SIMULATE)
         self._translator = QTranslator()
+        self._init_screen()
+        # QTimer.singleShot(2500, self._test_marquee_label)
+
+    def _init_screen(self):
+
         self.ui.home_page_btn.click()
         self.ui.clear_history_search.hide()
         self._set_time_search_data_start_edit()
@@ -249,13 +282,25 @@ class StrikeMachine(QMainWindow):
             Qt.ConnectionType.QueuedConnection
         )
         self.ui.stacked_list_history_page.setCurrentIndex(0)
-        # QTimer.singleShot(2500, self._test_marquee_label)
 
     def _test_marquee_label(self):
         test_text = "Strike Machine System - Running Normally - No Error Detected"
         # test_text = "Hello Hello Hello"
         self.ui.error_display.setText(test_text)
         print(f"MarqueeLabel setText: '{self.ui.error_display.text()}' \nWidget visible: {self.ui.error_display.isVisible()} \nWidget size: {self.ui.error_display.size()}")
+    
+    def _init_AI_actual_db(self):
+        self.ai_data_folder = Path(self.stk_mch_folder) / "AI_Training_Data"
+        self.ai_data_folder.mkdir(parents=True, exist_ok=True)
+        
+        self.fast_buffer = []      # Buffer cho tag nhanh (áp suất, ...)
+        self.slow_buffer = []      # Buffer cho tag chậm
+        
+        self.fast_buffer_size = 30    # ~3 giây nếu 100ms
+        self.slow_buffer_size = 10    # ~10 giây nếu 1000ms
+        
+        self.logger.info(f"AI Training folder: {self.ai_data_folder}")
+        self.logger.info("Fast sampling (100ms) enabled for pressure & critical tags")
 
     def showEvent(self, event):# type: ignore
         super().showEvent(event)
@@ -458,7 +503,7 @@ class StrikeMachine(QMainWindow):
             self.logger.addHandler(stream_handler)
 
         self.logger.setLevel(logging.INFO)
-        self.logger.propagate = False
+        self.logger.propagate = True
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Type.MouseButtonDblClick:
@@ -496,7 +541,9 @@ class StrikeMachine(QMainWindow):
         self._displayed_offset = 0
         self.history_db_path = None
         self.conn = None
+        self.ai_sql_db = None
         self._history_batch_counter = 0
+        self._ai_data_batch_counter = 0
         self._db_offset = 0
         self._search_keyword = ""
         self._search_offset = 0
@@ -523,6 +570,9 @@ class StrikeMachine(QMainWindow):
         self.worker_dict = {}
         self.thread_dict = {}
         self.all_data = {}
+        self.actual_data = {}
+        self.input_data = {}
+        self.error_data = {}
         self._data_lock = threading.Lock()
         
         self._last_i_o_group_3: list = [None] * 16
@@ -563,6 +613,7 @@ class StrikeMachine(QMainWindow):
         self.default_temp_room = 25.0
 
         self._sv_cycle_state("All", False)
+        self._set_cycle_state("All")
         self._shutting_down = False
         
     def _init_timer(self):
@@ -571,45 +622,55 @@ class StrikeMachine(QMainWindow):
         self.data_plc_timer = QTimer(self)
         self.all_timer.append(self.data_plc_timer)
         self.data_plc_timer.setInterval(200)
-        self.data_plc_timer.timeout.connect(lambda: self._data_ready(self.all_data))
+        self.data_plc_timer.timeout.connect(lambda: self._data_ready(self.input_data))
         self.data_plc_timer.start()
 
         self.data_table = QTimer(self)
         self.all_timer.append(self.data_table)
         self.data_table.setInterval(1000)
-        self.data_table.timeout.connect(lambda: self._data_table(self.all_data))
+        self.data_table.timeout.connect(lambda: self._data_table(self.actual_data))
         # self.data_table.start()
+
+        self.data_training_ai_timer = QTimer(self)
+        self.all_timer.append(self.data_training_ai_timer)
+        self.data_training_ai_timer.setInterval(1000)
+        self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.actual_data))
+        self.data_training_ai_timer.start()
 
         if self._plc_queue is not None:
             self.data_web_socket = QTimer(self)
             self.all_timer.append(self.data_web_socket)
-            self.data_web_socket.setInterval(200)
-            self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.all_data))
+            self.data_web_socket.setInterval(250)
+            self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.actual_data))
             self.data_web_socket.start()
 
         self.data_temp_timer = QTimer(self)
         self.all_timer.append(self.data_temp_timer)
         self.data_temp_timer.setInterval(500)
-        self.data_temp_timer.timeout.connect(lambda: self._data_temp(self.all_data))
+        self.data_temp_timer.timeout.connect(lambda: self._data_temp(self.actual_data))
         
 
         self.data_pressure_timer = QTimer(self)
         self.all_timer.append(self.data_pressure_timer)
-        self.data_pressure_timer.setInterval(200)
-        self.data_pressure_timer.timeout.connect(lambda: self._data_pressure(self.all_data))
+        self.data_pressure_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
+        self.data_pressure_timer.timeout.connect(lambda: self._data_pressure(self.actual_data))
 
 
         self.data_cycle_timer = QTimer(self)
         self.all_timer.append(self.data_cycle_timer)
-        self.data_cycle_timer.setInterval(250)
-        self.data_cycle_timer.timeout.connect(lambda: self._data_cycle(self.all_data))
+        self.data_cycle_timer.setInterval(500)
+        self.data_cycle_timer.timeout.connect(lambda: self._data_cycle(self.actual_data))
         
 
         self.data_temp_group_timer = QTimer(self)
         self.all_timer.append(self.data_temp_group_timer)
         self.data_temp_group_timer.setInterval(500)
-        self.data_temp_group_timer.timeout.connect(lambda: self._data_temp_group(self.all_data))
+        self.data_temp_group_timer.timeout.connect(lambda: self._data_temp_group(self.actual_data))
         
+        self.data_alarm_timer = QTimer(self)
+        self.all_timer.append(self.data_alarm_timer)
+        self.data_alarm_timer.setInterval(1500)
+        self.data_alarm_timer.timeout.connect(lambda: self._data_alarm(self.error_data))
 
         self.timer_alarm = QTimer(self)
         self.all_timer.append(self.timer_alarm)
@@ -619,13 +680,13 @@ class StrikeMachine(QMainWindow):
         
         self.chart_timer = QTimer(self)
         self.all_timer.append(self.chart_timer)
-        self.chart_timer.setInterval(125)
+        self.chart_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
         self.chart_timer.timeout.connect(self._update_all_charts)
         self.chart_timer.start()
 
         self._chart_render_timer = QTimer(self)
         self.all_timer.append(self._chart_render_timer)
-        self._chart_render_timer.setInterval(250)
+        self._chart_render_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
         self._chart_render_timer.timeout.connect(self._render_all_charts)
         self._chart_render_timer.start()
         
@@ -1505,12 +1566,12 @@ class StrikeMachine(QMainWindow):
                     g["group"],                      # [2]  Group.
                     f"{pressure_sv_val:.2f} bar",    # [3]  Pressure SV.
                     f"{g['pressure']:.2f} bar",      # [4]  Pressure.
-                    fmt(oven_sv_val),                # [5]  Oven SV.
-                    fmt(g["temp"]),                  # [6]  T-Oven.
-                    fmt(temp_sv_val),                # [7]  Temperature SV.
-                    fmt(g["front"]),                 # [8]  Front.
-                    fmt(g["mid"]),                   # [9]  Middle.
-                    fmt(g["end"]),                   # [10] End.
+                    fmt(self.for_display_temp(oven_sv_val)),                # [5]  Oven SV.
+                    fmt(self.for_display_temp(g["temp"])),                  # [6]  T-Oven.
+                    fmt(self.for_display_temp(temp_sv_val)),                # [7]  Temperature SV.
+                    fmt(self.for_display_temp(g["front"])),                 # [8]  Front.
+                    fmt(self.for_display_temp(g["mid"])),                   # [9]  Middle.
+                    fmt(self.for_display_temp(g["end"])),                   # [10] End.
                     today_date                       # [11] Date.
                 ]
 
@@ -2249,82 +2310,16 @@ class StrikeMachine(QMainWindow):
 
         time.sleep(0.1)
 
-        # if not self._setup_read_data_plc_thread(
-        #         name_module="ACTUAL DATA",
-        #         ip=self.db_dict["ip_plc"],
-        #         db_number=self.db_dict["db_name"],
-        #         db_layout=self.db_dict["DB_LAYOUT"],
-        #         db_size=self.db_dict["data_size"],
-        #         offsets=self.db_dict["offsets_data"],
-        #         poll_ms=self.db_dict["data_read"],
-        #         logger_parent=self.stk_mch_folder
-        #     ):
-        #     if self._current_lang == "en":
-        #         title = "Error"
-        #         content = "Failed to connect to PLC! Try again later."
-        #     elif self._current_lang == "cn":
-        #         title = "错误"
-        #         content = "无法连接 PLC！请稍后再试."
-        #     elif self._current_lang == "vn":
-        #         title = "Lỗi"
-        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-        # time.sleep(0.1)
-        # if not self._setup_read_input_plc_thread(
-        #         name_module="INPUT DATA",
-        #         ip=self.db_dict["ip_plc"],
-        #         db_number=self.db_dict["db_name"],
-        #         db_layout=self.db_dict["DB_LAYOUT"],
-        #         db_size=self.db_dict["input_size"],
-        #         offsets=self.db_dict["offsets_input"],
-        #         poll_ms=self.db_dict["input_read"],
-        #         logger_parent=self.stk_mch_folder
-        #     ):
-        #     if self._current_lang == "en":
-        #         title = "Error"
-        #         content = "Failed to connect to PLC! Try again later."
-        #     elif self._current_lang == "cn":
-        #         title = "错误"
-        #         content = "无法连接 PLC！请稍后再试."
-        #     elif self._current_lang == "vn":
-        #         title = "Lỗi"
-        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-        # time.sleep(0.1)
-        # if not self._setup_read_error_plc_thread(
-        #         name_module="ERROR DATA",
-        #         ip=self.db_dict["ip_plc"],
-        #         db_number=self.db_dict["db_name"],
-        #         db_layout=self.db_dict["DB_LAYOUT"],
-        #         db_size=self.db_dict["error_size"],
-        #         offsets=self.db_dict["offsets_error"],
-        #         poll_ms=self.db_dict["error_read"],
-        #         logger_parent=self.stk_mch_folder
-        #     ):
-        #     if self._current_lang == "en":
-        #         title = "Error"
-        #         content = "Failed to connect to PLC! Try again later."
-        #     elif self._current_lang == "cn":
-        #         title = "错误"
-        #         content = "无法连接 PLC！请稍后再试."
-        #     elif self._current_lang == "vn":
-        #         title = "Lỗi"
-        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-    #     time.sleep(0.1)
-        success = self._setup_read_plc_thread(
-            name_module="READ_MULTI",
-            ip=self.db_dict["ip_plc"],
-            db_number=self.db_dict["db_name"],
-            db_layout=self.db_dict["DB_LAYOUT"],
-            regions=[("ACTUAL", 0, 198), ("INPUT", 198, 138), ("STRING", 336, 50)],
-            poll_ms=200,
-            logger_parent=self.stk_mch_folder
-        )
-        if not success:
+        if not self._setup_read_data_plc_thread(
+                name_module="ACTUAL DATA",
+                ip=self.db_dict["ip_plc"],
+                db_number=self.db_dict["db_name"],
+                db_layout=self.db_dict["DB_LAYOUT"],
+                db_size=self.db_dict["data_size"],
+                offsets=self.db_dict["offsets_data"],
+                poll_ms=self.db_dict["data_read"],
+                logger_parent=self.stk_mch_folder
+            ):
             if self._current_lang == "en":
                 title = "Error"
                 content = "Failed to connect to PLC! Try again later."
@@ -2335,6 +2330,93 @@ class StrikeMachine(QMainWindow):
                 title = "Lỗi"
                 content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
             ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
+        time.sleep(0.1)
+        if not self._setup_read_input_plc_thread(
+                name_module="INPUT DATA",
+                ip=self.db_dict["ip_plc"],
+                db_number=self.db_dict["db_name"],
+                db_layout=self.db_dict["DB_LAYOUT"],
+                db_size=self.db_dict["input_size"],
+                offsets=self.db_dict["offsets_input"],
+                poll_ms=self.db_dict["input_read"],
+                logger_parent=self.stk_mch_folder
+            ):
+            if self._current_lang == "en":
+                title = "Error"
+                content = "Failed to connect to PLC! Try again later."
+            elif self._current_lang == "cn":
+                title = "错误"
+                content = "无法连接 PLC！请稍后再试."
+            elif self._current_lang == "vn":
+                title = "Lỗi"
+                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+            ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
+        time.sleep(0.1)
+        if not self._setup_read_error_plc_thread(
+                name_module="ERROR DATA",
+                ip=self.db_dict["ip_plc"],
+                db_number=self.db_dict["db_name"],
+                db_layout=self.db_dict["DB_LAYOUT"],
+                db_size=self.db_dict["error_size"],
+                offsets=self.db_dict["offsets_error"],
+                poll_ms=self.db_dict["error_read"],
+                logger_parent=self.stk_mch_folder
+            ):
+            if self._current_lang == "en":
+                title = "Error"
+                content = "Failed to connect to PLC! Try again later."
+            elif self._current_lang == "cn":
+                title = "错误"
+                content = "无法连接 PLC！请稍后再试."
+            elif self._current_lang == "vn":
+                title = "Lỗi"
+                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+            ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
+        # time.sleep(0.1)
+        # success = self._setup_read_plc_thread(
+        #         name_module="ALL DATA",
+        #         ip=self.db_dict["ip_plc"],
+        #         db_number=self.db_dict["db_name"],
+        #         db_layout=self.db_dict["DB_LAYOUT"],
+        #         db_size=(self.db_dict["data_size"] + self.db_dict["input_size"] + self.db_dict["error_size"]),
+        #         offsets=self.db_dict["offsets_input"],
+        #         poll_ms=self.db_dict["data_read"],
+        #         logger_parent=self.stk_mch_folder
+        # )
+        # if not success:
+        #     if self._current_lang == "en":
+        #         title = "Error"
+        #         content = "Failed to connect to PLC! Try again later."
+        #     elif self._current_lang == "cn":
+        #         title = "错误"
+        #         content = "无法连接 PLC！请稍后再试."
+        #     elif self._current_lang == "vn":
+        #         title = "Lỗi"
+        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
+        # success = self._setup_read_plc_thread(
+        #     name_module="READ_MULTI",
+        #     ip=self.db_dict["ip_plc"],
+        #     db_number=self.db_dict["db_name"],
+        #     db_layout=self.db_dict["DB_LAYOUT"],
+        #     regions=[("INPUT", 0, 198), ("ACTUAL", 198, 138), ("STRING", 336, 50)],
+        #     poll_ms=333,
+        #     logger_parent=self.stk_mch_folder
+        # )
+        # if not success:
+        #     if self._current_lang == "en":
+        #         title = "Error"
+        #         content = "Failed to connect to PLC! Try again later."
+        #     elif self._current_lang == "cn":
+        #         title = "错误"
+        #         content = "无法连接 PLC！请稍后再试."
+        #     elif self._current_lang == "vn":
+        #         title = "Lỗi"
+        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
+        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
 
     # def setup_simulate_threads(self):
     #     try:
@@ -2351,97 +2433,148 @@ class StrikeMachine(QMainWindow):
     #     except Exception as e:
     #         return 
         
-    def _setup_read_plc_thread(
-            self,
-            name_module: str,
-            ip: str = "172.16.100.100",
-            db_number: Optional[int] = None,
-            db_layout: Optional[list[tuple[str, str, int, Any]]] = None,
-            regions: Optional[list[tuple[str, int, int]]] = None,
-            poll_ms: int = 250,
-            logger_parent = None,
-        ) -> bool:
-        """
-        Khởi tạo PLCRead worker + QThread cho một Module.
+    # def _setup_read_plc_thread(
+        #     self,
+        #     name_module: str,
+        #     ip: str = "172.16.100.100",
+        #     db_number: Optional[int] = None,
+        #     db_layout: Optional[list[tuple[str, str, int, Any]]] = None,
+        #     regions: Optional[list[tuple[str, int, int]]] = None,
+        #     poll_ms: int = 250,
+        #     logger_parent = None,
+        # ) -> bool:
+        # """
+        # Khởi tạo PLCRead worker + QThread cho một Module.
         
-        Args:
-            name_module: Tên module (ví dụ: "ACTUAL", "INPUT", "ROBOT", ...)
-            db_number, db_layout, regions: Thông tin cấu hình DB
-        """
-        try:
-            if not name_module:
-                raise ValueError("name_module is required")
-            if db_number is None:
-                raise ValueError(f"DB number is not defined for module '{name_module}'")
-            if db_layout is None:
-                raise ValueError(f"DB layout is not defined for module '{name_module}'")
+        # Args:
+        #     name_module: Tên module (ví dụ: "ACTUAL", "INPUT", "ROBOT", ...)
+        #     db_number, db_layout, regions: Thông tin cấu hình DB
+        # """
+        # try:
+        #     if not name_module:
+        #         raise ValueError("name_module is required")
+        #     if db_number is None:
+        #         raise ValueError(f"DB number is not defined for module '{name_module}'")
+        #     if db_layout is None:
+        #         raise ValueError(f"DB layout is not defined for module '{name_module}'")
 
-            # Tự động tạo region bao trọn nếu người gọi không truyền
-            if regions is None:
-                # Giả sử bạn có self.offsets và self.db_size theo module
-                offsets = getattr(self, 'offsets', {}).get(name_module, 0)
-                db_size = getattr(self, 'db_size', {}).get(name_module, 0) or 1024
+        #     # Tự động tạo region bao trọn nếu người gọi không truyền
+        #     if regions is None:
+        #         # Giả sử bạn có self.offsets và self.db_size theo module
+        #         offsets = getattr(self, 'offsets', {}).get(name_module, 0)
+        #         db_size = getattr(self, 'db_size', {}).get(name_module, 0) or 1024
                 
-                if db_size <= 0:
-                    raise ValueError(f"db_size chưa được định nghĩa cho module '{name_module}'")
+        #         if db_size <= 0:
+        #             raise ValueError(f"db_size chưa được định nghĩa cho module '{name_module}'")
                 
-                regions = [(name_module, offsets, db_size)]
+        #         regions = [(name_module, offsets, db_size)]
 
-            # Kiểm tra tính hợp lệ của regions
-            total_region_size = sum(size for (_, _, size) in regions)
-            max_db_size = getattr(self, 'db_size', {}).get(name_module, 8192)
+        #     # Kiểm tra tính hợp lệ của regions
+        #     total_region_size = sum(size for (_, _, size) in regions)
+        #     max_db_size = getattr(self, 'db_size', {}).get(name_module, 8192)
             
-            if total_region_size > max_db_size:
-                raise ValueError(
-                    f"Tổng size các region ({total_region_size}) vượt quá "
-                    f"db_size tối đa ({max_db_size}) cho module '{name_module}'."
-                )
+        #     if total_region_size > max_db_size:
+        #         raise ValueError(
+        #             f"Tổng size các region ({total_region_size}) vượt quá "
+        #             f"db_size tối đa ({max_db_size}) cho module '{name_module}'."
+        #         )
 
-            # ── Tạo Thread + Worker ─────────────────────────────────────
-            self.plc_read_thread = QThread()
-            self.plc_read_worker = PLCReader(
+        #     # ── Tạo Thread + Worker ─────────────────────────────────────
+        #     self.plc_read_thread = QThread()
+        #     self.plc_read_worker = PLCReader(
+        #         ip=ip,
+        #         rack=0,
+        #         slot=1,
+        #         db_number=db_number,
+        #         db_layout=db_layout,
+        #         regions=regions,
+        #         poll_ms=poll_ms,
+        #         logger_parent=logger_parent,
+        #         # Các tham số optimizer
+        #         use_optimizer=True,
+        #         multi_read_max_gap=5,
+        #     )
+
+        #     self.plc_read_worker.moveToThread(self.plc_read_thread)
+
+        #     # Kết nối signals
+        #     self.plc_read_thread.started.connect(self.plc_read_worker.run)
+
+        #     self.plc_read_worker.data_ready.connect(self._data_get)
+        #     self.plc_read_worker.init_data.connect(self._set_init_data)
+        #     self.plc_read_worker.connected.connect(self._read_status_plc)
+        #     self.plc_read_worker.error.connect(self._on_plc_read_error)
+        #     self.plc_read_worker.disconnected.connect(self._on_plc_read_disconnected)
+        #     self.plc_read_worker.elapsed_time.connect(self._performance_communication)
+        #     self.plc_read_worker.finished.connect(self.plc_read_thread.quit)
+        #     self.plc_read_worker.finished.connect(self.plc_read_worker.deleteLater)
+        #     self.plc_read_thread.finished.connect(self.plc_read_thread.deleteLater)
+
+        #     if not hasattr(self, "worker_dict"):
+        #         self.worker_dict: dict[str, Any] = {}
+
+        #     self.worker_dict["plc_read_worker"] = self.plc_read_worker
+
+        #     self.plc_read_thread.start()
+        #     self.logger.info(f"[{name_module}] PLC Read thread started successfully")
+
+        #     return True
+
+        # except Exception as e:
+        #     self.logger.exception(f"[{name_module}] PLC Reader setup failed")
+        #     return False
+    
+    def _setup_read_plc_thread(
+            self, 
+            name_module: str    = "READ 1",
+            ip: str = "172.16.100.100", 
+            db_number: Optional[int] = None, 
+            db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
+            db_size: Optional[int] = None, 
+            offsets: int = 198,
+            poll_ms: int = 100,
+            logger_parent: str = None
+        ):
+        try:
+            if db_number is None:
+                raise ValueError("DB number is not defined. Cannot start PLC read thread.")
+            elif db_layout is None:
+                raise ValueError("DB layout is not defined. Cannot start PLC read thread.")
+            elif db_size is None:
+                raise ValueError("DB size is not defined. Cannot start PLC read thread.")
+            
+            self.plc_read_data_thread = QThread()
+            self.plc_read_data_worker = PLCRead(
+                name_module=name_module,
                 ip=ip,
-                rack=0,
-                slot=1,
                 db_number=db_number,
                 db_layout=db_layout,
-                regions=regions,
+                db_size=db_size,
+                offsets=offsets,
                 poll_ms=poll_ms,
-                logger_parent=logger_parent,
-                # Các tham số optimizer
-                use_optimizer=True,
-                multi_read_max_gap=5,
+                logger_parent=logger_parent
             )
+            self.plc_read_data_worker.moveToThread(self.plc_read_data_thread)
 
-            self.plc_read_worker.moveToThread(self.plc_read_thread)
+            self.plc_read_data_thread.started.connect(self.plc_read_data_worker.run)
+            self.plc_read_data_worker.data_ready.connect(self._data_actual)
+            self.plc_read_data_worker.init_data.connect(self._set_init_data)
+            self.plc_read_data_worker.connected.connect(self._read_status_plc)
+            self.plc_read_data_worker.elapsed_time.connect(self._performance_communication)
+            self.plc_read_data_worker.finished.connect(self.plc_read_data_thread.quit)
+            self.plc_read_data_worker.finished.connect(self.plc_read_data_worker.deleteLater)
+            self.plc_read_data_thread.finished.connect(self.plc_read_data_thread.deleteLater)
 
-            # Kết nối signals
-            self.plc_read_thread.started.connect(self.plc_read_worker.run)
-
-            self.plc_read_worker.data_ready.connect(self._data_get)
-            self.plc_read_worker.init_data.connect(self._set_system_data)
-            self.plc_read_worker.connected.connect(self._read_status_plc)
-            self.plc_read_worker.error.connect(self._on_plc_read_error)
-            self.plc_read_worker.disconnected.connect(self._on_plc_read_disconnected)
-            self.plc_read_worker.elapsed_time.connect(self._performance_communication)
-            self.plc_read_worker.finished.connect(self.plc_read_thread.quit)
-            self.plc_read_worker.finished.connect(self.plc_read_worker.deleteLater)
-            self.plc_read_thread.finished.connect(self.plc_read_thread.deleteLater)
-
-            if not hasattr(self, "worker_dict"):
-                self.worker_dict: dict[str, Any] = {}
-
-            self.worker_dict["plc_read_worker"] = self.plc_read_worker
-
-            self.plc_read_thread.start()
-            self.logger.info(f"[{name_module}] PLC Read thread started successfully")
-
-            return True
-
+            self.plc_read_data_thread.start()
+            if not self.plc_read_data_thread.isRunning():
+                raise Exception("plc_read_data_thread failed to start")
         except Exception as e:
-            self.logger.exception(f"[{name_module}] PLC Reader setup failed")
+            self.logger.info("PLC Reader gone wrong:", e)
             return False
-    
+        
+        self.worker_dict["plc_read_data_worker"] = self.plc_read_data_worker
+        return True
+
     def _on_plc_read_error(self, message: str):
         self.logger.warning("PLC Read error: %s", message)
 
@@ -2547,7 +2680,7 @@ class StrikeMachine(QMainWindow):
 
             self.plc_read_input_thread.started.connect(self.plc_read_input_worker.run)
             self.plc_read_input_worker.data_ready.connect(self._data_input)
-            self.plc_read_input_worker.init_data.connect(self._set_system_data)
+            self.plc_read_input_worker.init_data.connect(self._set_init_data)
             
             self.plc_read_input_worker.finished.connect(self.plc_read_input_thread.quit)
             self.plc_read_input_worker.finished.connect(self.plc_read_input_worker.deleteLater)
@@ -2620,16 +2753,19 @@ class StrikeMachine(QMainWindow):
     def _data_actual(self, data: dict):
         with self._data_lock:
             # print("Actual: ", len(data))
+            self.actual_data.update(data)
             self.all_data.update(data)
 
     def _data_input(self, data: dict):
         with self._data_lock:
             # print("Input: ", len(data))
+            self.input_data.update(data)
             self.all_data.update(data)
 
     def _data_error(self, data: dict):
         with self._data_lock:
             # print("Error: ", len(data))
+            self.error_data.update(data)
             self.all_data.update(data)
 
     def _setup_write_plc_thread(
@@ -2701,6 +2837,82 @@ class StrikeMachine(QMainWindow):
             ])
         except Exception as e:
             self.logger.error("[Main]-[_data_temp]:PLC Data Processing Error: %s", e)
+
+    def _data_AI(self, data: dict):
+        """Ghi dữ liệu AI - Fast chỉ cho Current_Pressure"""
+        if not data or not isinstance(data, dict):
+            return
+
+        try:
+            self._ai_data_batch_counter += 1
+
+            name = "Unknown"
+            if hasattr(self.ui, 'code_display') and self.ui.code_display is not None:
+                try:
+                    name = self.ui.code_display.text().strip()
+                except:
+                    pass
+
+            base_record = {
+                "timestamp": time.time(),
+                "datetime": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "No.": str(self._ai_data_batch_counter),
+                "Name.": name,
+            }
+
+            # Tách fast & slow
+            fast_record = base_record.copy()
+            slow_record = base_record.copy()
+
+            for key, value in data.items():
+                if 'Current_Pressure' in key:
+                    fast_record[key] = value
+                else:
+                    slow_record[key] = value
+
+            # Thêm vào buffer
+            self.fast_buffer.append(fast_record)
+            self.slow_buffer.append(slow_record)
+
+            # Flush fast buffer
+            if len(self.fast_buffer) >= self.fast_buffer_size:
+                self._flush_buffer(self.fast_buffer, "fast")
+                self.fast_buffer.clear()
+
+            # Flush slow buffer
+            if len(self.slow_buffer) >= self.slow_buffer_size:
+                self._flush_buffer(self.slow_buffer, "slow")
+                self.slow_buffer.clear()
+
+        except Exception as e:
+            if self.logger:
+                self.logger.error(f"[AI Training] Error: {e}")
+
+    def _flush_buffer(self, buffer: list, mode: str = "fast"):
+        if not buffer:
+            return
+            
+        df = pd.DataFrame(buffer)
+        date_str = time.strftime("%Y%m%d")
+        file_path = self.ai_data_folder / f"ai_{mode}_{date_str}.csv"
+
+        try:
+            if file_path.exists():
+                # Append vào file CSV đã có
+                df.to_csv(file_path, mode='a', header=False, index=False, encoding='utf-8')
+            else:
+                # Tạo file mới
+                df.to_csv(file_path, index=False, encoding='utf-8')
+
+            # self.logger.info(f"[AI {mode.upper()}] Saved {len(buffer)} records → {file_path.name}")
+
+        except Exception as e:
+            self.logger.error(f"Flush {mode} error: {e}")
+            # Clear buffer để tránh tràn bộ nhớ
+            if mode == "fast":
+                self.fast_buffer.clear()
+            else:
+                self.slow_buffer.clear()
 
     def _data_pressure(self, data: dict):
         # def _t(label, fn):
@@ -2786,6 +2998,8 @@ class StrikeMachine(QMainWindow):
                 # print(f"  [{label}] {ms:.1f}ms")
         # print(data)
         try:
+            if data == {}:
+                return
             if self.init_signal:
                 self._init_pressure_group_sv_obj([
                     int(data.get('P1_CountTimes', 0)),
@@ -2880,27 +3094,6 @@ class StrikeMachine(QMainWindow):
             ])
             # )
 
-            # _t("i_o_group_3", lambda: 
-            self._i_o_group_3_filter([
-                float(data.get('T0_Current_Temp', 0.0)),
-                float(data.get('P1_Current_Temp1', 0.0)),
-                float(data.get('P1_Current_Temp2', 0.0)),
-                float(data.get('P1_Current_Temp3', 0.0)),
-                float(data.get('P2_Current_Temp1', 0.0)),
-                float(data.get('P2_Current_Temp2', 0.0)),
-                float(data.get('P2_Current_Temp3', 0.0)),
-                float(data.get('P3_Current_Temp1', 0.0)),
-                float(data.get('P3_Current_Temp2', 0.0)),
-                float(data.get('P3_Current_Temp3', 0.0)),
-                float(data.get('P1_Current_PressureHose', 0.00)),
-                float(data.get('P2_Current_PressureHose', 0.00)),
-                float(data.get('P3_Current_PressureHose', 0.00)),
-                float(data.get('P1_Current_PressureITV', 0.0)),
-                float(data.get('P2_Current_PressureITV', 0.0)),
-                float(data.get('P3_Current_PressureITV', 0.0))
-            ])
-            # )
-
         except Exception as e:
             self.logger.error("[Main]-[_data_ready]:PLC Data Processing Error: %s", e)
 
@@ -2939,6 +3132,26 @@ class StrikeMachine(QMainWindow):
                 float(data.get('P3_Current_Temp2', 0.0)),
                 float(data.get('P3_Current_Temp3', 0.0))
             ])
+            # _t("i_o_group_3", lambda: 
+            self._i_o_group_3_filter([
+                float(data.get('T0_Current_Temp', 0.0)),
+                float(data.get('P1_Current_Temp1', 0.0)),
+                float(data.get('P1_Current_Temp2', 0.0)),
+                float(data.get('P1_Current_Temp3', 0.0)),
+                float(data.get('P2_Current_Temp1', 0.0)),
+                float(data.get('P2_Current_Temp2', 0.0)),
+                float(data.get('P2_Current_Temp3', 0.0)),
+                float(data.get('P3_Current_Temp1', 0.0)),
+                float(data.get('P3_Current_Temp2', 0.0)),
+                float(data.get('P3_Current_Temp3', 0.0)),
+                float(data.get('P1_Current_PressureHose', 0.00)),
+                float(data.get('P2_Current_PressureHose', 0.00)),
+                float(data.get('P3_Current_PressureHose', 0.00)),
+                float(data.get('P1_Current_PressureITV', 0.0)),
+                float(data.get('P2_Current_PressureITV', 0.0)),
+                float(data.get('P3_Current_PressureITV', 0.0))
+            ])
+            # )
         except Exception as e:
             self.logger.error("[Main]-[_data_ready]:PLC Data Processing Error: %s", e)
 
@@ -2999,14 +3212,13 @@ class StrikeMachine(QMainWindow):
     def _data_alarm(self, data: dict):
         try:
             self._alarm_data_filter([
-                bool(data.get('Bit_Alarm', False)),
                 str(data.get('Alarm_Info', ""))
             ])
             # )
         except Exception as e:
             self.logger.error("[Main]-[_data_alarm]:PLC Data Processing Error: %s", e)
 
-    def _set_system_data(self):
+    def _set_init_data(self):
         self.init_signal = True
         
     def _init_button_obj(self, list_bool):
@@ -3340,9 +3552,9 @@ class StrikeMachine(QMainWindow):
             self._last_ct = v
 
     def _alarm_data_filter(self, alarm_recv):
-        if alarm_recv[0]:
-            self.ui.error_display.setText(alarm_recv[1]) if self.ui.error_display.text() != alarm_recv[1] else None
-            # print(alarm_recv[1])
+        if alarm_recv != "":
+            self.ui.error_display.setText(alarm_recv) if self.ui.error_display.text() != alarm_recv else None
+            self.logger.error("[Main]-[_alarm_data_filter]:PLC Alarm: %s", alarm_recv)
         else:
             if self.ui.error_display.text() != "":
                 self.ui.error_display.setText("")
@@ -3439,58 +3651,61 @@ class StrikeMachine(QMainWindow):
                 btn.blockSignals(False)
             return
         else:
-            if checked:
-                self.ui.new_data_btn.setEnabled(checked)
-                self.ui.clear_data_btn.setEnabled(checked)
-            else:
-                self.ui.new_data_btn.setEnabled(not checked)
-                self.ui.clear_data_btn.setEnabled(not checked)
-                
-            if channel == "A":
+            try:
                 if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", True)   # type: ignore
-                    self.disable_pressure_group(channel, False)
-                    self._sv_cycle_state(channel, False)
-                    self.logger.info("[Main]-[pumping_btn]: Group A Pressure On!")
-                    # ltmessage.information(self, "Pumping", "Group A Pressure On!")
+                    self.ui.new_data_btn.setEnabled(checked)
+                    self.ui.clear_data_btn.setEnabled(checked)
                 else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", False)  # type: ignore
-                    self.disable_pressure_group(channel, True)
-                    self._sv_cycle_state(channel, True)
-                    self.logger.info("[Main]-[pumping_btn]: Group A Pressure Off!")
+                    self.ui.new_data_btn.setEnabled(not checked)
+                    self.ui.clear_data_btn.setEnabled(not checked)
+                    
+                if channel == "A":
+                    if checked:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", True)   # type: ignore
+                        self.disable_pressure_group(channel, False)
+                        self._sv_cycle_state(channel, False)
+                        self.logger.info("[Main]-[pumping_btn]: Group A Pressure On!")
+                        # ltmessage.information(self, "Pumping", "Group A Pressure On!")
+                    else:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", False)  # type: ignore
+                        self.disable_pressure_group(channel, True)
+                        self._sv_cycle_state(channel, True)
+                        self.logger.info("[Main]-[pumping_btn]: Group A Pressure Off!")
 
-            elif channel == "B":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", True)   # type: ignore
-                    self.disable_pressure_group(channel, False)
-                    self._sv_cycle_state(channel, False)
-                    self.logger.info("[Main]-[pumping_btn]: Group B Pressure On!")
-                    # ltmessage.information(self, "Pumping", "Group B Pressure On!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", False)  # type: ignore
-                    self.disable_pressure_group(channel, True)
-                    self._sv_cycle_state(channel, True)
-                    self.logger.info("[Main]-[pumping_btn]: Group B Pressure Off!")
+                elif channel == "B":
+                    if checked:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", True)   # type: ignore
+                        self.disable_pressure_group(channel, False)
+                        self._sv_cycle_state(channel, False)
+                        self.logger.info("[Main]-[pumping_btn]: Group B Pressure On!")
+                        # ltmessage.information(self, "Pumping", "Group B Pressure On!")
+                    else:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", False)  # type: ignore
+                        self.disable_pressure_group(channel, True)
+                        self._sv_cycle_state(channel, True)
+                        self.logger.info("[Main]-[pumping_btn]: Group B Pressure Off!")
 
-            elif channel == "C":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", True)   # type: ignore
-                    self.disable_pressure_group(channel, False)
-                    self._sv_cycle_state(channel, False)
-                    self.logger.info("[Main]-[pumping_btn]: Group C Pressure On!")
-                    # ltmessage.information(self, "Pumping", "Group C Pressure On!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", False)  # type: ignore
-                    self.disable_pressure_group(channel, True)
-                    self._sv_cycle_state(channel, True)
-                    self.logger.info("[Main]-[pumping_btn]: Group C Pressure Off!")
-            return
+                elif channel == "C":
+                    if checked:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", True)   # type: ignore
+                        self.disable_pressure_group(channel, False)
+                        self._sv_cycle_state(channel, False)
+                        self.logger.info("[Main]-[pumping_btn]: Group C Pressure On!")
+                        # ltmessage.information(self, "Pumping", "Group C Pressure On!")
+                    else:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", False)  # type: ignore
+                        self.disable_pressure_group(channel, True)
+                        self._sv_cycle_state(channel, True)
+                        self.logger.info("[Main]-[pumping_btn]: Group C Pressure Off!")
+                return
+            except Exception as e:
+                self.logger.error(f"[Main]-[pumping_btn]: Error occurred - {str(e)}")
 
     def fill_oil_btn(self, channel: str, checked: bool, btn=None):
         if not self.plc_writer_connection and not self.init_signal or self.ui.start_stop_stacked.currentIndex() == 0:
@@ -3507,50 +3722,53 @@ class StrikeMachine(QMainWindow):
                 btn.blockSignals(False)
             return
         else:
-            if channel == "A":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P1_Start_Oil", True)    # type: ignore
-                    self.disable_oil_group(channel, False)
-                    self._sv_cycle_state(channel, False)
-                    self.logger.info("[Main]-[fill_oil_btn]: Group A Oil Filling On!")
-                    # ltmessage.information(self, "Oil Fill", "Group A Oil Filling On!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P1_Start_Oil", False)   # type: ignore
-                    self.disable_oil_group(channel, True)
-                    self._sv_cycle_state(channel, True)
-                    self.logger.info("[Main]-[fill_oil_btn]: Group A Oil Filling Off!")
+            try:
+                if channel == "A":
+                    if checked:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P1_Start_Oil", True)    # type: ignore
+                        self.disable_oil_group(channel, False)
+                        self._sv_cycle_state(channel, False)
+                        self.logger.info("[Main]-[fill_oil_btn]: Group A Oil Filling On!")
+                        # ltmessage.information(self, "Oil Fill", "Group A Oil Filling On!")
+                    else:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P1_Start_Oil", False)   # type: ignore
+                        self.disable_oil_group(channel, True)
+                        self._sv_cycle_state(channel, True)
+                        self.logger.info("[Main]-[fill_oil_btn]: Group A Oil Filling Off!")
 
-            if channel == "B":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P2_Start_Oil", True)    # type: ignore
-                    self.disable_oil_group(channel, False)
-                    self._sv_cycle_state(channel, False)
-                    self.logger.info("[Main]-[fill_oil_btn]: Group B Oil Filling On!")
-                    # ltmessage.information(self, "Oil Fill", "Group B Oil Filling On!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P2_Start_Oil", False)   # type: ignore
-                    self.disable_oil_group(channel, True)
-                    self._sv_cycle_state(channel, True)
-                    self.logger.info("[Main]-[fill_oil_btn]: Group B Oil Filling Off!")
+                if channel == "B":
+                    if checked:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P2_Start_Oil", True)    # type: ignore
+                        self.disable_oil_group(channel, False)
+                        self._sv_cycle_state(channel, False)
+                        self.logger.info("[Main]-[fill_oil_btn]: Group B Oil Filling On!")
+                        # ltmessage.information(self, "Oil Fill", "Group B Oil Filling On!")
+                    else:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P2_Start_Oil", False)   # type: ignore
+                        self.disable_oil_group(channel, True)
+                        self._sv_cycle_state(channel, True)
+                        self.logger.info("[Main]-[fill_oil_btn]: Group B Oil Filling Off!")
 
-            if channel == "C":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P3_Start_Oil", True)    # type: ignore
-                    self.disable_oil_group(channel, False)
-                    self._sv_cycle_state(channel, False)
-                    self.logger.info("[Main]-[fill_oil_btn]: Group C Oil Filling On!")
-                    # ltmessage.information(self, "Oil Fill", "Group C Oil Filling On!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P3_Start_Oil", False)   # type: ignore
-                    self.disable_oil_group(channel, True)
-                    self._sv_cycle_state(channel, True)
-                    self.logger.info("[Main]-[fill_oil_btn]: Group C Oil Filling Off!")
+                if channel == "C":
+                    if checked:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P3_Start_Oil", True)    # type: ignore
+                        self.disable_oil_group(channel, False)
+                        self._sv_cycle_state(channel, False)
+                        self.logger.info("[Main]-[fill_oil_btn]: Group C Oil Filling On!")
+                        # ltmessage.information(self, "Oil Fill", "Group C Oil Filling On!")
+                    else:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P3_Start_Oil", False)   # type: ignore
+                        self.disable_oil_group(channel, True)
+                        self._sv_cycle_state(channel, True)
+                        self.logger.info("[Main]-[fill_oil_btn]: Group C Oil Filling Off!")
+            except Exception as e:
+                self.logger.error(f"[Main]-[fill_oil_btn]: Error occurred - {str(e)}")
 
     def cycle_loop_btn(self, channel: str, checked: bool, btn=None):
         buttons_a = [
@@ -3570,49 +3788,54 @@ class StrikeMachine(QMainWindow):
                 btn.blockSignals(False)
             return
         else:
-
-            if channel == "A":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", True)    # type: ignore
-                        self.reset_cycle_btn(channel)
-                    self._sv_cycle_state(channel, True)
-                    self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat Off!")
-                    # ltmessage.information(self, "Set Cycle A", "Group A Auto Repeat!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", False)   # type: ignore
-                    self._sv_cycle_state(channel, False)
-                    self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat On!")
-                return
-            if channel == "B":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", True)    # type: ignore
-                        self.reset_cycle_btn(channel)
-                    self._sv_cycle_state(channel, True)
-                    self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat Off!")
-                    # ltmessage.information(self, "Set Cycle B", "Group B Auto Repeat!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", False)   # type: ignore
-                    self._sv_cycle_state(channel, False)
-                    self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat On!")
-                return
-            if channel == "C":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", True)    # type: ignore
-                        self.reset_cycle_btn(channel)
-                    self._sv_cycle_state(channel, True)
-                    self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat Off!")
-                    # ltmessage.information(self, "Set Cycle C", "Group C Auto Repeat!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", False)   # type: ignore
-                    self._sv_cycle_state(channel, False)
-                    self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat On!")
-                return
+            try:
+                if channel == "A":
+                    if checked:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", True)    # type: ignore
+                            self.reset_cycle_btn(channel)
+                        self._sv_cycle_state(channel, True)
+                        self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat Off!")
+                        # ltmessage.information(self, "Set Cycle A", "Group A Auto Repeat!")
+                    else:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", False)   # type: ignore
+                        self._sv_cycle_state(channel, False)
+                        self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat On!")
+                    self._set_cycle_state(channel)
+                    return
+                if channel == "B":
+                    if checked:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", True)    # type: ignore
+                            self.reset_cycle_btn(channel)
+                        self._sv_cycle_state(channel, True)
+                        self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat Off!")
+                        # ltmessage.information(self, "Set Cycle B", "Group B Auto Repeat!")
+                    else:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", False)   # type: ignore
+                        self._sv_cycle_state(channel, False)
+                        self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat On!")
+                    self._set_cycle_state(channel)
+                    return
+                if channel == "C":
+                    if checked:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", True)    # type: ignore
+                            self.reset_cycle_btn(channel)
+                        self._sv_cycle_state(channel, True)
+                        self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat Off!")
+                        # ltmessage.information(self, "Set Cycle C", "Group C Auto Repeat!")
+                    else:
+                        if not self.init_signal:
+                            self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", False)   # type: ignore
+                        self._sv_cycle_state(channel, False)
+                        self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat On!")
+                    self._set_cycle_state(channel)
+                    return
+            except Exception as e:
+                self.logger.error(f"[Main]-[cycle_loop_btn]: Error occurred - {str(e)}")
 
     def _sv_cycle_state(self, channel, status):
         if channel == "All":
@@ -3632,42 +3855,57 @@ class StrikeMachine(QMainWindow):
             if self.ui.pressure_sv_c_11.isEnabled() != status:
                 self.ui.pressure_sv_c_11.setEnabled(status)
 
+    def _set_cycle_state(self, channel):
+        if channel == "All":
+            self.ui.stacked_pressure_sv_a_11.setCurrentIndex(1) if self.ui.set_cycle_a_btn.isChecked() else self.ui.stacked_pressure_sv_a_11.setCurrentIndex(0)
+            self.ui.stacked_pressure_sv_b_11.setCurrentIndex(1) if self.ui.set_cycle_b_btn.isChecked() else self.ui.stacked_pressure_sv_b_11.setCurrentIndex(0)
+            self.ui.stacked_pressure_sv_c_11.setCurrentIndex(1) if self.ui.set_cycle_c_btn.isChecked() else self.ui.stacked_pressure_sv_c_11.setCurrentIndex(0)
+        if channel == "A":
+            self.ui.stacked_pressure_sv_a_11.setCurrentIndex(1) if self.ui.set_cycle_a_btn.isChecked() else self.ui.stacked_pressure_sv_a_11.setCurrentIndex(0)
+        if channel == "B":
+            self.ui.stacked_pressure_sv_b_11.setCurrentIndex(1) if self.ui.set_cycle_b_btn.isChecked() else self.ui.stacked_pressure_sv_b_11.setCurrentIndex(0)
+        if channel == "C":
+            self.ui.stacked_pressure_sv_c_11.setCurrentIndex(1) if self.ui.set_cycle_c_btn.isChecked() else self.ui.stacked_pressure_sv_c_11.setCurrentIndex(0)
+
     def start_stop_btn(self, btn=None):
-        if not self.plc_writer_connection and not self.init_signal:
-            if self._current_lang == "en":
-                title = "Error"
-                content = "PLC Writer not connected!"
-            elif self._current_lang == "cn":
-                title = "错误"
-                content = "PLC Writer 未连接!"
-            elif self._current_lang == "vn":
-                title = "Lỗi"
-                content = "PLC Writer mất kết nối!"
-            ltmessage.error(self, title, content, self._current_lang)  # type: ignore
-            if btn is not None:
-                btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
-                btn.setChecked(False)
-                btn.blockSignals(False)
-            return
-        if self.ui.start_stop_stacked.currentIndex() == 0:
-            self.ui.sys_state_stacked_wid_39.setCurrentIndex(1)
-            self.ui.start_stop_stacked.setCurrentIndex(1)
-            self.plc_writer_worker.write_bool.emit("START", True)   # type: ignore
-            self.data_table.start()
-            self.logger.info("[Main]-[start_stop_btn]: System On")
-            # QTimer.singleShot(250, lambda: self.plc_writer_worker.write_bool.emit("START", False))
-            # ltmessage.information(self, "Strike Machine", "System On!")
-        elif self.ui.start_stop_stacked.currentIndex() == 1:
-            self.ui.sys_state_stacked_wid_39.setCurrentIndex(0)
-            self.ui.start_stop_stacked.setCurrentIndex(0)
-            self.plc_writer_worker.write_bool.emit("STOP", True)    # type: ignore
-            QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("START", False))  # type: ignore
-            QTimer.singleShot(200, lambda: self.plc_writer_worker.write_bool.emit("STOP", False))   # type: ignore
-            QTimer.singleShot(250, self._set_off_oil_btn)
-            QTimer.singleShot(250, self._set_off_vacuum_btn)
-            QTimer.singleShot(250, self._set_off_heating_btn)
-            self.data_table.stop()
-            self.logger.info("[Main]-[start_stop_btn]: System Off")
+        try:
+            if not self.plc_writer_connection and not self.init_signal:
+                if self._current_lang == "en":
+                    title = "Error"
+                    content = "PLC Writer not connected!"
+                elif self._current_lang == "cn":
+                    title = "错误"
+                    content = "PLC Writer 未连接!"
+                elif self._current_lang == "vn":
+                    title = "Lỗi"
+                    content = "PLC Writer mất kết nối!"
+                ltmessage.error(self, title, content, self._current_lang)  # type: ignore
+                if btn is not None:
+                    btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
+                    btn.setChecked(False)
+                    btn.blockSignals(False)
+                return
+            if self.ui.start_stop_stacked.currentIndex() == 0:
+                self.ui.sys_state_stacked_wid_39.setCurrentIndex(1)
+                self.ui.start_stop_stacked.setCurrentIndex(1)
+                self.plc_writer_worker.write_bool.emit("START", True)   # type: ignore
+                self.data_table.start()
+                self.logger.info("[Main]-[start_stop_btn]: System On")
+                # QTimer.singleShot(250, lambda: self.plc_writer_worker.write_bool.emit("START", False))
+                # ltmessage.information(self, "Strike Machine", "System On!")
+            elif self.ui.start_stop_stacked.currentIndex() == 1:
+                self.ui.sys_state_stacked_wid_39.setCurrentIndex(0)
+                self.ui.start_stop_stacked.setCurrentIndex(0)
+                self.plc_writer_worker.write_bool.emit("STOP", True)    # type: ignore
+                QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("START", False))  # type: ignore
+                QTimer.singleShot(200, lambda: self.plc_writer_worker.write_bool.emit("STOP", False))   # type: ignore
+                QTimer.singleShot(250, self._set_off_oil_btn)
+                QTimer.singleShot(250, self._set_off_vacuum_btn)
+                QTimer.singleShot(250, self._set_off_heating_btn)
+                self.data_table.stop()
+                self.logger.info("[Main]-[start_stop_btn]: System Off")
+        except Exception as e:
+            self.logger.error(f"[Main]-[start_stop_btn]: Error occurred - {str(e)}")
 
     def _set_off_oil_btn(self):
         self.ui.refuel_btn_a.blockSignals(True)
@@ -3882,9 +4120,9 @@ class StrikeMachine(QMainWindow):
                     self.pressure_b_sv_obj[i].blockSignals(True)
                     self.pressure_c_sv_obj[i].blockSignals(True)
                     
-                    self.pressure_a_sv_obj[i].setValue(0)
-                    self.pressure_b_sv_obj[i].setValue(0)
-                    self.pressure_c_sv_obj[i].setValue(0)
+                    self.pressure_a_sv_obj[i].setValue(0) if i != 0 else self.pressure_a_sv_obj[i].setValue(self.for_display_temp(0))
+                    self.pressure_b_sv_obj[i].setValue(0) if i != 0 else self.pressure_b_sv_obj[i].setValue(self.for_display_temp(0))
+                    self.pressure_c_sv_obj[i].setValue(0) if i != 0 else self.pressure_c_sv_obj[i].setValue(self.for_display_temp(0))
                     
                     self.pressure_a_sv_obj[i].blockSignals(False)
                     self.pressure_b_sv_obj[i].blockSignals(False)
@@ -3892,20 +4130,20 @@ class StrikeMachine(QMainWindow):
                     
                 for i in range(len(self.temp_sv_obj)):
                     self.temp_sv_obj[i].blockSignals(True)
-                    self.temp_sv_obj[i].setValue(0)
+                    self.temp_sv_obj[i].setValue(self.for_display_temp(0))
                     self.temp_sv_obj[i].blockSignals(False)
                 for i in range(len(self.temp_h_alm_obj)):
                     self.temp_h_alm_obj[i].blockSignals(True)
-                    self.temp_h_alm_obj[i].setValue(0)
+                    self.temp_h_alm_obj[i].setValue(self.for_display_temp(0))
                     self.temp_h_alm_obj[i].blockSignals(False)
 
                 for i in range(len(self.temp_l_alm_obj)):
                     self.temp_l_alm_obj[i].blockSignals(True)
-                    self.temp_l_alm_obj[i].setValue(0)
+                    self.temp_l_alm_obj[i].setValue(self.for_display_temp(0))
                     self.temp_l_alm_obj[i].blockSignals(False)
                 for i in range(len(self.temp_offset_obj)):
                     self.temp_offset_obj[i].blockSignals(True)
-                    self.temp_offset_obj[i].setValue(0)
+                    self.temp_offset_obj[i].setValue(self.for_display_temp(0))
                     self.temp_offset_obj[i].blockSignals(False)
                 items_a = [
                     self.plc_writer_worker.get_item("P1_CountTimes", self.list_for_import_a[0].value()),    # type: ignore
@@ -3915,12 +4153,12 @@ class StrikeMachine(QMainWindow):
                     self.plc_writer_worker.get_item("P1_Air_HoldingTime", self.list_for_import_a[4].value()),   # type: ignore
                     self.plc_writer_worker.get_item("P1_Air_ReleaseTime", self.list_for_import_a[5].value()),   # type: ignore
                     self.plc_writer_worker.get_item("P1_PressureSetting", self.list_for_import_a[6].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P1_TemperatureSetting", self.list_for_import_a[7].value()),    # type: ignore
-                    self.plc_writer_worker.get_item("P1_TempLimitHIGH", self.list_for_import_a[8].value()), # type: ignore
-                    self.plc_writer_worker.get_item("P1_TempLimitLOW", self.list_for_import_a[9].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P1_Temp1Offset", self.list_for_import_a[10].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P1_Temp2Offset", self.list_for_import_a[11].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P1_Temp3Offset", self.list_for_import_a[12].value())   # type: ignore
+                    self.plc_writer_worker.get_item("P1_TemperatureSetting", self.cal_fah_to_cel(self.list_for_import_a[7].value())),    # type: ignore
+                    self.plc_writer_worker.get_item("P1_TempLimitHIGH", self.cal_fah_to_cel(self.list_for_import_a[8].value())), # type: ignore
+                    self.plc_writer_worker.get_item("P1_TempLimitLOW", self.cal_fah_to_cel(self.list_for_import_a[9].value())),  # type: ignore
+                    self.plc_writer_worker.get_item("P1_Temp1Offset", self.cal_fah_to_cel(self.list_for_import_a[10].value())),  # type: ignore
+                    self.plc_writer_worker.get_item("P1_Temp2Offset", self.cal_fah_to_cel(self.list_for_import_a[11].value())),  # type: ignore
+                    self.plc_writer_worker.get_item("P1_Temp3Offset", self.cal_fah_to_cel(self.list_for_import_a[12].value()))   # type: ignore
                 ]
                 items_b = [
                     self.plc_writer_worker.get_item("P2_CountTimes", self.list_for_import_b[0].value()),    # type: ignore
@@ -3930,12 +4168,12 @@ class StrikeMachine(QMainWindow):
                     self.plc_writer_worker.get_item("P2_Air_HoldingTime", self.list_for_import_b[4].value()),   # type: ignore
                     self.plc_writer_worker.get_item("P2_Air_ReleaseTime", self.list_for_import_b[5].value()),   # type: ignore
                     self.plc_writer_worker.get_item("P2_PressureSetting", self.list_for_import_b[6].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P2_TemperatureSetting", self.list_for_import_b[7].value()),    # type: ignore
-                    self.plc_writer_worker.get_item("P2_TempLimitHIGH", self.list_for_import_b[8].value()), # type: ignore
-                    self.plc_writer_worker.get_item("P2_TempLimitLOW", self.list_for_import_b[9].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P2_Temp1Offset", self.list_for_import_b[10].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P2_Temp2Offset", self.list_for_import_b[11].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P2_Temp3Offset", self.list_for_import_b[12].value())   # type: ignore
+                    self.plc_writer_worker.get_item("P2_TemperatureSetting", self.cal_fah_to_cel(self.list_for_import_b[7].value())),    # type: ignore
+                    self.plc_writer_worker.get_item("P2_TempLimitHIGH", self.cal_fah_to_cel(self.list_for_import_b[8].value())), # type: ignore
+                    self.plc_writer_worker.get_item("P2_TempLimitLOW", self.cal_fah_to_cel(self.list_for_import_b[9].value())),  # type: ignore
+                    self.plc_writer_worker.get_item("P2_Temp1Offset", self.cal_fah_to_cel(self.list_for_import_b[10].value())),  # type: ignore
+                    self.plc_writer_worker.get_item("P2_Temp2Offset", self.cal_fah_to_cel(self.list_for_import_b[11].value())),  # type: ignore
+                    self.plc_writer_worker.get_item("P2_Temp3Offset", self.cal_fah_to_cel(self.list_for_import_b[12].value()))   # type: ignore
                 ]
                 items_c = [
                     self.plc_writer_worker.get_item("P3_CountTimes", self.list_for_import_c[0].value()),    # type: ignore
@@ -3945,18 +4183,18 @@ class StrikeMachine(QMainWindow):
                     self.plc_writer_worker.get_item("P3_Air_HoldingTime", self.list_for_import_c[4].value()),   # type: ignore
                     self.plc_writer_worker.get_item("P3_Air_ReleaseTime", self.list_for_import_c[5].value()),   # type: ignore
                     self.plc_writer_worker.get_item("P3_PressureSetting", self.list_for_import_c[6].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P3_TemperatureSetting", self.list_for_import_c[7].value()),    # type: ignore
-                    self.plc_writer_worker.get_item("P3_TempLimitHIGH", self.list_for_import_c[8].value()), # type: ignore
-                    self.plc_writer_worker.get_item("P3_TempLimitLOW", self.list_for_import_c[9].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P3_Temp1Offset", self.list_for_import_c[10].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P3_Temp2Offset", self.list_for_import_c[11].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P3_Temp3Offset", self.list_for_import_c[12].value())   # type: ignore
+                    self.plc_writer_worker.get_item("P3_TemperatureSetting", self.cal_fah_to_cel(self.list_for_import_c[7].value())),    # type: ignore
+                    self.plc_writer_worker.get_item("P3_TempLimitHIGH", self.cal_fah_to_cel(self.list_for_import_c[8].value())), # type: ignore
+                    self.plc_writer_worker.get_item("P3_TempLimitLOW", self.cal_fah_to_cel(self.list_for_import_c[9].value())),  # type: ignore
+                    self.plc_writer_worker.get_item("P3_Temp1Offset", self.cal_fah_to_cel(self.list_for_import_c[10].value())),  # type: ignore
+                    self.plc_writer_worker.get_item("P3_Temp2Offset", self.cal_fah_to_cel(self.list_for_import_c[11].value())),  # type: ignore
+                    self.plc_writer_worker.get_item("P3_Temp3Offset", self.cal_fah_to_cel(self.list_for_import_c[12].value()))   # type: ignore
                 ]
                 items_t0 = [
-                    self.plc_writer_worker.get_item("T0_TemperatureSetting", self.list_for_import_t0[0].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("T0_TempLimitHIGH", self.list_for_import_t0[1].value()),    # type: ignore
-                    self.plc_writer_worker.get_item("T0_TempLimitLOW", self.list_for_import_t0[2].value()), # type: ignore
-                    self.plc_writer_worker.get_item("T0_TempOffset", self.list_for_import_t0[3].value())    # type: ignore
+                    self.plc_writer_worker.get_item("T0_TemperatureSetting", self.cal_fah_to_cel(self.list_for_import_t0[0].value())),   # type: ignore
+                    self.plc_writer_worker.get_item("T0_TempLimitHIGH", self.cal_fah_to_cel(self.list_for_import_t0[1].value())),    # type: ignore
+                    self.plc_writer_worker.get_item("T0_TempLimitLOW", self.cal_fah_to_cel(self.list_for_import_t0[2].value())), # type: ignore
+                    self.plc_writer_worker.get_item("T0_TempOffset", self.cal_fah_to_cel(self.list_for_import_t0[3].value()))    # type: ignore
                 ]
                 self.plc_writer_worker.write_multi.emit(items_a, "A")   # type: ignore
                 self.plc_writer_worker.write_multi.emit(items_b, "B")   # type: ignore
@@ -3987,87 +4225,107 @@ class StrikeMachine(QMainWindow):
                 ltmessage.error(self, title, content, self._current_lang)
 
     def reset_cycle_btn(self, channel):
-        if channel == "A":
-            self.plc_writer_worker.write_value.emit("P1_Number_Test_Times", 0) if self.plc_writer_connection else None #type: ignore
-            if self.plc_writer_connection:
-                self.logger.info(f"[Main]-[reset_cycle_a_btn]: Total A Cycle: {self.ui.cycle_a_displ_3.value()}")
-            else:
-                self.logger.info(f"[Main]-[reset_cycle_a_btn]: Cannot set Total A Cycle")
-        if channel == "B":
-            self.plc_writer_worker.write_value.emit("P2_Number_Test_Times", 0) if self.plc_writer_connection else None #type: ignore
-            if self.plc_writer_connection:
-                self.logger.info(f"[Main]-[reset_cycle_b_btn]: Total B Cycle: {self.ui.cycle_b_displ_3.value()}")
-            else:
-                self.logger.info(f"[Main]-[reset_cycle_b_btn]: Cannot set Total B Cycle")
-        if channel == "C":
-            self.plc_writer_worker.write_value.emit("P3_Number_Test_Times", 0) if self.plc_writer_connection else None #type: ignore
-            if self.plc_writer_connection:
-                self.logger.info(f"[Main]-[reset_cycle_c_btn]: Total C Cycle: {self.ui.cycle_c_displ_3.value()}")
-            else:
-                self.logger.info(f"[Main]-[reset_cycle_c_btn]: Cannot set Total C Cycle")
+        try:
+            if channel == "A":
+                self.plc_writer_worker.write_value.emit("P1_Number_Test_Times", 0) if self.plc_writer_connection else None #type: ignore
+                if self.plc_writer_connection:
+                    self.logger.info(f"[Main]-[reset_cycle_a_btn]: Total A Cycle: {self.ui.cycle_a_displ_3.value()}")
+                else:
+                    self.logger.info(f"[Main]-[reset_cycle_a_btn]: Cannot set Total A Cycle")
+            if channel == "B":
+                self.plc_writer_worker.write_value.emit("P2_Number_Test_Times", 0) if self.plc_writer_connection else None #type: ignore
+                if self.plc_writer_connection:
+                    self.logger.info(f"[Main]-[reset_cycle_b_btn]: Total B Cycle: {self.ui.cycle_b_displ_3.value()}")
+                else:
+                    self.logger.info(f"[Main]-[reset_cycle_b_btn]: Cannot set Total B Cycle")
+            if channel == "C":
+                self.plc_writer_worker.write_value.emit("P3_Number_Test_Times", 0) if self.plc_writer_connection else None #type: ignore
+                if self.plc_writer_connection:
+                    self.logger.info(f"[Main]-[reset_cycle_c_btn]: Total C Cycle: {self.ui.cycle_c_displ_3.value()}")
+                else:
+                    self.logger.info(f"[Main]-[reset_cycle_c_btn]: Cannot set Total C Cycle")
+        except Exception as e:
+            self.logger.error(f"[Main]-[reset_cycle_btn]: Error occurred - {str(e)}")
 
     def cmd_btn(self):
-        if hasattr(self, '_console_process') and self._console_process.poll() is None:
+        try:
+            if self._is_console_running():
+                self._bring_console_to_front()
+                return
+
+            self._cleanup_console()
+
+            flag_path = os.path.join(tempfile.gettempdir(), "sm_force_quit.flag")
+            if os.path.exists(flag_path):
+                os.remove(flag_path)
+
+            if getattr(sys, 'frozen', False):
+                cmd = [os.path.join(os.path.dirname(sys.executable), "cmd.exe")]
+            else:
+                pythonw = sys.executable.replace("python.exe", "pythonw.exe")
+                cmd = [pythonw, "-u", os.path.join(os.path.dirname(__file__), "console_window.py")]
+
+            creationflags = subprocess.CREATE_NEW_CONSOLE | subprocess.CREATE_BREAKAWAY_FROM_JOB if os.name == 'nt' else 0
+
+            self._console_process = subprocess.Popen(
+                cmd,
+                creationflags=creationflags,
+                start_new_session=True
+            )
+
+            self.logger.info("Console opened (independent mode)")
+
+            if not hasattr(self, '_force_quit_timer'):
+                self._force_quit_timer = QTimer(self)
+                self._force_quit_timer.timeout.connect(self._check_force_quit_flag)
+            self._force_quit_timer.start(500)
+
+        except Exception as e:
+            self.logger.error(f"[cmd_btn] Error: {e}")
+
+    def _is_console_running(self):
+        if not hasattr(self, '_console_process') or self._console_process is None:
+            return False
+        try:
+            return self._console_process.poll() is None
+        except:
+            return False
+
+    def _cleanup_console(self):
+        if hasattr(self, '_force_quit_timer') and self._force_quit_timer:
+            self._force_quit_timer.stop()
+
+        if hasattr(self, '_console_process') and self._console_process:
             try:
-                WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_int, ctypes.c_int)
-                hwnds = []
-
-                def enum_callback(hwnd, _):
-                    length = ctypes.windll.user32.GetWindowTextLengthW(hwnd)
-                    if length > 0:
-                        buf = ctypes.create_unicode_buffer(length + 1)
-                        ctypes.windll.user32.GetWindowTextW(hwnd, buf, length + 1)
-                        if "Strike Machine Console" in buf.value:
-                            hwnds.append(hwnd)
-                    return True
-
-                ctypes.windll.user32.EnumWindows(WNDENUMPROC(enum_callback), 0)
-
-                if hwnds:
-                    hwnd = hwnds[0]
-                    ctypes.windll.user32.ShowWindow(hwnd, 9)  # SW_RESTORE
-                    ctypes.windll.user32.SetForegroundWindow(hwnd)
-                else:
-                    self.logger.warning("[cmd_btn] Console window not found by title")
-            except Exception as e:
-                self.logger.warning(f"[cmd_btn] Cannot focus console window: {e}")
-            return
-        
-        if hasattr(self, '_pipe_handler'):
-            try:
-                self.logger.removeHandler(self._pipe_handler)
-                self._pipe_handler.close()
-            except Exception:
+                if self._console_process.poll() is None:
+                    self._console_process.kill()
+            except:
                 pass
-            self._pipe_handler = None
+            self._console_process = None
 
-        flag_path = os.path.join(tempfile.gettempdir(), "sm_force_quit.flag")
-        if os.path.exists(flag_path):
-            os.remove(flag_path)
+    def _bring_console_to_front(self):
+        try:
+            import ctypes
+            WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_int, ctypes.c_int)
+            hwnds = []
 
-        if getattr(sys, 'frozen', False):
-            console_exe = os.path.join(os.path.dirname(sys.executable), "cmd.exe")
-            cmd = [console_exe]
-        else:
-            console_exe = os.path.join(os.path.dirname(__file__), "console_window.py")
-            cmd = [sys.executable, "-u", console_exe]
+            def enum_callback(hwnd, _):
+                length = ctypes.windll.user32.GetWindowTextLengthW(hwnd)
+                if length > 0:
+                    buf = ctypes.create_unicode_buffer(length + 1)
+                    ctypes.windll.user32.GetWindowTextW(hwnd, buf, length + 1)
+                    if "Strike Machine Console" in buf.value:
+                        hwnds.append(hwnd)
+                return True
 
-        self._console_process = subprocess.Popen(
-            cmd,
-            stdin=subprocess.PIPE,
-            text=True,
-            encoding="utf-8"
-        )
+            ctypes.windll.user32.EnumWindows(WNDENUMPROC(enum_callback), 0)
 
-        self._pipe_handler = PipeLogHandler(self._console_process)
-        fmt = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        self._pipe_handler.setFormatter(fmt)
-        self.logger.addHandler(self._pipe_handler)
-
-        if not hasattr(self, '_force_quit_timer'):
-            self._force_quit_timer = QTimer(self)
-            self._force_quit_timer.timeout.connect(self._check_force_quit_flag)
-        self._force_quit_timer.start(500)
+            if hwnds:
+                hwnd = hwnds[0]
+                ctypes.windll.user32.ShowWindow(hwnd, 9)   # SW_RESTORE
+                ctypes.windll.user32.SetForegroundWindow(hwnd)
+        except Exception as e:
+            self.logger.warning(f"[cmd_btn] Cannot focus console: {e}")
 
     def _check_force_quit_flag(self):
         flag_path = os.path.join(tempfile.gettempdir(), "sm_force_quit.flag")
@@ -4076,7 +4334,7 @@ class StrikeMachine(QMainWindow):
                 os.remove(flag_path)
             except Exception:
                 pass
-            self._force_quit_timer.stop()
+            self._cleanup_console()      # Thêm cleanup
             self._on_force_quit()
 
     @Slot()
@@ -4158,154 +4416,169 @@ class StrikeMachine(QMainWindow):
         ]
         if any(btn.isChecked() for btn in buttons):
             return
-        stk_mch_file = Path(self.stk_mch_folder)/ "Setting File" 
-        # print("Default path for data file:", stk_mch_file)s
-        file_str, _ = QFileDialog.getOpenFileName(
-            self,
-            "Select Group Data File",
-            str(stk_mch_file),
-            "Excel Files (*.xlsx *.xls)"
-        )
-        if not file_str:
-            return
-        path = Path(file_str)
-
         try:
-            df = pd.read_excel(path, sheet_name=0, header=None)
-        except Exception as e:
-            ltmessage.error(self, "Import Error", f"Cannot read file!\n\nError: {e}")
-            return
-        is_valid, error_msg = self._validate_import_df(df)
-        if not is_valid:
-            ltmessage.error(self, "Invalid File Format", error_msg)
-            return
+            stk_mch_file = Path(self.stk_mch_folder)/ "Setting File" 
+            # print("Default path for data file:", stk_mch_file)s
+            file_str, _ = QFileDialog.getOpenFileName(
+                self,
+                "Select Group Data File",
+                str(stk_mch_file),
+                "Excel Files (*.xlsx *.xls)"
+            )
+            if not file_str:
+                return
+            path = Path(file_str)
 
-        self.ui.code_display.setText(str(df.iloc[0][0]).strip() if pd.notna(df.iloc[0][0]) else "")
-        for i in range(2, len(df)):
-            column = df.iloc[i]
-            name_raw = str(column[0]).strip() if pd.notna(column[0]) else ""
-            if name_raw == "" or name_raw.lower() == "nan":
-                break
-            # Cột B: Group A
             try:
-                value_a_raw = str(column[1]).strip()
-                value_a = float(value_a_raw)
-            except:
-                value_a = 0
-            self.list_for_import_a[i-2].blockSignals(True)
-            self.list_for_import_a[i-2].setValue(value_a)   # type: ignore
-            
-            # Cột C: Group B
-            try:
-                value_b_raw = str(column[2]).strip()
-                value_b = float(value_b_raw)
-            except:
-                value_b = 0
-            self.list_for_import_b[i-2].blockSignals(True)
-            self.list_for_import_b[i-2].setValue(value_b)   # type: ignore
-            
-            # Cột D: Group C
-            try:
-                value_c_raw = str(column[3]).strip()
-                value_c = float(value_c_raw)
-            except:
-                value_c = 0
-            self.list_for_import_c[i-2].blockSignals(True)
-            self.list_for_import_c[i-2].setValue(value_c)   # type: ignore
+                df = pd.read_excel(path, sheet_name=0, header=None)
+            except Exception as e:
+                ltmessage.error(self, "Import Error", f"Cannot read file!\n\nError: {e}")
+                return
+            is_valid, error_msg = self._validate_import_df(df)
+            if not is_valid:
+                ltmessage.error(self, "Invalid File Format", error_msg)
+                return
 
-            if i >= 9  and i <=12:
-                # Cột E: Group T0
+            self.ui.code_display.setText(str(df.iloc[0][0]).strip() if pd.notna(df.iloc[0][0]) else "")
+            for i in range(2, len(df)): # Đọc từ dòng thứ 3 đến dòng cuối cùng của DataFrame
+                column = df.iloc[i]
+                name_raw = str(column[0]).strip() if pd.notna(column[0]) else ""
+                if name_raw == "" or name_raw.lower() == "nan":
+                    break
+                # Cột B: Group A
                 try:
-                    value_t0_raw = str(column[4]).strip()
-                    value_t0 = float(value_t0_raw)
+                    if i > 8:
+                        value_a_raw = str(column[1]).strip()
+                        value_a = self.for_display_temp(float(value_a_raw))
+                    else:
+                        value_a_raw = str(column[1]).strip()
+                        value_a = float(value_a_raw)
                 except:
-                    value_t0 = 0
-                self.list_for_import_t0[i-9].blockSignals(True)
-                self.list_for_import_t0[i-9].setValue(value_t0)
+                    value_a = 0
+                self.list_for_import_a[i-2].blockSignals(True)
+                self.list_for_import_a[i-2].setValue(value_a)   # type: ignore
+                
+                # Cột C: Group B
+                try:
+                    if i > 8:
+                        value_b_raw = str(column[2]).strip()
+                        value_b = self.for_display_temp(float(value_b_raw))
+                    else:
+                        value_b_raw = str(column[2]).strip()
+                        value_b = float(value_b_raw)
+                except:
+                    value_b = 0
+                self.list_for_import_b[i-2].blockSignals(True)
+                self.list_for_import_b[i-2].setValue(value_b)   # type: ignore
+                
+                # Cột D: Group C
+                try:
+                    if i > 8:
+                        value_c_raw = str(column[3]).strip()
+                        value_c = self.for_display_temp(float(value_c_raw))
+                    else:
+                        value_c_raw = str(column[3]).strip()
+                        value_c = float(value_c_raw)
+                except:
+                    value_c = 0
+                self.list_for_import_c[i-2].blockSignals(True)
+                self.list_for_import_c[i-2].setValue(value_c)   # type: ignore
 
-        self.ui.at_sv.blockSignals(True)
-        self.ui.at_sv.setValue(self.ui.pressure_sv_a_1.value())
-        self.ui.bt_sv.blockSignals(True)
-        self.ui.bt_sv.setValue(self.ui.pressure_sv_b_1.value())
-        self.ui.ct_sv.blockSignals(True)
-        self.ui.ct_sv.setValue(self.ui.pressure_sv_c_1.value())
-        items_a = [
-            self.plc_writer_worker.get_item("P1_CountTimes", self.list_for_import_a[0].value()),                                    # type: ignore
-            self.plc_writer_worker.get_item("P1_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_a[1].value()))),        # type: ignore
-            self.plc_writer_worker.get_item("P1_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_a[2].value()))),          # type: ignore
-            self.plc_writer_worker.get_item("P1_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_a[3].value()))),       # type: ignore
-            self.plc_writer_worker.get_item("P1_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_a[4].value()))),       # type: ignore
-            self.plc_writer_worker.get_item("P1_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_a[5].value()))),       # type: ignore
-            self.plc_writer_worker.get_item("P1_PressureSetting", self.list_for_import_a[6].value()),                               # type: ignore
-            self.plc_writer_worker.get_item("P1_TemperatureSetting", self.list_for_import_a[7].value()),                            # type: ignore
-            self.plc_writer_worker.get_item("P1_TempLimitHIGH", self.list_for_import_a[8].value()),                                 # type: ignore
-            self.plc_writer_worker.get_item("P1_TempLimitLOW", self.list_for_import_a[9].value()),                                  # type: ignore
-            self.plc_writer_worker.get_item("P1_Temp1Offset", self.list_for_import_a[10].value()),                                  # type: ignore
-            self.plc_writer_worker.get_item("P1_Temp2Offset", self.list_for_import_a[11].value()),                                  # type: ignore
-            self.plc_writer_worker.get_item("P1_Temp3Offset", self.list_for_import_a[12].value())                                   # type: ignore
-        ]
-        items_b = [
-            self.plc_writer_worker.get_item("P2_CountTimes", self.list_for_import_b[0].value()),                                    # type: ignore
-            self.plc_writer_worker.get_item("P2_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_b[1].value()))),        # type: ignore
-            self.plc_writer_worker.get_item("P2_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_b[2].value()))),          # type: ignore
-            self.plc_writer_worker.get_item("P2_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_b[3].value()))),       # type: ignore
-            self.plc_writer_worker.get_item("P2_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_b[4].value()))),       # type: ignore
-            self.plc_writer_worker.get_item("P2_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_b[5].value()))),       # type: ignore
-            self.plc_writer_worker.get_item("P2_PressureSetting", self.list_for_import_b[6].value()),                               # type: ignore
-            self.plc_writer_worker.get_item("P2_TemperatureSetting", self.list_for_import_b[7].value()),                            # type: ignore
-            self.plc_writer_worker.get_item("P2_TempLimitHIGH", self.list_for_import_b[8].value()),                                 # type: ignore
-            self.plc_writer_worker.get_item("P2_TempLimitLOW", self.list_for_import_b[9].value()),                                  # type: ignore
-            self.plc_writer_worker.get_item("P2_Temp1Offset", self.list_for_import_b[10].value()),                                  # type: ignore
-            self.plc_writer_worker.get_item("P2_Temp2Offset", self.list_for_import_b[11].value()),                                  # type: ignore
-            self.plc_writer_worker.get_item("P2_Temp3Offset", self.list_for_import_b[12].value())                                   # type: ignore
-        ]
-        items_c = [
-            self.plc_writer_worker.get_item("P3_CountTimes", self.list_for_import_c[0].value()),                                    # type: ignore
-            self.plc_writer_worker.get_item("P3_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_c[1].value()))),        # type: ignore
-            self.plc_writer_worker.get_item("P3_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_c[2].value()))),          # type: ignore
-            self.plc_writer_worker.get_item("P3_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_c[3].value()))),       # type: ignore
-            self.plc_writer_worker.get_item("P3_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_c[4].value()))),       # type: ignore
-            self.plc_writer_worker.get_item("P3_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_c[5].value()))),       # type: ignore
-            self.plc_writer_worker.get_item("P3_PressureSetting", self.list_for_import_c[6].value()),                               # type: ignore
-            self.plc_writer_worker.get_item("P3_TemperatureSetting", self.list_for_import_c[7].value()),                            # type: ignore
-            self.plc_writer_worker.get_item("P3_TempLimitHIGH", self.list_for_import_c[8].value()),                                 # type: ignore
-            self.plc_writer_worker.get_item("P3_TempLimitLOW", self.list_for_import_c[9].value()),                                  # type: ignore
-            self.plc_writer_worker.get_item("P3_Temp1Offset", self.list_for_import_c[10].value()),                                  # type: ignore
-            self.plc_writer_worker.get_item("P3_Temp2Offset", self.list_for_import_c[11].value()),                                  # type: ignore
-            self.plc_writer_worker.get_item("P3_Temp3Offset", self.list_for_import_c[12].value())                                   # type: ignore
-        ]
-        items_t0 = [
-            self.plc_writer_worker.get_item("T0_TemperatureSetting", self.list_for_import_t0[0].value()),                           # type: ignore
-            self.plc_writer_worker.get_item("T0_TempLimitHIGH", self.list_for_import_t0[1].value()),                                # type: ignore
-            self.plc_writer_worker.get_item("T0_TempLimitLOW", self.list_for_import_t0[2].value()),                                 # type: ignore
-            self.plc_writer_worker.get_item("T0_TempOffset", self.list_for_import_t0[3].value())                                    # type: ignore
-        ]
-        self.plc_writer_worker.write_multi.emit(items_a, "A")                                                                       # type: ignore
-        self.plc_writer_worker.write_multi.emit(items_b, "B")                                                                       # type: ignore
-        self.plc_writer_worker.write_multi.emit(items_c, "C")                                                                       # type: ignore
-        self.plc_writer_worker.write_multi.emit(items_t0, "T0")                                                                     # type: ignore
-        
-        for i in range(len(self.list_for_import_a)):
-            self.list_for_import_a[i].blockSignals(False)
-            self.list_for_import_b[i].blockSignals(False)
-            self.list_for_import_c[i].blockSignals(False)
-        for i in range(len(self.list_for_import_t0)):
-            self.list_for_import_t0[i].blockSignals(False)
-        
-        self.ui.at_sv.blockSignals(False)
-        self.ui.bt_sv.blockSignals(False)
-        self.ui.ct_sv.blockSignals(False)
-        if self.plc_writer_connection:
-            if not self.ui.set_cycle_a_btn.isChecked() and (self.list_for_import_a[0].value() > 0):
-                self.ui.set_cycle_a_btn.click()
-            if not self.ui.set_cycle_b_btn.isChecked() and (self.list_for_import_b[0].value() > 0):
-                self.ui.set_cycle_b_btn.click()
-            if not self.ui.set_cycle_c_btn.isChecked() and (self.list_for_import_c[0].value() > 0):
-                self.ui.set_cycle_c_btn.click()
-            self.disable_btn("A", False)
-            self.disable_btn("B", False)
-            self.disable_btn("C", False)
-            self.disable_btn("T0", False)
+                if i >= 9  and i <=12:
+                    # Cột E: Group T0
+                    try:
+                        value_t0_raw = str(column[4]).strip()
+                        value_t0 = self.for_display_temp(float(value_t0_raw))
+                    except:
+                        value_t0 = 0
+                    self.list_for_import_t0[i-9].blockSignals(True)
+                    self.list_for_import_t0[i-9].setValue(value_t0)
+
+            self.ui.at_sv.blockSignals(True)
+            self.ui.at_sv.setValue(self.ui.pressure_sv_a_1.value())
+            self.ui.bt_sv.blockSignals(True)
+            self.ui.bt_sv.setValue(self.ui.pressure_sv_b_1.value())
+            self.ui.ct_sv.blockSignals(True)
+            self.ui.ct_sv.setValue(self.ui.pressure_sv_c_1.value())
+            items_a = [
+                self.plc_writer_worker.get_item("P1_CountTimes", self.list_for_import_a[0].value()),                                    # type: ignore
+                self.plc_writer_worker.get_item("P1_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_a[1].value()))),        # type: ignore
+                self.plc_writer_worker.get_item("P1_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_a[2].value()))),          # type: ignore
+                self.plc_writer_worker.get_item("P1_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_a[3].value()))),       # type: ignore
+                self.plc_writer_worker.get_item("P1_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_a[4].value()))),       # type: ignore
+                self.plc_writer_worker.get_item("P1_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_a[5].value()))),       # type: ignore
+                self.plc_writer_worker.get_item("P1_PressureSetting", self.list_for_import_a[6].value()),                               # type: ignore
+                self.plc_writer_worker.get_item("P1_TemperatureSetting", self.cal_fah_to_cel(self.list_for_import_a[7].value())),                            # type: ignore
+                self.plc_writer_worker.get_item("P1_TempLimitHIGH", self.cal_fah_to_cel(self.list_for_import_a[8].value())),                                 # type: ignore
+                self.plc_writer_worker.get_item("P1_TempLimitLOW", self.cal_fah_to_cel(self.list_for_import_a[9].value())),                                  # type: ignore
+                self.plc_writer_worker.get_item("P1_Temp1Offset", self.cal_fah_to_cel(self.list_for_import_a[10].value())),                                  # type: ignore
+                self.plc_writer_worker.get_item("P1_Temp2Offset", self.cal_fah_to_cel(self.list_for_import_a[11].value())),                                  # type: ignore
+                self.plc_writer_worker.get_item("P1_Temp3Offset", self.cal_fah_to_cel(self.list_for_import_a[12].value()))                                   # type: ignore
+            ]
+            items_b = [
+                self.plc_writer_worker.get_item("P2_CountTimes", self.list_for_import_b[0].value()),                                    # type: ignore
+                self.plc_writer_worker.get_item("P2_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_b[1].value()))),        # type: ignore
+                self.plc_writer_worker.get_item("P2_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_b[2].value()))),          # type: ignore
+                self.plc_writer_worker.get_item("P2_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_b[3].value()))),       # type: ignore
+                self.plc_writer_worker.get_item("P2_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_b[4].value()))),       # type: ignore
+                self.plc_writer_worker.get_item("P2_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_b[5].value()))),       # type: ignore
+                self.plc_writer_worker.get_item("P2_PressureSetting", self.list_for_import_b[6].value()),                               # type: ignore
+                self.plc_writer_worker.get_item("P2_TemperatureSetting", self.cal_fah_to_cel(self.list_for_import_b[7].value())),                            # type: ignore
+                self.plc_writer_worker.get_item("P2_TempLimitHIGH", self.cal_fah_to_cel(self.list_for_import_b[8].value())),                                 # type: ignore
+                self.plc_writer_worker.get_item("P2_TempLimitLOW", self.cal_fah_to_cel(self.list_for_import_b[9].value())),                                  # type: ignore
+                self.plc_writer_worker.get_item("P2_Temp1Offset", self.cal_fah_to_cel(self.list_for_import_b[10].value())),                                  # type: ignore
+                self.plc_writer_worker.get_item("P2_Temp2Offset", self.cal_fah_to_cel(self.list_for_import_b[11].value())),                                  # type: ignore
+                self.plc_writer_worker.get_item("P2_Temp3Offset", self.cal_fah_to_cel(self.list_for_import_b[12].value()))                                   # type: ignore
+            ]
+            items_c = [
+                self.plc_writer_worker.get_item("P3_CountTimes", self.list_for_import_c[0].value()),                                    # type: ignore
+                self.plc_writer_worker.get_item("P3_Oil_Start_Time", (self.cal_sec_to_msec(self.list_for_import_c[1].value()))),        # type: ignore
+                self.plc_writer_worker.get_item("P3_Oil_End_Time", (self.cal_sec_to_msec(self.list_for_import_c[2].value()))),          # type: ignore
+                self.plc_writer_worker.get_item("P3_Air_FillingTime", (self.cal_sec_to_msec(self.list_for_import_c[3].value()))),       # type: ignore
+                self.plc_writer_worker.get_item("P3_Air_HoldingTime", (self.cal_sec_to_msec(self.list_for_import_c[4].value()))),       # type: ignore
+                self.plc_writer_worker.get_item("P3_Air_ReleaseTime", (self.cal_sec_to_msec(self.list_for_import_c[5].value()))),       # type: ignore
+                self.plc_writer_worker.get_item("P3_PressureSetting", self.list_for_import_c[6].value()),                               # type: ignore
+                self.plc_writer_worker.get_item("P3_TemperatureSetting", self.cal_fah_to_cel(self.list_for_import_c[7].value())),                            # type: ignore
+                self.plc_writer_worker.get_item("P3_TempLimitHIGH", self.cal_fah_to_cel(self.list_for_import_c[8].value())),                                 # type: ignore
+                self.plc_writer_worker.get_item("P3_TempLimitLOW", self.cal_fah_to_cel(self.list_for_import_c[9].value())),                                  # type: ignore
+                self.plc_writer_worker.get_item("P3_Temp1Offset", self.cal_fah_to_cel(self.list_for_import_c[10].value())),                                  # type: ignore
+                self.plc_writer_worker.get_item("P3_Temp2Offset", self.cal_fah_to_cel(self.list_for_import_c[11].value())),                                  # type: ignore
+                self.plc_writer_worker.get_item("P3_Temp3Offset", self.cal_fah_to_cel(self.list_for_import_c[12].value()))                                   # type: ignore
+            ]
+            items_t0 = [
+                self.plc_writer_worker.get_item("T0_TemperatureSetting", self.cal_fah_to_cel(self.list_for_import_t0[0].value())),                           # type: ignore
+                self.plc_writer_worker.get_item("T0_TempLimitHIGH", self.cal_fah_to_cel(self.list_for_import_t0[1].value())),                                # type: ignore
+                self.plc_writer_worker.get_item("T0_TempLimitLOW", self.cal_fah_to_cel(self.list_for_import_t0[2].value())),                                 # type: ignore
+                self.plc_writer_worker.get_item("T0_TempOffset", self.cal_fah_to_cel(self.list_for_import_t0[3].value()))                                    # type: ignore
+            ]
+            self.plc_writer_worker.write_multi.emit(items_a, "A")                                                                       # type: ignore
+            self.plc_writer_worker.write_multi.emit(items_b, "B")                                                                       # type: ignore
+            self.plc_writer_worker.write_multi.emit(items_c, "C")                                                                       # type: ignore
+            self.plc_writer_worker.write_multi.emit(items_t0, "T0")                                                                     # type: ignore
+            
+            for i in range(len(self.list_for_import_a)):
+                self.list_for_import_a[i].blockSignals(False)
+                self.list_for_import_b[i].blockSignals(False)
+                self.list_for_import_c[i].blockSignals(False)
+            for i in range(len(self.list_for_import_t0)):
+                self.list_for_import_t0[i].blockSignals(False)
+            
+            self.ui.at_sv.blockSignals(False)
+            self.ui.bt_sv.blockSignals(False)
+            self.ui.ct_sv.blockSignals(False)
+            if self.plc_writer_connection:
+                if not self.ui.set_cycle_a_btn.isChecked() and (self.list_for_import_a[0].value() > 0):
+                    self.ui.set_cycle_a_btn.click()
+                if not self.ui.set_cycle_b_btn.isChecked() and (self.list_for_import_b[0].value() > 0):
+                    self.ui.set_cycle_b_btn.click()
+                if not self.ui.set_cycle_c_btn.isChecked() and (self.list_for_import_c[0].value() > 0):
+                    self.ui.set_cycle_c_btn.click()
+                self.disable_btn("A", False)
+                self.disable_btn("B", False)
+                self.disable_btn("C", False)
+                self.disable_btn("T0", False)
+        except Exception as e:
+            self.logger.error(f"[Main]-[new_data_btn]: Error occurred - {str(e)}")
 
     def set_language_en(self):
         self._app.removeTranslator(self._translator)    # type: ignore
@@ -4743,10 +5016,10 @@ class StrikeMachine(QMainWindow):
             title = "Exit Confirmation"
             content = "Are you sure you want to exit?"
         elif self._current_lang == "cn":
-            title = "导出成功"
-            content = "是否前往保存文件夹?"
+            title = "退出确认"
+            content = "您确定要退出吗？"
         elif self._current_lang == "vn":
-            title = "Thoát ứng dụng"
+            title = "Xác nhận thoát"
             content = "Bạn có chắc chắn muốn thoát không?"
         reply = ltmessage.question(
             self, title, content, lang=self._current_lang # type: ignore
@@ -4797,23 +5070,3 @@ class StrikeMachine(QMainWindow):
                 except:
                     pass
         
-        self.stop_simulate_threads() if SIMULATE else None
-
-    def stop_simulate_threads(self):
-        try:
-            simulate_thread = self.thread_dict.get("data_simulator")
-
-            if simulate_thread is not None:
-                if hasattr(simulate_thread, "stop"):
-                    simulate_thread.stop()
-
-                simulate_thread.quit()
-
-                if not simulate_thread.wait(3000):
-                    simulate_thread.terminate()
-                    simulate_thread.wait()
-
-                del self.thread_dict["data_simulator"]
-
-        except Exception as e:
-            self.logger.error(f"Stop thread error: {e}")

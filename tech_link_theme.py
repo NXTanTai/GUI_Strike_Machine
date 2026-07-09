@@ -808,264 +808,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.code_display, 0, 0, 1, 1)
 
-        self.header_group_layout_1 = QHBoxLayout()
-        self.header_group_layout_1.setObjectName(u"header_group_layout_1")
-        self.widget = QWidget(self.widget_6)
-        self.widget.setObjectName(u"widget")
-        self.widget.setStyleSheet(u"QWidget{\n"
-"	color: rgb(30, 136, 229);\n"
-"	border-left: none;\n"
-"}")
-        self.verticalLayout_18 = QVBoxLayout(self.widget)
-        self.verticalLayout_18.setSpacing(5)
-        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
-        self.verticalLayout_18.setContentsMargins(0, 0, 0, 0)
-        self.label_156 = QLabel(self.widget)
-        self.label_156.setObjectName(u"label_156")
-        font10 = QFont()
-        font10.setFamilies([u"MS Shell Dlg 2"])
-        font10.setPointSize(19)
-        font10.setBold(True)
-        font10.setItalic(False)
-        self.label_156.setFont(font10)
-        self.label_156.setAlignment(Qt.AlignCenter)
-
-        self.verticalLayout_18.addWidget(self.label_156)
-
-        self.widget_14 = QWidget(self.widget)
-        self.widget_14.setObjectName(u"widget_14")
-        self.horizontalLayout_17 = QHBoxLayout(self.widget_14)
-        self.horizontalLayout_17.setSpacing(7)
-        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
-        self.horizontalLayout_17.setContentsMargins(0, 0, 0, 0)
-        self.widget_17 = QWidget(self.widget_14)
-        self.widget_17.setObjectName(u"widget_17")
-        self.widget_17.setStyleSheet(u"")
-        self.horizontalLayout_18 = QHBoxLayout(self.widget_17)
-        self.horizontalLayout_18.setSpacing(7)
-        self.horizontalLayout_18.setObjectName(u"horizontalLayout_18")
-        self.horizontalLayout_18.setContentsMargins(0, 2, 2, 2)
-        self.label_165 = QLabel(self.widget_17)
-        self.label_165.setObjectName(u"label_165")
-        font11 = QFont()
-        font11.setFamilies([u"MS Shell Dlg 2"])
-        font11.setPointSize(16)
-        font11.setBold(True)
-        font11.setItalic(False)
-        self.label_165.setFont(font11)
-        self.label_165.setStyleSheet(u"color: rgb(229, 57, 53);")
-        self.label_165.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_18.addWidget(self.label_165)
-
-        self.line_14 = QFrame(self.widget_17)
-        self.line_14.setObjectName(u"line_14")
-        self.line_14.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
-        self.line_14.setFrameShape(QFrame.Shape.VLine)
-        self.line_14.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.horizontalLayout_18.addWidget(self.line_14)
-
-        self.label_167 = QLabel(self.widget_17)
-        self.label_167.setObjectName(u"label_167")
-        self.label_167.setFont(font11)
-        self.label_167.setStyleSheet(u"color: rgb(67, 160, 71);")
-        self.label_167.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_18.addWidget(self.label_167)
-
-        self.horizontalLayout_18.setStretch(0, 1)
-        self.horizontalLayout_18.setStretch(2, 1)
-
-        self.horizontalLayout_17.addWidget(self.widget_17)
-
-        self.horizontalLayout_17.setStretch(0, 6)
-
-        self.verticalLayout_18.addWidget(self.widget_14)
-
-
-        self.header_group_layout_1.addWidget(self.widget)
-
-        self.clear_group_a = QPushButton(self.widget_6)
-        self.clear_group_a.setObjectName(u"clear_group_a")
-        sizePolicy.setHeightForWidth(self.clear_group_a.sizePolicy().hasHeightForWidth())
-        self.clear_group_a.setSizePolicy(sizePolicy)
-        icon12 = QIcon()
-        icon12.addFile(u":/Icons/eraser_hover.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_group_a.setIcon(icon12)
-        self.clear_group_a.setIconSize(QSize(42, 42))
-
-        self.header_group_layout_1.addWidget(self.clear_group_a)
-
-        self.header_group_layout_1.setStretch(0, 6)
-        self.header_group_layout_1.setStretch(1, 1)
-
-        self.gridLayout.addLayout(self.header_group_layout_1, 0, 2, 1, 1)
-
-        self.header_group_layout_2 = QHBoxLayout()
-        self.header_group_layout_2.setObjectName(u"header_group_layout_2")
-        self.widget_19 = QWidget(self.widget_6)
-        self.widget_19.setObjectName(u"widget_19")
-        self.widget_19.setStyleSheet(u"QWidget{\n"
-"	color: rgb(251, 140, 0);\n"
-"	border-left: none;\n"
-"}")
-        self.verticalLayout_20 = QVBoxLayout(self.widget_19)
-        self.verticalLayout_20.setSpacing(5)
-        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
-        self.verticalLayout_20.setContentsMargins(0, 0, 0, 0)
-        self.label_164 = QLabel(self.widget_19)
-        self.label_164.setObjectName(u"label_164")
-        self.label_164.setFont(font10)
-        self.label_164.setStyleSheet(u"")
-        self.label_164.setAlignment(Qt.AlignCenter)
-
-        self.verticalLayout_20.addWidget(self.label_164)
-
-        self.widget_20 = QWidget(self.widget_19)
-        self.widget_20.setObjectName(u"widget_20")
-        self.horizontalLayout_19 = QHBoxLayout(self.widget_20)
-        self.horizontalLayout_19.setSpacing(7)
-        self.horizontalLayout_19.setObjectName(u"horizontalLayout_19")
-        self.horizontalLayout_19.setContentsMargins(0, 0, 0, 0)
-        self.widget_21 = QWidget(self.widget_20)
-        self.widget_21.setObjectName(u"widget_21")
-        self.horizontalLayout_20 = QHBoxLayout(self.widget_21)
-        self.horizontalLayout_20.setSpacing(7)
-        self.horizontalLayout_20.setObjectName(u"horizontalLayout_20")
-        self.horizontalLayout_20.setContentsMargins(0, 2, 2, 2)
-        self.label_168 = QLabel(self.widget_21)
-        self.label_168.setObjectName(u"label_168")
-        self.label_168.setFont(font11)
-        self.label_168.setStyleSheet(u"color: rgb(229, 57, 53);")
-        self.label_168.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_20.addWidget(self.label_168)
-
-        self.line_15 = QFrame(self.widget_21)
-        self.line_15.setObjectName(u"line_15")
-        self.line_15.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
-        self.line_15.setFrameShape(QFrame.Shape.VLine)
-        self.line_15.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.horizontalLayout_20.addWidget(self.line_15)
-
-        self.label_170 = QLabel(self.widget_21)
-        self.label_170.setObjectName(u"label_170")
-        self.label_170.setFont(font11)
-        self.label_170.setStyleSheet(u"color: rgb(67, 160, 71);")
-        self.label_170.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_20.addWidget(self.label_170)
-
-        self.horizontalLayout_20.setStretch(0, 1)
-        self.horizontalLayout_20.setStretch(2, 1)
-
-        self.horizontalLayout_19.addWidget(self.widget_21)
-
-        self.horizontalLayout_19.setStretch(0, 6)
-
-        self.verticalLayout_20.addWidget(self.widget_20)
-
-
-        self.header_group_layout_2.addWidget(self.widget_19)
-
-        self.clear_group_b = QPushButton(self.widget_6)
-        self.clear_group_b.setObjectName(u"clear_group_b")
-        sizePolicy.setHeightForWidth(self.clear_group_b.sizePolicy().hasHeightForWidth())
-        self.clear_group_b.setSizePolicy(sizePolicy)
-        self.clear_group_b.setIcon(icon12)
-        self.clear_group_b.setIconSize(QSize(42, 42))
-
-        self.header_group_layout_2.addWidget(self.clear_group_b)
-
-        self.header_group_layout_2.setStretch(0, 6)
-        self.header_group_layout_2.setStretch(1, 1)
-
-        self.gridLayout.addLayout(self.header_group_layout_2, 0, 4, 1, 1)
-
-        self.header_group_layout_3 = QHBoxLayout()
-        self.header_group_layout_3.setObjectName(u"header_group_layout_3")
-        self.widget_22 = QWidget(self.widget_6)
-        self.widget_22.setObjectName(u"widget_22")
-        self.widget_22.setStyleSheet(u"QWidget{\n"
-"	color: #6F00FF;\n"
-"	border-left: none;\n"
-"}")
-        self.verticalLayout_22 = QVBoxLayout(self.widget_22)
-        self.verticalLayout_22.setSpacing(5)
-        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
-        self.verticalLayout_22.setContentsMargins(0, 0, 0, 0)
-        self.label_171 = QLabel(self.widget_22)
-        self.label_171.setObjectName(u"label_171")
-        self.label_171.setFont(font10)
-        self.label_171.setStyleSheet(u"")
-        self.label_171.setAlignment(Qt.AlignCenter)
-
-        self.verticalLayout_22.addWidget(self.label_171)
-
-        self.widget_23 = QWidget(self.widget_22)
-        self.widget_23.setObjectName(u"widget_23")
-        self.horizontalLayout_22 = QHBoxLayout(self.widget_23)
-        self.horizontalLayout_22.setSpacing(7)
-        self.horizontalLayout_22.setObjectName(u"horizontalLayout_22")
-        self.horizontalLayout_22.setContentsMargins(0, 0, 0, 0)
-        self.widget_24 = QWidget(self.widget_23)
-        self.widget_24.setObjectName(u"widget_24")
-        self.horizontalLayout_23 = QHBoxLayout(self.widget_24)
-        self.horizontalLayout_23.setSpacing(7)
-        self.horizontalLayout_23.setObjectName(u"horizontalLayout_23")
-        self.horizontalLayout_23.setContentsMargins(0, 2, 2, 2)
-        self.label_172 = QLabel(self.widget_24)
-        self.label_172.setObjectName(u"label_172")
-        self.label_172.setFont(font11)
-        self.label_172.setStyleSheet(u"color: rgb(229, 57, 53);")
-        self.label_172.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_23.addWidget(self.label_172)
-
-        self.line_16 = QFrame(self.widget_24)
-        self.line_16.setObjectName(u"line_16")
-        self.line_16.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
-        self.line_16.setFrameShape(QFrame.Shape.VLine)
-        self.line_16.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.horizontalLayout_23.addWidget(self.line_16)
-
-        self.label_175 = QLabel(self.widget_24)
-        self.label_175.setObjectName(u"label_175")
-        self.label_175.setFont(font11)
-        self.label_175.setStyleSheet(u"color: rgb(67, 160, 71);")
-        self.label_175.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_23.addWidget(self.label_175)
-
-        self.horizontalLayout_23.setStretch(0, 1)
-        self.horizontalLayout_23.setStretch(2, 1)
-
-        self.horizontalLayout_22.addWidget(self.widget_24)
-
-        self.horizontalLayout_22.setStretch(0, 6)
-
-        self.verticalLayout_22.addWidget(self.widget_23)
-
-
-        self.header_group_layout_3.addWidget(self.widget_22)
-
-        self.clear_group_c = QPushButton(self.widget_6)
-        self.clear_group_c.setObjectName(u"clear_group_c")
-        sizePolicy.setHeightForWidth(self.clear_group_c.sizePolicy().hasHeightForWidth())
-        self.clear_group_c.setSizePolicy(sizePolicy)
-        self.clear_group_c.setIcon(icon12)
-        self.clear_group_c.setIconSize(QSize(42, 42))
-
-        self.header_group_layout_3.addWidget(self.clear_group_c)
-
-        self.header_group_layout_3.setStretch(0, 6)
-        self.header_group_layout_3.setStretch(1, 1)
-
-        self.gridLayout.addLayout(self.header_group_layout_3, 0, 6, 1, 1)
-
         self.label_name_1 = QWidget(self.widget_6)
         self.label_name_1.setObjectName(u"label_name_1")
         self.horizontalLayout_11 = QHBoxLayout(self.label_name_1)
@@ -1073,12 +815,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_11.setContentsMargins(3, 3, 3, 3)
         self.label_85 = QLabel(self.label_name_1)
         self.label_85.setObjectName(u"label_85")
-        font12 = QFont()
-        font12.setFamilies([u"Segoe UI"])
-        font12.setPointSize(19)
-        font12.setBold(True)
-        font12.setItalic(False)
-        self.label_85.setFont(font12)
+        font10 = QFont()
+        font10.setFamilies([u"Segoe UI"])
+        font10.setPointSize(19)
+        font10.setBold(True)
+        font10.setItalic(False)
+        self.label_85.setFont(font10)
         self.label_85.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -1095,14 +837,6 @@ class Ui_MainWindow(object):
 
 
         self.gridLayout.addWidget(self.label_name_1, 1, 0, 1, 1)
-
-        self.line_3 = QFrame(self.widget_6)
-        self.line_3.setObjectName(u"line_3")
-        self.line_3.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
-        self.line_3.setFrameShape(QFrame.Shape.VLine)
-        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout.addWidget(self.line_3, 1, 1, 3, 1)
 
         self.group_1_val_1 = QWidget(self.widget_6)
         self.group_1_val_1.setObjectName(u"group_1_val_1")
@@ -1130,7 +864,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_11.setObjectName(u"pressure_pv_a_11")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_11.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_11.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_11.setFont(font12)
+        self.pressure_pv_a_11.setFont(font10)
         self.pressure_pv_a_11.setStyleSheet(u"")
         self.pressure_pv_a_11.setWrapping(True)
         self.pressure_pv_a_11.setAlignment(Qt.AlignCenter)
@@ -1148,11 +882,43 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_577.addWidget(self.line_47)
 
-        self.pressure_sv_a_11 = QSpinBox(self.widget_303)
+        self.stacked_pressure_sv_a_11 = QStackedWidget(self.widget_303)
+        self.stacked_pressure_sv_a_11.setObjectName(u"stacked_pressure_sv_a_11")
+        self.stacked_pressure_sv_a_11.setStyleSheet(u"\n"
+"	border: none;")
+        self.inf_pressure_sv_a_11 = QWidget()
+        self.inf_pressure_sv_a_11.setObjectName(u"inf_pressure_sv_a_11")
+        self.inf_pressure_sv_a_11.setStyleSheet(u"\n"
+"	border: none;")
+        self.horizontalLayout_6 = QHBoxLayout(self.inf_pressure_sv_a_11)
+        self.horizontalLayout_6.setSpacing(0)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.pushButton = QPushButton(self.inf_pressure_sv_a_11)
+        self.pushButton.setObjectName(u"pushButton")
+        sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
+        self.pushButton.setSizePolicy(sizePolicy)
+        icon12 = QIcon()
+        icon12.addFile(u":/Icons/loop.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton.setIcon(icon12)
+        self.pushButton.setIconSize(QSize(35, 35))
+
+        self.horizontalLayout_6.addWidget(self.pushButton)
+
+        self.stacked_pressure_sv_a_11.addWidget(self.inf_pressure_sv_a_11)
+        self.count_pressure_sv_a_11 = QWidget()
+        self.count_pressure_sv_a_11.setObjectName(u"count_pressure_sv_a_11")
+        self.count_pressure_sv_a_11.setStyleSheet(u"\n"
+"	border: none;")
+        self.horizontalLayout_5 = QHBoxLayout(self.count_pressure_sv_a_11)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.pressure_sv_a_11 = QSpinBox(self.count_pressure_sv_a_11)
         self.pressure_sv_a_11.setObjectName(u"pressure_sv_a_11")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_11.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_11.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_11.setFont(font12)
+        self.pressure_sv_a_11.setFont(font10)
         self.pressure_sv_a_11.setStyleSheet(u"QSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1162,8 +928,14 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_11.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.pressure_sv_a_11.setMaximum(9999999)
 
-        self.horizontalLayout_577.addWidget(self.pressure_sv_a_11)
+        self.horizontalLayout_5.addWidget(self.pressure_sv_a_11)
 
+        self.stacked_pressure_sv_a_11.addWidget(self.count_pressure_sv_a_11)
+
+        self.horizontalLayout_577.addWidget(self.stacked_pressure_sv_a_11)
+
+        self.horizontalLayout_577.setStretch(0, 1)
+        self.horizontalLayout_577.setStretch(2, 1)
 
         self.horizontalLayout_576.addWidget(self.widget_303)
 
@@ -1172,11 +944,11 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.set_cycle_a_btn.sizePolicy().hasHeightForWidth())
         self.set_cycle_a_btn.setSizePolicy(sizePolicy)
         self.set_cycle_a_btn.setMinimumSize(QSize(0, 0))
-        font13 = QFont()
-        font13.setFamilies([u"Segoe UI"])
-        font13.setPointSize(18)
-        font13.setBold(True)
-        self.set_cycle_a_btn.setFont(font13)
+        font11 = QFont()
+        font11.setFamilies([u"Segoe UI"])
+        font11.setPointSize(18)
+        font11.setBold(True)
+        self.set_cycle_a_btn.setFont(font11)
         self.set_cycle_a_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #10B981;\n"
 "    color: white;\n"
@@ -1207,110 +979,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_1_val_1, 1, 2, 1, 1)
 
-        self.line_5 = QFrame(self.widget_6)
-        self.line_5.setObjectName(u"line_5")
-        self.line_5.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
-        self.line_5.setFrameShape(QFrame.Shape.VLine)
-        self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout.addWidget(self.line_5, 1, 3, 3, 1)
-
-        self.group_2_val_1 = QWidget(self.widget_6)
-        self.group_2_val_1.setObjectName(u"group_2_val_1")
-        self.horizontalLayout_578 = QHBoxLayout(self.group_2_val_1)
-        self.horizontalLayout_578.setObjectName(u"horizontalLayout_578")
-        self.horizontalLayout_578.setContentsMargins(3, 3, 6, 3)
-        self.widget_335 = QWidget(self.group_2_val_1)
-        self.widget_335.setObjectName(u"widget_335")
-        self.widget_335.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_579 = QHBoxLayout(self.widget_335)
-        self.horizontalLayout_579.setObjectName(u"horizontalLayout_579")
-        self.horizontalLayout_579.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_b_11 = QSpinBox(self.widget_335)
-        self.pressure_pv_b_11.setObjectName(u"pressure_pv_b_11")
-        sizePolicy.setHeightForWidth(self.pressure_pv_b_11.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_b_11.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_11.setFont(font12)
-        self.pressure_pv_b_11.setStyleSheet(u"")
-        self.pressure_pv_b_11.setWrapping(True)
-        self.pressure_pv_b_11.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_b_11.setReadOnly(True)
-        self.pressure_pv_b_11.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_b_11.setMaximum(9999999)
-
-        self.horizontalLayout_579.addWidget(self.pressure_pv_b_11)
-
-        self.line_59 = QFrame(self.widget_335)
-        self.line_59.setObjectName(u"line_59")
-        self.line_59.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
-        self.line_59.setFrameShape(QFrame.Shape.VLine)
-        self.line_59.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.horizontalLayout_579.addWidget(self.line_59)
-
-        self.pressure_sv_b_11 = QSpinBox(self.widget_335)
-        self.pressure_sv_b_11.setObjectName(u"pressure_sv_b_11")
-        sizePolicy.setHeightForWidth(self.pressure_sv_b_11.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_b_11.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_11.setFont(font12)
-        self.pressure_sv_b_11.setStyleSheet(u"QSpinBox:hover{\n"
-"    border: 2px solid #43A047;\n"
-"}")
-        self.pressure_sv_b_11.setWrapping(False)
-        self.pressure_sv_b_11.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_b_11.setReadOnly(False)
-        self.pressure_sv_b_11.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_b_11.setMaximum(9999999)
-
-        self.horizontalLayout_579.addWidget(self.pressure_sv_b_11)
-
-
-        self.horizontalLayout_578.addWidget(self.widget_335)
-
-        self.set_cycle_b_btn = QPushButton(self.group_2_val_1)
-        self.set_cycle_b_btn.setObjectName(u"set_cycle_b_btn")
-        sizePolicy.setHeightForWidth(self.set_cycle_b_btn.sizePolicy().hasHeightForWidth())
-        self.set_cycle_b_btn.setSizePolicy(sizePolicy)
-        self.set_cycle_b_btn.setMinimumSize(QSize(0, 0))
-        self.set_cycle_b_btn.setFont(font13)
-        self.set_cycle_b_btn.setStyleSheet(u"QPushButton {\n"
-"    background-color: #10B981;\n"
-"    color: white;\n"
-"    border: 1px solid #0B7EC8;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: rgb(13, 152, 106);\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #EF4444;\n"
-"}\n"
-"QPushButton:checked {\n"
-"    background-color: white;\n"
-"    color: #0B7EC8;\n"
-"}")
-        self.set_cycle_b_btn.setIcon(icon13)
-        self.set_cycle_b_btn.setIconSize(QSize(30, 30))
-        self.set_cycle_b_btn.setCheckable(True)
-
-        self.horizontalLayout_578.addWidget(self.set_cycle_b_btn)
-
-        self.horizontalLayout_578.setStretch(0, 6)
-        self.horizontalLayout_578.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_2_val_1, 1, 4, 1, 1)
-
         self.line_4 = QFrame(self.widget_6)
         self.line_4.setObjectName(u"line_4")
         self.line_4.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
@@ -1319,106 +987,279 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.line_4, 1, 5, 3, 1)
 
-        self.group_3_val_1 = QWidget(self.widget_6)
-        self.group_3_val_1.setObjectName(u"group_3_val_1")
-        self.horizontalLayout_580 = QHBoxLayout(self.group_3_val_1)
-        self.horizontalLayout_580.setObjectName(u"horizontalLayout_580")
-        self.horizontalLayout_580.setContentsMargins(3, 3, 6, 3)
-        self.widget_337 = QWidget(self.group_3_val_1)
-        self.widget_337.setObjectName(u"widget_337")
-        self.widget_337.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
+        self.header_group_layout_1 = QHBoxLayout()
+        self.header_group_layout_1.setObjectName(u"header_group_layout_1")
+        self.widget = QWidget(self.widget_6)
+        self.widget.setObjectName(u"widget")
+        self.widget.setStyleSheet(u"QWidget{\n"
+"	color: rgb(30, 136, 229);\n"
+"	border-left: none;\n"
 "}")
-        self.horizontalLayout_581 = QHBoxLayout(self.widget_337)
-        self.horizontalLayout_581.setObjectName(u"horizontalLayout_581")
-        self.horizontalLayout_581.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_c_11 = QSpinBox(self.widget_337)
-        self.pressure_pv_c_11.setObjectName(u"pressure_pv_c_11")
-        sizePolicy.setHeightForWidth(self.pressure_pv_c_11.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_c_11.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_11.setFont(font12)
-        self.pressure_pv_c_11.setStyleSheet(u"")
-        self.pressure_pv_c_11.setWrapping(True)
-        self.pressure_pv_c_11.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_c_11.setReadOnly(True)
-        self.pressure_pv_c_11.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_c_11.setMaximum(9999999)
+        self.verticalLayout_18 = QVBoxLayout(self.widget)
+        self.verticalLayout_18.setSpacing(5)
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.verticalLayout_18.setContentsMargins(0, 0, 0, 0)
+        self.label_156 = QLabel(self.widget)
+        self.label_156.setObjectName(u"label_156")
+        font12 = QFont()
+        font12.setFamilies([u"MS Shell Dlg 2"])
+        font12.setPointSize(19)
+        font12.setBold(True)
+        font12.setItalic(False)
+        self.label_156.setFont(font12)
+        self.label_156.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_581.addWidget(self.pressure_pv_c_11)
+        self.verticalLayout_18.addWidget(self.label_156)
 
-        self.line_60 = QFrame(self.widget_337)
-        self.line_60.setObjectName(u"line_60")
-        self.line_60.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
-        self.line_60.setFrameShape(QFrame.Shape.VLine)
-        self.line_60.setFrameShadow(QFrame.Shadow.Sunken)
+        self.widget_14 = QWidget(self.widget)
+        self.widget_14.setObjectName(u"widget_14")
+        self.horizontalLayout_17 = QHBoxLayout(self.widget_14)
+        self.horizontalLayout_17.setSpacing(7)
+        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.horizontalLayout_17.setContentsMargins(0, 0, 0, 0)
+        self.widget_17 = QWidget(self.widget_14)
+        self.widget_17.setObjectName(u"widget_17")
+        self.widget_17.setStyleSheet(u"")
+        self.horizontalLayout_18 = QHBoxLayout(self.widget_17)
+        self.horizontalLayout_18.setSpacing(7)
+        self.horizontalLayout_18.setObjectName(u"horizontalLayout_18")
+        self.horizontalLayout_18.setContentsMargins(0, 2, 2, 2)
+        self.label_165 = QLabel(self.widget_17)
+        self.label_165.setObjectName(u"label_165")
+        font13 = QFont()
+        font13.setFamilies([u"MS Shell Dlg 2"])
+        font13.setPointSize(16)
+        font13.setBold(True)
+        font13.setItalic(False)
+        self.label_165.setFont(font13)
+        self.label_165.setStyleSheet(u"color: rgb(229, 57, 53);")
+        self.label_165.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_581.addWidget(self.line_60)
+        self.horizontalLayout_18.addWidget(self.label_165)
 
-        self.pressure_sv_c_11 = QSpinBox(self.widget_337)
-        self.pressure_sv_c_11.setObjectName(u"pressure_sv_c_11")
-        sizePolicy.setHeightForWidth(self.pressure_sv_c_11.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_c_11.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_11.setFont(font12)
-        self.pressure_sv_c_11.setStyleSheet(u"QSpinBox:hover{\n"
-"    border: 2px solid #43A047;\n"
-"}")
-        self.pressure_sv_c_11.setWrapping(False)
-        self.pressure_sv_c_11.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_c_11.setReadOnly(False)
-        self.pressure_sv_c_11.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_c_11.setMaximum(9999999)
+        self.line_14 = QFrame(self.widget_17)
+        self.line_14.setObjectName(u"line_14")
+        self.line_14.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
+        self.line_14.setFrameShape(QFrame.Shape.VLine)
+        self.line_14.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.horizontalLayout_581.addWidget(self.pressure_sv_c_11)
+        self.horizontalLayout_18.addWidget(self.line_14)
+
+        self.label_167 = QLabel(self.widget_17)
+        self.label_167.setObjectName(u"label_167")
+        self.label_167.setFont(font13)
+        self.label_167.setStyleSheet(u"color: rgb(67, 160, 71);")
+        self.label_167.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_18.addWidget(self.label_167)
+
+        self.horizontalLayout_18.setStretch(0, 1)
+        self.horizontalLayout_18.setStretch(2, 1)
+
+        self.horizontalLayout_17.addWidget(self.widget_17)
+
+        self.horizontalLayout_17.setStretch(0, 6)
+
+        self.verticalLayout_18.addWidget(self.widget_14)
 
 
-        self.horizontalLayout_580.addWidget(self.widget_337)
+        self.header_group_layout_1.addWidget(self.widget)
 
-        self.set_cycle_c_btn = QPushButton(self.group_3_val_1)
-        self.set_cycle_c_btn.setObjectName(u"set_cycle_c_btn")
-        sizePolicy.setHeightForWidth(self.set_cycle_c_btn.sizePolicy().hasHeightForWidth())
-        self.set_cycle_c_btn.setSizePolicy(sizePolicy)
-        self.set_cycle_c_btn.setMinimumSize(QSize(0, 0))
-        self.set_cycle_c_btn.setFont(font13)
-        self.set_cycle_c_btn.setToolTipDuration(-1)
-        self.set_cycle_c_btn.setStyleSheet(u"QPushButton {\n"
-"    background-color: #10B981;\n"
-"    color: white;\n"
-"    border: 1px solid #0B7EC8;\n"
-"    border-radius: 15px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: rgb(13, 152, 106);\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #EF4444;\n"
-"}\n"
-"QPushButton:checked {\n"
-"    background-color: white;\n"
-"    color: #0B7EC8;\n"
-"}")
+        self.clear_group_a = QPushButton(self.widget_6)
+        self.clear_group_a.setObjectName(u"clear_group_a")
+        sizePolicy.setHeightForWidth(self.clear_group_a.sizePolicy().hasHeightForWidth())
+        self.clear_group_a.setSizePolicy(sizePolicy)
         icon14 = QIcon()
-        icon14.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        icon14.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        icon14.addFile(u":/newPrefix/rotate-reverse-white.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
-        self.set_cycle_c_btn.setIcon(icon14)
-        self.set_cycle_c_btn.setIconSize(QSize(30, 30))
-        self.set_cycle_c_btn.setCheckable(True)
+        icon14.addFile(u":/Icons/eraser_hover.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_group_a.setIcon(icon14)
+        self.clear_group_a.setIconSize(QSize(42, 42))
 
-        self.horizontalLayout_580.addWidget(self.set_cycle_c_btn)
+        self.header_group_layout_1.addWidget(self.clear_group_a)
 
-        self.horizontalLayout_580.setStretch(0, 6)
-        self.horizontalLayout_580.setStretch(1, 1)
+        self.header_group_layout_1.setStretch(0, 6)
+        self.header_group_layout_1.setStretch(1, 1)
 
-        self.gridLayout.addWidget(self.group_3_val_1, 1, 6, 1, 1)
+        self.gridLayout.addLayout(self.header_group_layout_1, 0, 2, 1, 1)
+
+        self.header_group_layout_2 = QHBoxLayout()
+        self.header_group_layout_2.setObjectName(u"header_group_layout_2")
+        self.widget_19 = QWidget(self.widget_6)
+        self.widget_19.setObjectName(u"widget_19")
+        self.widget_19.setStyleSheet(u"QWidget{\n"
+"	color: rgb(251, 140, 0);\n"
+"	border-left: none;\n"
+"}")
+        self.verticalLayout_20 = QVBoxLayout(self.widget_19)
+        self.verticalLayout_20.setSpacing(5)
+        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.verticalLayout_20.setContentsMargins(0, 0, 0, 0)
+        self.label_164 = QLabel(self.widget_19)
+        self.label_164.setObjectName(u"label_164")
+        self.label_164.setFont(font12)
+        self.label_164.setStyleSheet(u"")
+        self.label_164.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_20.addWidget(self.label_164)
+
+        self.widget_20 = QWidget(self.widget_19)
+        self.widget_20.setObjectName(u"widget_20")
+        self.horizontalLayout_19 = QHBoxLayout(self.widget_20)
+        self.horizontalLayout_19.setSpacing(7)
+        self.horizontalLayout_19.setObjectName(u"horizontalLayout_19")
+        self.horizontalLayout_19.setContentsMargins(0, 0, 0, 0)
+        self.widget_21 = QWidget(self.widget_20)
+        self.widget_21.setObjectName(u"widget_21")
+        self.horizontalLayout_20 = QHBoxLayout(self.widget_21)
+        self.horizontalLayout_20.setSpacing(7)
+        self.horizontalLayout_20.setObjectName(u"horizontalLayout_20")
+        self.horizontalLayout_20.setContentsMargins(0, 2, 2, 2)
+        self.label_168 = QLabel(self.widget_21)
+        self.label_168.setObjectName(u"label_168")
+        self.label_168.setFont(font13)
+        self.label_168.setStyleSheet(u"color: rgb(229, 57, 53);")
+        self.label_168.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_20.addWidget(self.label_168)
+
+        self.line_15 = QFrame(self.widget_21)
+        self.line_15.setObjectName(u"line_15")
+        self.line_15.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
+        self.line_15.setFrameShape(QFrame.Shape.VLine)
+        self.line_15.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout_20.addWidget(self.line_15)
+
+        self.label_170 = QLabel(self.widget_21)
+        self.label_170.setObjectName(u"label_170")
+        self.label_170.setFont(font13)
+        self.label_170.setStyleSheet(u"color: rgb(67, 160, 71);")
+        self.label_170.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_20.addWidget(self.label_170)
+
+        self.horizontalLayout_20.setStretch(0, 1)
+        self.horizontalLayout_20.setStretch(2, 1)
+
+        self.horizontalLayout_19.addWidget(self.widget_21)
+
+        self.horizontalLayout_19.setStretch(0, 6)
+
+        self.verticalLayout_20.addWidget(self.widget_20)
+
+
+        self.header_group_layout_2.addWidget(self.widget_19)
+
+        self.clear_group_b = QPushButton(self.widget_6)
+        self.clear_group_b.setObjectName(u"clear_group_b")
+        sizePolicy.setHeightForWidth(self.clear_group_b.sizePolicy().hasHeightForWidth())
+        self.clear_group_b.setSizePolicy(sizePolicy)
+        self.clear_group_b.setIcon(icon14)
+        self.clear_group_b.setIconSize(QSize(42, 42))
+
+        self.header_group_layout_2.addWidget(self.clear_group_b)
+
+        self.header_group_layout_2.setStretch(0, 6)
+        self.header_group_layout_2.setStretch(1, 1)
+
+        self.gridLayout.addLayout(self.header_group_layout_2, 0, 4, 1, 1)
+
+        self.header_group_layout_3 = QHBoxLayout()
+        self.header_group_layout_3.setObjectName(u"header_group_layout_3")
+        self.widget_22 = QWidget(self.widget_6)
+        self.widget_22.setObjectName(u"widget_22")
+        self.widget_22.setStyleSheet(u"QWidget{\n"
+"	color: #6F00FF;\n"
+"	border-left: none;\n"
+"}")
+        self.verticalLayout_22 = QVBoxLayout(self.widget_22)
+        self.verticalLayout_22.setSpacing(5)
+        self.verticalLayout_22.setObjectName(u"verticalLayout_22")
+        self.verticalLayout_22.setContentsMargins(0, 0, 0, 0)
+        self.label_171 = QLabel(self.widget_22)
+        self.label_171.setObjectName(u"label_171")
+        self.label_171.setFont(font12)
+        self.label_171.setStyleSheet(u"")
+        self.label_171.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_22.addWidget(self.label_171)
+
+        self.widget_23 = QWidget(self.widget_22)
+        self.widget_23.setObjectName(u"widget_23")
+        self.horizontalLayout_22 = QHBoxLayout(self.widget_23)
+        self.horizontalLayout_22.setSpacing(7)
+        self.horizontalLayout_22.setObjectName(u"horizontalLayout_22")
+        self.horizontalLayout_22.setContentsMargins(0, 0, 0, 0)
+        self.widget_24 = QWidget(self.widget_23)
+        self.widget_24.setObjectName(u"widget_24")
+        self.horizontalLayout_23 = QHBoxLayout(self.widget_24)
+        self.horizontalLayout_23.setSpacing(7)
+        self.horizontalLayout_23.setObjectName(u"horizontalLayout_23")
+        self.horizontalLayout_23.setContentsMargins(0, 2, 2, 2)
+        self.label_172 = QLabel(self.widget_24)
+        self.label_172.setObjectName(u"label_172")
+        self.label_172.setFont(font13)
+        self.label_172.setStyleSheet(u"color: rgb(229, 57, 53);")
+        self.label_172.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_23.addWidget(self.label_172)
+
+        self.line_16 = QFrame(self.widget_24)
+        self.line_16.setObjectName(u"line_16")
+        self.line_16.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
+        self.line_16.setFrameShape(QFrame.Shape.VLine)
+        self.line_16.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout_23.addWidget(self.line_16)
+
+        self.label_175 = QLabel(self.widget_24)
+        self.label_175.setObjectName(u"label_175")
+        self.label_175.setFont(font13)
+        self.label_175.setStyleSheet(u"color: rgb(67, 160, 71);")
+        self.label_175.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_23.addWidget(self.label_175)
+
+        self.horizontalLayout_23.setStretch(0, 1)
+        self.horizontalLayout_23.setStretch(2, 1)
+
+        self.horizontalLayout_22.addWidget(self.widget_24)
+
+        self.horizontalLayout_22.setStretch(0, 6)
+
+        self.verticalLayout_22.addWidget(self.widget_23)
+
+
+        self.header_group_layout_3.addWidget(self.widget_22)
+
+        self.clear_group_c = QPushButton(self.widget_6)
+        self.clear_group_c.setObjectName(u"clear_group_c")
+        sizePolicy.setHeightForWidth(self.clear_group_c.sizePolicy().hasHeightForWidth())
+        self.clear_group_c.setSizePolicy(sizePolicy)
+        self.clear_group_c.setIcon(icon14)
+        self.clear_group_c.setIconSize(QSize(42, 42))
+
+        self.header_group_layout_3.addWidget(self.clear_group_c)
+
+        self.header_group_layout_3.setStretch(0, 6)
+        self.header_group_layout_3.setStretch(1, 1)
+
+        self.gridLayout.addLayout(self.header_group_layout_3, 0, 6, 1, 1)
+
+        self.line_3 = QFrame(self.widget_6)
+        self.line_3.setObjectName(u"line_3")
+        self.line_3.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
+        self.line_3.setFrameShape(QFrame.Shape.VLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout.addWidget(self.line_3, 1, 1, 3, 1)
+
+        self.line_5 = QFrame(self.widget_6)
+        self.line_5.setObjectName(u"line_5")
+        self.line_5.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
+        self.line_5.setFrameShape(QFrame.Shape.VLine)
+        self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout.addWidget(self.line_5, 1, 3, 3, 1)
 
         self.label_name_2 = QWidget(self.widget_6)
         self.label_name_2.setObjectName(u"label_name_2")
@@ -1427,7 +1268,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_12.setContentsMargins(3, 3, 3, 3)
         self.label_83 = QLabel(self.label_name_2)
         self.label_83.setObjectName(u"label_83")
-        self.label_83.setFont(font12)
+        self.label_83.setFont(font10)
         self.label_83.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -1471,7 +1312,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_9.setObjectName(u"pressure_pv_a_9")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_9.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_9.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_9.setFont(font12)
+        self.pressure_pv_a_9.setFont(font10)
         self.pressure_pv_a_9.setStyleSheet(u"")
         self.pressure_pv_a_9.setWrapping(True)
         self.pressure_pv_a_9.setAlignment(Qt.AlignCenter)
@@ -1495,7 +1336,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_9.setObjectName(u"pressure_sv_a_9")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_9.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_9.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_9.setFont(font12)
+        self.pressure_sv_a_9.setFont(font10)
         self.pressure_sv_a_9.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1535,14 +1376,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_1_val_2, 2, 2, 1, 1)
 
-        self.group_2_val_2 = QWidget(self.widget_6)
-        self.group_2_val_2.setObjectName(u"group_2_val_2")
-        self.horizontalLayout_508 = QHBoxLayout(self.group_2_val_2)
-        self.horizontalLayout_508.setObjectName(u"horizontalLayout_508")
-        self.horizontalLayout_508.setContentsMargins(3, 3, 6, 3)
-        self.widget_237 = QWidget(self.group_2_val_2)
-        self.widget_237.setObjectName(u"widget_237")
-        self.widget_237.setStyleSheet(u"QWidget{\n"
+        self.group_3_val_1 = QWidget(self.widget_6)
+        self.group_3_val_1.setObjectName(u"group_3_val_1")
+        self.horizontalLayout_580 = QHBoxLayout(self.group_3_val_1)
+        self.horizontalLayout_580.setObjectName(u"horizontalLayout_580")
+        self.horizontalLayout_580.setContentsMargins(3, 3, 6, 3)
+        self.widget_337 = QWidget(self.group_3_val_1)
+        self.widget_337.setObjectName(u"widget_337")
+        self.widget_337.setStyleSheet(u"QWidget{\n"
 "    border: 2px solid #D1D5DB;\n"
 "    border-radius: 10px;\n"
 "}\n"
@@ -1554,80 +1395,132 @@ class Ui_MainWindow(object):
 "{\n"
 "    border: none;\n"
 "}")
-        self.horizontalLayout_509 = QHBoxLayout(self.widget_237)
-        self.horizontalLayout_509.setObjectName(u"horizontalLayout_509")
-        self.horizontalLayout_509.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_b_9 = QDoubleSpinBox(self.widget_237)
-        self.pressure_pv_b_9.setObjectName(u"pressure_pv_b_9")
-        sizePolicy.setHeightForWidth(self.pressure_pv_b_9.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_b_9.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_9.setFont(font12)
-        self.pressure_pv_b_9.setStyleSheet(u"")
-        self.pressure_pv_b_9.setWrapping(True)
-        self.pressure_pv_b_9.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_b_9.setReadOnly(True)
-        self.pressure_pv_b_9.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_b_9.setDecimals(1)
-        self.pressure_pv_b_9.setMaximum(999.000000000000000)
-        self.pressure_pv_b_9.setValue(0.000000000000000)
+        self.horizontalLayout_581 = QHBoxLayout(self.widget_337)
+        self.horizontalLayout_581.setObjectName(u"horizontalLayout_581")
+        self.horizontalLayout_581.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_c_11 = QSpinBox(self.widget_337)
+        self.pressure_pv_c_11.setObjectName(u"pressure_pv_c_11")
+        sizePolicy.setHeightForWidth(self.pressure_pv_c_11.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_c_11.setSizePolicy(sizePolicy)
+        self.pressure_pv_c_11.setFont(font10)
+        self.pressure_pv_c_11.setStyleSheet(u"")
+        self.pressure_pv_c_11.setWrapping(True)
+        self.pressure_pv_c_11.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_c_11.setReadOnly(True)
+        self.pressure_pv_c_11.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_c_11.setMaximum(9999999)
 
-        self.horizontalLayout_509.addWidget(self.pressure_pv_b_9)
+        self.horizontalLayout_581.addWidget(self.pressure_pv_c_11)
 
-        self.line_53 = QFrame(self.widget_237)
-        self.line_53.setObjectName(u"line_53")
-        self.line_53.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
-        self.line_53.setFrameShape(QFrame.Shape.VLine)
-        self.line_53.setFrameShadow(QFrame.Shadow.Sunken)
+        self.line_60 = QFrame(self.widget_337)
+        self.line_60.setObjectName(u"line_60")
+        self.line_60.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
+        self.line_60.setFrameShape(QFrame.Shape.VLine)
+        self.line_60.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.horizontalLayout_509.addWidget(self.line_53)
+        self.horizontalLayout_581.addWidget(self.line_60)
 
-        self.pressure_sv_b_9 = QDoubleSpinBox(self.widget_237)
-        self.pressure_sv_b_9.setObjectName(u"pressure_sv_b_9")
-        sizePolicy.setHeightForWidth(self.pressure_sv_b_9.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_b_9.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_9.setFont(font12)
-        self.pressure_sv_b_9.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+        self.stacked_pressure_sv_c_11 = QStackedWidget(self.widget_337)
+        self.stacked_pressure_sv_c_11.setObjectName(u"stacked_pressure_sv_c_11")
+        self.stacked_pressure_sv_c_11.setStyleSheet(u"\n"
+"	border: none;")
+        self.inf_pressure_sv_c_11 = QWidget()
+        self.inf_pressure_sv_c_11.setObjectName(u"inf_pressure_sv_c_11")
+        self.inf_pressure_sv_c_11.setStyleSheet(u"\n"
+"	border: none;")
+        self.horizontalLayout_34 = QHBoxLayout(self.inf_pressure_sv_c_11)
+        self.horizontalLayout_34.setSpacing(0)
+        self.horizontalLayout_34.setObjectName(u"horizontalLayout_34")
+        self.horizontalLayout_34.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_3 = QPushButton(self.inf_pressure_sv_c_11)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+        sizePolicy.setHeightForWidth(self.pushButton_3.sizePolicy().hasHeightForWidth())
+        self.pushButton_3.setSizePolicy(sizePolicy)
+        self.pushButton_3.setIcon(icon12)
+        self.pushButton_3.setIconSize(QSize(35, 35))
+
+        self.horizontalLayout_34.addWidget(self.pushButton_3)
+
+        self.stacked_pressure_sv_c_11.addWidget(self.inf_pressure_sv_c_11)
+        self.count_pressure_sv_c_11 = QWidget()
+        self.count_pressure_sv_c_11.setObjectName(u"count_pressure_sv_c_11")
+        self.count_pressure_sv_c_11.setStyleSheet(u"\n"
+"	border: none;")
+        self.horizontalLayout_42 = QHBoxLayout(self.count_pressure_sv_c_11)
+        self.horizontalLayout_42.setSpacing(0)
+        self.horizontalLayout_42.setObjectName(u"horizontalLayout_42")
+        self.horizontalLayout_42.setContentsMargins(0, 0, 0, 0)
+        self.pressure_sv_c_11 = QSpinBox(self.count_pressure_sv_c_11)
+        self.pressure_sv_c_11.setObjectName(u"pressure_sv_c_11")
+        sizePolicy.setHeightForWidth(self.pressure_sv_c_11.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_c_11.setSizePolicy(sizePolicy)
+        self.pressure_sv_c_11.setFont(font10)
+        self.pressure_sv_c_11.setStyleSheet(u"QSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
-        self.pressure_sv_b_9.setWrapping(False)
-        self.pressure_sv_b_9.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_b_9.setReadOnly(False)
-        self.pressure_sv_b_9.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_b_9.setDecimals(1)
-        self.pressure_sv_b_9.setMaximum(999.000000000000000)
-        self.pressure_sv_b_9.setValue(0.000000000000000)
+        self.pressure_sv_c_11.setWrapping(False)
+        self.pressure_sv_c_11.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_c_11.setReadOnly(False)
+        self.pressure_sv_c_11.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_c_11.setMaximum(9999999)
 
-        self.horizontalLayout_509.addWidget(self.pressure_sv_b_9)
+        self.horizontalLayout_42.addWidget(self.pressure_sv_c_11)
 
-        self.horizontalLayout_509.setStretch(0, 1)
-        self.horizontalLayout_509.setStretch(2, 1)
+        self.stacked_pressure_sv_c_11.addWidget(self.count_pressure_sv_c_11)
 
-        self.horizontalLayout_508.addWidget(self.widget_237)
+        self.horizontalLayout_581.addWidget(self.stacked_pressure_sv_c_11)
 
-        self.label_247 = QLabel(self.group_2_val_2)
-        self.label_247.setObjectName(u"label_247")
-        self.label_247.setFont(font14)
-        self.label_247.setStyleSheet(u"QLabel{\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
+        self.horizontalLayout_581.setStretch(0, 1)
+        self.horizontalLayout_581.setStretch(2, 1)
+
+        self.horizontalLayout_580.addWidget(self.widget_337)
+
+        self.set_cycle_c_btn = QPushButton(self.group_3_val_1)
+        self.set_cycle_c_btn.setObjectName(u"set_cycle_c_btn")
+        sizePolicy.setHeightForWidth(self.set_cycle_c_btn.sizePolicy().hasHeightForWidth())
+        self.set_cycle_c_btn.setSizePolicy(sizePolicy)
+        self.set_cycle_c_btn.setMinimumSize(QSize(0, 0))
+        self.set_cycle_c_btn.setFont(font11)
+        self.set_cycle_c_btn.setToolTipDuration(-1)
+        self.set_cycle_c_btn.setStyleSheet(u"QPushButton {\n"
+"    background-color: #10B981;\n"
+"    color: white;\n"
+"    border: 1px solid #0B7EC8;\n"
+"    border-radius: 15px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: rgb(13, 152, 106);\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    background-color: #EF4444;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: white;\n"
+"    color: #0B7EC8;\n"
 "}")
-        self.label_247.setAlignment(Qt.AlignCenter)
+        icon15 = QIcon()
+        icon15.addFile(u":/Icons/infinite-cycle.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon15.addFile(u":/Icons/arrows-repeat-1.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        icon15.addFile(u":/newPrefix/rotate-reverse-white.png", QSize(), QIcon.Mode.Selected, QIcon.State.On)
+        self.set_cycle_c_btn.setIcon(icon15)
+        self.set_cycle_c_btn.setIconSize(QSize(30, 30))
+        self.set_cycle_c_btn.setCheckable(True)
 
-        self.horizontalLayout_508.addWidget(self.label_247)
+        self.horizontalLayout_580.addWidget(self.set_cycle_c_btn)
 
-        self.horizontalLayout_508.setStretch(0, 6)
-        self.horizontalLayout_508.setStretch(1, 1)
+        self.horizontalLayout_580.setStretch(0, 6)
+        self.horizontalLayout_580.setStretch(1, 1)
 
-        self.gridLayout.addWidget(self.group_2_val_2, 2, 4, 1, 1)
+        self.gridLayout.addWidget(self.group_3_val_1, 1, 6, 1, 1)
 
-        self.group_3_val_2 = QWidget(self.widget_6)
-        self.group_3_val_2.setObjectName(u"group_3_val_2")
-        self.horizontalLayout_544 = QHBoxLayout(self.group_3_val_2)
-        self.horizontalLayout_544.setObjectName(u"horizontalLayout_544")
-        self.horizontalLayout_544.setContentsMargins(3, 3, 6, 3)
-        self.widget_289 = QWidget(self.group_3_val_2)
-        self.widget_289.setObjectName(u"widget_289")
-        self.widget_289.setStyleSheet(u"QWidget{\n"
+        self.group_2_val_1 = QWidget(self.widget_6)
+        self.group_2_val_1.setObjectName(u"group_2_val_1")
+        self.horizontalLayout_578 = QHBoxLayout(self.group_2_val_1)
+        self.horizontalLayout_578.setObjectName(u"horizontalLayout_578")
+        self.horizontalLayout_578.setContentsMargins(3, 3, 6, 3)
+        self.widget_335 = QWidget(self.group_2_val_1)
+        self.widget_335.setObjectName(u"widget_335")
+        self.widget_335.setStyleSheet(u"QWidget{\n"
 "    border: 2px solid #D1D5DB;\n"
 "    border-radius: 10px;\n"
 "}\n"
@@ -1639,96 +1532,118 @@ class Ui_MainWindow(object):
 "{\n"
 "    border: none;\n"
 "}")
-        self.horizontalLayout_545 = QHBoxLayout(self.widget_289)
-        self.horizontalLayout_545.setObjectName(u"horizontalLayout_545")
-        self.horizontalLayout_545.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_c_9 = QDoubleSpinBox(self.widget_289)
-        self.pressure_pv_c_9.setObjectName(u"pressure_pv_c_9")
-        sizePolicy.setHeightForWidth(self.pressure_pv_c_9.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_c_9.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_9.setFont(font12)
-        self.pressure_pv_c_9.setStyleSheet(u"")
-        self.pressure_pv_c_9.setWrapping(True)
-        self.pressure_pv_c_9.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_c_9.setReadOnly(True)
-        self.pressure_pv_c_9.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_c_9.setDecimals(1)
-        self.pressure_pv_c_9.setMaximum(999.000000000000000)
-        self.pressure_pv_c_9.setValue(0.000000000000000)
+        self.horizontalLayout_579 = QHBoxLayout(self.widget_335)
+        self.horizontalLayout_579.setObjectName(u"horizontalLayout_579")
+        self.horizontalLayout_579.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_b_11 = QSpinBox(self.widget_335)
+        self.pressure_pv_b_11.setObjectName(u"pressure_pv_b_11")
+        sizePolicy.setHeightForWidth(self.pressure_pv_b_11.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_b_11.setSizePolicy(sizePolicy)
+        self.pressure_pv_b_11.setFont(font10)
+        self.pressure_pv_b_11.setStyleSheet(u"")
+        self.pressure_pv_b_11.setWrapping(True)
+        self.pressure_pv_b_11.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_b_11.setReadOnly(True)
+        self.pressure_pv_b_11.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_b_11.setMaximum(9999999)
 
-        self.horizontalLayout_545.addWidget(self.pressure_pv_c_9)
+        self.horizontalLayout_579.addWidget(self.pressure_pv_b_11)
 
-        self.line_56 = QFrame(self.widget_289)
-        self.line_56.setObjectName(u"line_56")
-        self.line_56.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
-        self.line_56.setFrameShape(QFrame.Shape.VLine)
-        self.line_56.setFrameShadow(QFrame.Shadow.Sunken)
+        self.line_59 = QFrame(self.widget_335)
+        self.line_59.setObjectName(u"line_59")
+        self.line_59.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
+        self.line_59.setFrameShape(QFrame.Shape.VLine)
+        self.line_59.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.horizontalLayout_545.addWidget(self.line_56)
+        self.horizontalLayout_579.addWidget(self.line_59)
 
-        self.pressure_sv_c_9 = QDoubleSpinBox(self.widget_289)
-        self.pressure_sv_c_9.setObjectName(u"pressure_sv_c_9")
-        sizePolicy.setHeightForWidth(self.pressure_sv_c_9.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_c_9.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_9.setFont(font12)
-        self.pressure_sv_c_9.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+        self.stacked_pressure_sv_b_11 = QStackedWidget(self.widget_335)
+        self.stacked_pressure_sv_b_11.setObjectName(u"stacked_pressure_sv_b_11")
+        self.stacked_pressure_sv_b_11.setStyleSheet(u"\n"
+"	border: none;")
+        self.inf_pressure_sv_b_11 = QWidget()
+        self.inf_pressure_sv_b_11.setObjectName(u"inf_pressure_sv_b_11")
+        self.inf_pressure_sv_b_11.setStyleSheet(u"\n"
+"	border: none;")
+        self.horizontalLayout_25 = QHBoxLayout(self.inf_pressure_sv_b_11)
+        self.horizontalLayout_25.setSpacing(0)
+        self.horizontalLayout_25.setObjectName(u"horizontalLayout_25")
+        self.horizontalLayout_25.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_2 = QPushButton(self.inf_pressure_sv_b_11)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+        sizePolicy.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
+        self.pushButton_2.setSizePolicy(sizePolicy)
+        self.pushButton_2.setIcon(icon12)
+        self.pushButton_2.setIconSize(QSize(35, 35))
+
+        self.horizontalLayout_25.addWidget(self.pushButton_2)
+
+        self.stacked_pressure_sv_b_11.addWidget(self.inf_pressure_sv_b_11)
+        self.count_pressure_sv_b_11 = QWidget()
+        self.count_pressure_sv_b_11.setObjectName(u"count_pressure_sv_b_11")
+        self.count_pressure_sv_b_11.setStyleSheet(u"\n"
+"	border: none;")
+        self.horizontalLayout_26 = QHBoxLayout(self.count_pressure_sv_b_11)
+        self.horizontalLayout_26.setSpacing(0)
+        self.horizontalLayout_26.setObjectName(u"horizontalLayout_26")
+        self.horizontalLayout_26.setContentsMargins(0, 0, 0, 0)
+        self.pressure_sv_b_11 = QSpinBox(self.count_pressure_sv_b_11)
+        self.pressure_sv_b_11.setObjectName(u"pressure_sv_b_11")
+        sizePolicy.setHeightForWidth(self.pressure_sv_b_11.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_b_11.setSizePolicy(sizePolicy)
+        self.pressure_sv_b_11.setFont(font10)
+        self.pressure_sv_b_11.setStyleSheet(u"QSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
-        self.pressure_sv_c_9.setWrapping(False)
-        self.pressure_sv_c_9.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_c_9.setReadOnly(False)
-        self.pressure_sv_c_9.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_c_9.setDecimals(1)
-        self.pressure_sv_c_9.setMaximum(999.000000000000000)
-        self.pressure_sv_c_9.setValue(0.000000000000000)
+        self.pressure_sv_b_11.setWrapping(False)
+        self.pressure_sv_b_11.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_b_11.setReadOnly(False)
+        self.pressure_sv_b_11.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_b_11.setMaximum(9999999)
 
-        self.horizontalLayout_545.addWidget(self.pressure_sv_c_9)
+        self.horizontalLayout_26.addWidget(self.pressure_sv_b_11)
 
-        self.horizontalLayout_545.setStretch(0, 1)
-        self.horizontalLayout_545.setStretch(2, 1)
+        self.stacked_pressure_sv_b_11.addWidget(self.count_pressure_sv_b_11)
 
-        self.horizontalLayout_544.addWidget(self.widget_289)
+        self.horizontalLayout_579.addWidget(self.stacked_pressure_sv_b_11)
 
-        self.label_261 = QLabel(self.group_3_val_2)
-        self.label_261.setObjectName(u"label_261")
-        self.label_261.setFont(font14)
-        self.label_261.setStyleSheet(u"QLabel{\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
+        self.horizontalLayout_579.setStretch(0, 1)
+        self.horizontalLayout_579.setStretch(2, 1)
+
+        self.horizontalLayout_578.addWidget(self.widget_335)
+
+        self.set_cycle_b_btn = QPushButton(self.group_2_val_1)
+        self.set_cycle_b_btn.setObjectName(u"set_cycle_b_btn")
+        sizePolicy.setHeightForWidth(self.set_cycle_b_btn.sizePolicy().hasHeightForWidth())
+        self.set_cycle_b_btn.setSizePolicy(sizePolicy)
+        self.set_cycle_b_btn.setMinimumSize(QSize(0, 0))
+        self.set_cycle_b_btn.setFont(font11)
+        self.set_cycle_b_btn.setStyleSheet(u"QPushButton {\n"
+"    background-color: #10B981;\n"
+"    color: white;\n"
+"    border: 1px solid #0B7EC8;\n"
+"    border-radius: 15px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: rgb(13, 152, 106);\n"
+"}\n"
+"QPushButton:pressed {\n"
+"    background-color: #EF4444;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: white;\n"
+"    color: #0B7EC8;\n"
 "}")
-        self.label_261.setAlignment(Qt.AlignCenter)
+        self.set_cycle_b_btn.setIcon(icon13)
+        self.set_cycle_b_btn.setIconSize(QSize(30, 30))
+        self.set_cycle_b_btn.setCheckable(True)
 
-        self.horizontalLayout_544.addWidget(self.label_261)
+        self.horizontalLayout_578.addWidget(self.set_cycle_b_btn)
 
-        self.horizontalLayout_544.setStretch(0, 6)
-        self.horizontalLayout_544.setStretch(1, 1)
+        self.horizontalLayout_578.setStretch(0, 6)
+        self.horizontalLayout_578.setStretch(1, 1)
 
-        self.gridLayout.addWidget(self.group_3_val_2, 2, 6, 1, 1)
-
-        self.label_name_3 = QWidget(self.widget_6)
-        self.label_name_3.setObjectName(u"label_name_3")
-        self.horizontalLayout_13 = QHBoxLayout(self.label_name_3)
-        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
-        self.horizontalLayout_13.setContentsMargins(3, 3, 3, 3)
-        self.label_84 = QLabel(self.label_name_3)
-        self.label_84.setObjectName(u"label_84")
-        self.label_84.setFont(font12)
-        self.label_84.setStyleSheet(u"QLabel{\n"
-"	border-radius: 10px;\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"	background: qlineargradient(\n"
-"                x1:0, y1:0,\n"
-"                x2:1, y2:0,\n"
-"                stop:0 #f8f9fc,\n"
-"                stop:1 #e3e6ee\n"
-"            );\n"
-"}")
-
-        self.horizontalLayout_13.addWidget(self.label_84)
-
-
-        self.gridLayout.addWidget(self.label_name_3, 3, 0, 1, 1)
+        self.gridLayout.addWidget(self.group_2_val_1, 1, 4, 1, 1)
 
         self.group_1_val_3 = QWidget(self.widget_6)
         self.group_1_val_3.setObjectName(u"group_1_val_3")
@@ -1756,7 +1671,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_10.setObjectName(u"pressure_pv_a_10")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_10.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_10.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_10.setFont(font12)
+        self.pressure_pv_a_10.setFont(font10)
         self.pressure_pv_a_10.setStyleSheet(u"")
         self.pressure_pv_a_10.setWrapping(True)
         self.pressure_pv_a_10.setAlignment(Qt.AlignCenter)
@@ -1780,7 +1695,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_10.setObjectName(u"pressure_sv_a_10")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_10.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_10.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_10.setFont(font12)
+        self.pressure_sv_a_10.setFont(font10)
         self.pressure_sv_a_10.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1815,6 +1730,91 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_1_val_3, 3, 2, 1, 1)
 
+        self.group_3_val_2 = QWidget(self.widget_6)
+        self.group_3_val_2.setObjectName(u"group_3_val_2")
+        self.horizontalLayout_544 = QHBoxLayout(self.group_3_val_2)
+        self.horizontalLayout_544.setObjectName(u"horizontalLayout_544")
+        self.horizontalLayout_544.setContentsMargins(3, 3, 6, 3)
+        self.widget_289 = QWidget(self.group_3_val_2)
+        self.widget_289.setObjectName(u"widget_289")
+        self.widget_289.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_545 = QHBoxLayout(self.widget_289)
+        self.horizontalLayout_545.setObjectName(u"horizontalLayout_545")
+        self.horizontalLayout_545.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_c_9 = QDoubleSpinBox(self.widget_289)
+        self.pressure_pv_c_9.setObjectName(u"pressure_pv_c_9")
+        sizePolicy.setHeightForWidth(self.pressure_pv_c_9.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_c_9.setSizePolicy(sizePolicy)
+        self.pressure_pv_c_9.setFont(font10)
+        self.pressure_pv_c_9.setStyleSheet(u"")
+        self.pressure_pv_c_9.setWrapping(True)
+        self.pressure_pv_c_9.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_c_9.setReadOnly(True)
+        self.pressure_pv_c_9.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_c_9.setDecimals(1)
+        self.pressure_pv_c_9.setMaximum(999.000000000000000)
+        self.pressure_pv_c_9.setValue(0.000000000000000)
+
+        self.horizontalLayout_545.addWidget(self.pressure_pv_c_9)
+
+        self.line_56 = QFrame(self.widget_289)
+        self.line_56.setObjectName(u"line_56")
+        self.line_56.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
+        self.line_56.setFrameShape(QFrame.Shape.VLine)
+        self.line_56.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout_545.addWidget(self.line_56)
+
+        self.pressure_sv_c_9 = QDoubleSpinBox(self.widget_289)
+        self.pressure_sv_c_9.setObjectName(u"pressure_sv_c_9")
+        sizePolicy.setHeightForWidth(self.pressure_sv_c_9.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_c_9.setSizePolicy(sizePolicy)
+        self.pressure_sv_c_9.setFont(font10)
+        self.pressure_sv_c_9.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+"    border: 2px solid #43A047;\n"
+"}")
+        self.pressure_sv_c_9.setWrapping(False)
+        self.pressure_sv_c_9.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_c_9.setReadOnly(False)
+        self.pressure_sv_c_9.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_c_9.setDecimals(1)
+        self.pressure_sv_c_9.setMaximum(999.000000000000000)
+        self.pressure_sv_c_9.setValue(0.000000000000000)
+
+        self.horizontalLayout_545.addWidget(self.pressure_sv_c_9)
+
+        self.horizontalLayout_545.setStretch(0, 1)
+        self.horizontalLayout_545.setStretch(2, 1)
+
+        self.horizontalLayout_544.addWidget(self.widget_289)
+
+        self.label_261 = QLabel(self.group_3_val_2)
+        self.label_261.setObjectName(u"label_261")
+        self.label_261.setFont(font14)
+        self.label_261.setStyleSheet(u"QLabel{\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"}")
+        self.label_261.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_544.addWidget(self.label_261)
+
+        self.horizontalLayout_544.setStretch(0, 6)
+        self.horizontalLayout_544.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_3_val_2, 2, 6, 1, 1)
+
         self.group_2_val_3 = QWidget(self.widget_6)
         self.group_2_val_3.setObjectName(u"group_2_val_3")
         self.horizontalLayout_510 = QHBoxLayout(self.group_2_val_3)
@@ -1841,7 +1841,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_10.setObjectName(u"pressure_pv_b_10")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_10.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_10.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_10.setFont(font12)
+        self.pressure_pv_b_10.setFont(font10)
         self.pressure_pv_b_10.setStyleSheet(u"")
         self.pressure_pv_b_10.setWrapping(True)
         self.pressure_pv_b_10.setAlignment(Qt.AlignCenter)
@@ -1865,7 +1865,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_10.setObjectName(u"pressure_sv_b_10")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_10.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_10.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_10.setFont(font12)
+        self.pressure_sv_b_10.setFont(font10)
         self.pressure_sv_b_10.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1900,6 +1900,91 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_2_val_3, 3, 4, 1, 1)
 
+        self.group_2_val_2 = QWidget(self.widget_6)
+        self.group_2_val_2.setObjectName(u"group_2_val_2")
+        self.horizontalLayout_508 = QHBoxLayout(self.group_2_val_2)
+        self.horizontalLayout_508.setObjectName(u"horizontalLayout_508")
+        self.horizontalLayout_508.setContentsMargins(3, 3, 6, 3)
+        self.widget_237 = QWidget(self.group_2_val_2)
+        self.widget_237.setObjectName(u"widget_237")
+        self.widget_237.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_509 = QHBoxLayout(self.widget_237)
+        self.horizontalLayout_509.setObjectName(u"horizontalLayout_509")
+        self.horizontalLayout_509.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_b_9 = QDoubleSpinBox(self.widget_237)
+        self.pressure_pv_b_9.setObjectName(u"pressure_pv_b_9")
+        sizePolicy.setHeightForWidth(self.pressure_pv_b_9.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_b_9.setSizePolicy(sizePolicy)
+        self.pressure_pv_b_9.setFont(font10)
+        self.pressure_pv_b_9.setStyleSheet(u"")
+        self.pressure_pv_b_9.setWrapping(True)
+        self.pressure_pv_b_9.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_b_9.setReadOnly(True)
+        self.pressure_pv_b_9.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_b_9.setDecimals(1)
+        self.pressure_pv_b_9.setMaximum(999.000000000000000)
+        self.pressure_pv_b_9.setValue(0.000000000000000)
+
+        self.horizontalLayout_509.addWidget(self.pressure_pv_b_9)
+
+        self.line_53 = QFrame(self.widget_237)
+        self.line_53.setObjectName(u"line_53")
+        self.line_53.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
+        self.line_53.setFrameShape(QFrame.Shape.VLine)
+        self.line_53.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout_509.addWidget(self.line_53)
+
+        self.pressure_sv_b_9 = QDoubleSpinBox(self.widget_237)
+        self.pressure_sv_b_9.setObjectName(u"pressure_sv_b_9")
+        sizePolicy.setHeightForWidth(self.pressure_sv_b_9.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_b_9.setSizePolicy(sizePolicy)
+        self.pressure_sv_b_9.setFont(font10)
+        self.pressure_sv_b_9.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+"    border: 2px solid #43A047;\n"
+"}")
+        self.pressure_sv_b_9.setWrapping(False)
+        self.pressure_sv_b_9.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_b_9.setReadOnly(False)
+        self.pressure_sv_b_9.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_b_9.setDecimals(1)
+        self.pressure_sv_b_9.setMaximum(999.000000000000000)
+        self.pressure_sv_b_9.setValue(0.000000000000000)
+
+        self.horizontalLayout_509.addWidget(self.pressure_sv_b_9)
+
+        self.horizontalLayout_509.setStretch(0, 1)
+        self.horizontalLayout_509.setStretch(2, 1)
+
+        self.horizontalLayout_508.addWidget(self.widget_237)
+
+        self.label_247 = QLabel(self.group_2_val_2)
+        self.label_247.setObjectName(u"label_247")
+        self.label_247.setFont(font14)
+        self.label_247.setStyleSheet(u"QLabel{\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"}")
+        self.label_247.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_508.addWidget(self.label_247)
+
+        self.horizontalLayout_508.setStretch(0, 6)
+        self.horizontalLayout_508.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_2_val_2, 2, 4, 1, 1)
+
         self.group_3_val_3 = QWidget(self.widget_6)
         self.group_3_val_3.setObjectName(u"group_3_val_3")
         self.horizontalLayout_546 = QHBoxLayout(self.group_3_val_3)
@@ -1926,7 +2011,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_10.setObjectName(u"pressure_pv_c_10")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_10.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_10.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_10.setFont(font12)
+        self.pressure_pv_c_10.setFont(font10)
         self.pressure_pv_c_10.setStyleSheet(u"")
         self.pressure_pv_c_10.setWrapping(True)
         self.pressure_pv_c_10.setAlignment(Qt.AlignCenter)
@@ -1950,7 +2035,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_10.setObjectName(u"pressure_sv_c_10")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_10.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_10.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_10.setFont(font12)
+        self.pressure_sv_c_10.setFont(font10)
         self.pressure_sv_c_10.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1985,6 +2070,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_3_val_3, 3, 6, 1, 1)
 
+        self.line_11 = QFrame(self.widget_6)
+        self.line_11.setObjectName(u"line_11")
+        self.line_11.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
+        self.line_11.setFrameShape(QFrame.Shape.VLine)
+        self.line_11.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout.addWidget(self.line_11, 12, 1, 7, 1)
+
         self.line_2 = QFrame(self.widget_6)
         self.line_2.setObjectName(u"line_2")
         self.line_2.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
@@ -1993,15 +2086,213 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.line_2, 4, 0, 1, 7)
 
-        self.label_name_4 = QWidget(self.widget_6)
-        self.label_name_4.setObjectName(u"label_name_4")
-        self.horizontalLayout_14 = QHBoxLayout(self.label_name_4)
-        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
-        self.horizontalLayout_14.setContentsMargins(3, 3, 3, 3)
-        self.label_100 = QLabel(self.label_name_4)
-        self.label_100.setObjectName(u"label_100")
-        self.label_100.setFont(font12)
-        self.label_100.setStyleSheet(u"QLabel{\n"
+        self.line_7 = QFrame(self.widget_6)
+        self.line_7.setObjectName(u"line_7")
+        self.line_7.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
+        self.line_7.setFrameShape(QFrame.Shape.VLine)
+        self.line_7.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout.addWidget(self.line_7, 5, 1, 6, 1)
+
+        self.line_8 = QFrame(self.widget_6)
+        self.line_8.setObjectName(u"line_8")
+        self.line_8.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
+        self.line_8.setFrameShape(QFrame.Shape.VLine)
+        self.line_8.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout.addWidget(self.line_8, 5, 3, 6, 1)
+
+        self.line_6 = QFrame(self.widget_6)
+        self.line_6.setObjectName(u"line_6")
+        self.line_6.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
+        self.line_6.setFrameShape(QFrame.Shape.VLine)
+        self.line_6.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout.addWidget(self.line_6, 5, 5, 6, 1)
+
+        self.group_2_val_9 = QWidget(self.widget_6)
+        self.group_2_val_9.setObjectName(u"group_2_val_9")
+        self.horizontalLayout_572 = QHBoxLayout(self.group_2_val_9)
+        self.horizontalLayout_572.setObjectName(u"horizontalLayout_572")
+        self.horizontalLayout_572.setContentsMargins(3, 3, 6, 3)
+        self.widget_300 = QWidget(self.group_2_val_9)
+        self.widget_300.setObjectName(u"widget_300")
+        self.widget_300.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_573 = QHBoxLayout(self.widget_300)
+        self.horizontalLayout_573.setObjectName(u"horizontalLayout_573")
+        self.horizontalLayout_573.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_b_5 = QDoubleSpinBox(self.widget_300)
+        self.pressure_pv_b_5.setObjectName(u"pressure_pv_b_5")
+        sizePolicy.setHeightForWidth(self.pressure_pv_b_5.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_b_5.setSizePolicy(sizePolicy)
+        self.pressure_pv_b_5.setFont(font10)
+        self.pressure_pv_b_5.setWrapping(False)
+        self.pressure_pv_b_5.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_b_5.setReadOnly(True)
+        self.pressure_pv_b_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_b_5.setDecimals(2)
+        self.pressure_pv_b_5.setMaximum(999.990000000000009)
+        self.pressure_pv_b_5.setValue(0.000000000000000)
+
+        self.horizontalLayout_573.addWidget(self.pressure_pv_b_5)
+
+        self.horizontalLayout_573.setStretch(0, 1)
+
+        self.horizontalLayout_572.addWidget(self.widget_300)
+
+        self.label_268 = QLabel(self.group_2_val_9)
+        self.label_268.setObjectName(u"label_268")
+        self.label_268.setFont(font14)
+        self.label_268.setStyleSheet(u"QLabel{\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"}")
+        self.label_268.setAlignment(Qt.AlignCenter)
+        self.label_268.setWordWrap(True)
+
+        self.horizontalLayout_572.addWidget(self.label_268)
+
+        self.horizontalLayout_572.setStretch(0, 6)
+        self.horizontalLayout_572.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_2_val_9, 10, 4, 1, 1)
+
+        self.group_3_val_9 = QWidget(self.widget_6)
+        self.group_3_val_9.setObjectName(u"group_3_val_9")
+        self.horizontalLayout_574 = QHBoxLayout(self.group_3_val_9)
+        self.horizontalLayout_574.setObjectName(u"horizontalLayout_574")
+        self.horizontalLayout_574.setContentsMargins(3, 3, 6, 3)
+        self.widget_301 = QWidget(self.group_3_val_9)
+        self.widget_301.setObjectName(u"widget_301")
+        self.widget_301.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_575 = QHBoxLayout(self.widget_301)
+        self.horizontalLayout_575.setObjectName(u"horizontalLayout_575")
+        self.horizontalLayout_575.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_c_5 = QDoubleSpinBox(self.widget_301)
+        self.pressure_pv_c_5.setObjectName(u"pressure_pv_c_5")
+        sizePolicy.setHeightForWidth(self.pressure_pv_c_5.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_c_5.setSizePolicy(sizePolicy)
+        self.pressure_pv_c_5.setFont(font10)
+        self.pressure_pv_c_5.setWrapping(False)
+        self.pressure_pv_c_5.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_c_5.setReadOnly(True)
+        self.pressure_pv_c_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_c_5.setDecimals(2)
+        self.pressure_pv_c_5.setMaximum(999.990000000000009)
+        self.pressure_pv_c_5.setValue(0.000000000000000)
+
+        self.horizontalLayout_575.addWidget(self.pressure_pv_c_5)
+
+        self.horizontalLayout_575.setStretch(0, 1)
+
+        self.horizontalLayout_574.addWidget(self.widget_301)
+
+        self.label_269 = QLabel(self.group_3_val_9)
+        self.label_269.setObjectName(u"label_269")
+        self.label_269.setFont(font14)
+        self.label_269.setStyleSheet(u"QLabel{\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"}")
+        self.label_269.setAlignment(Qt.AlignCenter)
+        self.label_269.setWordWrap(True)
+
+        self.horizontalLayout_574.addWidget(self.label_269)
+
+        self.horizontalLayout_574.setStretch(0, 6)
+        self.horizontalLayout_574.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_3_val_9, 10, 6, 1, 1)
+
+        self.group_1_val_9 = QWidget(self.widget_6)
+        self.group_1_val_9.setObjectName(u"group_1_val_9")
+        self.horizontalLayout_348 = QHBoxLayout(self.group_1_val_9)
+        self.horizontalLayout_348.setObjectName(u"horizontalLayout_348")
+        self.horizontalLayout_348.setContentsMargins(3, 3, 6, 3)
+        self.widget_299 = QWidget(self.group_1_val_9)
+        self.widget_299.setObjectName(u"widget_299")
+        self.widget_299.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_349 = QHBoxLayout(self.widget_299)
+        self.horizontalLayout_349.setObjectName(u"horizontalLayout_349")
+        self.horizontalLayout_349.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_a_5 = QDoubleSpinBox(self.widget_299)
+        self.pressure_pv_a_5.setObjectName(u"pressure_pv_a_5")
+        sizePolicy.setHeightForWidth(self.pressure_pv_a_5.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_a_5.setSizePolicy(sizePolicy)
+        self.pressure_pv_a_5.setFont(font10)
+        self.pressure_pv_a_5.setWrapping(False)
+        self.pressure_pv_a_5.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_a_5.setReadOnly(True)
+        self.pressure_pv_a_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_a_5.setDecimals(2)
+        self.pressure_pv_a_5.setMaximum(999.990000000000009)
+        self.pressure_pv_a_5.setValue(0.000000000000000)
+
+        self.horizontalLayout_349.addWidget(self.pressure_pv_a_5)
+
+        self.horizontalLayout_349.setStretch(0, 1)
+
+        self.horizontalLayout_348.addWidget(self.widget_299)
+
+        self.label_267 = QLabel(self.group_1_val_9)
+        self.label_267.setObjectName(u"label_267")
+        self.label_267.setFont(font14)
+        self.label_267.setStyleSheet(u"QLabel{\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"}")
+        self.label_267.setAlignment(Qt.AlignCenter)
+        self.label_267.setWordWrap(True)
+
+        self.horizontalLayout_348.addWidget(self.label_267)
+
+        self.horizontalLayout_348.setStretch(0, 6)
+        self.horizontalLayout_348.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_1_val_9, 10, 2, 1, 1)
+
+        self.label_name_10 = QWidget(self.widget_6)
+        self.label_name_10.setObjectName(u"label_name_10")
+        self.horizontalLayout_37 = QHBoxLayout(self.label_name_10)
+        self.horizontalLayout_37.setObjectName(u"horizontalLayout_37")
+        self.horizontalLayout_37.setContentsMargins(3, 3, 3, 3)
+        self.label_104 = QLabel(self.label_name_10)
+        self.label_104.setObjectName(u"label_104")
+        self.label_104.setFont(font10)
+        self.label_104.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2013,18 +2304,97 @@ class Ui_MainWindow(object):
 "            );\n"
 "}")
 
-        self.horizontalLayout_14.addWidget(self.label_100)
+        self.horizontalLayout_37.addWidget(self.label_104)
 
 
-        self.gridLayout.addWidget(self.label_name_4, 5, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_name_10, 12, 0, 1, 1)
 
-        self.line_7 = QFrame(self.widget_6)
-        self.line_7.setObjectName(u"line_7")
-        self.line_7.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
-        self.line_7.setFrameShape(QFrame.Shape.VLine)
-        self.line_7.setFrameShadow(QFrame.Shadow.Sunken)
+        self.group_1_val_10 = QWidget(self.widget_6)
+        self.group_1_val_10.setObjectName(u"group_1_val_10")
+        self.horizontalLayout_288 = QHBoxLayout(self.group_1_val_10)
+        self.horizontalLayout_288.setSpacing(7)
+        self.horizontalLayout_288.setObjectName(u"horizontalLayout_288")
+        self.horizontalLayout_288.setContentsMargins(3, 3, 6, 3)
+        self.widget_264 = QWidget(self.group_1_val_10)
+        self.widget_264.setObjectName(u"widget_264")
+        self.widget_264.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_341 = QHBoxLayout(self.widget_264)
+        self.horizontalLayout_341.setObjectName(u"horizontalLayout_341")
+        self.horizontalLayout_341.setContentsMargins(2, 2, 2, 2)
+        self.pressure_sv_a_1 = QDoubleSpinBox(self.widget_264)
+        self.pressure_sv_a_1.setObjectName(u"pressure_sv_a_1")
+        sizePolicy.setHeightForWidth(self.pressure_sv_a_1.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_a_1.setSizePolicy(sizePolicy)
+        self.pressure_sv_a_1.setFont(font10)
+        self.pressure_sv_a_1.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+"    border: 2px solid #43A047;\n"
+"}")
+        self.pressure_sv_a_1.setWrapping(False)
+        self.pressure_sv_a_1.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_a_1.setReadOnly(False)
+        self.pressure_sv_a_1.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_a_1.setDecimals(1)
+        self.pressure_sv_a_1.setMaximum(999.000000000000000)
+        self.pressure_sv_a_1.setValue(0.000000000000000)
 
-        self.gridLayout.addWidget(self.line_7, 5, 1, 6, 1)
+        self.horizontalLayout_341.addWidget(self.pressure_sv_a_1)
+
+        self.horizontalLayout_341.setStretch(0, 1)
+
+        self.horizontalLayout_288.addWidget(self.widget_264)
+
+        self.stacked_cel_fah_press_a_1 = QStackedWidget(self.group_1_val_10)
+        self.stacked_cel_fah_press_a_1.setObjectName(u"stacked_cel_fah_press_a_1")
+        self.celsius_ap_39 = QWidget()
+        self.celsius_ap_39.setObjectName(u"celsius_ap_39")
+        self.horizontalLayout_512 = QHBoxLayout(self.celsius_ap_39)
+        self.horizontalLayout_512.setObjectName(u"horizontalLayout_512")
+        self.horizontalLayout_512.setContentsMargins(0, 0, 0, 0)
+        self.label_280 = QLabel(self.celsius_ap_39)
+        self.label_280.setObjectName(u"label_280")
+        self.label_280.setFont(font14)
+        self.label_280.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_280.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_512.addWidget(self.label_280)
+
+        self.stacked_cel_fah_press_a_1.addWidget(self.celsius_ap_39)
+        self.fahrenheit_ap_39 = QWidget()
+        self.fahrenheit_ap_39.setObjectName(u"fahrenheit_ap_39")
+        self.horizontalLayout_513 = QHBoxLayout(self.fahrenheit_ap_39)
+        self.horizontalLayout_513.setObjectName(u"horizontalLayout_513")
+        self.horizontalLayout_513.setContentsMargins(0, 0, 0, 0)
+        self.label_340 = QLabel(self.fahrenheit_ap_39)
+        self.label_340.setObjectName(u"label_340")
+        self.label_340.setFont(font14)
+        self.label_340.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_340.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_513.addWidget(self.label_340)
+
+        self.stacked_cel_fah_press_a_1.addWidget(self.fahrenheit_ap_39)
+
+        self.horizontalLayout_288.addWidget(self.stacked_cel_fah_press_a_1)
+
+        self.horizontalLayout_288.setStretch(0, 6)
+        self.horizontalLayout_288.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_1_val_10, 12, 2, 1, 1)
 
         self.group_1_val_4 = QWidget(self.widget_6)
         self.group_1_val_4.setObjectName(u"group_1_val_4")
@@ -2052,7 +2422,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_6.setObjectName(u"pressure_pv_a_6")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_6.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_6.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_6.setFont(font12)
+        self.pressure_pv_a_6.setFont(font10)
         self.pressure_pv_a_6.setStyleSheet(u"")
         self.pressure_pv_a_6.setWrapping(True)
         self.pressure_pv_a_6.setAlignment(Qt.AlignCenter)
@@ -2076,7 +2446,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_6.setObjectName(u"pressure_sv_a_6")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_6.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_6.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_6.setFont(font12)
+        self.pressure_sv_a_6.setFont(font10)
         self.pressure_sv_a_6.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2111,22 +2481,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_1_val_4, 5, 2, 1, 1)
 
-        self.line_8 = QFrame(self.widget_6)
-        self.line_8.setObjectName(u"line_8")
-        self.line_8.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
-        self.line_8.setFrameShape(QFrame.Shape.VLine)
-        self.line_8.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout.addWidget(self.line_8, 5, 3, 6, 1)
-
-        self.group_2_val_4 = QWidget(self.widget_6)
-        self.group_2_val_4.setObjectName(u"group_2_val_4")
-        self.horizontalLayout_522 = QHBoxLayout(self.group_2_val_4)
-        self.horizontalLayout_522.setObjectName(u"horizontalLayout_522")
-        self.horizontalLayout_522.setContentsMargins(3, 3, 6, 3)
-        self.widget_273 = QWidget(self.group_2_val_4)
-        self.widget_273.setObjectName(u"widget_273")
-        self.widget_273.setStyleSheet(u"QWidget{\n"
+        self.group_1_val_5 = QWidget(self.widget_6)
+        self.group_1_val_5.setObjectName(u"group_1_val_5")
+        self.horizontalLayout_504 = QHBoxLayout(self.group_1_val_5)
+        self.horizontalLayout_504.setObjectName(u"horizontalLayout_504")
+        self.horizontalLayout_504.setContentsMargins(3, 3, 6, 3)
+        self.widget_233 = QWidget(self.group_1_val_5)
+        self.widget_233.setObjectName(u"widget_233")
+        self.widget_233.setStyleSheet(u"QWidget{\n"
 "    border: 2px solid #D1D5DB;\n"
 "    border-radius: 10px;\n"
 "}\n"
@@ -2138,79 +2500,71 @@ class Ui_MainWindow(object):
 "{\n"
 "    border: none;\n"
 "}")
-        self.horizontalLayout_523 = QHBoxLayout(self.widget_273)
-        self.horizontalLayout_523.setObjectName(u"horizontalLayout_523")
-        self.horizontalLayout_523.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_b_6 = QDoubleSpinBox(self.widget_273)
-        self.pressure_pv_b_6.setObjectName(u"pressure_pv_b_6")
-        sizePolicy.setHeightForWidth(self.pressure_pv_b_6.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_b_6.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_6.setFont(font12)
-        self.pressure_pv_b_6.setStyleSheet(u"")
-        self.pressure_pv_b_6.setWrapping(True)
-        self.pressure_pv_b_6.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_b_6.setReadOnly(True)
-        self.pressure_pv_b_6.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_b_6.setDecimals(1)
-        self.pressure_pv_b_6.setMaximum(999.000000000000000)
-        self.pressure_pv_b_6.setValue(0.000000000000000)
+        self.horizontalLayout_505 = QHBoxLayout(self.widget_233)
+        self.horizontalLayout_505.setObjectName(u"horizontalLayout_505")
+        self.horizontalLayout_505.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_a_7 = QDoubleSpinBox(self.widget_233)
+        self.pressure_pv_a_7.setObjectName(u"pressure_pv_a_7")
+        sizePolicy.setHeightForWidth(self.pressure_pv_a_7.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_a_7.setSizePolicy(sizePolicy)
+        self.pressure_pv_a_7.setFont(font10)
+        self.pressure_pv_a_7.setStyleSheet(u"")
+        self.pressure_pv_a_7.setWrapping(True)
+        self.pressure_pv_a_7.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_a_7.setReadOnly(True)
+        self.pressure_pv_a_7.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_a_7.setDecimals(1)
+        self.pressure_pv_a_7.setMaximum(999.000000000000000)
+        self.pressure_pv_a_7.setValue(0.000000000000000)
 
-        self.horizontalLayout_523.addWidget(self.pressure_pv_b_6)
+        self.horizontalLayout_505.addWidget(self.pressure_pv_a_7)
 
-        self.line_50 = QFrame(self.widget_273)
-        self.line_50.setObjectName(u"line_50")
-        self.line_50.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
-        self.line_50.setFrameShape(QFrame.Shape.VLine)
-        self.line_50.setFrameShadow(QFrame.Shadow.Sunken)
+        self.line_45 = QFrame(self.widget_233)
+        self.line_45.setObjectName(u"line_45")
+        self.line_45.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
+        self.line_45.setFrameShape(QFrame.Shape.VLine)
+        self.line_45.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.horizontalLayout_523.addWidget(self.line_50)
+        self.horizontalLayout_505.addWidget(self.line_45)
 
-        self.pressure_sv_b_6 = QDoubleSpinBox(self.widget_273)
-        self.pressure_sv_b_6.setObjectName(u"pressure_sv_b_6")
-        sizePolicy.setHeightForWidth(self.pressure_sv_b_6.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_b_6.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_6.setFont(font12)
-        self.pressure_sv_b_6.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+        self.pressure_sv_a_7 = QDoubleSpinBox(self.widget_233)
+        self.pressure_sv_a_7.setObjectName(u"pressure_sv_a_7")
+        sizePolicy.setHeightForWidth(self.pressure_sv_a_7.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_a_7.setSizePolicy(sizePolicy)
+        self.pressure_sv_a_7.setFont(font10)
+        self.pressure_sv_a_7.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
-        self.pressure_sv_b_6.setWrapping(False)
-        self.pressure_sv_b_6.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_b_6.setReadOnly(False)
-        self.pressure_sv_b_6.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_b_6.setDecimals(1)
-        self.pressure_sv_b_6.setMaximum(999.000000000000000)
-        self.pressure_sv_b_6.setValue(0.000000000000000)
+        self.pressure_sv_a_7.setWrapping(False)
+        self.pressure_sv_a_7.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_a_7.setReadOnly(False)
+        self.pressure_sv_a_7.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_a_7.setDecimals(1)
+        self.pressure_sv_a_7.setMaximum(999.000000000000000)
+        self.pressure_sv_a_7.setValue(0.000000000000000)
 
-        self.horizontalLayout_523.addWidget(self.pressure_sv_b_6)
+        self.horizontalLayout_505.addWidget(self.pressure_sv_a_7)
 
-        self.horizontalLayout_523.setStretch(0, 1)
-        self.horizontalLayout_523.setStretch(2, 1)
+        self.horizontalLayout_505.setStretch(0, 1)
+        self.horizontalLayout_505.setStretch(2, 1)
 
-        self.horizontalLayout_522.addWidget(self.widget_273)
+        self.horizontalLayout_504.addWidget(self.widget_233)
 
-        self.label_254 = QLabel(self.group_2_val_4)
-        self.label_254.setObjectName(u"label_254")
-        self.label_254.setFont(font14)
-        self.label_254.setStyleSheet(u"QLabel{\n"
+        self.label_243 = QLabel(self.group_1_val_5)
+        self.label_243.setObjectName(u"label_243")
+        self.label_243.setFont(font14)
+        self.label_243.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
 "}")
-        self.label_254.setAlignment(Qt.AlignCenter)
+        self.label_243.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_522.addWidget(self.label_254)
+        self.horizontalLayout_504.addWidget(self.label_243)
 
-        self.horizontalLayout_522.setStretch(0, 6)
-        self.horizontalLayout_522.setStretch(1, 1)
+        self.horizontalLayout_504.setStretch(0, 6)
+        self.horizontalLayout_504.setStretch(1, 1)
 
-        self.gridLayout.addWidget(self.group_2_val_4, 5, 4, 1, 1)
-
-        self.line_6 = QFrame(self.widget_6)
-        self.line_6.setObjectName(u"line_6")
-        self.line_6.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
-        self.line_6.setFrameShape(QFrame.Shape.VLine)
-        self.line_6.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout.addWidget(self.line_6, 5, 5, 6, 1)
+        self.gridLayout.addWidget(self.group_1_val_5, 6, 2, 1, 1)
 
         self.group_3_val_4 = QWidget(self.widget_6)
         self.group_3_val_4.setObjectName(u"group_3_val_4")
@@ -2238,7 +2592,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_6.setObjectName(u"pressure_pv_c_6")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_6.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_6.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_6.setFont(font12)
+        self.pressure_pv_c_6.setFont(font10)
         self.pressure_pv_c_6.setStyleSheet(u"")
         self.pressure_pv_c_6.setWrapping(True)
         self.pressure_pv_c_6.setAlignment(Qt.AlignCenter)
@@ -2262,7 +2616,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_6.setObjectName(u"pressure_sv_c_6")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_6.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_6.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_6.setFont(font12)
+        self.pressure_sv_c_6.setFont(font10)
         self.pressure_sv_c_6.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2304,7 +2658,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_16.setContentsMargins(3, 3, 3, 3)
         self.label_101 = QLabel(self.label_name_5)
         self.label_101.setObjectName(u"label_101")
-        self.label_101.setFont(font12)
+        self.label_101.setFont(font10)
         self.label_101.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -2322,14 +2676,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.label_name_5, 6, 0, 1, 1)
 
-        self.group_1_val_5 = QWidget(self.widget_6)
-        self.group_1_val_5.setObjectName(u"group_1_val_5")
-        self.horizontalLayout_504 = QHBoxLayout(self.group_1_val_5)
-        self.horizontalLayout_504.setObjectName(u"horizontalLayout_504")
-        self.horizontalLayout_504.setContentsMargins(3, 3, 6, 3)
-        self.widget_233 = QWidget(self.group_1_val_5)
-        self.widget_233.setObjectName(u"widget_233")
-        self.widget_233.setStyleSheet(u"QWidget{\n"
+        self.group_2_val_4 = QWidget(self.widget_6)
+        self.group_2_val_4.setObjectName(u"group_2_val_4")
+        self.horizontalLayout_522 = QHBoxLayout(self.group_2_val_4)
+        self.horizontalLayout_522.setObjectName(u"horizontalLayout_522")
+        self.horizontalLayout_522.setContentsMargins(3, 3, 6, 3)
+        self.widget_273 = QWidget(self.group_2_val_4)
+        self.widget_273.setObjectName(u"widget_273")
+        self.widget_273.setStyleSheet(u"QWidget{\n"
 "    border: 2px solid #D1D5DB;\n"
 "    border-radius: 10px;\n"
 "}\n"
@@ -2341,71 +2695,291 @@ class Ui_MainWindow(object):
 "{\n"
 "    border: none;\n"
 "}")
-        self.horizontalLayout_505 = QHBoxLayout(self.widget_233)
-        self.horizontalLayout_505.setObjectName(u"horizontalLayout_505")
-        self.horizontalLayout_505.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_a_7 = QDoubleSpinBox(self.widget_233)
-        self.pressure_pv_a_7.setObjectName(u"pressure_pv_a_7")
-        sizePolicy.setHeightForWidth(self.pressure_pv_a_7.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_a_7.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_7.setFont(font12)
-        self.pressure_pv_a_7.setStyleSheet(u"")
-        self.pressure_pv_a_7.setWrapping(True)
-        self.pressure_pv_a_7.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_a_7.setReadOnly(True)
-        self.pressure_pv_a_7.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_a_7.setDecimals(1)
-        self.pressure_pv_a_7.setMaximum(999.000000000000000)
-        self.pressure_pv_a_7.setValue(0.000000000000000)
+        self.horizontalLayout_523 = QHBoxLayout(self.widget_273)
+        self.horizontalLayout_523.setObjectName(u"horizontalLayout_523")
+        self.horizontalLayout_523.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_b_6 = QDoubleSpinBox(self.widget_273)
+        self.pressure_pv_b_6.setObjectName(u"pressure_pv_b_6")
+        sizePolicy.setHeightForWidth(self.pressure_pv_b_6.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_b_6.setSizePolicy(sizePolicy)
+        self.pressure_pv_b_6.setFont(font10)
+        self.pressure_pv_b_6.setStyleSheet(u"")
+        self.pressure_pv_b_6.setWrapping(True)
+        self.pressure_pv_b_6.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_b_6.setReadOnly(True)
+        self.pressure_pv_b_6.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_b_6.setDecimals(1)
+        self.pressure_pv_b_6.setMaximum(999.000000000000000)
+        self.pressure_pv_b_6.setValue(0.000000000000000)
 
-        self.horizontalLayout_505.addWidget(self.pressure_pv_a_7)
+        self.horizontalLayout_523.addWidget(self.pressure_pv_b_6)
 
-        self.line_45 = QFrame(self.widget_233)
-        self.line_45.setObjectName(u"line_45")
-        self.line_45.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
-        self.line_45.setFrameShape(QFrame.Shape.VLine)
-        self.line_45.setFrameShadow(QFrame.Shadow.Sunken)
+        self.line_50 = QFrame(self.widget_273)
+        self.line_50.setObjectName(u"line_50")
+        self.line_50.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
+        self.line_50.setFrameShape(QFrame.Shape.VLine)
+        self.line_50.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.horizontalLayout_505.addWidget(self.line_45)
+        self.horizontalLayout_523.addWidget(self.line_50)
 
-        self.pressure_sv_a_7 = QDoubleSpinBox(self.widget_233)
-        self.pressure_sv_a_7.setObjectName(u"pressure_sv_a_7")
-        sizePolicy.setHeightForWidth(self.pressure_sv_a_7.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_a_7.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_7.setFont(font12)
-        self.pressure_sv_a_7.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+        self.pressure_sv_b_6 = QDoubleSpinBox(self.widget_273)
+        self.pressure_sv_b_6.setObjectName(u"pressure_sv_b_6")
+        sizePolicy.setHeightForWidth(self.pressure_sv_b_6.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_b_6.setSizePolicy(sizePolicy)
+        self.pressure_sv_b_6.setFont(font10)
+        self.pressure_sv_b_6.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
-        self.pressure_sv_a_7.setWrapping(False)
-        self.pressure_sv_a_7.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_a_7.setReadOnly(False)
-        self.pressure_sv_a_7.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_a_7.setDecimals(1)
-        self.pressure_sv_a_7.setMaximum(999.000000000000000)
-        self.pressure_sv_a_7.setValue(0.000000000000000)
+        self.pressure_sv_b_6.setWrapping(False)
+        self.pressure_sv_b_6.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_b_6.setReadOnly(False)
+        self.pressure_sv_b_6.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_b_6.setDecimals(1)
+        self.pressure_sv_b_6.setMaximum(999.000000000000000)
+        self.pressure_sv_b_6.setValue(0.000000000000000)
 
-        self.horizontalLayout_505.addWidget(self.pressure_sv_a_7)
+        self.horizontalLayout_523.addWidget(self.pressure_sv_b_6)
 
-        self.horizontalLayout_505.setStretch(0, 1)
-        self.horizontalLayout_505.setStretch(2, 1)
+        self.horizontalLayout_523.setStretch(0, 1)
+        self.horizontalLayout_523.setStretch(2, 1)
 
-        self.horizontalLayout_504.addWidget(self.widget_233)
+        self.horizontalLayout_522.addWidget(self.widget_273)
 
-        self.label_243 = QLabel(self.group_1_val_5)
-        self.label_243.setObjectName(u"label_243")
-        self.label_243.setFont(font14)
-        self.label_243.setStyleSheet(u"QLabel{\n"
+        self.label_254 = QLabel(self.group_2_val_4)
+        self.label_254.setObjectName(u"label_254")
+        self.label_254.setFont(font14)
+        self.label_254.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
 "}")
-        self.label_243.setAlignment(Qt.AlignCenter)
+        self.label_254.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_504.addWidget(self.label_243)
+        self.horizontalLayout_522.addWidget(self.label_254)
 
-        self.horizontalLayout_504.setStretch(0, 6)
-        self.horizontalLayout_504.setStretch(1, 1)
+        self.horizontalLayout_522.setStretch(0, 6)
+        self.horizontalLayout_522.setStretch(1, 1)
 
-        self.gridLayout.addWidget(self.group_1_val_5, 6, 2, 1, 1)
+        self.gridLayout.addWidget(self.group_2_val_4, 5, 4, 1, 1)
+
+        self.label_name_4 = QWidget(self.widget_6)
+        self.label_name_4.setObjectName(u"label_name_4")
+        self.horizontalLayout_14 = QHBoxLayout(self.label_name_4)
+        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
+        self.horizontalLayout_14.setContentsMargins(3, 3, 3, 3)
+        self.label_100 = QLabel(self.label_name_4)
+        self.label_100.setObjectName(u"label_100")
+        self.label_100.setFont(font10)
+        self.label_100.setStyleSheet(u"QLabel{\n"
+"	border-radius: 10px;\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
+"}")
+
+        self.horizontalLayout_14.addWidget(self.label_100)
+
+
+        self.gridLayout.addWidget(self.label_name_4, 5, 0, 1, 1)
+
+        self.group_2_val_6 = QWidget(self.widget_6)
+        self.group_2_val_6.setObjectName(u"group_2_val_6")
+        self.horizontalLayout_526 = QHBoxLayout(self.group_2_val_6)
+        self.horizontalLayout_526.setObjectName(u"horizontalLayout_526")
+        self.horizontalLayout_526.setContentsMargins(3, 3, 6, 3)
+        self.widget_284 = QWidget(self.group_2_val_6)
+        self.widget_284.setObjectName(u"widget_284")
+        self.widget_284.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_527 = QHBoxLayout(self.widget_284)
+        self.horizontalLayout_527.setObjectName(u"horizontalLayout_527")
+        self.horizontalLayout_527.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_b_8 = QDoubleSpinBox(self.widget_284)
+        self.pressure_pv_b_8.setObjectName(u"pressure_pv_b_8")
+        sizePolicy.setHeightForWidth(self.pressure_pv_b_8.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_b_8.setSizePolicy(sizePolicy)
+        self.pressure_pv_b_8.setFont(font10)
+        self.pressure_pv_b_8.setStyleSheet(u"")
+        self.pressure_pv_b_8.setWrapping(True)
+        self.pressure_pv_b_8.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_b_8.setReadOnly(True)
+        self.pressure_pv_b_8.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_b_8.setDecimals(1)
+        self.pressure_pv_b_8.setMaximum(999.000000000000000)
+        self.pressure_pv_b_8.setValue(0.000000000000000)
+
+        self.horizontalLayout_527.addWidget(self.pressure_pv_b_8)
+
+        self.line_55 = QFrame(self.widget_284)
+        self.line_55.setObjectName(u"line_55")
+        self.line_55.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
+        self.line_55.setFrameShape(QFrame.Shape.VLine)
+        self.line_55.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout_527.addWidget(self.line_55)
+
+        self.pressure_sv_b_8 = QDoubleSpinBox(self.widget_284)
+        self.pressure_sv_b_8.setObjectName(u"pressure_sv_b_8")
+        sizePolicy.setHeightForWidth(self.pressure_sv_b_8.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_b_8.setSizePolicy(sizePolicy)
+        self.pressure_sv_b_8.setFont(font10)
+        self.pressure_sv_b_8.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+"    border: 2px solid #43A047;\n"
+"}")
+        self.pressure_sv_b_8.setWrapping(False)
+        self.pressure_sv_b_8.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_b_8.setReadOnly(False)
+        self.pressure_sv_b_8.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_b_8.setDecimals(1)
+        self.pressure_sv_b_8.setMaximum(999.000000000000000)
+        self.pressure_sv_b_8.setValue(0.000000000000000)
+
+        self.horizontalLayout_527.addWidget(self.pressure_sv_b_8)
+
+        self.horizontalLayout_527.setStretch(0, 1)
+        self.horizontalLayout_527.setStretch(2, 1)
+
+        self.horizontalLayout_526.addWidget(self.widget_284)
+
+        self.label_256 = QLabel(self.group_2_val_6)
+        self.label_256.setObjectName(u"label_256")
+        self.label_256.setFont(font14)
+        self.label_256.setStyleSheet(u"QLabel{\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"}")
+        self.label_256.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_526.addWidget(self.label_256)
+
+        self.horizontalLayout_526.setStretch(0, 6)
+        self.horizontalLayout_526.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_2_val_6, 7, 4, 1, 1)
+
+        self.label_name_6 = QWidget(self.widget_6)
+        self.label_name_6.setObjectName(u"label_name_6")
+        self.horizontalLayout_28 = QHBoxLayout(self.label_name_6)
+        self.horizontalLayout_28.setObjectName(u"horizontalLayout_28")
+        self.horizontalLayout_28.setContentsMargins(3, 3, 3, 3)
+        self.label_102 = QLabel(self.label_name_6)
+        self.label_102.setObjectName(u"label_102")
+        self.label_102.setFont(font10)
+        self.label_102.setStyleSheet(u"QLabel{\n"
+"	border-radius: 10px;\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
+"}")
+
+        self.horizontalLayout_28.addWidget(self.label_102)
+
+
+        self.gridLayout.addWidget(self.label_name_6, 7, 0, 1, 1)
+
+        self.group_1_val_6 = QWidget(self.widget_6)
+        self.group_1_val_6.setObjectName(u"group_1_val_6")
+        self.horizontalLayout_506 = QHBoxLayout(self.group_1_val_6)
+        self.horizontalLayout_506.setObjectName(u"horizontalLayout_506")
+        self.horizontalLayout_506.setContentsMargins(3, 3, 6, 3)
+        self.widget_234 = QWidget(self.group_1_val_6)
+        self.widget_234.setObjectName(u"widget_234")
+        self.widget_234.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_507 = QHBoxLayout(self.widget_234)
+        self.horizontalLayout_507.setObjectName(u"horizontalLayout_507")
+        self.horizontalLayout_507.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_a_8 = QDoubleSpinBox(self.widget_234)
+        self.pressure_pv_a_8.setObjectName(u"pressure_pv_a_8")
+        sizePolicy.setHeightForWidth(self.pressure_pv_a_8.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_a_8.setSizePolicy(sizePolicy)
+        self.pressure_pv_a_8.setFont(font10)
+        self.pressure_pv_a_8.setStyleSheet(u"")
+        self.pressure_pv_a_8.setWrapping(True)
+        self.pressure_pv_a_8.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_a_8.setReadOnly(True)
+        self.pressure_pv_a_8.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_a_8.setDecimals(1)
+        self.pressure_pv_a_8.setMaximum(999.000000000000000)
+        self.pressure_pv_a_8.setValue(0.000000000000000)
+
+        self.horizontalLayout_507.addWidget(self.pressure_pv_a_8)
+
+        self.line_46 = QFrame(self.widget_234)
+        self.line_46.setObjectName(u"line_46")
+        self.line_46.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
+        self.line_46.setFrameShape(QFrame.Shape.VLine)
+        self.line_46.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout_507.addWidget(self.line_46)
+
+        self.pressure_sv_a_8 = QDoubleSpinBox(self.widget_234)
+        self.pressure_sv_a_8.setObjectName(u"pressure_sv_a_8")
+        sizePolicy.setHeightForWidth(self.pressure_sv_a_8.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_a_8.setSizePolicy(sizePolicy)
+        self.pressure_sv_a_8.setFont(font10)
+        self.pressure_sv_a_8.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+"    border: 2px solid #43A047;\n"
+"}")
+        self.pressure_sv_a_8.setWrapping(False)
+        self.pressure_sv_a_8.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_a_8.setReadOnly(False)
+        self.pressure_sv_a_8.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_a_8.setDecimals(1)
+        self.pressure_sv_a_8.setMaximum(999.000000000000000)
+        self.pressure_sv_a_8.setValue(0.000000000000000)
+
+        self.horizontalLayout_507.addWidget(self.pressure_sv_a_8)
+
+        self.horizontalLayout_507.setStretch(0, 1)
+        self.horizontalLayout_507.setStretch(2, 1)
+
+        self.horizontalLayout_506.addWidget(self.widget_234)
+
+        self.label_244 = QLabel(self.group_1_val_6)
+        self.label_244.setObjectName(u"label_244")
+        self.label_244.setFont(font14)
+        self.label_244.setStyleSheet(u"QLabel{\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"}")
+        self.label_244.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_506.addWidget(self.label_244)
+
+        self.horizontalLayout_506.setStretch(0, 6)
+        self.horizontalLayout_506.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_1_val_6, 7, 2, 1, 1)
 
         self.group_2_val_5 = QWidget(self.widget_6)
         self.group_2_val_5.setObjectName(u"group_2_val_5")
@@ -2433,7 +3007,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_7.setObjectName(u"pressure_pv_b_7")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_7.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_7.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_7.setFont(font12)
+        self.pressure_pv_b_7.setFont(font10)
         self.pressure_pv_b_7.setStyleSheet(u"")
         self.pressure_pv_b_7.setWrapping(True)
         self.pressure_pv_b_7.setAlignment(Qt.AlignCenter)
@@ -2457,7 +3031,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_7.setObjectName(u"pressure_sv_b_7")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_7.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_7.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_7.setFont(font12)
+        self.pressure_sv_b_7.setFont(font10)
         self.pressure_sv_b_7.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2518,7 +3092,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_7.setObjectName(u"pressure_pv_c_7")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_7.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_7.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_7.setFont(font12)
+        self.pressure_pv_c_7.setFont(font10)
         self.pressure_pv_c_7.setStyleSheet(u"")
         self.pressure_pv_c_7.setWrapping(True)
         self.pressure_pv_c_7.setAlignment(Qt.AlignCenter)
@@ -2542,7 +3116,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_7.setObjectName(u"pressure_sv_c_7")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_7.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_7.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_7.setFont(font12)
+        self.pressure_sv_c_7.setFont(font10)
         self.pressure_sv_c_7.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2577,39 +3151,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_3_val_5, 6, 6, 1, 1)
 
-        self.label_name_6 = QWidget(self.widget_6)
-        self.label_name_6.setObjectName(u"label_name_6")
-        self.horizontalLayout_28 = QHBoxLayout(self.label_name_6)
-        self.horizontalLayout_28.setObjectName(u"horizontalLayout_28")
-        self.horizontalLayout_28.setContentsMargins(3, 3, 3, 3)
-        self.label_102 = QLabel(self.label_name_6)
-        self.label_102.setObjectName(u"label_102")
-        self.label_102.setFont(font12)
-        self.label_102.setStyleSheet(u"QLabel{\n"
-"	border-radius: 10px;\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"	background: qlineargradient(\n"
-"                x1:0, y1:0,\n"
-"                x2:1, y2:0,\n"
-"                stop:0 #f8f9fc,\n"
-"                stop:1 #e3e6ee\n"
-"            );\n"
-"}")
-
-        self.horizontalLayout_28.addWidget(self.label_102)
-
-
-        self.gridLayout.addWidget(self.label_name_6, 7, 0, 1, 1)
-
-        self.group_1_val_6 = QWidget(self.widget_6)
-        self.group_1_val_6.setObjectName(u"group_1_val_6")
-        self.horizontalLayout_506 = QHBoxLayout(self.group_1_val_6)
-        self.horizontalLayout_506.setObjectName(u"horizontalLayout_506")
-        self.horizontalLayout_506.setContentsMargins(3, 3, 6, 3)
-        self.widget_234 = QWidget(self.group_1_val_6)
-        self.widget_234.setObjectName(u"widget_234")
-        self.widget_234.setStyleSheet(u"QWidget{\n"
+        self.group_2_val_7 = QWidget(self.widget_6)
+        self.group_2_val_7.setObjectName(u"group_2_val_7")
+        self.horizontalLayout_520 = QHBoxLayout(self.group_2_val_7)
+        self.horizontalLayout_520.setObjectName(u"horizontalLayout_520")
+        self.horizontalLayout_520.setContentsMargins(3, 3, 6, 3)
+        self.widget_272 = QWidget(self.group_2_val_7)
+        self.widget_272.setObjectName(u"widget_272")
+        self.widget_272.setStyleSheet(u"QWidget{\n"
 "    border: 2px solid #D1D5DB;\n"
 "    border-radius: 10px;\n"
 "}\n"
@@ -2621,156 +3170,47 @@ class Ui_MainWindow(object):
 "{\n"
 "    border: none;\n"
 "}")
-        self.horizontalLayout_507 = QHBoxLayout(self.widget_234)
-        self.horizontalLayout_507.setObjectName(u"horizontalLayout_507")
-        self.horizontalLayout_507.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_a_8 = QDoubleSpinBox(self.widget_234)
-        self.pressure_pv_a_8.setObjectName(u"pressure_pv_a_8")
-        sizePolicy.setHeightForWidth(self.pressure_pv_a_8.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_a_8.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_8.setFont(font12)
-        self.pressure_pv_a_8.setStyleSheet(u"")
-        self.pressure_pv_a_8.setWrapping(True)
-        self.pressure_pv_a_8.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_a_8.setReadOnly(True)
-        self.pressure_pv_a_8.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_a_8.setDecimals(1)
-        self.pressure_pv_a_8.setMaximum(999.000000000000000)
-        self.pressure_pv_a_8.setValue(0.000000000000000)
-
-        self.horizontalLayout_507.addWidget(self.pressure_pv_a_8)
-
-        self.line_46 = QFrame(self.widget_234)
-        self.line_46.setObjectName(u"line_46")
-        self.line_46.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
-        self.line_46.setFrameShape(QFrame.Shape.VLine)
-        self.line_46.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.horizontalLayout_507.addWidget(self.line_46)
-
-        self.pressure_sv_a_8 = QDoubleSpinBox(self.widget_234)
-        self.pressure_sv_a_8.setObjectName(u"pressure_sv_a_8")
-        sizePolicy.setHeightForWidth(self.pressure_sv_a_8.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_a_8.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_8.setFont(font12)
-        self.pressure_sv_a_8.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+        self.horizontalLayout_521 = QHBoxLayout(self.widget_272)
+        self.horizontalLayout_521.setObjectName(u"horizontalLayout_521")
+        self.horizontalLayout_521.setContentsMargins(2, 2, 2, 2)
+        self.pressure_sv_b_5 = QDoubleSpinBox(self.widget_272)
+        self.pressure_sv_b_5.setObjectName(u"pressure_sv_b_5")
+        sizePolicy.setHeightForWidth(self.pressure_sv_b_5.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_b_5.setSizePolicy(sizePolicy)
+        self.pressure_sv_b_5.setFont(font10)
+        self.pressure_sv_b_5.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
-        self.pressure_sv_a_8.setWrapping(False)
-        self.pressure_sv_a_8.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_a_8.setReadOnly(False)
-        self.pressure_sv_a_8.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_a_8.setDecimals(1)
-        self.pressure_sv_a_8.setMaximum(999.000000000000000)
-        self.pressure_sv_a_8.setValue(0.000000000000000)
+        self.pressure_sv_b_5.setWrapping(False)
+        self.pressure_sv_b_5.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_b_5.setReadOnly(False)
+        self.pressure_sv_b_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_b_5.setDecimals(2)
+        self.pressure_sv_b_5.setMaximum(20.000000000000000)
+        self.pressure_sv_b_5.setValue(0.000000000000000)
 
-        self.horizontalLayout_507.addWidget(self.pressure_sv_a_8)
+        self.horizontalLayout_521.addWidget(self.pressure_sv_b_5)
 
-        self.horizontalLayout_507.setStretch(0, 1)
-        self.horizontalLayout_507.setStretch(2, 1)
+        self.horizontalLayout_521.setStretch(0, 1)
 
-        self.horizontalLayout_506.addWidget(self.widget_234)
+        self.horizontalLayout_520.addWidget(self.widget_272)
 
-        self.label_244 = QLabel(self.group_1_val_6)
-        self.label_244.setObjectName(u"label_244")
-        self.label_244.setFont(font14)
-        self.label_244.setStyleSheet(u"QLabel{\n"
+        self.label_253 = QLabel(self.group_2_val_7)
+        self.label_253.setObjectName(u"label_253")
+        self.label_253.setFont(font14)
+        self.label_253.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
 "}")
-        self.label_244.setAlignment(Qt.AlignCenter)
+        self.label_253.setAlignment(Qt.AlignCenter)
+        self.label_253.setWordWrap(True)
 
-        self.horizontalLayout_506.addWidget(self.label_244)
+        self.horizontalLayout_520.addWidget(self.label_253)
 
-        self.horizontalLayout_506.setStretch(0, 6)
-        self.horizontalLayout_506.setStretch(1, 1)
+        self.horizontalLayout_520.setStretch(0, 6)
+        self.horizontalLayout_520.setStretch(1, 1)
 
-        self.gridLayout.addWidget(self.group_1_val_6, 7, 2, 1, 1)
-
-        self.group_2_val_6 = QWidget(self.widget_6)
-        self.group_2_val_6.setObjectName(u"group_2_val_6")
-        self.horizontalLayout_526 = QHBoxLayout(self.group_2_val_6)
-        self.horizontalLayout_526.setObjectName(u"horizontalLayout_526")
-        self.horizontalLayout_526.setContentsMargins(3, 3, 6, 3)
-        self.widget_284 = QWidget(self.group_2_val_6)
-        self.widget_284.setObjectName(u"widget_284")
-        self.widget_284.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_527 = QHBoxLayout(self.widget_284)
-        self.horizontalLayout_527.setObjectName(u"horizontalLayout_527")
-        self.horizontalLayout_527.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_b_8 = QDoubleSpinBox(self.widget_284)
-        self.pressure_pv_b_8.setObjectName(u"pressure_pv_b_8")
-        sizePolicy.setHeightForWidth(self.pressure_pv_b_8.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_b_8.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_8.setFont(font12)
-        self.pressure_pv_b_8.setStyleSheet(u"")
-        self.pressure_pv_b_8.setWrapping(True)
-        self.pressure_pv_b_8.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_b_8.setReadOnly(True)
-        self.pressure_pv_b_8.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_b_8.setDecimals(1)
-        self.pressure_pv_b_8.setMaximum(999.000000000000000)
-        self.pressure_pv_b_8.setValue(0.000000000000000)
-
-        self.horizontalLayout_527.addWidget(self.pressure_pv_b_8)
-
-        self.line_55 = QFrame(self.widget_284)
-        self.line_55.setObjectName(u"line_55")
-        self.line_55.setStyleSheet(u"border: 1px solid rgb(22, 93, 200);")
-        self.line_55.setFrameShape(QFrame.Shape.VLine)
-        self.line_55.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.horizontalLayout_527.addWidget(self.line_55)
-
-        self.pressure_sv_b_8 = QDoubleSpinBox(self.widget_284)
-        self.pressure_sv_b_8.setObjectName(u"pressure_sv_b_8")
-        sizePolicy.setHeightForWidth(self.pressure_sv_b_8.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_b_8.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_8.setFont(font12)
-        self.pressure_sv_b_8.setStyleSheet(u"QDoubleSpinBox:hover{\n"
-"    border: 2px solid #43A047;\n"
-"}")
-        self.pressure_sv_b_8.setWrapping(False)
-        self.pressure_sv_b_8.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_b_8.setReadOnly(False)
-        self.pressure_sv_b_8.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_b_8.setDecimals(1)
-        self.pressure_sv_b_8.setMaximum(999.000000000000000)
-        self.pressure_sv_b_8.setValue(0.000000000000000)
-
-        self.horizontalLayout_527.addWidget(self.pressure_sv_b_8)
-
-        self.horizontalLayout_527.setStretch(0, 1)
-        self.horizontalLayout_527.setStretch(2, 1)
-
-        self.horizontalLayout_526.addWidget(self.widget_284)
-
-        self.label_256 = QLabel(self.group_2_val_6)
-        self.label_256.setObjectName(u"label_256")
-        self.label_256.setFont(font14)
-        self.label_256.setStyleSheet(u"QLabel{\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"}")
-        self.label_256.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_526.addWidget(self.label_256)
-
-        self.horizontalLayout_526.setStretch(0, 6)
-        self.horizontalLayout_526.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_2_val_6, 7, 4, 1, 1)
+        self.gridLayout.addWidget(self.group_2_val_7, 8, 4, 1, 1)
 
         self.group_3_val_6 = QWidget(self.widget_6)
         self.group_3_val_6.setObjectName(u"group_3_val_6")
@@ -2798,7 +3238,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_8.setObjectName(u"pressure_pv_c_8")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_8.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_8.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_8.setFont(font12)
+        self.pressure_pv_c_8.setFont(font10)
         self.pressure_pv_c_8.setStyleSheet(u"")
         self.pressure_pv_c_8.setWrapping(True)
         self.pressure_pv_c_8.setAlignment(Qt.AlignCenter)
@@ -2822,7 +3262,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_8.setObjectName(u"pressure_sv_c_8")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_8.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_8.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_8.setFont(font12)
+        self.pressure_sv_c_8.setFont(font10)
         self.pressure_sv_c_8.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2864,7 +3304,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_32.setContentsMargins(3, 3, 3, 3)
         self.label_99 = QLabel(self.label_name_7)
         self.label_99.setObjectName(u"label_99")
-        self.label_99.setFont(font12)
+        self.label_99.setFont(font10)
         self.label_99.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -2881,128 +3321,6 @@ class Ui_MainWindow(object):
 
 
         self.gridLayout.addWidget(self.label_name_7, 8, 0, 1, 1)
-
-        self.group_1_val_7 = QWidget(self.widget_6)
-        self.group_1_val_7.setObjectName(u"group_1_val_7")
-        self.horizontalLayout_336 = QHBoxLayout(self.group_1_val_7)
-        self.horizontalLayout_336.setObjectName(u"horizontalLayout_336")
-        self.horizontalLayout_336.setContentsMargins(3, 3, 6, 3)
-        self.widget_231 = QWidget(self.group_1_val_7)
-        self.widget_231.setObjectName(u"widget_231")
-        self.widget_231.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_340 = QHBoxLayout(self.widget_231)
-        self.horizontalLayout_340.setObjectName(u"horizontalLayout_340")
-        self.horizontalLayout_340.setContentsMargins(2, 2, 2, 2)
-        self.pressure_sv_a_5 = QDoubleSpinBox(self.widget_231)
-        self.pressure_sv_a_5.setObjectName(u"pressure_sv_a_5")
-        sizePolicy.setHeightForWidth(self.pressure_sv_a_5.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_a_5.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_5.setFont(font12)
-        self.pressure_sv_a_5.setStyleSheet(u"QDoubleSpinBox:hover{\n"
-"    border: 2px solid #43A047;\n"
-"}")
-        self.pressure_sv_a_5.setWrapping(False)
-        self.pressure_sv_a_5.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_a_5.setReadOnly(False)
-        self.pressure_sv_a_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_a_5.setDecimals(2)
-        self.pressure_sv_a_5.setMaximum(20.000000000000000)
-        self.pressure_sv_a_5.setValue(0.000000000000000)
-
-        self.horizontalLayout_340.addWidget(self.pressure_sv_a_5)
-
-        self.horizontalLayout_340.setStretch(0, 1)
-
-        self.horizontalLayout_336.addWidget(self.widget_231)
-
-        self.label_241 = QLabel(self.group_1_val_7)
-        self.label_241.setObjectName(u"label_241")
-        self.label_241.setFont(font14)
-        self.label_241.setStyleSheet(u"QLabel{\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"}")
-        self.label_241.setAlignment(Qt.AlignCenter)
-        self.label_241.setWordWrap(True)
-
-        self.horizontalLayout_336.addWidget(self.label_241)
-
-        self.horizontalLayout_336.setStretch(0, 6)
-        self.horizontalLayout_336.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_1_val_7, 8, 2, 1, 1)
-
-        self.group_2_val_7 = QWidget(self.widget_6)
-        self.group_2_val_7.setObjectName(u"group_2_val_7")
-        self.horizontalLayout_520 = QHBoxLayout(self.group_2_val_7)
-        self.horizontalLayout_520.setObjectName(u"horizontalLayout_520")
-        self.horizontalLayout_520.setContentsMargins(3, 3, 6, 3)
-        self.widget_272 = QWidget(self.group_2_val_7)
-        self.widget_272.setObjectName(u"widget_272")
-        self.widget_272.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_521 = QHBoxLayout(self.widget_272)
-        self.horizontalLayout_521.setObjectName(u"horizontalLayout_521")
-        self.horizontalLayout_521.setContentsMargins(2, 2, 2, 2)
-        self.pressure_sv_b_5 = QDoubleSpinBox(self.widget_272)
-        self.pressure_sv_b_5.setObjectName(u"pressure_sv_b_5")
-        sizePolicy.setHeightForWidth(self.pressure_sv_b_5.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_b_5.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_5.setFont(font12)
-        self.pressure_sv_b_5.setStyleSheet(u"QDoubleSpinBox:hover{\n"
-"    border: 2px solid #43A047;\n"
-"}")
-        self.pressure_sv_b_5.setWrapping(False)
-        self.pressure_sv_b_5.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_b_5.setReadOnly(False)
-        self.pressure_sv_b_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_b_5.setDecimals(2)
-        self.pressure_sv_b_5.setMaximum(20.000000000000000)
-        self.pressure_sv_b_5.setValue(0.000000000000000)
-
-        self.horizontalLayout_521.addWidget(self.pressure_sv_b_5)
-
-        self.horizontalLayout_521.setStretch(0, 1)
-
-        self.horizontalLayout_520.addWidget(self.widget_272)
-
-        self.label_253 = QLabel(self.group_2_val_7)
-        self.label_253.setObjectName(u"label_253")
-        self.label_253.setFont(font14)
-        self.label_253.setStyleSheet(u"QLabel{\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"}")
-        self.label_253.setAlignment(Qt.AlignCenter)
-        self.label_253.setWordWrap(True)
-
-        self.horizontalLayout_520.addWidget(self.label_253)
-
-        self.horizontalLayout_520.setStretch(0, 6)
-        self.horizontalLayout_520.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_2_val_7, 8, 4, 1, 1)
 
         self.group_3_val_7 = QWidget(self.widget_6)
         self.group_3_val_7.setObjectName(u"group_3_val_7")
@@ -3030,7 +3348,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_5.setObjectName(u"pressure_sv_c_5")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_5.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_5.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_5.setFont(font12)
+        self.pressure_sv_c_5.setFont(font10)
         self.pressure_sv_c_5.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -3072,7 +3390,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_35.setContentsMargins(3, 3, 3, 3)
         self.label_106 = QLabel(self.label_name_8)
         self.label_106.setObjectName(u"label_106")
-        self.label_106.setFont(font12)
+        self.label_106.setFont(font10)
         self.label_106.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -3090,14 +3408,14 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.label_name_8, 9, 0, 1, 1)
 
-        self.group_1_val_8 = QWidget(self.widget_6)
-        self.group_1_val_8.setObjectName(u"group_1_val_8")
-        self.horizontalLayout_350 = QHBoxLayout(self.group_1_val_8)
-        self.horizontalLayout_350.setObjectName(u"horizontalLayout_350")
-        self.horizontalLayout_350.setContentsMargins(3, 3, 6, 3)
-        self.widget_339 = QWidget(self.group_1_val_8)
-        self.widget_339.setObjectName(u"widget_339")
-        self.widget_339.setStyleSheet(u"QWidget{\n"
+        self.group_1_val_7 = QWidget(self.widget_6)
+        self.group_1_val_7.setObjectName(u"group_1_val_7")
+        self.horizontalLayout_336 = QHBoxLayout(self.group_1_val_7)
+        self.horizontalLayout_336.setObjectName(u"horizontalLayout_336")
+        self.horizontalLayout_336.setContentsMargins(3, 3, 6, 3)
+        self.widget_231 = QWidget(self.group_1_val_7)
+        self.widget_231.setObjectName(u"widget_231")
+        self.widget_231.setStyleSheet(u"QWidget{\n"
 "    border: 2px solid #D1D5DB;\n"
 "    border-radius: 10px;\n"
 "}\n"
@@ -3109,44 +3427,72 @@ class Ui_MainWindow(object):
 "{\n"
 "    border: none;\n"
 "}")
-        self.horizontalLayout_351 = QHBoxLayout(self.widget_339)
-        self.horizontalLayout_351.setObjectName(u"horizontalLayout_351")
-        self.horizontalLayout_351.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_a_12 = QDoubleSpinBox(self.widget_339)
-        self.pressure_pv_a_12.setObjectName(u"pressure_pv_a_12")
-        sizePolicy.setHeightForWidth(self.pressure_pv_a_12.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_a_12.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_12.setFont(font12)
-        self.pressure_pv_a_12.setWrapping(False)
-        self.pressure_pv_a_12.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_a_12.setReadOnly(True)
-        self.pressure_pv_a_12.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_a_12.setDecimals(2)
-        self.pressure_pv_a_12.setMaximum(999.990000000000009)
-        self.pressure_pv_a_12.setValue(0.000000000000000)
+        self.horizontalLayout_340 = QHBoxLayout(self.widget_231)
+        self.horizontalLayout_340.setObjectName(u"horizontalLayout_340")
+        self.horizontalLayout_340.setContentsMargins(2, 2, 2, 2)
+        self.pressure_sv_a_5 = QDoubleSpinBox(self.widget_231)
+        self.pressure_sv_a_5.setObjectName(u"pressure_sv_a_5")
+        sizePolicy.setHeightForWidth(self.pressure_sv_a_5.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_a_5.setSizePolicy(sizePolicy)
+        self.pressure_sv_a_5.setFont(font10)
+        self.pressure_sv_a_5.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+"    border: 2px solid #43A047;\n"
+"}")
+        self.pressure_sv_a_5.setWrapping(False)
+        self.pressure_sv_a_5.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_a_5.setReadOnly(False)
+        self.pressure_sv_a_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_a_5.setDecimals(2)
+        self.pressure_sv_a_5.setMaximum(20.000000000000000)
+        self.pressure_sv_a_5.setValue(0.000000000000000)
 
-        self.horizontalLayout_351.addWidget(self.pressure_pv_a_12)
+        self.horizontalLayout_340.addWidget(self.pressure_sv_a_5)
 
-        self.horizontalLayout_351.setStretch(0, 1)
+        self.horizontalLayout_340.setStretch(0, 1)
 
-        self.horizontalLayout_350.addWidget(self.widget_339)
+        self.horizontalLayout_336.addWidget(self.widget_231)
 
-        self.label_270 = QLabel(self.group_1_val_8)
-        self.label_270.setObjectName(u"label_270")
-        self.label_270.setFont(font14)
-        self.label_270.setStyleSheet(u"QLabel{\n"
+        self.label_241 = QLabel(self.group_1_val_7)
+        self.label_241.setObjectName(u"label_241")
+        self.label_241.setFont(font14)
+        self.label_241.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
 "}")
-        self.label_270.setAlignment(Qt.AlignCenter)
-        self.label_270.setWordWrap(True)
+        self.label_241.setAlignment(Qt.AlignCenter)
+        self.label_241.setWordWrap(True)
 
-        self.horizontalLayout_350.addWidget(self.label_270)
+        self.horizontalLayout_336.addWidget(self.label_241)
 
-        self.horizontalLayout_350.setStretch(0, 6)
-        self.horizontalLayout_350.setStretch(1, 1)
+        self.horizontalLayout_336.setStretch(0, 6)
+        self.horizontalLayout_336.setStretch(1, 1)
 
-        self.gridLayout.addWidget(self.group_1_val_8, 9, 2, 1, 1)
+        self.gridLayout.addWidget(self.group_1_val_7, 8, 2, 1, 1)
+
+        self.label_name_9 = QWidget(self.widget_6)
+        self.label_name_9.setObjectName(u"label_name_9")
+        self.horizontalLayout_36 = QHBoxLayout(self.label_name_9)
+        self.horizontalLayout_36.setObjectName(u"horizontalLayout_36")
+        self.horizontalLayout_36.setContentsMargins(3, 3, 3, 3)
+        self.label_105 = QLabel(self.label_name_9)
+        self.label_105.setObjectName(u"label_105")
+        self.label_105.setFont(font10)
+        self.label_105.setStyleSheet(u"QLabel{\n"
+"	border-radius: 10px;\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
+"}")
+
+        self.horizontalLayout_36.addWidget(self.label_105)
+
+
+        self.gridLayout.addWidget(self.label_name_9, 10, 0, 1, 1)
 
         self.group_2_val_8 = QWidget(self.widget_6)
         self.group_2_val_8.setObjectName(u"group_2_val_8")
@@ -3174,7 +3520,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_12.setObjectName(u"pressure_pv_b_12")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_12.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_12.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_12.setFont(font12)
+        self.pressure_pv_b_12.setFont(font10)
         self.pressure_pv_b_12.setWrapping(False)
         self.pressure_pv_b_12.setAlignment(Qt.AlignCenter)
         self.pressure_pv_b_12.setReadOnly(True)
@@ -3206,6 +3552,64 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_2_val_8, 9, 4, 1, 1)
 
+        self.group_1_val_8 = QWidget(self.widget_6)
+        self.group_1_val_8.setObjectName(u"group_1_val_8")
+        self.horizontalLayout_350 = QHBoxLayout(self.group_1_val_8)
+        self.horizontalLayout_350.setObjectName(u"horizontalLayout_350")
+        self.horizontalLayout_350.setContentsMargins(3, 3, 6, 3)
+        self.widget_339 = QWidget(self.group_1_val_8)
+        self.widget_339.setObjectName(u"widget_339")
+        self.widget_339.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_351 = QHBoxLayout(self.widget_339)
+        self.horizontalLayout_351.setObjectName(u"horizontalLayout_351")
+        self.horizontalLayout_351.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_a_12 = QDoubleSpinBox(self.widget_339)
+        self.pressure_pv_a_12.setObjectName(u"pressure_pv_a_12")
+        sizePolicy.setHeightForWidth(self.pressure_pv_a_12.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_a_12.setSizePolicy(sizePolicy)
+        self.pressure_pv_a_12.setFont(font10)
+        self.pressure_pv_a_12.setWrapping(False)
+        self.pressure_pv_a_12.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_a_12.setReadOnly(True)
+        self.pressure_pv_a_12.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_a_12.setDecimals(2)
+        self.pressure_pv_a_12.setMaximum(999.990000000000009)
+        self.pressure_pv_a_12.setValue(0.000000000000000)
+
+        self.horizontalLayout_351.addWidget(self.pressure_pv_a_12)
+
+        self.horizontalLayout_351.setStretch(0, 1)
+
+        self.horizontalLayout_350.addWidget(self.widget_339)
+
+        self.label_270 = QLabel(self.group_1_val_8)
+        self.label_270.setObjectName(u"label_270")
+        self.label_270.setFont(font14)
+        self.label_270.setStyleSheet(u"QLabel{\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"}")
+        self.label_270.setAlignment(Qt.AlignCenter)
+        self.label_270.setWordWrap(True)
+
+        self.horizontalLayout_350.addWidget(self.label_270)
+
+        self.horizontalLayout_350.setStretch(0, 6)
+        self.horizontalLayout_350.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_1_val_8, 9, 2, 1, 1)
+
         self.group_3_val_8 = QWidget(self.widget_6)
         self.group_3_val_8.setObjectName(u"group_3_val_8")
         self.horizontalLayout_582 = QHBoxLayout(self.group_3_val_8)
@@ -3232,7 +3636,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_12.setObjectName(u"pressure_pv_c_12")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_12.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_12.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_12.setFont(font12)
+        self.pressure_pv_c_12.setFont(font10)
         self.pressure_pv_c_12.setWrapping(False)
         self.pressure_pv_c_12.setAlignment(Qt.AlignCenter)
         self.pressure_pv_c_12.setReadOnly(True)
@@ -3264,205 +3668,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_3_val_8, 9, 6, 1, 1)
 
-        self.label_name_9 = QWidget(self.widget_6)
-        self.label_name_9.setObjectName(u"label_name_9")
-        self.horizontalLayout_36 = QHBoxLayout(self.label_name_9)
-        self.horizontalLayout_36.setObjectName(u"horizontalLayout_36")
-        self.horizontalLayout_36.setContentsMargins(3, 3, 3, 3)
-        self.label_105 = QLabel(self.label_name_9)
-        self.label_105.setObjectName(u"label_105")
-        self.label_105.setFont(font12)
-        self.label_105.setStyleSheet(u"QLabel{\n"
-"	border-radius: 10px;\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"	background: qlineargradient(\n"
-"                x1:0, y1:0,\n"
-"                x2:1, y2:0,\n"
-"                stop:0 #f8f9fc,\n"
-"                stop:1 #e3e6ee\n"
-"            );\n"
-"}")
-
-        self.horizontalLayout_36.addWidget(self.label_105)
-
-
-        self.gridLayout.addWidget(self.label_name_9, 10, 0, 1, 1)
-
-        self.group_1_val_9 = QWidget(self.widget_6)
-        self.group_1_val_9.setObjectName(u"group_1_val_9")
-        self.horizontalLayout_348 = QHBoxLayout(self.group_1_val_9)
-        self.horizontalLayout_348.setObjectName(u"horizontalLayout_348")
-        self.horizontalLayout_348.setContentsMargins(3, 3, 6, 3)
-        self.widget_299 = QWidget(self.group_1_val_9)
-        self.widget_299.setObjectName(u"widget_299")
-        self.widget_299.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_349 = QHBoxLayout(self.widget_299)
-        self.horizontalLayout_349.setObjectName(u"horizontalLayout_349")
-        self.horizontalLayout_349.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_a_5 = QDoubleSpinBox(self.widget_299)
-        self.pressure_pv_a_5.setObjectName(u"pressure_pv_a_5")
-        sizePolicy.setHeightForWidth(self.pressure_pv_a_5.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_a_5.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_5.setFont(font12)
-        self.pressure_pv_a_5.setWrapping(False)
-        self.pressure_pv_a_5.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_a_5.setReadOnly(True)
-        self.pressure_pv_a_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_a_5.setDecimals(2)
-        self.pressure_pv_a_5.setMaximum(999.990000000000009)
-        self.pressure_pv_a_5.setValue(0.000000000000000)
-
-        self.horizontalLayout_349.addWidget(self.pressure_pv_a_5)
-
-        self.horizontalLayout_349.setStretch(0, 1)
-
-        self.horizontalLayout_348.addWidget(self.widget_299)
-
-        self.label_267 = QLabel(self.group_1_val_9)
-        self.label_267.setObjectName(u"label_267")
-        self.label_267.setFont(font14)
-        self.label_267.setStyleSheet(u"QLabel{\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"}")
-        self.label_267.setAlignment(Qt.AlignCenter)
-        self.label_267.setWordWrap(True)
-
-        self.horizontalLayout_348.addWidget(self.label_267)
-
-        self.horizontalLayout_348.setStretch(0, 6)
-        self.horizontalLayout_348.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_1_val_9, 10, 2, 1, 1)
-
-        self.group_2_val_9 = QWidget(self.widget_6)
-        self.group_2_val_9.setObjectName(u"group_2_val_9")
-        self.horizontalLayout_572 = QHBoxLayout(self.group_2_val_9)
-        self.horizontalLayout_572.setObjectName(u"horizontalLayout_572")
-        self.horizontalLayout_572.setContentsMargins(3, 3, 6, 3)
-        self.widget_300 = QWidget(self.group_2_val_9)
-        self.widget_300.setObjectName(u"widget_300")
-        self.widget_300.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_573 = QHBoxLayout(self.widget_300)
-        self.horizontalLayout_573.setObjectName(u"horizontalLayout_573")
-        self.horizontalLayout_573.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_b_5 = QDoubleSpinBox(self.widget_300)
-        self.pressure_pv_b_5.setObjectName(u"pressure_pv_b_5")
-        sizePolicy.setHeightForWidth(self.pressure_pv_b_5.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_b_5.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_5.setFont(font12)
-        self.pressure_pv_b_5.setWrapping(False)
-        self.pressure_pv_b_5.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_b_5.setReadOnly(True)
-        self.pressure_pv_b_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_b_5.setDecimals(2)
-        self.pressure_pv_b_5.setMaximum(999.990000000000009)
-        self.pressure_pv_b_5.setValue(0.000000000000000)
-
-        self.horizontalLayout_573.addWidget(self.pressure_pv_b_5)
-
-        self.horizontalLayout_573.setStretch(0, 1)
-
-        self.horizontalLayout_572.addWidget(self.widget_300)
-
-        self.label_268 = QLabel(self.group_2_val_9)
-        self.label_268.setObjectName(u"label_268")
-        self.label_268.setFont(font14)
-        self.label_268.setStyleSheet(u"QLabel{\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"}")
-        self.label_268.setAlignment(Qt.AlignCenter)
-        self.label_268.setWordWrap(True)
-
-        self.horizontalLayout_572.addWidget(self.label_268)
-
-        self.horizontalLayout_572.setStretch(0, 6)
-        self.horizontalLayout_572.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_2_val_9, 10, 4, 1, 1)
-
-        self.group_3_val_9 = QWidget(self.widget_6)
-        self.group_3_val_9.setObjectName(u"group_3_val_9")
-        self.horizontalLayout_574 = QHBoxLayout(self.group_3_val_9)
-        self.horizontalLayout_574.setObjectName(u"horizontalLayout_574")
-        self.horizontalLayout_574.setContentsMargins(3, 3, 6, 3)
-        self.widget_301 = QWidget(self.group_3_val_9)
-        self.widget_301.setObjectName(u"widget_301")
-        self.widget_301.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_575 = QHBoxLayout(self.widget_301)
-        self.horizontalLayout_575.setObjectName(u"horizontalLayout_575")
-        self.horizontalLayout_575.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_c_5 = QDoubleSpinBox(self.widget_301)
-        self.pressure_pv_c_5.setObjectName(u"pressure_pv_c_5")
-        sizePolicy.setHeightForWidth(self.pressure_pv_c_5.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_c_5.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_5.setFont(font12)
-        self.pressure_pv_c_5.setWrapping(False)
-        self.pressure_pv_c_5.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_c_5.setReadOnly(True)
-        self.pressure_pv_c_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_c_5.setDecimals(2)
-        self.pressure_pv_c_5.setMaximum(999.990000000000009)
-        self.pressure_pv_c_5.setValue(0.000000000000000)
-
-        self.horizontalLayout_575.addWidget(self.pressure_pv_c_5)
-
-        self.horizontalLayout_575.setStretch(0, 1)
-
-        self.horizontalLayout_574.addWidget(self.widget_301)
-
-        self.label_269 = QLabel(self.group_3_val_9)
-        self.label_269.setObjectName(u"label_269")
-        self.label_269.setFont(font14)
-        self.label_269.setStyleSheet(u"QLabel{\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"}")
-        self.label_269.setAlignment(Qt.AlignCenter)
-        self.label_269.setWordWrap(True)
-
-        self.horizontalLayout_574.addWidget(self.label_269)
-
-        self.horizontalLayout_574.setStretch(0, 6)
-        self.horizontalLayout_574.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_3_val_9, 10, 6, 1, 1)
-
         self.line = QFrame(self.widget_6)
         self.line.setObjectName(u"line")
         self.line.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
@@ -3470,126 +3675,6 @@ class Ui_MainWindow(object):
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.gridLayout.addWidget(self.line, 11, 0, 1, 7)
-
-        self.label_name_10 = QWidget(self.widget_6)
-        self.label_name_10.setObjectName(u"label_name_10")
-        self.horizontalLayout_37 = QHBoxLayout(self.label_name_10)
-        self.horizontalLayout_37.setObjectName(u"horizontalLayout_37")
-        self.horizontalLayout_37.setContentsMargins(3, 3, 3, 3)
-        self.label_104 = QLabel(self.label_name_10)
-        self.label_104.setObjectName(u"label_104")
-        self.label_104.setFont(font12)
-        self.label_104.setStyleSheet(u"QLabel{\n"
-"	border-radius: 10px;\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"	background: qlineargradient(\n"
-"                x1:0, y1:0,\n"
-"                x2:1, y2:0,\n"
-"                stop:0 #f8f9fc,\n"
-"                stop:1 #e3e6ee\n"
-"            );\n"
-"}")
-
-        self.horizontalLayout_37.addWidget(self.label_104)
-
-
-        self.gridLayout.addWidget(self.label_name_10, 12, 0, 1, 1)
-
-        self.line_11 = QFrame(self.widget_6)
-        self.line_11.setObjectName(u"line_11")
-        self.line_11.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
-        self.line_11.setFrameShape(QFrame.Shape.VLine)
-        self.line_11.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout.addWidget(self.line_11, 12, 1, 7, 1)
-
-        self.group_1_val_10 = QWidget(self.widget_6)
-        self.group_1_val_10.setObjectName(u"group_1_val_10")
-        self.horizontalLayout_288 = QHBoxLayout(self.group_1_val_10)
-        self.horizontalLayout_288.setSpacing(7)
-        self.horizontalLayout_288.setObjectName(u"horizontalLayout_288")
-        self.horizontalLayout_288.setContentsMargins(3, 3, 6, 3)
-        self.widget_264 = QWidget(self.group_1_val_10)
-        self.widget_264.setObjectName(u"widget_264")
-        self.widget_264.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_341 = QHBoxLayout(self.widget_264)
-        self.horizontalLayout_341.setObjectName(u"horizontalLayout_341")
-        self.horizontalLayout_341.setContentsMargins(2, 2, 2, 2)
-        self.pressure_sv_a_1 = QDoubleSpinBox(self.widget_264)
-        self.pressure_sv_a_1.setObjectName(u"pressure_sv_a_1")
-        sizePolicy.setHeightForWidth(self.pressure_sv_a_1.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_a_1.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_1.setFont(font12)
-        self.pressure_sv_a_1.setStyleSheet(u"QDoubleSpinBox:hover{\n"
-"    border: 2px solid #43A047;\n"
-"}")
-        self.pressure_sv_a_1.setWrapping(False)
-        self.pressure_sv_a_1.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_a_1.setReadOnly(False)
-        self.pressure_sv_a_1.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_a_1.setDecimals(1)
-        self.pressure_sv_a_1.setMaximum(999.000000000000000)
-        self.pressure_sv_a_1.setValue(0.000000000000000)
-
-        self.horizontalLayout_341.addWidget(self.pressure_sv_a_1)
-
-        self.horizontalLayout_341.setStretch(0, 1)
-
-        self.horizontalLayout_288.addWidget(self.widget_264)
-
-        self.stacked_cel_fah_press_a_1 = QStackedWidget(self.group_1_val_10)
-        self.stacked_cel_fah_press_a_1.setObjectName(u"stacked_cel_fah_press_a_1")
-        self.celsius_ap_39 = QWidget()
-        self.celsius_ap_39.setObjectName(u"celsius_ap_39")
-        self.horizontalLayout_512 = QHBoxLayout(self.celsius_ap_39)
-        self.horizontalLayout_512.setObjectName(u"horizontalLayout_512")
-        self.horizontalLayout_512.setContentsMargins(0, 0, 0, 0)
-        self.label_280 = QLabel(self.celsius_ap_39)
-        self.label_280.setObjectName(u"label_280")
-        self.label_280.setFont(font14)
-        self.label_280.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_280.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_512.addWidget(self.label_280)
-
-        self.stacked_cel_fah_press_a_1.addWidget(self.celsius_ap_39)
-        self.fahrenheit_ap_39 = QWidget()
-        self.fahrenheit_ap_39.setObjectName(u"fahrenheit_ap_39")
-        self.horizontalLayout_513 = QHBoxLayout(self.fahrenheit_ap_39)
-        self.horizontalLayout_513.setObjectName(u"horizontalLayout_513")
-        self.horizontalLayout_513.setContentsMargins(0, 0, 0, 0)
-        self.label_340 = QLabel(self.fahrenheit_ap_39)
-        self.label_340.setObjectName(u"label_340")
-        self.label_340.setFont(font14)
-        self.label_340.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_340.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_513.addWidget(self.label_340)
-
-        self.stacked_cel_fah_press_a_1.addWidget(self.fahrenheit_ap_39)
-
-        self.horizontalLayout_288.addWidget(self.stacked_cel_fah_press_a_1)
-
-        self.horizontalLayout_288.setStretch(0, 6)
-        self.horizontalLayout_288.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_1_val_10, 12, 2, 1, 1)
 
         self.line_10 = QFrame(self.widget_6)
         self.line_10.setObjectName(u"line_10")
@@ -3599,93 +3684,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.line_10, 12, 3, 7, 1)
 
-        self.group_2_val_10 = QWidget(self.widget_6)
-        self.group_2_val_10.setObjectName(u"group_2_val_10")
-        self.horizontalLayout_528 = QHBoxLayout(self.group_2_val_10)
-        self.horizontalLayout_528.setSpacing(7)
-        self.horizontalLayout_528.setObjectName(u"horizontalLayout_528")
-        self.horizontalLayout_528.setContentsMargins(3, 3, 6, 3)
-        self.widget_285 = QWidget(self.group_2_val_10)
-        self.widget_285.setObjectName(u"widget_285")
-        self.widget_285.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_529 = QHBoxLayout(self.widget_285)
-        self.horizontalLayout_529.setObjectName(u"horizontalLayout_529")
-        self.horizontalLayout_529.setContentsMargins(2, 2, 2, 2)
-        self.pressure_sv_b_1 = QDoubleSpinBox(self.widget_285)
-        self.pressure_sv_b_1.setObjectName(u"pressure_sv_b_1")
-        sizePolicy.setHeightForWidth(self.pressure_sv_b_1.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_b_1.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_1.setFont(font12)
-        self.pressure_sv_b_1.setStyleSheet(u"QDoubleSpinBox:hover{\n"
-"    border: 2px solid #43A047;\n"
-"}")
-        self.pressure_sv_b_1.setWrapping(False)
-        self.pressure_sv_b_1.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_b_1.setReadOnly(False)
-        self.pressure_sv_b_1.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_b_1.setDecimals(1)
-        self.pressure_sv_b_1.setMaximum(999.000000000000000)
-        self.pressure_sv_b_1.setValue(0.000000000000000)
-
-        self.horizontalLayout_529.addWidget(self.pressure_sv_b_1)
-
-        self.horizontalLayout_529.setStretch(0, 1)
-
-        self.horizontalLayout_528.addWidget(self.widget_285)
-
-        self.stacked_cel_fah_press_b_1 = QStackedWidget(self.group_2_val_10)
-        self.stacked_cel_fah_press_b_1.setObjectName(u"stacked_cel_fah_press_b_1")
-        self.celsius_ap_43 = QWidget()
-        self.celsius_ap_43.setObjectName(u"celsius_ap_43")
-        self.horizontalLayout_530 = QHBoxLayout(self.celsius_ap_43)
-        self.horizontalLayout_530.setObjectName(u"horizontalLayout_530")
-        self.horizontalLayout_530.setContentsMargins(0, 0, 0, 0)
-        self.label_281 = QLabel(self.celsius_ap_43)
-        self.label_281.setObjectName(u"label_281")
-        self.label_281.setFont(font14)
-        self.label_281.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_281.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_530.addWidget(self.label_281)
-
-        self.stacked_cel_fah_press_b_1.addWidget(self.celsius_ap_43)
-        self.fahrenheit_ap_43 = QWidget()
-        self.fahrenheit_ap_43.setObjectName(u"fahrenheit_ap_43")
-        self.horizontalLayout_531 = QHBoxLayout(self.fahrenheit_ap_43)
-        self.horizontalLayout_531.setObjectName(u"horizontalLayout_531")
-        self.horizontalLayout_531.setContentsMargins(0, 0, 0, 0)
-        self.label_366 = QLabel(self.fahrenheit_ap_43)
-        self.label_366.setObjectName(u"label_366")
-        self.label_366.setFont(font14)
-        self.label_366.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_366.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_531.addWidget(self.label_366)
-
-        self.stacked_cel_fah_press_b_1.addWidget(self.fahrenheit_ap_43)
-
-        self.horizontalLayout_528.addWidget(self.stacked_cel_fah_press_b_1)
-
-        self.horizontalLayout_528.setStretch(0, 6)
-        self.horizontalLayout_528.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_2_val_10, 12, 4, 1, 1)
-
         self.line_9 = QFrame(self.widget_6)
         self.line_9.setObjectName(u"line_9")
         self.line_9.setStyleSheet(u"border: 1px solid rgb(22, 93, 200)")
@@ -3693,762 +3691,6 @@ class Ui_MainWindow(object):
         self.line_9.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.gridLayout.addWidget(self.line_9, 12, 5, 7, 1)
-
-        self.group_3_val_10 = QWidget(self.widget_6)
-        self.group_3_val_10.setObjectName(u"group_3_val_10")
-        self.horizontalLayout_556 = QHBoxLayout(self.group_3_val_10)
-        self.horizontalLayout_556.setSpacing(7)
-        self.horizontalLayout_556.setObjectName(u"horizontalLayout_556")
-        self.horizontalLayout_556.setContentsMargins(3, 3, 6, 3)
-        self.widget_295 = QWidget(self.group_3_val_10)
-        self.widget_295.setObjectName(u"widget_295")
-        self.widget_295.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_557 = QHBoxLayout(self.widget_295)
-        self.horizontalLayout_557.setObjectName(u"horizontalLayout_557")
-        self.horizontalLayout_557.setContentsMargins(2, 2, 2, 2)
-        self.pressure_sv_c_1 = QDoubleSpinBox(self.widget_295)
-        self.pressure_sv_c_1.setObjectName(u"pressure_sv_c_1")
-        sizePolicy.setHeightForWidth(self.pressure_sv_c_1.sizePolicy().hasHeightForWidth())
-        self.pressure_sv_c_1.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_1.setFont(font12)
-        self.pressure_sv_c_1.setStyleSheet(u"QDoubleSpinBox:hover{\n"
-"    border: 2px solid #43A047;\n"
-"}")
-        self.pressure_sv_c_1.setWrapping(False)
-        self.pressure_sv_c_1.setAlignment(Qt.AlignCenter)
-        self.pressure_sv_c_1.setReadOnly(False)
-        self.pressure_sv_c_1.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_sv_c_1.setDecimals(1)
-        self.pressure_sv_c_1.setMaximum(999.000000000000000)
-        self.pressure_sv_c_1.setValue(0.000000000000000)
-
-        self.horizontalLayout_557.addWidget(self.pressure_sv_c_1)
-
-
-        self.horizontalLayout_556.addWidget(self.widget_295)
-
-        self.stacked_cel_fah_press_c_1 = QStackedWidget(self.group_3_val_10)
-        self.stacked_cel_fah_press_c_1.setObjectName(u"stacked_cel_fah_press_c_1")
-        self.celsius_ap_47 = QWidget()
-        self.celsius_ap_47.setObjectName(u"celsius_ap_47")
-        self.horizontalLayout_558 = QHBoxLayout(self.celsius_ap_47)
-        self.horizontalLayout_558.setObjectName(u"horizontalLayout_558")
-        self.horizontalLayout_558.setContentsMargins(0, 0, 0, 0)
-        self.label_398 = QLabel(self.celsius_ap_47)
-        self.label_398.setObjectName(u"label_398")
-        self.label_398.setFont(font14)
-        self.label_398.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_398.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_558.addWidget(self.label_398)
-
-        self.stacked_cel_fah_press_c_1.addWidget(self.celsius_ap_47)
-        self.fahrenheit_ap_47 = QWidget()
-        self.fahrenheit_ap_47.setObjectName(u"fahrenheit_ap_47")
-        self.horizontalLayout_559 = QHBoxLayout(self.fahrenheit_ap_47)
-        self.horizontalLayout_559.setObjectName(u"horizontalLayout_559")
-        self.horizontalLayout_559.setContentsMargins(0, 0, 0, 0)
-        self.label_399 = QLabel(self.fahrenheit_ap_47)
-        self.label_399.setObjectName(u"label_399")
-        self.label_399.setFont(font14)
-        self.label_399.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_399.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_559.addWidget(self.label_399)
-
-        self.stacked_cel_fah_press_c_1.addWidget(self.fahrenheit_ap_47)
-
-        self.horizontalLayout_556.addWidget(self.stacked_cel_fah_press_c_1)
-
-        self.horizontalLayout_556.setStretch(0, 6)
-        self.horizontalLayout_556.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_3_val_10, 12, 6, 1, 1)
-
-        self.label_name_11 = QWidget(self.widget_6)
-        self.label_name_11.setObjectName(u"label_name_11")
-        self.horizontalLayout_38 = QHBoxLayout(self.label_name_11)
-        self.horizontalLayout_38.setObjectName(u"horizontalLayout_38")
-        self.horizontalLayout_38.setContentsMargins(3, 3, 3, 3)
-        self.label_103 = QLabel(self.label_name_11)
-        self.label_103.setObjectName(u"label_103")
-        self.label_103.setFont(font12)
-        self.label_103.setStyleSheet(u"QLabel{\n"
-"	border-radius: 10px;\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"	background: qlineargradient(\n"
-"                x1:0, y1:0,\n"
-"                x2:1, y2:0,\n"
-"                stop:0 #f8f9fc,\n"
-"                stop:1 #e3e6ee\n"
-"            );\n"
-"}")
-
-        self.horizontalLayout_38.addWidget(self.label_103)
-
-
-        self.gridLayout.addWidget(self.label_name_11, 13, 0, 1, 1)
-
-        self.group_1_val_11 = QWidget(self.widget_6)
-        self.group_1_val_11.setObjectName(u"group_1_val_11")
-        self.horizontalLayout_342 = QHBoxLayout(self.group_1_val_11)
-        self.horizontalLayout_342.setSpacing(7)
-        self.horizontalLayout_342.setObjectName(u"horizontalLayout_342")
-        self.horizontalLayout_342.setContentsMargins(3, 3, 6, 3)
-        self.widget_265 = QWidget(self.group_1_val_11)
-        self.widget_265.setObjectName(u"widget_265")
-        self.widget_265.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_343 = QHBoxLayout(self.widget_265)
-        self.horizontalLayout_343.setObjectName(u"horizontalLayout_343")
-        self.horizontalLayout_343.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_a_2 = QDoubleSpinBox(self.widget_265)
-        self.pressure_pv_a_2.setObjectName(u"pressure_pv_a_2")
-        sizePolicy.setHeightForWidth(self.pressure_pv_a_2.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_a_2.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_2.setFont(font12)
-        self.pressure_pv_a_2.setStyleSheet(u"")
-        self.pressure_pv_a_2.setWrapping(True)
-        self.pressure_pv_a_2.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_a_2.setReadOnly(True)
-        self.pressure_pv_a_2.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_a_2.setDecimals(1)
-        self.pressure_pv_a_2.setMaximum(999.000000000000000)
-        self.pressure_pv_a_2.setValue(0.000000000000000)
-
-        self.horizontalLayout_343.addWidget(self.pressure_pv_a_2)
-
-        self.horizontalLayout_343.setStretch(0, 1)
-
-        self.horizontalLayout_342.addWidget(self.widget_265)
-
-        self.stacked_cel_fah_press_a_2 = QStackedWidget(self.group_1_val_11)
-        self.stacked_cel_fah_press_a_2.setObjectName(u"stacked_cel_fah_press_a_2")
-        self.celsius_ap_40 = QWidget()
-        self.celsius_ap_40.setObjectName(u"celsius_ap_40")
-        self.horizontalLayout_514 = QHBoxLayout(self.celsius_ap_40)
-        self.horizontalLayout_514.setObjectName(u"horizontalLayout_514")
-        self.horizontalLayout_514.setContentsMargins(0, 0, 0, 0)
-        self.label_379 = QLabel(self.celsius_ap_40)
-        self.label_379.setObjectName(u"label_379")
-        self.label_379.setFont(font14)
-        self.label_379.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_379.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_514.addWidget(self.label_379)
-
-        self.stacked_cel_fah_press_a_2.addWidget(self.celsius_ap_40)
-        self.fahrenheit_ap_40 = QWidget()
-        self.fahrenheit_ap_40.setObjectName(u"fahrenheit_ap_40")
-        self.horizontalLayout_515 = QHBoxLayout(self.fahrenheit_ap_40)
-        self.horizontalLayout_515.setObjectName(u"horizontalLayout_515")
-        self.horizontalLayout_515.setContentsMargins(0, 0, 0, 0)
-        self.label_380 = QLabel(self.fahrenheit_ap_40)
-        self.label_380.setObjectName(u"label_380")
-        self.label_380.setFont(font14)
-        self.label_380.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_380.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_515.addWidget(self.label_380)
-
-        self.stacked_cel_fah_press_a_2.addWidget(self.fahrenheit_ap_40)
-
-        self.horizontalLayout_342.addWidget(self.stacked_cel_fah_press_a_2)
-
-        self.horizontalLayout_342.setStretch(0, 6)
-        self.horizontalLayout_342.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_1_val_11, 13, 2, 1, 1)
-
-        self.group_2_val_11 = QWidget(self.widget_6)
-        self.group_2_val_11.setObjectName(u"group_2_val_11")
-        self.horizontalLayout_532 = QHBoxLayout(self.group_2_val_11)
-        self.horizontalLayout_532.setSpacing(7)
-        self.horizontalLayout_532.setObjectName(u"horizontalLayout_532")
-        self.horizontalLayout_532.setContentsMargins(3, 3, 6, 3)
-        self.widget_286 = QWidget(self.group_2_val_11)
-        self.widget_286.setObjectName(u"widget_286")
-        self.widget_286.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_533 = QHBoxLayout(self.widget_286)
-        self.horizontalLayout_533.setObjectName(u"horizontalLayout_533")
-        self.horizontalLayout_533.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_b_2 = QDoubleSpinBox(self.widget_286)
-        self.pressure_pv_b_2.setObjectName(u"pressure_pv_b_2")
-        sizePolicy.setHeightForWidth(self.pressure_pv_b_2.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_b_2.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_2.setFont(font12)
-        self.pressure_pv_b_2.setStyleSheet(u"")
-        self.pressure_pv_b_2.setWrapping(True)
-        self.pressure_pv_b_2.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_b_2.setReadOnly(True)
-        self.pressure_pv_b_2.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_b_2.setDecimals(1)
-        self.pressure_pv_b_2.setMaximum(999.000000000000000)
-        self.pressure_pv_b_2.setValue(0.000000000000000)
-
-        self.horizontalLayout_533.addWidget(self.pressure_pv_b_2)
-
-        self.horizontalLayout_533.setStretch(0, 1)
-
-        self.horizontalLayout_532.addWidget(self.widget_286)
-
-        self.stacked_cel_fah_press_b_2 = QStackedWidget(self.group_2_val_11)
-        self.stacked_cel_fah_press_b_2.setObjectName(u"stacked_cel_fah_press_b_2")
-        self.celsius_ap_44 = QWidget()
-        self.celsius_ap_44.setObjectName(u"celsius_ap_44")
-        self.horizontalLayout_534 = QHBoxLayout(self.celsius_ap_44)
-        self.horizontalLayout_534.setObjectName(u"horizontalLayout_534")
-        self.horizontalLayout_534.setContentsMargins(0, 0, 0, 0)
-        self.label_392 = QLabel(self.celsius_ap_44)
-        self.label_392.setObjectName(u"label_392")
-        self.label_392.setFont(font14)
-        self.label_392.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_392.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_534.addWidget(self.label_392)
-
-        self.stacked_cel_fah_press_b_2.addWidget(self.celsius_ap_44)
-        self.fahrenheit_ap_44 = QWidget()
-        self.fahrenheit_ap_44.setObjectName(u"fahrenheit_ap_44")
-        self.horizontalLayout_535 = QHBoxLayout(self.fahrenheit_ap_44)
-        self.horizontalLayout_535.setObjectName(u"horizontalLayout_535")
-        self.horizontalLayout_535.setContentsMargins(0, 0, 0, 0)
-        self.label_393 = QLabel(self.fahrenheit_ap_44)
-        self.label_393.setObjectName(u"label_393")
-        self.label_393.setFont(font14)
-        self.label_393.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_393.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_535.addWidget(self.label_393)
-
-        self.stacked_cel_fah_press_b_2.addWidget(self.fahrenheit_ap_44)
-
-        self.horizontalLayout_532.addWidget(self.stacked_cel_fah_press_b_2)
-
-        self.horizontalLayout_532.setStretch(0, 6)
-        self.horizontalLayout_532.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_2_val_11, 13, 4, 1, 1)
-
-        self.group_3_val_11 = QWidget(self.widget_6)
-        self.group_3_val_11.setObjectName(u"group_3_val_11")
-        self.horizontalLayout_560 = QHBoxLayout(self.group_3_val_11)
-        self.horizontalLayout_560.setSpacing(7)
-        self.horizontalLayout_560.setObjectName(u"horizontalLayout_560")
-        self.horizontalLayout_560.setContentsMargins(3, 3, 6, 3)
-        self.widget_296 = QWidget(self.group_3_val_11)
-        self.widget_296.setObjectName(u"widget_296")
-        self.widget_296.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_561 = QHBoxLayout(self.widget_296)
-        self.horizontalLayout_561.setObjectName(u"horizontalLayout_561")
-        self.horizontalLayout_561.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_c_2 = QDoubleSpinBox(self.widget_296)
-        self.pressure_pv_c_2.setObjectName(u"pressure_pv_c_2")
-        sizePolicy.setHeightForWidth(self.pressure_pv_c_2.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_c_2.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_2.setFont(font12)
-        self.pressure_pv_c_2.setStyleSheet(u"")
-        self.pressure_pv_c_2.setWrapping(True)
-        self.pressure_pv_c_2.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_c_2.setReadOnly(True)
-        self.pressure_pv_c_2.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_c_2.setDecimals(1)
-        self.pressure_pv_c_2.setMaximum(999.000000000000000)
-        self.pressure_pv_c_2.setValue(0.000000000000000)
-
-        self.horizontalLayout_561.addWidget(self.pressure_pv_c_2)
-
-        self.horizontalLayout_561.setStretch(0, 1)
-
-        self.horizontalLayout_560.addWidget(self.widget_296)
-
-        self.stacked_cel_fah_press_c_2 = QStackedWidget(self.group_3_val_11)
-        self.stacked_cel_fah_press_c_2.setObjectName(u"stacked_cel_fah_press_c_2")
-        self.celsius_ap_48 = QWidget()
-        self.celsius_ap_48.setObjectName(u"celsius_ap_48")
-        self.horizontalLayout_562 = QHBoxLayout(self.celsius_ap_48)
-        self.horizontalLayout_562.setObjectName(u"horizontalLayout_562")
-        self.horizontalLayout_562.setContentsMargins(0, 0, 0, 0)
-        self.label_282 = QLabel(self.celsius_ap_48)
-        self.label_282.setObjectName(u"label_282")
-        self.label_282.setFont(font14)
-        self.label_282.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_282.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_562.addWidget(self.label_282)
-
-        self.stacked_cel_fah_press_c_2.addWidget(self.celsius_ap_48)
-        self.fahrenheit_ap_48 = QWidget()
-        self.fahrenheit_ap_48.setObjectName(u"fahrenheit_ap_48")
-        self.horizontalLayout_563 = QHBoxLayout(self.fahrenheit_ap_48)
-        self.horizontalLayout_563.setObjectName(u"horizontalLayout_563")
-        self.horizontalLayout_563.setContentsMargins(0, 0, 0, 0)
-        self.label_400 = QLabel(self.fahrenheit_ap_48)
-        self.label_400.setObjectName(u"label_400")
-        self.label_400.setFont(font14)
-        self.label_400.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_400.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_563.addWidget(self.label_400)
-
-        self.stacked_cel_fah_press_c_2.addWidget(self.fahrenheit_ap_48)
-
-        self.horizontalLayout_560.addWidget(self.stacked_cel_fah_press_c_2)
-
-        self.horizontalLayout_560.setStretch(0, 6)
-        self.horizontalLayout_560.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_3_val_11, 13, 6, 1, 1)
-
-        self.label_name_12 = QWidget(self.widget_6)
-        self.label_name_12.setObjectName(u"label_name_12")
-        self.horizontalLayout_39 = QHBoxLayout(self.label_name_12)
-        self.horizontalLayout_39.setObjectName(u"horizontalLayout_39")
-        self.horizontalLayout_39.setContentsMargins(3, 3, 3, 3)
-        self.label_98 = QLabel(self.label_name_12)
-        self.label_98.setObjectName(u"label_98")
-        self.label_98.setFont(font12)
-        self.label_98.setStyleSheet(u"QLabel{\n"
-"	border-radius: 10px;\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"	background: qlineargradient(\n"
-"                x1:0, y1:0,\n"
-"                x2:1, y2:0,\n"
-"                stop:0 #f8f9fc,\n"
-"                stop:1 #e3e6ee\n"
-"            );\n"
-"}")
-
-        self.horizontalLayout_39.addWidget(self.label_98)
-
-
-        self.gridLayout.addWidget(self.label_name_12, 14, 0, 1, 1)
-
-        self.group_1_val_12 = QWidget(self.widget_6)
-        self.group_1_val_12.setObjectName(u"group_1_val_12")
-        self.horizontalLayout_344 = QHBoxLayout(self.group_1_val_12)
-        self.horizontalLayout_344.setSpacing(7)
-        self.horizontalLayout_344.setObjectName(u"horizontalLayout_344")
-        self.horizontalLayout_344.setContentsMargins(3, 3, 6, 3)
-        self.widget_270 = QWidget(self.group_1_val_12)
-        self.widget_270.setObjectName(u"widget_270")
-        self.widget_270.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_345 = QHBoxLayout(self.widget_270)
-        self.horizontalLayout_345.setObjectName(u"horizontalLayout_345")
-        self.horizontalLayout_345.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_a_3 = QDoubleSpinBox(self.widget_270)
-        self.pressure_pv_a_3.setObjectName(u"pressure_pv_a_3")
-        sizePolicy.setHeightForWidth(self.pressure_pv_a_3.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_a_3.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_3.setFont(font12)
-        self.pressure_pv_a_3.setStyleSheet(u"")
-        self.pressure_pv_a_3.setWrapping(True)
-        self.pressure_pv_a_3.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_a_3.setReadOnly(True)
-        self.pressure_pv_a_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_a_3.setDecimals(1)
-        self.pressure_pv_a_3.setMaximum(999.000000000000000)
-        self.pressure_pv_a_3.setValue(0.000000000000000)
-
-        self.horizontalLayout_345.addWidget(self.pressure_pv_a_3)
-
-        self.horizontalLayout_345.setStretch(0, 1)
-
-        self.horizontalLayout_344.addWidget(self.widget_270)
-
-        self.stacked_cel_fah_press_a_3 = QStackedWidget(self.group_1_val_12)
-        self.stacked_cel_fah_press_a_3.setObjectName(u"stacked_cel_fah_press_a_3")
-        self.celsius_ap_41 = QWidget()
-        self.celsius_ap_41.setObjectName(u"celsius_ap_41")
-        self.horizontalLayout_516 = QHBoxLayout(self.celsius_ap_41)
-        self.horizontalLayout_516.setObjectName(u"horizontalLayout_516")
-        self.horizontalLayout_516.setContentsMargins(0, 0, 0, 0)
-        self.label_381 = QLabel(self.celsius_ap_41)
-        self.label_381.setObjectName(u"label_381")
-        self.label_381.setFont(font14)
-        self.label_381.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_381.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_516.addWidget(self.label_381)
-
-        self.stacked_cel_fah_press_a_3.addWidget(self.celsius_ap_41)
-        self.fahrenheit_ap_41 = QWidget()
-        self.fahrenheit_ap_41.setObjectName(u"fahrenheit_ap_41")
-        self.horizontalLayout_517 = QHBoxLayout(self.fahrenheit_ap_41)
-        self.horizontalLayout_517.setObjectName(u"horizontalLayout_517")
-        self.horizontalLayout_517.setContentsMargins(0, 0, 0, 0)
-        self.label_382 = QLabel(self.fahrenheit_ap_41)
-        self.label_382.setObjectName(u"label_382")
-        self.label_382.setFont(font14)
-        self.label_382.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_382.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_517.addWidget(self.label_382)
-
-        self.stacked_cel_fah_press_a_3.addWidget(self.fahrenheit_ap_41)
-
-        self.horizontalLayout_344.addWidget(self.stacked_cel_fah_press_a_3)
-
-        self.horizontalLayout_344.setStretch(0, 6)
-        self.horizontalLayout_344.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_1_val_12, 14, 2, 1, 1)
-
-        self.group_2_val_12 = QWidget(self.widget_6)
-        self.group_2_val_12.setObjectName(u"group_2_val_12")
-        self.horizontalLayout_536 = QHBoxLayout(self.group_2_val_12)
-        self.horizontalLayout_536.setSpacing(7)
-        self.horizontalLayout_536.setObjectName(u"horizontalLayout_536")
-        self.horizontalLayout_536.setContentsMargins(3, 3, 6, 3)
-        self.widget_287 = QWidget(self.group_2_val_12)
-        self.widget_287.setObjectName(u"widget_287")
-        self.widget_287.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_537 = QHBoxLayout(self.widget_287)
-        self.horizontalLayout_537.setObjectName(u"horizontalLayout_537")
-        self.horizontalLayout_537.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_b_3 = QDoubleSpinBox(self.widget_287)
-        self.pressure_pv_b_3.setObjectName(u"pressure_pv_b_3")
-        sizePolicy.setHeightForWidth(self.pressure_pv_b_3.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_b_3.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_3.setFont(font12)
-        self.pressure_pv_b_3.setStyleSheet(u"")
-        self.pressure_pv_b_3.setWrapping(True)
-        self.pressure_pv_b_3.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_b_3.setReadOnly(True)
-        self.pressure_pv_b_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_b_3.setDecimals(1)
-        self.pressure_pv_b_3.setMaximum(999.000000000000000)
-        self.pressure_pv_b_3.setValue(0.000000000000000)
-
-        self.horizontalLayout_537.addWidget(self.pressure_pv_b_3)
-
-        self.horizontalLayout_537.setStretch(0, 1)
-
-        self.horizontalLayout_536.addWidget(self.widget_287)
-
-        self.stacked_cel_fah_press_b_3 = QStackedWidget(self.group_2_val_12)
-        self.stacked_cel_fah_press_b_3.setObjectName(u"stacked_cel_fah_press_b_3")
-        self.celsius_ap_45 = QWidget()
-        self.celsius_ap_45.setObjectName(u"celsius_ap_45")
-        self.horizontalLayout_538 = QHBoxLayout(self.celsius_ap_45)
-        self.horizontalLayout_538.setObjectName(u"horizontalLayout_538")
-        self.horizontalLayout_538.setContentsMargins(0, 0, 0, 0)
-        self.label_394 = QLabel(self.celsius_ap_45)
-        self.label_394.setObjectName(u"label_394")
-        self.label_394.setFont(font14)
-        self.label_394.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_394.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_538.addWidget(self.label_394)
-
-        self.stacked_cel_fah_press_b_3.addWidget(self.celsius_ap_45)
-        self.fahrenheit_ap_45 = QWidget()
-        self.fahrenheit_ap_45.setObjectName(u"fahrenheit_ap_45")
-        self.horizontalLayout_539 = QHBoxLayout(self.fahrenheit_ap_45)
-        self.horizontalLayout_539.setObjectName(u"horizontalLayout_539")
-        self.horizontalLayout_539.setContentsMargins(0, 0, 0, 0)
-        self.label_395 = QLabel(self.fahrenheit_ap_45)
-        self.label_395.setObjectName(u"label_395")
-        self.label_395.setFont(font14)
-        self.label_395.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_395.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_539.addWidget(self.label_395)
-
-        self.stacked_cel_fah_press_b_3.addWidget(self.fahrenheit_ap_45)
-
-        self.horizontalLayout_536.addWidget(self.stacked_cel_fah_press_b_3)
-
-        self.horizontalLayout_536.setStretch(0, 6)
-        self.horizontalLayout_536.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_2_val_12, 14, 4, 1, 1)
-
-        self.group_3_val_12 = QWidget(self.widget_6)
-        self.group_3_val_12.setObjectName(u"group_3_val_12")
-        self.horizontalLayout_564 = QHBoxLayout(self.group_3_val_12)
-        self.horizontalLayout_564.setSpacing(7)
-        self.horizontalLayout_564.setObjectName(u"horizontalLayout_564")
-        self.horizontalLayout_564.setContentsMargins(3, 3, 6, 3)
-        self.widget_297 = QWidget(self.group_3_val_12)
-        self.widget_297.setObjectName(u"widget_297")
-        self.widget_297.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_565 = QHBoxLayout(self.widget_297)
-        self.horizontalLayout_565.setObjectName(u"horizontalLayout_565")
-        self.horizontalLayout_565.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_c_3 = QDoubleSpinBox(self.widget_297)
-        self.pressure_pv_c_3.setObjectName(u"pressure_pv_c_3")
-        sizePolicy.setHeightForWidth(self.pressure_pv_c_3.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_c_3.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_3.setFont(font12)
-        self.pressure_pv_c_3.setStyleSheet(u"")
-        self.pressure_pv_c_3.setWrapping(True)
-        self.pressure_pv_c_3.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_c_3.setReadOnly(True)
-        self.pressure_pv_c_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_c_3.setDecimals(1)
-        self.pressure_pv_c_3.setMaximum(999.000000000000000)
-        self.pressure_pv_c_3.setValue(0.000000000000000)
-
-        self.horizontalLayout_565.addWidget(self.pressure_pv_c_3)
-
-        self.horizontalLayout_565.setStretch(0, 1)
-
-        self.horizontalLayout_564.addWidget(self.widget_297)
-
-        self.stacked_cel_fah_press_c_3 = QStackedWidget(self.group_3_val_12)
-        self.stacked_cel_fah_press_c_3.setObjectName(u"stacked_cel_fah_press_c_3")
-        self.celsius_ap_49 = QWidget()
-        self.celsius_ap_49.setObjectName(u"celsius_ap_49")
-        self.horizontalLayout_566 = QHBoxLayout(self.celsius_ap_49)
-        self.horizontalLayout_566.setObjectName(u"horizontalLayout_566")
-        self.horizontalLayout_566.setContentsMargins(0, 0, 0, 0)
-        self.label_401 = QLabel(self.celsius_ap_49)
-        self.label_401.setObjectName(u"label_401")
-        self.label_401.setFont(font14)
-        self.label_401.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_401.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_566.addWidget(self.label_401)
-
-        self.stacked_cel_fah_press_c_3.addWidget(self.celsius_ap_49)
-        self.fahrenheit_ap_49 = QWidget()
-        self.fahrenheit_ap_49.setObjectName(u"fahrenheit_ap_49")
-        self.horizontalLayout_567 = QHBoxLayout(self.fahrenheit_ap_49)
-        self.horizontalLayout_567.setObjectName(u"horizontalLayout_567")
-        self.horizontalLayout_567.setContentsMargins(0, 0, 0, 0)
-        self.label_402 = QLabel(self.fahrenheit_ap_49)
-        self.label_402.setObjectName(u"label_402")
-        self.label_402.setFont(font14)
-        self.label_402.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_402.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_567.addWidget(self.label_402)
-
-        self.stacked_cel_fah_press_c_3.addWidget(self.fahrenheit_ap_49)
-
-        self.horizontalLayout_564.addWidget(self.stacked_cel_fah_press_c_3)
-
-        self.horizontalLayout_564.setStretch(0, 6)
-        self.horizontalLayout_564.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_3_val_12, 14, 6, 1, 1)
-
-        self.label_name_13 = QWidget(self.widget_6)
-        self.label_name_13.setObjectName(u"label_name_13")
-        self.horizontalLayout_40 = QHBoxLayout(self.label_name_13)
-        self.horizontalLayout_40.setObjectName(u"horizontalLayout_40")
-        self.horizontalLayout_40.setContentsMargins(3, 3, 3, 3)
-        self.label_97 = QLabel(self.label_name_13)
-        self.label_97.setObjectName(u"label_97")
-        self.label_97.setFont(font12)
-        self.label_97.setStyleSheet(u"QLabel{\n"
-"	border-radius: 10px;\n"
-"	border-left: none;\n"
-"	color: rgb(97, 97, 97);\n"
-"	background: qlineargradient(\n"
-"                x1:0, y1:0,\n"
-"                x2:1, y2:0,\n"
-"                stop:0 #f8f9fc,\n"
-"                stop:1 #e3e6ee\n"
-"            );\n"
-"}")
-
-        self.horizontalLayout_40.addWidget(self.label_97)
-
-
-        self.gridLayout.addWidget(self.label_name_13, 15, 0, 1, 1)
-
-        self.group_1_val_13 = QWidget(self.widget_6)
-        self.group_1_val_13.setObjectName(u"group_1_val_13")
-        self.horizontalLayout_346 = QHBoxLayout(self.group_1_val_13)
-        self.horizontalLayout_346.setSpacing(7)
-        self.horizontalLayout_346.setObjectName(u"horizontalLayout_346")
-        self.horizontalLayout_346.setContentsMargins(3, 3, 6, 3)
-        self.widget_271 = QWidget(self.group_1_val_13)
-        self.widget_271.setObjectName(u"widget_271")
-        self.widget_271.setStyleSheet(u"QWidget{\n"
-"    border: 2px solid #D1D5DB;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}\n"
-"QSpinBox\n"
-"{\n"
-"    border: none;\n"
-"}")
-        self.horizontalLayout_347 = QHBoxLayout(self.widget_271)
-        self.horizontalLayout_347.setObjectName(u"horizontalLayout_347")
-        self.horizontalLayout_347.setContentsMargins(2, 2, 2, 2)
-        self.pressure_pv_a_4 = QDoubleSpinBox(self.widget_271)
-        self.pressure_pv_a_4.setObjectName(u"pressure_pv_a_4")
-        sizePolicy.setHeightForWidth(self.pressure_pv_a_4.sizePolicy().hasHeightForWidth())
-        self.pressure_pv_a_4.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_4.setFont(font12)
-        self.pressure_pv_a_4.setStyleSheet(u"")
-        self.pressure_pv_a_4.setWrapping(True)
-        self.pressure_pv_a_4.setAlignment(Qt.AlignCenter)
-        self.pressure_pv_a_4.setReadOnly(True)
-        self.pressure_pv_a_4.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.pressure_pv_a_4.setDecimals(1)
-        self.pressure_pv_a_4.setMaximum(999.000000000000000)
-        self.pressure_pv_a_4.setValue(0.000000000000000)
-
-        self.horizontalLayout_347.addWidget(self.pressure_pv_a_4)
-
-        self.horizontalLayout_347.setStretch(0, 1)
-
-        self.horizontalLayout_346.addWidget(self.widget_271)
-
-        self.stacked_cel_fah_press_a_4 = QStackedWidget(self.group_1_val_13)
-        self.stacked_cel_fah_press_a_4.setObjectName(u"stacked_cel_fah_press_a_4")
-        self.celsius_ap_42 = QWidget()
-        self.celsius_ap_42.setObjectName(u"celsius_ap_42")
-        self.horizontalLayout_518 = QHBoxLayout(self.celsius_ap_42)
-        self.horizontalLayout_518.setObjectName(u"horizontalLayout_518")
-        self.horizontalLayout_518.setContentsMargins(0, 0, 0, 0)
-        self.label_383 = QLabel(self.celsius_ap_42)
-        self.label_383.setObjectName(u"label_383")
-        self.label_383.setFont(font14)
-        self.label_383.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_383.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_518.addWidget(self.label_383)
-
-        self.stacked_cel_fah_press_a_4.addWidget(self.celsius_ap_42)
-        self.fahrenheit_ap_42 = QWidget()
-        self.fahrenheit_ap_42.setObjectName(u"fahrenheit_ap_42")
-        self.horizontalLayout_519 = QHBoxLayout(self.fahrenheit_ap_42)
-        self.horizontalLayout_519.setObjectName(u"horizontalLayout_519")
-        self.horizontalLayout_519.setContentsMargins(0, 0, 0, 0)
-        self.label_384 = QLabel(self.fahrenheit_ap_42)
-        self.label_384.setObjectName(u"label_384")
-        self.label_384.setFont(font14)
-        self.label_384.setStyleSheet(u"QLabel{\n"
-"	color: rgb(97, 97, 97)\n"
-"}")
-        self.label_384.setAlignment(Qt.AlignCenter)
-
-        self.horizontalLayout_519.addWidget(self.label_384)
-
-        self.stacked_cel_fah_press_a_4.addWidget(self.fahrenheit_ap_42)
-
-        self.horizontalLayout_346.addWidget(self.stacked_cel_fah_press_a_4)
-
-        self.horizontalLayout_346.setStretch(0, 6)
-        self.horizontalLayout_346.setStretch(1, 1)
-
-        self.gridLayout.addWidget(self.group_1_val_13, 15, 2, 1, 1)
 
         self.group_2_val_13 = QWidget(self.widget_6)
         self.group_2_val_13.setObjectName(u"group_2_val_13")
@@ -4477,7 +3719,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_4.setObjectName(u"pressure_pv_b_4")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_4.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_4.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_4.setFont(font12)
+        self.pressure_pv_b_4.setFont(font10)
         self.pressure_pv_b_4.setStyleSheet(u"")
         self.pressure_pv_b_4.setWrapping(True)
         self.pressure_pv_b_4.setAlignment(Qt.AlignCenter)
@@ -4535,6 +3777,49 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.group_2_val_13, 15, 4, 1, 1)
 
+        self.widget_51 = QWidget(self.widget_6)
+        self.widget_51.setObjectName(u"widget_51")
+        self.horizontalLayout_58 = QHBoxLayout(self.widget_51)
+        self.horizontalLayout_58.setObjectName(u"horizontalLayout_58")
+        self.horizontalLayout_58.setContentsMargins(3, 5, 3, 3)
+        self.refuel_btn_b = QPushButton(self.widget_51)
+        self.refuel_btn_b.setObjectName(u"refuel_btn_b")
+        sizePolicy.setHeightForWidth(self.refuel_btn_b.sizePolicy().hasHeightForWidth())
+        self.refuel_btn_b.setSizePolicy(sizePolicy)
+        self.refuel_btn_b.setMinimumSize(QSize(0, 40))
+        self.refuel_btn_b.setMaximumSize(QSize(16777215, 75))
+        self.refuel_btn_b.setFont(font2)
+        self.refuel_btn_b.setStyleSheet(u"QPushButton {\n"
+"    background-color: #0B7EC8;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 8px 12px;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #0968A3;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"	color: white;\n"
+"    background-color: #085A91;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: #EF4444;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    border-radius: 8px;\n"
+"}")
+        icon16 = QIcon()
+        icon16.addFile(u":/Icons/gas-pump-alt.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.refuel_btn_b.setIcon(icon16)
+        self.refuel_btn_b.setIconSize(QSize(35, 35))
+        self.refuel_btn_b.setCheckable(True)
+
+        self.horizontalLayout_58.addWidget(self.refuel_btn_b)
+
+
+        self.gridLayout.addWidget(self.widget_51, 16, 4, 1, 1)
+
         self.group_3_val_13 = QWidget(self.widget_6)
         self.group_3_val_13.setObjectName(u"group_3_val_13")
         self.horizontalLayout_568 = QHBoxLayout(self.group_3_val_13)
@@ -4562,7 +3847,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_4.setObjectName(u"pressure_pv_c_4")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_4.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_4.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_4.setFont(font12)
+        self.pressure_pv_c_4.setFont(font10)
         self.pressure_pv_c_4.setStyleSheet(u"")
         self.pressure_pv_c_4.setWrapping(True)
         self.pressure_pv_c_4.setAlignment(Qt.AlignCenter)
@@ -4652,9 +3937,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        icon15 = QIcon()
-        icon15.addFile(u":/Icons/gas-pump-alt.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.refuel_btn_a.setIcon(icon15)
+        self.refuel_btn_a.setIcon(icon16)
         self.refuel_btn_a.setIconSize(QSize(35, 35))
         self.refuel_btn_a.setCheckable(True)
 
@@ -4663,19 +3946,19 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.widget_44, 16, 2, 1, 1)
 
-        self.widget_51 = QWidget(self.widget_6)
-        self.widget_51.setObjectName(u"widget_51")
-        self.horizontalLayout_58 = QHBoxLayout(self.widget_51)
-        self.horizontalLayout_58.setObjectName(u"horizontalLayout_58")
-        self.horizontalLayout_58.setContentsMargins(3, 5, 3, 3)
-        self.refuel_btn_b = QPushButton(self.widget_51)
-        self.refuel_btn_b.setObjectName(u"refuel_btn_b")
-        sizePolicy.setHeightForWidth(self.refuel_btn_b.sizePolicy().hasHeightForWidth())
-        self.refuel_btn_b.setSizePolicy(sizePolicy)
-        self.refuel_btn_b.setMinimumSize(QSize(0, 40))
-        self.refuel_btn_b.setMaximumSize(QSize(16777215, 75))
-        self.refuel_btn_b.setFont(font2)
-        self.refuel_btn_b.setStyleSheet(u"QPushButton {\n"
+        self.widget_45 = QWidget(self.widget_6)
+        self.widget_45.setObjectName(u"widget_45")
+        self.horizontalLayout_52 = QHBoxLayout(self.widget_45)
+        self.horizontalLayout_52.setObjectName(u"horizontalLayout_52")
+        self.horizontalLayout_52.setContentsMargins(3, 3, 3, 3)
+        self.vacuum_btn_b = QPushButton(self.widget_45)
+        self.vacuum_btn_b.setObjectName(u"vacuum_btn_b")
+        sizePolicy.setHeightForWidth(self.vacuum_btn_b.sizePolicy().hasHeightForWidth())
+        self.vacuum_btn_b.setSizePolicy(sizePolicy)
+        self.vacuum_btn_b.setMinimumSize(QSize(0, 40))
+        self.vacuum_btn_b.setMaximumSize(QSize(16777215, 75))
+        self.vacuum_btn_b.setFont(font2)
+        self.vacuum_btn_b.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
 "    border: none;\n"
@@ -4695,14 +3978,16 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        self.refuel_btn_b.setIcon(icon15)
-        self.refuel_btn_b.setIconSize(QSize(35, 35))
-        self.refuel_btn_b.setCheckable(True)
+        icon17 = QIcon()
+        icon17.addFile(u":/Icons/pump.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.vacuum_btn_b.setIcon(icon17)
+        self.vacuum_btn_b.setIconSize(QSize(35, 35))
+        self.vacuum_btn_b.setCheckable(True)
 
-        self.horizontalLayout_58.addWidget(self.refuel_btn_b)
+        self.horizontalLayout_52.addWidget(self.vacuum_btn_b)
 
 
-        self.gridLayout.addWidget(self.widget_51, 16, 4, 1, 1)
+        self.gridLayout.addWidget(self.widget_45, 17, 4, 1, 1)
 
         self.widget_42 = QWidget(self.widget_6)
         self.widget_42.setObjectName(u"widget_42")
@@ -4736,7 +4021,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        self.refuel_btn_c.setIcon(icon15)
+        self.refuel_btn_c.setIcon(icon16)
         self.refuel_btn_c.setIconSize(QSize(35, 35))
         self.refuel_btn_c.setCheckable(True)
 
@@ -4777,9 +4062,7 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    border-radius: 8px;\n"
 "}")
-        icon16 = QIcon()
-        icon16.addFile(u":/Icons/pump.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.vacuum_btn_a.setIcon(icon16)
+        self.vacuum_btn_a.setIcon(icon17)
         self.vacuum_btn_a.setIconSize(QSize(35, 35))
         self.vacuum_btn_a.setCheckable(True)
 
@@ -4788,212 +4071,848 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.widget_47, 17, 2, 1, 1)
 
-        self.widget_45 = QWidget(self.widget_6)
-        self.widget_45.setObjectName(u"widget_45")
-        self.horizontalLayout_52 = QHBoxLayout(self.widget_45)
-        self.horizontalLayout_52.setObjectName(u"horizontalLayout_52")
-        self.horizontalLayout_52.setContentsMargins(3, 3, 3, 3)
-        self.vacuum_btn_b = QPushButton(self.widget_45)
-        self.vacuum_btn_b.setObjectName(u"vacuum_btn_b")
-        sizePolicy.setHeightForWidth(self.vacuum_btn_b.sizePolicy().hasHeightForWidth())
-        self.vacuum_btn_b.setSizePolicy(sizePolicy)
-        self.vacuum_btn_b.setMinimumSize(QSize(0, 40))
-        self.vacuum_btn_b.setMaximumSize(QSize(16777215, 75))
-        self.vacuum_btn_b.setFont(font2)
-        self.vacuum_btn_b.setStyleSheet(u"QPushButton {\n"
-"    background-color: #0B7EC8;\n"
-"    color: white;\n"
+        self.group_2_val_11 = QWidget(self.widget_6)
+        self.group_2_val_11.setObjectName(u"group_2_val_11")
+        self.horizontalLayout_532 = QHBoxLayout(self.group_2_val_11)
+        self.horizontalLayout_532.setSpacing(7)
+        self.horizontalLayout_532.setObjectName(u"horizontalLayout_532")
+        self.horizontalLayout_532.setContentsMargins(3, 3, 6, 3)
+        self.widget_286 = QWidget(self.group_2_val_11)
+        self.widget_286.setObjectName(u"widget_286")
+        self.widget_286.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
 "    border: none;\n"
-"    padding: 8px 12px;\n"
-"    border-radius: 8px;\n"
 "}\n"
-"QPushButton:hover {\n"
-"    background-color: #0968A3;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"	color: white;\n"
-"    background-color: #085A91;\n"
-"}\n"
-"QPushButton:checked {\n"
-"    background-color: #EF4444;\n"
-"    color: white;\n"
+"QSpinBox\n"
+"{\n"
 "    border: none;\n"
-"    border-radius: 8px;\n"
 "}")
-        self.vacuum_btn_b.setIcon(icon16)
-        self.vacuum_btn_b.setIconSize(QSize(35, 35))
-        self.vacuum_btn_b.setCheckable(True)
+        self.horizontalLayout_533 = QHBoxLayout(self.widget_286)
+        self.horizontalLayout_533.setObjectName(u"horizontalLayout_533")
+        self.horizontalLayout_533.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_b_2 = QDoubleSpinBox(self.widget_286)
+        self.pressure_pv_b_2.setObjectName(u"pressure_pv_b_2")
+        sizePolicy.setHeightForWidth(self.pressure_pv_b_2.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_b_2.setSizePolicy(sizePolicy)
+        self.pressure_pv_b_2.setFont(font10)
+        self.pressure_pv_b_2.setStyleSheet(u"")
+        self.pressure_pv_b_2.setWrapping(True)
+        self.pressure_pv_b_2.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_b_2.setReadOnly(True)
+        self.pressure_pv_b_2.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_b_2.setDecimals(1)
+        self.pressure_pv_b_2.setMaximum(999.000000000000000)
+        self.pressure_pv_b_2.setValue(0.000000000000000)
 
-        self.horizontalLayout_52.addWidget(self.vacuum_btn_b)
+        self.horizontalLayout_533.addWidget(self.pressure_pv_b_2)
 
+        self.horizontalLayout_533.setStretch(0, 1)
 
-        self.gridLayout.addWidget(self.widget_45, 17, 4, 1, 1)
+        self.horizontalLayout_532.addWidget(self.widget_286)
 
-        self.widget_46 = QWidget(self.widget_6)
-        self.widget_46.setObjectName(u"widget_46")
-        self.horizontalLayout_53 = QHBoxLayout(self.widget_46)
-        self.horizontalLayout_53.setObjectName(u"horizontalLayout_53")
-        self.horizontalLayout_53.setContentsMargins(3, 3, 3, 3)
-        self.vacuum_btn_c = QPushButton(self.widget_46)
-        self.vacuum_btn_c.setObjectName(u"vacuum_btn_c")
-        sizePolicy.setHeightForWidth(self.vacuum_btn_c.sizePolicy().hasHeightForWidth())
-        self.vacuum_btn_c.setSizePolicy(sizePolicy)
-        self.vacuum_btn_c.setMinimumSize(QSize(0, 40))
-        self.vacuum_btn_c.setMaximumSize(QSize(16777215, 75))
-        self.vacuum_btn_c.setFont(font2)
-        self.vacuum_btn_c.setStyleSheet(u"QPushButton {\n"
-"    background-color: #0B7EC8;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    padding: 8px 12px;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #0968A3;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"	color: white;\n"
-"    background-color: #085A91;\n"
-"}\n"
-"QPushButton:checked {\n"
-"    background-color: #EF4444;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    border-radius: 8px;\n"
+        self.stacked_cel_fah_press_b_2 = QStackedWidget(self.group_2_val_11)
+        self.stacked_cel_fah_press_b_2.setObjectName(u"stacked_cel_fah_press_b_2")
+        self.celsius_ap_44 = QWidget()
+        self.celsius_ap_44.setObjectName(u"celsius_ap_44")
+        self.horizontalLayout_534 = QHBoxLayout(self.celsius_ap_44)
+        self.horizontalLayout_534.setObjectName(u"horizontalLayout_534")
+        self.horizontalLayout_534.setContentsMargins(0, 0, 0, 0)
+        self.label_392 = QLabel(self.celsius_ap_44)
+        self.label_392.setObjectName(u"label_392")
+        self.label_392.setFont(font14)
+        self.label_392.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
 "}")
-        self.vacuum_btn_c.setIcon(icon16)
-        self.vacuum_btn_c.setIconSize(QSize(35, 35))
-        self.vacuum_btn_c.setCheckable(True)
+        self.label_392.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_53.addWidget(self.vacuum_btn_c)
+        self.horizontalLayout_534.addWidget(self.label_392)
 
-
-        self.gridLayout.addWidget(self.widget_46, 17, 6, 1, 1)
-
-        self.widget_50 = QWidget(self.widget_6)
-        self.widget_50.setObjectName(u"widget_50")
-        self.horizontalLayout_21 = QHBoxLayout(self.widget_50)
-        self.horizontalLayout_21.setObjectName(u"horizontalLayout_21")
-        self.horizontalLayout_21.setContentsMargins(3, 3, 3, 0)
-        self.heat_btn_a = QPushButton(self.widget_50)
-        self.heat_btn_a.setObjectName(u"heat_btn_a")
-        sizePolicy.setHeightForWidth(self.heat_btn_a.sizePolicy().hasHeightForWidth())
-        self.heat_btn_a.setSizePolicy(sizePolicy)
-        self.heat_btn_a.setMinimumSize(QSize(0, 40))
-        self.heat_btn_a.setMaximumSize(QSize(16777215, 75))
-        self.heat_btn_a.setFont(font2)
-        self.heat_btn_a.setStyleSheet(u"QPushButton {\n"
-"    background-color: #0B7EC8;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    padding: 8px 12px;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #0968A3;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"	color: white;\n"
-"    background-color: #085A91;\n"
-"}\n"
-"QPushButton:checked {\n"
-"    background-color: #EF4444;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    border-radius: 8px;\n"
+        self.stacked_cel_fah_press_b_2.addWidget(self.celsius_ap_44)
+        self.fahrenheit_ap_44 = QWidget()
+        self.fahrenheit_ap_44.setObjectName(u"fahrenheit_ap_44")
+        self.horizontalLayout_535 = QHBoxLayout(self.fahrenheit_ap_44)
+        self.horizontalLayout_535.setObjectName(u"horizontalLayout_535")
+        self.horizontalLayout_535.setContentsMargins(0, 0, 0, 0)
+        self.label_393 = QLabel(self.fahrenheit_ap_44)
+        self.label_393.setObjectName(u"label_393")
+        self.label_393.setFont(font14)
+        self.label_393.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
 "}")
-        icon17 = QIcon()
-        icon17.addFile(u":/Icons/heat.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.heat_btn_a.setIcon(icon17)
-        self.heat_btn_a.setIconSize(QSize(35, 35))
-        self.heat_btn_a.setCheckable(True)
+        self.label_393.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_21.addWidget(self.heat_btn_a)
+        self.horizontalLayout_535.addWidget(self.label_393)
 
+        self.stacked_cel_fah_press_b_2.addWidget(self.fahrenheit_ap_44)
 
-        self.gridLayout.addWidget(self.widget_50, 18, 2, 1, 1)
+        self.horizontalLayout_532.addWidget(self.stacked_cel_fah_press_b_2)
 
-        self.widget_48 = QWidget(self.widget_6)
-        self.widget_48.setObjectName(u"widget_48")
-        self.horizontalLayout_56 = QHBoxLayout(self.widget_48)
-        self.horizontalLayout_56.setObjectName(u"horizontalLayout_56")
-        self.horizontalLayout_56.setContentsMargins(3, 3, 3, 0)
-        self.heat_btn_b = QPushButton(self.widget_48)
-        self.heat_btn_b.setObjectName(u"heat_btn_b")
-        sizePolicy.setHeightForWidth(self.heat_btn_b.sizePolicy().hasHeightForWidth())
-        self.heat_btn_b.setSizePolicy(sizePolicy)
-        self.heat_btn_b.setMinimumSize(QSize(0, 40))
-        self.heat_btn_b.setMaximumSize(QSize(16777215, 75))
-        self.heat_btn_b.setFont(font2)
-        self.heat_btn_b.setStyleSheet(u"QPushButton {\n"
-"    background-color: #0B7EC8;\n"
-"    color: white;\n"
+        self.horizontalLayout_532.setStretch(0, 6)
+        self.horizontalLayout_532.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_2_val_11, 13, 4, 1, 1)
+
+        self.group_3_val_10 = QWidget(self.widget_6)
+        self.group_3_val_10.setObjectName(u"group_3_val_10")
+        self.horizontalLayout_556 = QHBoxLayout(self.group_3_val_10)
+        self.horizontalLayout_556.setSpacing(7)
+        self.horizontalLayout_556.setObjectName(u"horizontalLayout_556")
+        self.horizontalLayout_556.setContentsMargins(3, 3, 6, 3)
+        self.widget_295 = QWidget(self.group_3_val_10)
+        self.widget_295.setObjectName(u"widget_295")
+        self.widget_295.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
 "    border: none;\n"
-"    padding: 8px 12px;\n"
-"    border-radius: 8px;\n"
 "}\n"
-"QPushButton:hover {\n"
-"    background-color: #0968A3;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"	color: white;\n"
-"    background-color: #085A91;\n"
-"}\n"
-"QPushButton:checked {\n"
-"    background-color: #EF4444;\n"
-"    color: white;\n"
+"QSpinBox\n"
+"{\n"
 "    border: none;\n"
-"    border-radius: 8px;\n"
 "}")
-        self.heat_btn_b.setIcon(icon17)
-        self.heat_btn_b.setIconSize(QSize(35, 35))
-        self.heat_btn_b.setCheckable(True)
-
-        self.horizontalLayout_56.addWidget(self.heat_btn_b)
-
-
-        self.gridLayout.addWidget(self.widget_48, 18, 4, 1, 1)
-
-        self.widget_49 = QWidget(self.widget_6)
-        self.widget_49.setObjectName(u"widget_49")
-        self.horizontalLayout_57 = QHBoxLayout(self.widget_49)
-        self.horizontalLayout_57.setObjectName(u"horizontalLayout_57")
-        self.horizontalLayout_57.setContentsMargins(3, 3, 3, 0)
-        self.heat_btn_c = QPushButton(self.widget_49)
-        self.heat_btn_c.setObjectName(u"heat_btn_c")
-        sizePolicy.setHeightForWidth(self.heat_btn_c.sizePolicy().hasHeightForWidth())
-        self.heat_btn_c.setSizePolicy(sizePolicy)
-        self.heat_btn_c.setMinimumSize(QSize(0, 40))
-        self.heat_btn_c.setMaximumSize(QSize(16777215, 75))
-        self.heat_btn_c.setFont(font2)
-        self.heat_btn_c.setStyleSheet(u"QPushButton {\n"
-"    background-color: #0B7EC8;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    padding: 8px 12px;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #0968A3;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"	color: white;\n"
-"    background-color: #085A91;\n"
-"}\n"
-"QPushButton:checked {\n"
-"    background-color: #EF4444;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    border-radius: 8px;\n"
+        self.horizontalLayout_557 = QHBoxLayout(self.widget_295)
+        self.horizontalLayout_557.setObjectName(u"horizontalLayout_557")
+        self.horizontalLayout_557.setContentsMargins(2, 2, 2, 2)
+        self.pressure_sv_c_1 = QDoubleSpinBox(self.widget_295)
+        self.pressure_sv_c_1.setObjectName(u"pressure_sv_c_1")
+        sizePolicy.setHeightForWidth(self.pressure_sv_c_1.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_c_1.setSizePolicy(sizePolicy)
+        self.pressure_sv_c_1.setFont(font10)
+        self.pressure_sv_c_1.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+"    border: 2px solid #43A047;\n"
 "}")
-        self.heat_btn_c.setIcon(icon17)
-        self.heat_btn_c.setIconSize(QSize(35, 35))
-        self.heat_btn_c.setCheckable(True)
+        self.pressure_sv_c_1.setWrapping(False)
+        self.pressure_sv_c_1.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_c_1.setReadOnly(False)
+        self.pressure_sv_c_1.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_c_1.setDecimals(1)
+        self.pressure_sv_c_1.setMaximum(999.000000000000000)
+        self.pressure_sv_c_1.setValue(0.000000000000000)
 
-        self.horizontalLayout_57.addWidget(self.heat_btn_c)
+        self.horizontalLayout_557.addWidget(self.pressure_sv_c_1)
 
 
-        self.gridLayout.addWidget(self.widget_49, 18, 6, 1, 1)
+        self.horizontalLayout_556.addWidget(self.widget_295)
+
+        self.stacked_cel_fah_press_c_1 = QStackedWidget(self.group_3_val_10)
+        self.stacked_cel_fah_press_c_1.setObjectName(u"stacked_cel_fah_press_c_1")
+        self.celsius_ap_47 = QWidget()
+        self.celsius_ap_47.setObjectName(u"celsius_ap_47")
+        self.horizontalLayout_558 = QHBoxLayout(self.celsius_ap_47)
+        self.horizontalLayout_558.setObjectName(u"horizontalLayout_558")
+        self.horizontalLayout_558.setContentsMargins(0, 0, 0, 0)
+        self.label_398 = QLabel(self.celsius_ap_47)
+        self.label_398.setObjectName(u"label_398")
+        self.label_398.setFont(font14)
+        self.label_398.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_398.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_558.addWidget(self.label_398)
+
+        self.stacked_cel_fah_press_c_1.addWidget(self.celsius_ap_47)
+        self.fahrenheit_ap_47 = QWidget()
+        self.fahrenheit_ap_47.setObjectName(u"fahrenheit_ap_47")
+        self.horizontalLayout_559 = QHBoxLayout(self.fahrenheit_ap_47)
+        self.horizontalLayout_559.setObjectName(u"horizontalLayout_559")
+        self.horizontalLayout_559.setContentsMargins(0, 0, 0, 0)
+        self.label_399 = QLabel(self.fahrenheit_ap_47)
+        self.label_399.setObjectName(u"label_399")
+        self.label_399.setFont(font14)
+        self.label_399.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_399.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_559.addWidget(self.label_399)
+
+        self.stacked_cel_fah_press_c_1.addWidget(self.fahrenheit_ap_47)
+
+        self.horizontalLayout_556.addWidget(self.stacked_cel_fah_press_c_1)
+
+        self.horizontalLayout_556.setStretch(0, 6)
+        self.horizontalLayout_556.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_3_val_10, 12, 6, 1, 1)
+
+        self.label_name_11 = QWidget(self.widget_6)
+        self.label_name_11.setObjectName(u"label_name_11")
+        self.horizontalLayout_38 = QHBoxLayout(self.label_name_11)
+        self.horizontalLayout_38.setObjectName(u"horizontalLayout_38")
+        self.horizontalLayout_38.setContentsMargins(3, 3, 3, 3)
+        self.label_103 = QLabel(self.label_name_11)
+        self.label_103.setObjectName(u"label_103")
+        self.label_103.setFont(font10)
+        self.label_103.setStyleSheet(u"QLabel{\n"
+"	border-radius: 10px;\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
+"}")
+
+        self.horizontalLayout_38.addWidget(self.label_103)
+
+
+        self.gridLayout.addWidget(self.label_name_11, 13, 0, 1, 1)
+
+        self.group_2_val_10 = QWidget(self.widget_6)
+        self.group_2_val_10.setObjectName(u"group_2_val_10")
+        self.horizontalLayout_528 = QHBoxLayout(self.group_2_val_10)
+        self.horizontalLayout_528.setSpacing(7)
+        self.horizontalLayout_528.setObjectName(u"horizontalLayout_528")
+        self.horizontalLayout_528.setContentsMargins(3, 3, 6, 3)
+        self.widget_285 = QWidget(self.group_2_val_10)
+        self.widget_285.setObjectName(u"widget_285")
+        self.widget_285.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_529 = QHBoxLayout(self.widget_285)
+        self.horizontalLayout_529.setObjectName(u"horizontalLayout_529")
+        self.horizontalLayout_529.setContentsMargins(2, 2, 2, 2)
+        self.pressure_sv_b_1 = QDoubleSpinBox(self.widget_285)
+        self.pressure_sv_b_1.setObjectName(u"pressure_sv_b_1")
+        sizePolicy.setHeightForWidth(self.pressure_sv_b_1.sizePolicy().hasHeightForWidth())
+        self.pressure_sv_b_1.setSizePolicy(sizePolicy)
+        self.pressure_sv_b_1.setFont(font10)
+        self.pressure_sv_b_1.setStyleSheet(u"QDoubleSpinBox:hover{\n"
+"    border: 2px solid #43A047;\n"
+"}")
+        self.pressure_sv_b_1.setWrapping(False)
+        self.pressure_sv_b_1.setAlignment(Qt.AlignCenter)
+        self.pressure_sv_b_1.setReadOnly(False)
+        self.pressure_sv_b_1.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_sv_b_1.setDecimals(1)
+        self.pressure_sv_b_1.setMaximum(999.000000000000000)
+        self.pressure_sv_b_1.setValue(0.000000000000000)
+
+        self.horizontalLayout_529.addWidget(self.pressure_sv_b_1)
+
+        self.horizontalLayout_529.setStretch(0, 1)
+
+        self.horizontalLayout_528.addWidget(self.widget_285)
+
+        self.stacked_cel_fah_press_b_1 = QStackedWidget(self.group_2_val_10)
+        self.stacked_cel_fah_press_b_1.setObjectName(u"stacked_cel_fah_press_b_1")
+        self.celsius_ap_43 = QWidget()
+        self.celsius_ap_43.setObjectName(u"celsius_ap_43")
+        self.horizontalLayout_530 = QHBoxLayout(self.celsius_ap_43)
+        self.horizontalLayout_530.setObjectName(u"horizontalLayout_530")
+        self.horizontalLayout_530.setContentsMargins(0, 0, 0, 0)
+        self.label_281 = QLabel(self.celsius_ap_43)
+        self.label_281.setObjectName(u"label_281")
+        self.label_281.setFont(font14)
+        self.label_281.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_281.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_530.addWidget(self.label_281)
+
+        self.stacked_cel_fah_press_b_1.addWidget(self.celsius_ap_43)
+        self.fahrenheit_ap_43 = QWidget()
+        self.fahrenheit_ap_43.setObjectName(u"fahrenheit_ap_43")
+        self.horizontalLayout_531 = QHBoxLayout(self.fahrenheit_ap_43)
+        self.horizontalLayout_531.setObjectName(u"horizontalLayout_531")
+        self.horizontalLayout_531.setContentsMargins(0, 0, 0, 0)
+        self.label_366 = QLabel(self.fahrenheit_ap_43)
+        self.label_366.setObjectName(u"label_366")
+        self.label_366.setFont(font14)
+        self.label_366.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_366.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_531.addWidget(self.label_366)
+
+        self.stacked_cel_fah_press_b_1.addWidget(self.fahrenheit_ap_43)
+
+        self.horizontalLayout_528.addWidget(self.stacked_cel_fah_press_b_1)
+
+        self.horizontalLayout_528.setStretch(0, 6)
+        self.horizontalLayout_528.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_2_val_10, 12, 4, 1, 1)
+
+        self.group_1_val_11 = QWidget(self.widget_6)
+        self.group_1_val_11.setObjectName(u"group_1_val_11")
+        self.horizontalLayout_342 = QHBoxLayout(self.group_1_val_11)
+        self.horizontalLayout_342.setSpacing(7)
+        self.horizontalLayout_342.setObjectName(u"horizontalLayout_342")
+        self.horizontalLayout_342.setContentsMargins(3, 3, 6, 3)
+        self.widget_265 = QWidget(self.group_1_val_11)
+        self.widget_265.setObjectName(u"widget_265")
+        self.widget_265.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_343 = QHBoxLayout(self.widget_265)
+        self.horizontalLayout_343.setObjectName(u"horizontalLayout_343")
+        self.horizontalLayout_343.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_a_2 = QDoubleSpinBox(self.widget_265)
+        self.pressure_pv_a_2.setObjectName(u"pressure_pv_a_2")
+        sizePolicy.setHeightForWidth(self.pressure_pv_a_2.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_a_2.setSizePolicy(sizePolicy)
+        self.pressure_pv_a_2.setFont(font10)
+        self.pressure_pv_a_2.setStyleSheet(u"")
+        self.pressure_pv_a_2.setWrapping(True)
+        self.pressure_pv_a_2.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_a_2.setReadOnly(True)
+        self.pressure_pv_a_2.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_a_2.setDecimals(1)
+        self.pressure_pv_a_2.setMaximum(999.000000000000000)
+        self.pressure_pv_a_2.setValue(0.000000000000000)
+
+        self.horizontalLayout_343.addWidget(self.pressure_pv_a_2)
+
+        self.horizontalLayout_343.setStretch(0, 1)
+
+        self.horizontalLayout_342.addWidget(self.widget_265)
+
+        self.stacked_cel_fah_press_a_2 = QStackedWidget(self.group_1_val_11)
+        self.stacked_cel_fah_press_a_2.setObjectName(u"stacked_cel_fah_press_a_2")
+        self.celsius_ap_40 = QWidget()
+        self.celsius_ap_40.setObjectName(u"celsius_ap_40")
+        self.horizontalLayout_514 = QHBoxLayout(self.celsius_ap_40)
+        self.horizontalLayout_514.setObjectName(u"horizontalLayout_514")
+        self.horizontalLayout_514.setContentsMargins(0, 0, 0, 0)
+        self.label_379 = QLabel(self.celsius_ap_40)
+        self.label_379.setObjectName(u"label_379")
+        self.label_379.setFont(font14)
+        self.label_379.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_379.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_514.addWidget(self.label_379)
+
+        self.stacked_cel_fah_press_a_2.addWidget(self.celsius_ap_40)
+        self.fahrenheit_ap_40 = QWidget()
+        self.fahrenheit_ap_40.setObjectName(u"fahrenheit_ap_40")
+        self.horizontalLayout_515 = QHBoxLayout(self.fahrenheit_ap_40)
+        self.horizontalLayout_515.setObjectName(u"horizontalLayout_515")
+        self.horizontalLayout_515.setContentsMargins(0, 0, 0, 0)
+        self.label_380 = QLabel(self.fahrenheit_ap_40)
+        self.label_380.setObjectName(u"label_380")
+        self.label_380.setFont(font14)
+        self.label_380.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_380.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_515.addWidget(self.label_380)
+
+        self.stacked_cel_fah_press_a_2.addWidget(self.fahrenheit_ap_40)
+
+        self.horizontalLayout_342.addWidget(self.stacked_cel_fah_press_a_2)
+
+        self.horizontalLayout_342.setStretch(0, 6)
+        self.horizontalLayout_342.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_1_val_11, 13, 2, 1, 1)
+
+        self.group_1_val_12 = QWidget(self.widget_6)
+        self.group_1_val_12.setObjectName(u"group_1_val_12")
+        self.horizontalLayout_344 = QHBoxLayout(self.group_1_val_12)
+        self.horizontalLayout_344.setSpacing(7)
+        self.horizontalLayout_344.setObjectName(u"horizontalLayout_344")
+        self.horizontalLayout_344.setContentsMargins(3, 3, 6, 3)
+        self.widget_270 = QWidget(self.group_1_val_12)
+        self.widget_270.setObjectName(u"widget_270")
+        self.widget_270.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_345 = QHBoxLayout(self.widget_270)
+        self.horizontalLayout_345.setObjectName(u"horizontalLayout_345")
+        self.horizontalLayout_345.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_a_3 = QDoubleSpinBox(self.widget_270)
+        self.pressure_pv_a_3.setObjectName(u"pressure_pv_a_3")
+        sizePolicy.setHeightForWidth(self.pressure_pv_a_3.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_a_3.setSizePolicy(sizePolicy)
+        self.pressure_pv_a_3.setFont(font10)
+        self.pressure_pv_a_3.setStyleSheet(u"")
+        self.pressure_pv_a_3.setWrapping(True)
+        self.pressure_pv_a_3.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_a_3.setReadOnly(True)
+        self.pressure_pv_a_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_a_3.setDecimals(1)
+        self.pressure_pv_a_3.setMaximum(999.000000000000000)
+        self.pressure_pv_a_3.setValue(0.000000000000000)
+
+        self.horizontalLayout_345.addWidget(self.pressure_pv_a_3)
+
+        self.horizontalLayout_345.setStretch(0, 1)
+
+        self.horizontalLayout_344.addWidget(self.widget_270)
+
+        self.stacked_cel_fah_press_a_3 = QStackedWidget(self.group_1_val_12)
+        self.stacked_cel_fah_press_a_3.setObjectName(u"stacked_cel_fah_press_a_3")
+        self.celsius_ap_41 = QWidget()
+        self.celsius_ap_41.setObjectName(u"celsius_ap_41")
+        self.horizontalLayout_516 = QHBoxLayout(self.celsius_ap_41)
+        self.horizontalLayout_516.setObjectName(u"horizontalLayout_516")
+        self.horizontalLayout_516.setContentsMargins(0, 0, 0, 0)
+        self.label_381 = QLabel(self.celsius_ap_41)
+        self.label_381.setObjectName(u"label_381")
+        self.label_381.setFont(font14)
+        self.label_381.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_381.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_516.addWidget(self.label_381)
+
+        self.stacked_cel_fah_press_a_3.addWidget(self.celsius_ap_41)
+        self.fahrenheit_ap_41 = QWidget()
+        self.fahrenheit_ap_41.setObjectName(u"fahrenheit_ap_41")
+        self.horizontalLayout_517 = QHBoxLayout(self.fahrenheit_ap_41)
+        self.horizontalLayout_517.setObjectName(u"horizontalLayout_517")
+        self.horizontalLayout_517.setContentsMargins(0, 0, 0, 0)
+        self.label_382 = QLabel(self.fahrenheit_ap_41)
+        self.label_382.setObjectName(u"label_382")
+        self.label_382.setFont(font14)
+        self.label_382.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_382.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_517.addWidget(self.label_382)
+
+        self.stacked_cel_fah_press_a_3.addWidget(self.fahrenheit_ap_41)
+
+        self.horizontalLayout_344.addWidget(self.stacked_cel_fah_press_a_3)
+
+        self.horizontalLayout_344.setStretch(0, 6)
+        self.horizontalLayout_344.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_1_val_12, 14, 2, 1, 1)
+
+        self.group_3_val_11 = QWidget(self.widget_6)
+        self.group_3_val_11.setObjectName(u"group_3_val_11")
+        self.horizontalLayout_560 = QHBoxLayout(self.group_3_val_11)
+        self.horizontalLayout_560.setSpacing(7)
+        self.horizontalLayout_560.setObjectName(u"horizontalLayout_560")
+        self.horizontalLayout_560.setContentsMargins(3, 3, 6, 3)
+        self.widget_296 = QWidget(self.group_3_val_11)
+        self.widget_296.setObjectName(u"widget_296")
+        self.widget_296.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_561 = QHBoxLayout(self.widget_296)
+        self.horizontalLayout_561.setObjectName(u"horizontalLayout_561")
+        self.horizontalLayout_561.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_c_2 = QDoubleSpinBox(self.widget_296)
+        self.pressure_pv_c_2.setObjectName(u"pressure_pv_c_2")
+        sizePolicy.setHeightForWidth(self.pressure_pv_c_2.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_c_2.setSizePolicy(sizePolicy)
+        self.pressure_pv_c_2.setFont(font10)
+        self.pressure_pv_c_2.setStyleSheet(u"")
+        self.pressure_pv_c_2.setWrapping(True)
+        self.pressure_pv_c_2.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_c_2.setReadOnly(True)
+        self.pressure_pv_c_2.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_c_2.setDecimals(1)
+        self.pressure_pv_c_2.setMaximum(999.000000000000000)
+        self.pressure_pv_c_2.setValue(0.000000000000000)
+
+        self.horizontalLayout_561.addWidget(self.pressure_pv_c_2)
+
+        self.horizontalLayout_561.setStretch(0, 1)
+
+        self.horizontalLayout_560.addWidget(self.widget_296)
+
+        self.stacked_cel_fah_press_c_2 = QStackedWidget(self.group_3_val_11)
+        self.stacked_cel_fah_press_c_2.setObjectName(u"stacked_cel_fah_press_c_2")
+        self.celsius_ap_48 = QWidget()
+        self.celsius_ap_48.setObjectName(u"celsius_ap_48")
+        self.horizontalLayout_562 = QHBoxLayout(self.celsius_ap_48)
+        self.horizontalLayout_562.setObjectName(u"horizontalLayout_562")
+        self.horizontalLayout_562.setContentsMargins(0, 0, 0, 0)
+        self.label_282 = QLabel(self.celsius_ap_48)
+        self.label_282.setObjectName(u"label_282")
+        self.label_282.setFont(font14)
+        self.label_282.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_282.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_562.addWidget(self.label_282)
+
+        self.stacked_cel_fah_press_c_2.addWidget(self.celsius_ap_48)
+        self.fahrenheit_ap_48 = QWidget()
+        self.fahrenheit_ap_48.setObjectName(u"fahrenheit_ap_48")
+        self.horizontalLayout_563 = QHBoxLayout(self.fahrenheit_ap_48)
+        self.horizontalLayout_563.setObjectName(u"horizontalLayout_563")
+        self.horizontalLayout_563.setContentsMargins(0, 0, 0, 0)
+        self.label_400 = QLabel(self.fahrenheit_ap_48)
+        self.label_400.setObjectName(u"label_400")
+        self.label_400.setFont(font14)
+        self.label_400.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_400.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_563.addWidget(self.label_400)
+
+        self.stacked_cel_fah_press_c_2.addWidget(self.fahrenheit_ap_48)
+
+        self.horizontalLayout_560.addWidget(self.stacked_cel_fah_press_c_2)
+
+        self.horizontalLayout_560.setStretch(0, 6)
+        self.horizontalLayout_560.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_3_val_11, 13, 6, 1, 1)
+
+        self.group_2_val_12 = QWidget(self.widget_6)
+        self.group_2_val_12.setObjectName(u"group_2_val_12")
+        self.horizontalLayout_536 = QHBoxLayout(self.group_2_val_12)
+        self.horizontalLayout_536.setSpacing(7)
+        self.horizontalLayout_536.setObjectName(u"horizontalLayout_536")
+        self.horizontalLayout_536.setContentsMargins(3, 3, 6, 3)
+        self.widget_287 = QWidget(self.group_2_val_12)
+        self.widget_287.setObjectName(u"widget_287")
+        self.widget_287.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_537 = QHBoxLayout(self.widget_287)
+        self.horizontalLayout_537.setObjectName(u"horizontalLayout_537")
+        self.horizontalLayout_537.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_b_3 = QDoubleSpinBox(self.widget_287)
+        self.pressure_pv_b_3.setObjectName(u"pressure_pv_b_3")
+        sizePolicy.setHeightForWidth(self.pressure_pv_b_3.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_b_3.setSizePolicy(sizePolicy)
+        self.pressure_pv_b_3.setFont(font10)
+        self.pressure_pv_b_3.setStyleSheet(u"")
+        self.pressure_pv_b_3.setWrapping(True)
+        self.pressure_pv_b_3.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_b_3.setReadOnly(True)
+        self.pressure_pv_b_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_b_3.setDecimals(1)
+        self.pressure_pv_b_3.setMaximum(999.000000000000000)
+        self.pressure_pv_b_3.setValue(0.000000000000000)
+
+        self.horizontalLayout_537.addWidget(self.pressure_pv_b_3)
+
+        self.horizontalLayout_537.setStretch(0, 1)
+
+        self.horizontalLayout_536.addWidget(self.widget_287)
+
+        self.stacked_cel_fah_press_b_3 = QStackedWidget(self.group_2_val_12)
+        self.stacked_cel_fah_press_b_3.setObjectName(u"stacked_cel_fah_press_b_3")
+        self.celsius_ap_45 = QWidget()
+        self.celsius_ap_45.setObjectName(u"celsius_ap_45")
+        self.horizontalLayout_538 = QHBoxLayout(self.celsius_ap_45)
+        self.horizontalLayout_538.setObjectName(u"horizontalLayout_538")
+        self.horizontalLayout_538.setContentsMargins(0, 0, 0, 0)
+        self.label_394 = QLabel(self.celsius_ap_45)
+        self.label_394.setObjectName(u"label_394")
+        self.label_394.setFont(font14)
+        self.label_394.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_394.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_538.addWidget(self.label_394)
+
+        self.stacked_cel_fah_press_b_3.addWidget(self.celsius_ap_45)
+        self.fahrenheit_ap_45 = QWidget()
+        self.fahrenheit_ap_45.setObjectName(u"fahrenheit_ap_45")
+        self.horizontalLayout_539 = QHBoxLayout(self.fahrenheit_ap_45)
+        self.horizontalLayout_539.setObjectName(u"horizontalLayout_539")
+        self.horizontalLayout_539.setContentsMargins(0, 0, 0, 0)
+        self.label_395 = QLabel(self.fahrenheit_ap_45)
+        self.label_395.setObjectName(u"label_395")
+        self.label_395.setFont(font14)
+        self.label_395.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_395.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_539.addWidget(self.label_395)
+
+        self.stacked_cel_fah_press_b_3.addWidget(self.fahrenheit_ap_45)
+
+        self.horizontalLayout_536.addWidget(self.stacked_cel_fah_press_b_3)
+
+        self.horizontalLayout_536.setStretch(0, 6)
+        self.horizontalLayout_536.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_2_val_12, 14, 4, 1, 1)
+
+        self.label_name_12 = QWidget(self.widget_6)
+        self.label_name_12.setObjectName(u"label_name_12")
+        self.horizontalLayout_39 = QHBoxLayout(self.label_name_12)
+        self.horizontalLayout_39.setObjectName(u"horizontalLayout_39")
+        self.horizontalLayout_39.setContentsMargins(3, 3, 3, 3)
+        self.label_98 = QLabel(self.label_name_12)
+        self.label_98.setObjectName(u"label_98")
+        self.label_98.setFont(font10)
+        self.label_98.setStyleSheet(u"QLabel{\n"
+"	border-radius: 10px;\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
+"}")
+
+        self.horizontalLayout_39.addWidget(self.label_98)
+
+
+        self.gridLayout.addWidget(self.label_name_12, 14, 0, 1, 1)
+
+        self.group_1_val_13 = QWidget(self.widget_6)
+        self.group_1_val_13.setObjectName(u"group_1_val_13")
+        self.horizontalLayout_346 = QHBoxLayout(self.group_1_val_13)
+        self.horizontalLayout_346.setSpacing(7)
+        self.horizontalLayout_346.setObjectName(u"horizontalLayout_346")
+        self.horizontalLayout_346.setContentsMargins(3, 3, 6, 3)
+        self.widget_271 = QWidget(self.group_1_val_13)
+        self.widget_271.setObjectName(u"widget_271")
+        self.widget_271.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_347 = QHBoxLayout(self.widget_271)
+        self.horizontalLayout_347.setObjectName(u"horizontalLayout_347")
+        self.horizontalLayout_347.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_a_4 = QDoubleSpinBox(self.widget_271)
+        self.pressure_pv_a_4.setObjectName(u"pressure_pv_a_4")
+        sizePolicy.setHeightForWidth(self.pressure_pv_a_4.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_a_4.setSizePolicy(sizePolicy)
+        self.pressure_pv_a_4.setFont(font10)
+        self.pressure_pv_a_4.setStyleSheet(u"")
+        self.pressure_pv_a_4.setWrapping(True)
+        self.pressure_pv_a_4.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_a_4.setReadOnly(True)
+        self.pressure_pv_a_4.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_a_4.setDecimals(1)
+        self.pressure_pv_a_4.setMaximum(999.000000000000000)
+        self.pressure_pv_a_4.setValue(0.000000000000000)
+
+        self.horizontalLayout_347.addWidget(self.pressure_pv_a_4)
+
+        self.horizontalLayout_347.setStretch(0, 1)
+
+        self.horizontalLayout_346.addWidget(self.widget_271)
+
+        self.stacked_cel_fah_press_a_4 = QStackedWidget(self.group_1_val_13)
+        self.stacked_cel_fah_press_a_4.setObjectName(u"stacked_cel_fah_press_a_4")
+        self.celsius_ap_42 = QWidget()
+        self.celsius_ap_42.setObjectName(u"celsius_ap_42")
+        self.horizontalLayout_518 = QHBoxLayout(self.celsius_ap_42)
+        self.horizontalLayout_518.setObjectName(u"horizontalLayout_518")
+        self.horizontalLayout_518.setContentsMargins(0, 0, 0, 0)
+        self.label_383 = QLabel(self.celsius_ap_42)
+        self.label_383.setObjectName(u"label_383")
+        self.label_383.setFont(font14)
+        self.label_383.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_383.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_518.addWidget(self.label_383)
+
+        self.stacked_cel_fah_press_a_4.addWidget(self.celsius_ap_42)
+        self.fahrenheit_ap_42 = QWidget()
+        self.fahrenheit_ap_42.setObjectName(u"fahrenheit_ap_42")
+        self.horizontalLayout_519 = QHBoxLayout(self.fahrenheit_ap_42)
+        self.horizontalLayout_519.setObjectName(u"horizontalLayout_519")
+        self.horizontalLayout_519.setContentsMargins(0, 0, 0, 0)
+        self.label_384 = QLabel(self.fahrenheit_ap_42)
+        self.label_384.setObjectName(u"label_384")
+        self.label_384.setFont(font14)
+        self.label_384.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_384.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_519.addWidget(self.label_384)
+
+        self.stacked_cel_fah_press_a_4.addWidget(self.fahrenheit_ap_42)
+
+        self.horizontalLayout_346.addWidget(self.stacked_cel_fah_press_a_4)
+
+        self.horizontalLayout_346.setStretch(0, 6)
+        self.horizontalLayout_346.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_1_val_13, 15, 2, 1, 1)
+
+        self.group_3_val_12 = QWidget(self.widget_6)
+        self.group_3_val_12.setObjectName(u"group_3_val_12")
+        self.horizontalLayout_564 = QHBoxLayout(self.group_3_val_12)
+        self.horizontalLayout_564.setSpacing(7)
+        self.horizontalLayout_564.setObjectName(u"horizontalLayout_564")
+        self.horizontalLayout_564.setContentsMargins(3, 3, 6, 3)
+        self.widget_297 = QWidget(self.group_3_val_12)
+        self.widget_297.setObjectName(u"widget_297")
+        self.widget_297.setStyleSheet(u"QWidget{\n"
+"    border: 2px solid #D1D5DB;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}\n"
+"QSpinBox\n"
+"{\n"
+"    border: none;\n"
+"}")
+        self.horizontalLayout_565 = QHBoxLayout(self.widget_297)
+        self.horizontalLayout_565.setObjectName(u"horizontalLayout_565")
+        self.horizontalLayout_565.setContentsMargins(2, 2, 2, 2)
+        self.pressure_pv_c_3 = QDoubleSpinBox(self.widget_297)
+        self.pressure_pv_c_3.setObjectName(u"pressure_pv_c_3")
+        sizePolicy.setHeightForWidth(self.pressure_pv_c_3.sizePolicy().hasHeightForWidth())
+        self.pressure_pv_c_3.setSizePolicy(sizePolicy)
+        self.pressure_pv_c_3.setFont(font10)
+        self.pressure_pv_c_3.setStyleSheet(u"")
+        self.pressure_pv_c_3.setWrapping(True)
+        self.pressure_pv_c_3.setAlignment(Qt.AlignCenter)
+        self.pressure_pv_c_3.setReadOnly(True)
+        self.pressure_pv_c_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.pressure_pv_c_3.setDecimals(1)
+        self.pressure_pv_c_3.setMaximum(999.000000000000000)
+        self.pressure_pv_c_3.setValue(0.000000000000000)
+
+        self.horizontalLayout_565.addWidget(self.pressure_pv_c_3)
+
+        self.horizontalLayout_565.setStretch(0, 1)
+
+        self.horizontalLayout_564.addWidget(self.widget_297)
+
+        self.stacked_cel_fah_press_c_3 = QStackedWidget(self.group_3_val_12)
+        self.stacked_cel_fah_press_c_3.setObjectName(u"stacked_cel_fah_press_c_3")
+        self.celsius_ap_49 = QWidget()
+        self.celsius_ap_49.setObjectName(u"celsius_ap_49")
+        self.horizontalLayout_566 = QHBoxLayout(self.celsius_ap_49)
+        self.horizontalLayout_566.setObjectName(u"horizontalLayout_566")
+        self.horizontalLayout_566.setContentsMargins(0, 0, 0, 0)
+        self.label_401 = QLabel(self.celsius_ap_49)
+        self.label_401.setObjectName(u"label_401")
+        self.label_401.setFont(font14)
+        self.label_401.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_401.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_566.addWidget(self.label_401)
+
+        self.stacked_cel_fah_press_c_3.addWidget(self.celsius_ap_49)
+        self.fahrenheit_ap_49 = QWidget()
+        self.fahrenheit_ap_49.setObjectName(u"fahrenheit_ap_49")
+        self.horizontalLayout_567 = QHBoxLayout(self.fahrenheit_ap_49)
+        self.horizontalLayout_567.setObjectName(u"horizontalLayout_567")
+        self.horizontalLayout_567.setContentsMargins(0, 0, 0, 0)
+        self.label_402 = QLabel(self.fahrenheit_ap_49)
+        self.label_402.setObjectName(u"label_402")
+        self.label_402.setFont(font14)
+        self.label_402.setStyleSheet(u"QLabel{\n"
+"	color: rgb(97, 97, 97)\n"
+"}")
+        self.label_402.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_567.addWidget(self.label_402)
+
+        self.stacked_cel_fah_press_c_3.addWidget(self.fahrenheit_ap_49)
+
+        self.horizontalLayout_564.addWidget(self.stacked_cel_fah_press_c_3)
+
+        self.horizontalLayout_564.setStretch(0, 6)
+        self.horizontalLayout_564.setStretch(1, 1)
+
+        self.gridLayout.addWidget(self.group_3_val_12, 14, 6, 1, 1)
+
+        self.label_name_13 = QWidget(self.widget_6)
+        self.label_name_13.setObjectName(u"label_name_13")
+        self.horizontalLayout_40 = QHBoxLayout(self.label_name_13)
+        self.horizontalLayout_40.setObjectName(u"horizontalLayout_40")
+        self.horizontalLayout_40.setContentsMargins(3, 3, 3, 3)
+        self.label_97 = QLabel(self.label_name_13)
+        self.label_97.setObjectName(u"label_97")
+        self.label_97.setFont(font10)
+        self.label_97.setStyleSheet(u"QLabel{\n"
+"	border-radius: 10px;\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
+"}")
+
+        self.horizontalLayout_40.addWidget(self.label_97)
+
+
+        self.gridLayout.addWidget(self.label_name_13, 15, 0, 1, 1)
 
         self.start_stop_stacked = QStackedWidget(self.widget_6)
         self.start_stop_stacked.setObjectName(u"start_stop_stacked")
@@ -5071,6 +4990,197 @@ class Ui_MainWindow(object):
         self.start_stop_stacked.addWidget(self.page_2)
 
         self.gridLayout.addWidget(self.start_stop_stacked, 16, 0, 3, 1)
+
+        self.widget_46 = QWidget(self.widget_6)
+        self.widget_46.setObjectName(u"widget_46")
+        self.horizontalLayout_53 = QHBoxLayout(self.widget_46)
+        self.horizontalLayout_53.setObjectName(u"horizontalLayout_53")
+        self.horizontalLayout_53.setContentsMargins(3, 3, 3, 3)
+        self.vacuum_btn_c = QPushButton(self.widget_46)
+        self.vacuum_btn_c.setObjectName(u"vacuum_btn_c")
+        sizePolicy.setHeightForWidth(self.vacuum_btn_c.sizePolicy().hasHeightForWidth())
+        self.vacuum_btn_c.setSizePolicy(sizePolicy)
+        self.vacuum_btn_c.setMinimumSize(QSize(0, 40))
+        self.vacuum_btn_c.setMaximumSize(QSize(16777215, 75))
+        self.vacuum_btn_c.setFont(font2)
+        self.vacuum_btn_c.setStyleSheet(u"QPushButton {\n"
+"    background-color: #0B7EC8;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 8px 12px;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #0968A3;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"	color: white;\n"
+"    background-color: #085A91;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: #EF4444;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    border-radius: 8px;\n"
+"}")
+        self.vacuum_btn_c.setIcon(icon17)
+        self.vacuum_btn_c.setIconSize(QSize(35, 35))
+        self.vacuum_btn_c.setCheckable(True)
+
+        self.horizontalLayout_53.addWidget(self.vacuum_btn_c)
+
+
+        self.gridLayout.addWidget(self.widget_46, 17, 6, 1, 1)
+
+        self.widget_49 = QWidget(self.widget_6)
+        self.widget_49.setObjectName(u"widget_49")
+        self.horizontalLayout_57 = QHBoxLayout(self.widget_49)
+        self.horizontalLayout_57.setObjectName(u"horizontalLayout_57")
+        self.horizontalLayout_57.setContentsMargins(3, 3, 3, 0)
+        self.heat_btn_c = QPushButton(self.widget_49)
+        self.heat_btn_c.setObjectName(u"heat_btn_c")
+        sizePolicy.setHeightForWidth(self.heat_btn_c.sizePolicy().hasHeightForWidth())
+        self.heat_btn_c.setSizePolicy(sizePolicy)
+        self.heat_btn_c.setMinimumSize(QSize(0, 40))
+        self.heat_btn_c.setMaximumSize(QSize(16777215, 75))
+        self.heat_btn_c.setFont(font2)
+        self.heat_btn_c.setStyleSheet(u"QPushButton {\n"
+"    background-color: #0B7EC8;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 8px 12px;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #0968A3;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"	color: white;\n"
+"    background-color: #085A91;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: #EF4444;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    border-radius: 8px;\n"
+"}")
+        icon20 = QIcon()
+        icon20.addFile(u":/Icons/heat.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.heat_btn_c.setIcon(icon20)
+        self.heat_btn_c.setIconSize(QSize(35, 35))
+        self.heat_btn_c.setCheckable(True)
+
+        self.horizontalLayout_57.addWidget(self.heat_btn_c)
+
+
+        self.gridLayout.addWidget(self.widget_49, 18, 6, 1, 1)
+
+        self.widget_50 = QWidget(self.widget_6)
+        self.widget_50.setObjectName(u"widget_50")
+        self.horizontalLayout_21 = QHBoxLayout(self.widget_50)
+        self.horizontalLayout_21.setObjectName(u"horizontalLayout_21")
+        self.horizontalLayout_21.setContentsMargins(3, 3, 3, 0)
+        self.heat_btn_a = QPushButton(self.widget_50)
+        self.heat_btn_a.setObjectName(u"heat_btn_a")
+        sizePolicy.setHeightForWidth(self.heat_btn_a.sizePolicy().hasHeightForWidth())
+        self.heat_btn_a.setSizePolicy(sizePolicy)
+        self.heat_btn_a.setMinimumSize(QSize(0, 40))
+        self.heat_btn_a.setMaximumSize(QSize(16777215, 75))
+        self.heat_btn_a.setFont(font2)
+        self.heat_btn_a.setStyleSheet(u"QPushButton {\n"
+"    background-color: #0B7EC8;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 8px 12px;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #0968A3;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"	color: white;\n"
+"    background-color: #085A91;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: #EF4444;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    border-radius: 8px;\n"
+"}")
+        self.heat_btn_a.setIcon(icon20)
+        self.heat_btn_a.setIconSize(QSize(35, 35))
+        self.heat_btn_a.setCheckable(True)
+
+        self.horizontalLayout_21.addWidget(self.heat_btn_a)
+
+
+        self.gridLayout.addWidget(self.widget_50, 18, 2, 1, 1)
+
+        self.widget_48 = QWidget(self.widget_6)
+        self.widget_48.setObjectName(u"widget_48")
+        self.horizontalLayout_56 = QHBoxLayout(self.widget_48)
+        self.horizontalLayout_56.setObjectName(u"horizontalLayout_56")
+        self.horizontalLayout_56.setContentsMargins(3, 3, 3, 0)
+        self.heat_btn_b = QPushButton(self.widget_48)
+        self.heat_btn_b.setObjectName(u"heat_btn_b")
+        sizePolicy.setHeightForWidth(self.heat_btn_b.sizePolicy().hasHeightForWidth())
+        self.heat_btn_b.setSizePolicy(sizePolicy)
+        self.heat_btn_b.setMinimumSize(QSize(0, 40))
+        self.heat_btn_b.setMaximumSize(QSize(16777215, 75))
+        self.heat_btn_b.setFont(font2)
+        self.heat_btn_b.setStyleSheet(u"QPushButton {\n"
+"    background-color: #0B7EC8;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 8px 12px;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #0968A3;\n"
+"}\n"
+"QPushButton:pressed {\n"
+"	color: white;\n"
+"    background-color: #085A91;\n"
+"}\n"
+"QPushButton:checked {\n"
+"    background-color: #EF4444;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    border-radius: 8px;\n"
+"}")
+        self.heat_btn_b.setIcon(icon20)
+        self.heat_btn_b.setIconSize(QSize(35, 35))
+        self.heat_btn_b.setCheckable(True)
+
+        self.horizontalLayout_56.addWidget(self.heat_btn_b)
+
+
+        self.gridLayout.addWidget(self.widget_48, 18, 4, 1, 1)
+
+        self.label_name_3 = QWidget(self.widget_6)
+        self.label_name_3.setObjectName(u"label_name_3")
+        self.horizontalLayout_13 = QHBoxLayout(self.label_name_3)
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
+        self.horizontalLayout_13.setContentsMargins(3, 3, 3, 3)
+        self.label_84 = QLabel(self.label_name_3)
+        self.label_84.setObjectName(u"label_84")
+        self.label_84.setFont(font10)
+        self.label_84.setStyleSheet(u"QLabel{\n"
+"	border-radius: 10px;\n"
+"	border-left: none;\n"
+"	color: rgb(97, 97, 97);\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #e3e6ee\n"
+"            );\n"
+"}")
+
+        self.horizontalLayout_13.addWidget(self.label_84)
+
+
+        self.gridLayout.addWidget(self.label_name_3, 3, 0, 1, 1)
 
         self.gridLayout.setRowStretch(1, 1)
         self.gridLayout.setRowStretch(2, 1)
@@ -5542,7 +5652,7 @@ class Ui_MainWindow(object):
 
         self.label_123 = QLabel(self.widget_77)
         self.label_123.setObjectName(u"label_123")
-        self.label_123.setFont(font12)
+        self.label_123.setFont(font10)
         self.label_123.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -5556,7 +5666,7 @@ class Ui_MainWindow(object):
 
         self.label_124 = QLabel(self.widget_77)
         self.label_124.setObjectName(u"label_124")
-        self.label_124.setFont(font12)
+        self.label_124.setFont(font10)
         self.label_124.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -5570,7 +5680,7 @@ class Ui_MainWindow(object):
 
         self.label_125 = QLabel(self.widget_77)
         self.label_125.setObjectName(u"label_125")
-        self.label_125.setFont(font12)
+        self.label_125.setFont(font10)
         self.label_125.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -5584,7 +5694,7 @@ class Ui_MainWindow(object):
 
         self.label_126 = QLabel(self.widget_77)
         self.label_126.setObjectName(u"label_126")
-        self.label_126.setFont(font12)
+        self.label_126.setFont(font10)
         self.label_126.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -7019,7 +7129,7 @@ class Ui_MainWindow(object):
 
         self.label_135 = QLabel(self.widget_77)
         self.label_135.setObjectName(u"label_135")
-        self.label_135.setFont(font12)
+        self.label_135.setFont(font10)
         self.label_135.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -7645,7 +7755,7 @@ class Ui_MainWindow(object):
 
         self.label_133 = QLabel(self.widget_77)
         self.label_133.setObjectName(u"label_133")
-        self.label_133.setFont(font12)
+        self.label_133.setFont(font10)
         self.label_133.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -7659,7 +7769,7 @@ class Ui_MainWindow(object):
 
         self.label_134 = QLabel(self.widget_77)
         self.label_134.setObjectName(u"label_134")
-        self.label_134.setFont(font12)
+        self.label_134.setFont(font10)
         self.label_134.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -7704,9 +7814,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.heat_btn_t0.sizePolicy().hasHeightForWidth())
         self.heat_btn_t0.setSizePolicy(sizePolicy)
         self.heat_btn_t0.setMaximumSize(QSize(16777215, 150))
-        self.heat_btn_t0.setFont(font13)
+        self.heat_btn_t0.setFont(font11)
         self.heat_btn_t0.setStyleSheet(u"")
-        self.heat_btn_t0.setIcon(icon17)
+        self.heat_btn_t0.setIcon(icon20)
         self.heat_btn_t0.setIconSize(QSize(35, 35))
         self.heat_btn_t0.setCheckable(True)
 
@@ -7912,9 +8022,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/Icons/to-do-list.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.write_table_label.setIcon(icon20)
+        icon21 = QIcon()
+        icon21.addFile(u":/Icons/to-do-list.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.write_table_label.setIcon(icon21)
         self.write_table_label.setIconSize(QSize(55, 55))
         self.write_table_label.setCheckable(True)
 
@@ -7996,7 +8106,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.reset_cycle_c_btn.sizePolicy().hasHeightForWidth())
         self.reset_cycle_c_btn.setSizePolicy(sizePolicy)
         self.reset_cycle_c_btn.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_c_btn.setFont(font13)
+        self.reset_cycle_c_btn.setFont(font11)
         self.reset_cycle_c_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
@@ -8009,9 +8119,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        icon21 = QIcon()
-        icon21.addFile(u":/Icons/broom.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.reset_cycle_c_btn.setIcon(icon21)
+        icon22 = QIcon()
+        icon22.addFile(u":/Icons/broom.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.reset_cycle_c_btn.setIcon(icon22)
         self.reset_cycle_c_btn.setIconSize(QSize(50, 50))
 
         self.horizontalLayout_48.addWidget(self.reset_cycle_c_btn)
@@ -8060,7 +8170,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.reset_cycle_b_btn.sizePolicy().hasHeightForWidth())
         self.reset_cycle_b_btn.setSizePolicy(sizePolicy)
         self.reset_cycle_b_btn.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_b_btn.setFont(font13)
+        self.reset_cycle_b_btn.setFont(font11)
         self.reset_cycle_b_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
@@ -8073,7 +8183,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        self.reset_cycle_b_btn.setIcon(icon21)
+        self.reset_cycle_b_btn.setIcon(icon22)
         self.reset_cycle_b_btn.setIconSize(QSize(50, 50))
 
         self.horizontalLayout_46.addWidget(self.reset_cycle_b_btn)
@@ -8157,9 +8267,9 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: orange; \n"
 "padding-right: 3px;")
-        icon22 = QIcon()
-        icon22.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_24.setIcon(icon22)
+        icon23 = QIcon()
+        icon23.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_24.setIcon(icon23)
         self.pushButton_24.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_7.addWidget(self.pushButton_24)
@@ -8177,7 +8287,7 @@ class Ui_MainWindow(object):
         self.read_time_input.setAlignment(Qt.AlignCenter)
         self.read_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.read_time_input.setMinimum(16)
-        self.read_time_input.setMaximum(1000)
+        self.read_time_input.setMaximum(2000)
         self.read_time_input.setValue(500)
 
         self.horizontalLayout_31.addWidget(self.read_time_input)
@@ -8258,7 +8368,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: orange; \n"
 "padding-right: 3px;")
-        self.pushButton_22.setIcon(icon22)
+        self.pushButton_22.setIcon(icon23)
         self.pushButton_22.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_8.addWidget(self.pushButton_22)
@@ -8276,7 +8386,7 @@ class Ui_MainWindow(object):
         self.write_time_input.setAlignment(Qt.AlignCenter)
         self.write_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.write_time_input.setMinimum(16)
-        self.write_time_input.setMaximum(1000)
+        self.write_time_input.setMaximum(2000)
         self.write_time_input.setValue(500)
 
         self.horizontalLayout_41.addWidget(self.write_time_input)
@@ -8324,7 +8434,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.reset_cycle_a_btn.sizePolicy().hasHeightForWidth())
         self.reset_cycle_a_btn.setSizePolicy(sizePolicy)
         self.reset_cycle_a_btn.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_a_btn.setFont(font13)
+        self.reset_cycle_a_btn.setFont(font11)
         self.reset_cycle_a_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
@@ -8337,7 +8447,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        self.reset_cycle_a_btn.setIcon(icon21)
+        self.reset_cycle_a_btn.setIcon(icon22)
         self.reset_cycle_a_btn.setIconSize(QSize(50, 50))
 
         self.horizontalLayout_44.addWidget(self.reset_cycle_a_btn)
@@ -9569,9 +9679,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon23 = QIcon()
-        icon23.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_file_path.setIcon(icon23)
+        icon24 = QIcon()
+        icon24.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.db_file_path.setIcon(icon24)
         self.db_file_path.setIconSize(QSize(55, 55))
         self.db_file_path.setCheckable(True)
 
@@ -9588,9 +9698,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon24 = QIcon()
-        icon24.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.ip_plc_address.setIcon(icon24)
+        icon25 = QIcon()
+        icon25.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.ip_plc_address.setIcon(icon25)
         self.ip_plc_address.setIconSize(QSize(55, 55))
         self.ip_plc_address.setCheckable(True)
 
@@ -9607,9 +9717,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon25 = QIcon()
-        icon25.addFile(u":/Icons/server-setting.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_number.setIcon(icon25)
+        icon26 = QIcon()
+        icon26.addFile(u":/Icons/server-setting.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.db_number.setIcon(icon26)
         self.db_number.setIconSize(QSize(55, 55))
         self.db_number.setCheckable(True)
 
@@ -9671,9 +9781,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon26 = QIcon()
-        icon26.addFile(u":/Icons/security.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.write_plc_label_2.setIcon(icon26)
+        icon27 = QIcon()
+        icon27.addFile(u":/Icons/security.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.write_plc_label_2.setIcon(icon27)
         self.write_plc_label_2.setIconSize(QSize(55, 55))
         self.write_plc_label_2.setCheckable(True)
 
@@ -9703,9 +9813,9 @@ class Ui_MainWindow(object):
 "	border-right: 5px solid #0AB1F9;\n"
 "	color: #0AB1F9;\n"
 "}")
-        icon27 = QIcon()
-        icon27.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.cmd_btn.setIcon(icon27)
+        icon28 = QIcon()
+        icon28.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.cmd_btn.setIcon(icon28)
         self.cmd_btn.setIconSize(QSize(80, 80))
 
         self.gridLayout_6.addWidget(self.cmd_btn, 4, 0, 1, 2)
@@ -9821,9 +9931,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.search_icon.sizePolicy().hasHeightForWidth())
         self.search_icon.setSizePolicy(sizePolicy)
         self.search_icon.setStyleSheet(u"padding: 5px;")
-        icon28 = QIcon()
-        icon28.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.search_icon.setIcon(icon28)
+        icon29 = QIcon()
+        icon29.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.search_icon.setIcon(icon29)
         self.search_icon.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_3.addWidget(self.search_icon)
@@ -10170,9 +10280,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.clear_history_search.sizePolicy().hasHeightForWidth())
         self.clear_history_search.setSizePolicy(sizePolicy)
         self.clear_history_search.setMinimumSize(QSize(45, 0))
-        icon29 = QIcon()
-        icon29.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_history_search.setIcon(icon29)
+        icon30 = QIcon()
+        icon30.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_history_search.setIcon(icon30)
         self.clear_history_search.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_3.addWidget(self.clear_history_search)
@@ -10202,9 +10312,9 @@ class Ui_MainWindow(object):
 "    background-color: #94A3B8;\n"
 "    color: #CBD5E1;\n"
 "}")
-        icon30 = QIcon()
-        icon30.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.export_all_tables_to_excel_btn.setIcon(icon30)
+        icon31 = QIcon()
+        icon31.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.export_all_tables_to_excel_btn.setIcon(icon31)
         self.export_all_tables_to_excel_btn.setIconSize(QSize(35, 35))
 
         self.list_query_btn.addWidget(self.export_all_tables_to_excel_btn)
@@ -10392,21 +10502,24 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(2)
+        self.stackedWidget_2.setCurrentIndex(1)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
-        self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
-        self.stacked_cel_fah_press_b_1.setCurrentIndex(0)
-        self.stacked_cel_fah_press_c_1.setCurrentIndex(0)
-        self.stacked_cel_fah_press_a_2.setCurrentIndex(0)
-        self.stacked_cel_fah_press_b_2.setCurrentIndex(0)
-        self.stacked_cel_fah_press_c_2.setCurrentIndex(0)
-        self.stacked_cel_fah_press_a_3.setCurrentIndex(0)
-        self.stacked_cel_fah_press_b_3.setCurrentIndex(0)
-        self.stacked_cel_fah_press_c_3.setCurrentIndex(0)
-        self.stacked_cel_fah_press_a_4.setCurrentIndex(0)
+        self.stacked_pressure_sv_a_11.setCurrentIndex(0)
+        self.stacked_pressure_sv_c_11.setCurrentIndex(0)
+        self.stacked_pressure_sv_b_11.setCurrentIndex(0)
+        self.stacked_cel_fah_press_a_1.setCurrentIndex(1)
         self.stacked_cel_fah_press_b_4.setCurrentIndex(0)
         self.stacked_cel_fah_press_c_4.setCurrentIndex(0)
+        self.stacked_cel_fah_press_b_2.setCurrentIndex(0)
+        self.stacked_cel_fah_press_c_1.setCurrentIndex(0)
+        self.stacked_cel_fah_press_b_1.setCurrentIndex(0)
+        self.stacked_cel_fah_press_a_2.setCurrentIndex(0)
+        self.stacked_cel_fah_press_a_3.setCurrentIndex(0)
+        self.stacked_cel_fah_press_c_2.setCurrentIndex(0)
+        self.stacked_cel_fah_press_b_3.setCurrentIndex(0)
+        self.stacked_cel_fah_press_a_4.setCurrentIndex(0)
+        self.stacked_cel_fah_press_c_3.setCurrentIndex(0)
         self.start_stop_stacked.setCurrentIndex(0)
         self.stacked_cel_fah_temp_b_4.setCurrentIndex(0)
         self.stacked_cel_fah_temp_b_7.setCurrentIndex(0)
@@ -10478,6 +10591,12 @@ class Ui_MainWindow(object):
 
         self.clear_data_btn.setText(QCoreApplication.translate("MainWindow", u" Clear Data", None))
         self.new_data_btn.setText(QCoreApplication.translate("MainWindow", u" Import Data", None))
+        self.label_85.setText(QCoreApplication.translate("MainWindow", u"Cycle Setting:", None))
+        self.pushButton.setText("")
+#if QT_CONFIG(tooltip)
+        self.set_cycle_a_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.set_cycle_a_btn.setText("")
         self.label_156.setText(QCoreApplication.translate("MainWindow", u"Group A", None))
         self.label_165.setText(QCoreApplication.translate("MainWindow", u"PV", None))
         self.label_167.setText(QCoreApplication.translate("MainWindow", u"SV", None))
@@ -10490,73 +10609,94 @@ class Ui_MainWindow(object):
         self.label_172.setText(QCoreApplication.translate("MainWindow", u"PV", None))
         self.label_175.setText(QCoreApplication.translate("MainWindow", u"SV", None))
         self.clear_group_c.setText("")
-        self.label_85.setText(QCoreApplication.translate("MainWindow", u"Cycle Setting:", None))
-#if QT_CONFIG(tooltip)
-        self.set_cycle_a_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.set_cycle_a_btn.setText("")
-#if QT_CONFIG(tooltip)
-        self.set_cycle_b_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.set_cycle_b_btn.setText("")
-#if QT_CONFIG(tooltip)
-        self.set_cycle_c_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.set_cycle_c_btn.setText("")
         self.label_83.setText(QCoreApplication.translate("MainWindow", u"Oil Start time:", None))
         self.pressure_pv_a_9.setPrefix("")
         self.pressure_pv_a_9.setSuffix("")
         self.pressure_sv_a_9.setPrefix("")
         self.pressure_sv_a_9.setSuffix("")
         self.label_245.setText(QCoreApplication.translate("MainWindow", u"s", None))
-        self.pressure_pv_b_9.setPrefix("")
-        self.pressure_pv_b_9.setSuffix("")
-        self.pressure_sv_b_9.setPrefix("")
-        self.pressure_sv_b_9.setSuffix("")
-        self.label_247.setText(QCoreApplication.translate("MainWindow", u"s", None))
-        self.pressure_pv_c_9.setPrefix("")
-        self.pressure_pv_c_9.setSuffix("")
-        self.pressure_sv_c_9.setPrefix("")
-        self.pressure_sv_c_9.setSuffix("")
-        self.label_261.setText(QCoreApplication.translate("MainWindow", u"s", None))
-        self.label_84.setText(QCoreApplication.translate("MainWindow", u"Oil End time:", None))
+        self.pushButton_3.setText("")
+#if QT_CONFIG(tooltip)
+        self.set_cycle_c_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.set_cycle_c_btn.setText("")
+        self.pushButton_2.setText("")
+#if QT_CONFIG(tooltip)
+        self.set_cycle_b_btn.setToolTip(QCoreApplication.translate("MainWindow", u"<html><head/><body><p>Enable/Disable Running by Cycle</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.set_cycle_b_btn.setText("")
         self.pressure_pv_a_10.setPrefix("")
         self.pressure_pv_a_10.setSuffix("")
         self.pressure_sv_a_10.setPrefix("")
         self.pressure_sv_a_10.setSuffix("")
         self.label_246.setText(QCoreApplication.translate("MainWindow", u"s", None))
+        self.pressure_pv_c_9.setPrefix("")
+        self.pressure_pv_c_9.setSuffix("")
+        self.pressure_sv_c_9.setPrefix("")
+        self.pressure_sv_c_9.setSuffix("")
+        self.label_261.setText(QCoreApplication.translate("MainWindow", u"s", None))
         self.pressure_pv_b_10.setPrefix("")
         self.pressure_pv_b_10.setSuffix("")
         self.pressure_sv_b_10.setPrefix("")
         self.pressure_sv_b_10.setSuffix("")
         self.label_248.setText(QCoreApplication.translate("MainWindow", u"s", None))
+        self.pressure_pv_b_9.setPrefix("")
+        self.pressure_pv_b_9.setSuffix("")
+        self.pressure_sv_b_9.setPrefix("")
+        self.pressure_sv_b_9.setSuffix("")
+        self.label_247.setText(QCoreApplication.translate("MainWindow", u"s", None))
         self.pressure_pv_c_10.setPrefix("")
         self.pressure_pv_c_10.setSuffix("")
         self.pressure_sv_c_10.setPrefix("")
         self.pressure_sv_c_10.setSuffix("")
         self.label_262.setText(QCoreApplication.translate("MainWindow", u"s", None))
-        self.label_100.setText(QCoreApplication.translate("MainWindow", u"Air Filling time:", None))
+        self.pressure_pv_b_5.setPrefix("")
+        self.pressure_pv_b_5.setSuffix("")
+        self.label_268.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
+        self.pressure_pv_c_5.setPrefix("")
+        self.pressure_pv_c_5.setSuffix("")
+        self.label_269.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
+        self.pressure_pv_a_5.setPrefix("")
+        self.pressure_pv_a_5.setSuffix("")
+        self.label_267.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
+        self.label_104.setText(QCoreApplication.translate("MainWindow", u"Temp Setting:", None))
+        self.pressure_sv_a_1.setPrefix("")
+        self.pressure_sv_a_1.setSuffix("")
+        self.label_280.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_340.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
         self.pressure_pv_a_6.setPrefix("")
         self.pressure_pv_a_6.setSuffix("")
         self.pressure_sv_a_6.setPrefix("")
         self.pressure_sv_a_6.setSuffix("")
         self.label_242.setText(QCoreApplication.translate("MainWindow", u"s", None))
-        self.pressure_pv_b_6.setPrefix("")
-        self.pressure_pv_b_6.setSuffix("")
-        self.pressure_sv_b_6.setPrefix("")
-        self.pressure_sv_b_6.setSuffix("")
-        self.label_254.setText(QCoreApplication.translate("MainWindow", u"s", None))
+        self.pressure_pv_a_7.setPrefix("")
+        self.pressure_pv_a_7.setSuffix("")
+        self.pressure_sv_a_7.setPrefix("")
+        self.pressure_sv_a_7.setSuffix("")
+        self.label_243.setText(QCoreApplication.translate("MainWindow", u"s", None))
         self.pressure_pv_c_6.setPrefix("")
         self.pressure_pv_c_6.setSuffix("")
         self.pressure_sv_c_6.setPrefix("")
         self.pressure_sv_c_6.setSuffix("")
         self.label_264.setText(QCoreApplication.translate("MainWindow", u"s", None))
         self.label_101.setText(QCoreApplication.translate("MainWindow", u"Air Holding time:", None))
-        self.pressure_pv_a_7.setPrefix("")
-        self.pressure_pv_a_7.setSuffix("")
-        self.pressure_sv_a_7.setPrefix("")
-        self.pressure_sv_a_7.setSuffix("")
-        self.label_243.setText(QCoreApplication.translate("MainWindow", u"s", None))
+        self.pressure_pv_b_6.setPrefix("")
+        self.pressure_pv_b_6.setSuffix("")
+        self.pressure_sv_b_6.setPrefix("")
+        self.pressure_sv_b_6.setSuffix("")
+        self.label_254.setText(QCoreApplication.translate("MainWindow", u"s", None))
+        self.label_100.setText(QCoreApplication.translate("MainWindow", u"Air Filling time:", None))
+        self.pressure_pv_b_8.setPrefix("")
+        self.pressure_pv_b_8.setSuffix("")
+        self.pressure_sv_b_8.setPrefix("")
+        self.pressure_sv_b_8.setSuffix("")
+        self.label_256.setText(QCoreApplication.translate("MainWindow", u"s", None))
+        self.label_102.setText(QCoreApplication.translate("MainWindow", u"Air Bleeding time:", None))
+        self.pressure_pv_a_8.setPrefix("")
+        self.pressure_pv_a_8.setSuffix("")
+        self.pressure_sv_a_8.setPrefix("")
+        self.pressure_sv_a_8.setSuffix("")
+        self.label_244.setText(QCoreApplication.translate("MainWindow", u"s", None))
         self.pressure_pv_b_7.setPrefix("")
         self.pressure_pv_b_7.setSuffix("")
         self.pressure_sv_b_7.setPrefix("")
@@ -10567,115 +10707,91 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_7.setPrefix("")
         self.pressure_sv_c_7.setSuffix("")
         self.label_265.setText(QCoreApplication.translate("MainWindow", u"s", None))
-        self.label_102.setText(QCoreApplication.translate("MainWindow", u"Air Bleeding time:", None))
-        self.pressure_pv_a_8.setPrefix("")
-        self.pressure_pv_a_8.setSuffix("")
-        self.pressure_sv_a_8.setPrefix("")
-        self.pressure_sv_a_8.setSuffix("")
-        self.label_244.setText(QCoreApplication.translate("MainWindow", u"s", None))
-        self.pressure_pv_b_8.setPrefix("")
-        self.pressure_pv_b_8.setSuffix("")
-        self.pressure_sv_b_8.setPrefix("")
-        self.pressure_sv_b_8.setSuffix("")
-        self.label_256.setText(QCoreApplication.translate("MainWindow", u"s", None))
+        self.pressure_sv_b_5.setPrefix("")
+        self.pressure_sv_b_5.setSuffix("")
+        self.label_253.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
         self.pressure_pv_c_8.setPrefix("")
         self.pressure_pv_c_8.setSuffix("")
         self.pressure_sv_c_8.setPrefix("")
         self.pressure_sv_c_8.setSuffix("")
         self.label_266.setText(QCoreApplication.translate("MainWindow", u"s", None))
         self.label_99.setText(QCoreApplication.translate("MainWindow", u"Pressure Setting:", None))
-        self.pressure_sv_a_5.setPrefix("")
-        self.pressure_sv_a_5.setSuffix("")
-        self.label_241.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
-        self.pressure_sv_b_5.setPrefix("")
-        self.pressure_sv_b_5.setSuffix("")
-        self.label_253.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
         self.pressure_sv_c_5.setPrefix("")
         self.pressure_sv_c_5.setSuffix("")
         self.label_263.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
         self.label_106.setText(QCoreApplication.translate("MainWindow", u"ITV Pressure:", None))
-        self.pressure_pv_a_12.setPrefix("")
-        self.pressure_pv_a_12.setSuffix("")
-        self.label_270.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
+        self.pressure_sv_a_5.setPrefix("")
+        self.pressure_sv_a_5.setSuffix("")
+        self.label_241.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
+        self.label_105.setText(QCoreApplication.translate("MainWindow", u"Pipe Pressure:", None))
         self.pressure_pv_b_12.setPrefix("")
         self.pressure_pv_b_12.setSuffix("")
         self.label_272.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
+        self.pressure_pv_a_12.setPrefix("")
+        self.pressure_pv_a_12.setSuffix("")
+        self.label_270.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
         self.pressure_pv_c_12.setPrefix("")
         self.pressure_pv_c_12.setSuffix("")
         self.label_271.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
-        self.label_105.setText(QCoreApplication.translate("MainWindow", u"Pipe Pressure:", None))
-        self.pressure_pv_a_5.setPrefix("")
-        self.pressure_pv_a_5.setSuffix("")
-        self.label_267.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
-        self.pressure_pv_b_5.setPrefix("")
-        self.pressure_pv_b_5.setSuffix("")
-        self.label_268.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
-        self.pressure_pv_c_5.setPrefix("")
-        self.pressure_pv_c_5.setSuffix("")
-        self.label_269.setText(QCoreApplication.translate("MainWindow", u"Bar", None))
-        self.label_104.setText(QCoreApplication.translate("MainWindow", u"Temp Setting:", None))
-        self.pressure_sv_a_1.setPrefix("")
-        self.pressure_sv_a_1.setSuffix("")
-        self.label_280.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_340.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.pressure_sv_b_1.setPrefix("")
-        self.pressure_sv_b_1.setSuffix("")
-        self.label_281.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_366.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.pressure_sv_c_1.setPrefix("")
-        self.pressure_sv_c_1.setSuffix("")
-        self.label_398.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_399.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.label_103.setText(QCoreApplication.translate("MainWindow", u"Front Temperature:", None))
-        self.pressure_pv_a_2.setPrefix("")
-        self.pressure_pv_a_2.setSuffix("")
-        self.label_379.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_380.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.pressure_pv_b_2.setPrefix("")
-        self.pressure_pv_b_2.setSuffix("")
-        self.label_392.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_393.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.pressure_pv_c_2.setPrefix("")
-        self.pressure_pv_c_2.setSuffix("")
-        self.label_282.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_400.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.label_98.setText(QCoreApplication.translate("MainWindow", u"Mid Temperature:", None))
-        self.pressure_pv_a_3.setPrefix("")
-        self.pressure_pv_a_3.setSuffix("")
-        self.label_381.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_382.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.pressure_pv_b_3.setPrefix("")
-        self.pressure_pv_b_3.setSuffix("")
-        self.label_394.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_395.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.pressure_pv_c_3.setPrefix("")
-        self.pressure_pv_c_3.setSuffix("")
-        self.label_401.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_402.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.label_97.setText(QCoreApplication.translate("MainWindow", u"End Temperature:", None))
-        self.pressure_pv_a_4.setPrefix("")
-        self.pressure_pv_a_4.setSuffix("")
-        self.label_383.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
-        self.label_384.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
         self.pressure_pv_b_4.setPrefix("")
         self.pressure_pv_b_4.setSuffix("")
         self.label_396.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
         self.label_397.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.refuel_btn_b.setText(QCoreApplication.translate("MainWindow", u" Oil Fill B", None))
         self.pressure_pv_c_4.setPrefix("")
         self.pressure_pv_c_4.setSuffix("")
         self.label_403.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
         self.label_404.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
         self.refuel_btn_a.setText(QCoreApplication.translate("MainWindow", u" Oil Fill A", None))
-        self.refuel_btn_b.setText(QCoreApplication.translate("MainWindow", u" Oil Fill B", None))
+        self.vacuum_btn_b.setText(QCoreApplication.translate("MainWindow", u" Pressure B", None))
         self.refuel_btn_c.setText(QCoreApplication.translate("MainWindow", u" Oil Fill C", None))
         self.vacuum_btn_a.setText(QCoreApplication.translate("MainWindow", u" Pressure A", None))
-        self.vacuum_btn_b.setText(QCoreApplication.translate("MainWindow", u" Pressure B", None))
-        self.vacuum_btn_c.setText(QCoreApplication.translate("MainWindow", u" Pressure C", None))
-        self.heat_btn_a.setText(QCoreApplication.translate("MainWindow", u" Heating A", None))
-        self.heat_btn_b.setText(QCoreApplication.translate("MainWindow", u" Heating B", None))
-        self.heat_btn_c.setText(QCoreApplication.translate("MainWindow", u" Heating C", None))
+        self.pressure_pv_b_2.setPrefix("")
+        self.pressure_pv_b_2.setSuffix("")
+        self.label_392.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_393.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.pressure_sv_c_1.setPrefix("")
+        self.pressure_sv_c_1.setSuffix("")
+        self.label_398.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_399.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.label_103.setText(QCoreApplication.translate("MainWindow", u"Front Temperature:", None))
+        self.pressure_sv_b_1.setPrefix("")
+        self.pressure_sv_b_1.setSuffix("")
+        self.label_281.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_366.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.pressure_pv_a_2.setPrefix("")
+        self.pressure_pv_a_2.setSuffix("")
+        self.label_379.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_380.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.pressure_pv_a_3.setPrefix("")
+        self.pressure_pv_a_3.setSuffix("")
+        self.label_381.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_382.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.pressure_pv_c_2.setPrefix("")
+        self.pressure_pv_c_2.setSuffix("")
+        self.label_282.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_400.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.pressure_pv_b_3.setPrefix("")
+        self.pressure_pv_b_3.setSuffix("")
+        self.label_394.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_395.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.label_98.setText(QCoreApplication.translate("MainWindow", u"Mid Temperature:", None))
+        self.pressure_pv_a_4.setPrefix("")
+        self.pressure_pv_a_4.setSuffix("")
+        self.label_383.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_384.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.pressure_pv_c_3.setPrefix("")
+        self.pressure_pv_c_3.setSuffix("")
+        self.label_401.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
+        self.label_402.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
+        self.label_97.setText(QCoreApplication.translate("MainWindow", u"End Temperature:", None))
         self.start_btn.setText(QCoreApplication.translate("MainWindow", u" Start", None))
         self.stop_btn.setText(QCoreApplication.translate("MainWindow", u" Stop", None))
+        self.vacuum_btn_c.setText(QCoreApplication.translate("MainWindow", u" Pressure C", None))
+        self.heat_btn_c.setText(QCoreApplication.translate("MainWindow", u" Heating C", None))
+        self.heat_btn_a.setText(QCoreApplication.translate("MainWindow", u" Heating A", None))
+        self.heat_btn_b.setText(QCoreApplication.translate("MainWindow", u" Heating B", None))
+        self.label_84.setText(QCoreApplication.translate("MainWindow", u"Oil End time:", None))
         self.bt_l_alm_value.setPrefix("")
         self.bt_l_alm_value.setSuffix("")
         self.label_342.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))

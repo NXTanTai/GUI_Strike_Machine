@@ -3,7 +3,7 @@ import os
 import socket
 import tempfile
 import threading
-from PySide6.QtCore import Qt, Slot
+from PySide6.QtCore import Qt, Slot, QLocale
 from PySide6.QtGui import QColor, QTextCharFormat, QTextCursor, QFont, QIcon
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget,
                                 QVBoxLayout, QHBoxLayout, QTextEdit,
@@ -158,8 +158,21 @@ class ConsoleWindow(QMainWindow):
             self.append_log(
                 "  cls                - Clear screen\n"
                 "  help               - Show commands\n"
+                "  localsystem        - Show system info\n"
                 "  ipconfig           - Show network info\n",
                 "DEBUG"
+            )
+        elif cmd.lower() == "localsystem":
+            locale = QLocale.system()
+            self.append_log(
+                f"System Locale: {locale.name()}\n"
+                f"BCP47: {locale.bcp47Name()}\n"
+                f"Language: {locale.languageToString(locale.language())}\n"
+                f"Script: {locale.scriptToString(locale.script())}\n"
+                f"Country: {locale.territoryToString(locale.territory())}\n"
+                f"Decimal Point: {locale.decimalPoint()}\n"
+                f"Measurement System: {'Metric' if locale.measurementSystem() == QLocale.MeasurementSystem.MetricSystem else 'Imperial'}",
+                "INFO"
             )
         elif cmd.lower() == "ipconfig":
             hostname = socket.gethostname()

@@ -122,7 +122,7 @@ class PLCWrite(QObject):
             self.logger.addHandler(stream_handler)
 
         self.logger.setLevel(logging.INFO)
-        self.logger.propagate = False
+        self.logger.propagate = True
 
     def _build_layout_dict(self) -> dict:
         """
@@ -401,7 +401,7 @@ class PLCWrite(QObject):
             result = set_bool(raw, 0, bit or 0, bool(value))
             self._client.db_write(self._db_number, offset, result)     # type: ignore
             if self.logger:
-                self.logger.info("[PLC WRITE]: BOOL OK → %s = %s", name, value)
+                self.logger.info("[PLC WRITE]: BOOL OK - %s = %s", name, value)
         except Exception as exc:
             raise exc
 

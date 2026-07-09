@@ -1,9 +1,6 @@
 Startup errors:
 Traceback (most recent call last):
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 175, in <module>
-    from source_v2            import StrikeMachine
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source_v2.py", line 3100
-    if self.data_temp_timer.isActive()
-                                      ^
-SyntaxError: expected ':'
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 172, in <module>
+    from PySide6.QtWidgets import QApplication, QMessageBox
+ModuleNotFoundError: No module named 'PySide6'
 

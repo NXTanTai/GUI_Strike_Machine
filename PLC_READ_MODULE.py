@@ -72,8 +72,9 @@ class PLCRead(QObject):
         if not self.folder:
             self.logger = None
             return
-
-        self.logger = logging.getLogger(__name__)
+        
+        logger_name = f"{__name__}.{self._name_module}"
+        self.logger = logging.getLogger(logger_name)
         for handler in self.logger.handlers[:]:
             self.logger.removeHandler(handler)
 
@@ -100,7 +101,7 @@ class PLCRead(QObject):
             self.logger.addHandler(stream_handler)
 
         self.logger.setLevel(logging.INFO)
-        self.logger.propagate = False
+        self.logger.propagate = True
 
     @Slot()
     def run(self):

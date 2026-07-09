@@ -171,8 +171,22 @@ if __name__ == '__main__':
     try:
         from PySide6.QtWidgets import QApplication, QMessageBox
         from PySide6.QtCore    import QLocale, QSharedMemory, QSystemSemaphore, QTimer
-        # from source            import StrikeMachine
-        from source_v2            import StrikeMachine
+        from source            import StrikeMachine
+        # from source_v2            import StrikeMachine
+
+        def check_full_language_info():
+            locale = QLocale.system()
+            
+            info = {
+                "System Locale": locale.name(),
+                "BCP47": locale.bcp47Name(),
+                "Language": locale.languageToString(locale.language()),
+                "Script": locale.scriptToString(locale.script()),
+                "Country": locale.territoryToString(locale.territory()),
+                "Decimal Point": locale.decimalPoint(),
+                "Measurement System": "Metric" if locale.measurementSystem() == QLocale.MeasurementSystem.MetricSystem else "Imperial",
+            }
+            return info
 
         app = QApplication(sys.argv)
         QLocale.setDefault(QLocale(QLocale.Language.C))
@@ -199,12 +213,14 @@ if __name__ == '__main__':
             window = StrikeMachine(
                 on_hide_loading=_pause_loading,
                 on_show_loading=_resume_loading,
+                info_system=check_full_language_info,  # type: ignore
                 plc_queue=plc_queue  # type: ignore
             )
         else:
             window = StrikeMachine(
                 on_hide_loading=_pause_loading,
-                on_show_loading=_resume_loading
+                on_show_loading=_resume_loading,
+                info_system=check_full_language_info  # type: ignore
             )
 
         screen = QApplication.primaryScreen().availableGeometry()
