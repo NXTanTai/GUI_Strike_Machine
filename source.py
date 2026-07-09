@@ -18,13 +18,13 @@ import queue
 import threading
 import subprocess
 import tempfile
+import psutil
 import webbrowser
-import ctypes
 from PySide6.QtCore import (
     Qt, QTimer, QObject, Slot,
     QTime, QSettings, QDateTime,
     QEvent, QThread, QEasingCurve, 
-    QTranslator, QMetaObject, QProcess
+    QTranslator
 )
 from PySide6.QtGui import (
     QFont, 
@@ -4252,7 +4252,7 @@ class StrikeMachine(QMainWindow):
             if self._is_console_running():
                 self._bring_console_to_front()
                 return
-
+                
             self._cleanup_console()
 
             flag_path = os.path.join(tempfile.gettempdir(), "sm_force_quit.flag")
@@ -4265,15 +4265,21 @@ class StrikeMachine(QMainWindow):
                 pythonw = sys.executable.replace("python.exe", "pythonw.exe")
                 cmd = [pythonw, "-u", os.path.join(os.path.dirname(__file__), "console_window.py")]
 
-            creationflags = subprocess.CREATE_NEW_CONSOLE | subprocess.CREATE_BREAKAWAY_FROM_JOB if os.name == 'nt' else 0
+            creationflags = subprocess.CREATE_BREAKAWAY_FROM_JOB if os.name == 'nt' else 0
 
             self._console_process = subprocess.Popen(
                 cmd,
+                stdin=subprocess.PIPE,
+                text=True,
+                encoding="utf-8",
                 creationflags=creationflags,
                 start_new_session=True
             )
 
-            self.logger.info("Console opened (independent mode)")
+            self._pipe_handler = SafePipeLogHandler(self._console_process)
+            fmt = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+            self._pipe_handler.setFormatter(fmt)
+            self.logger.addHandler(self._pipe_handler)
 
             if not hasattr(self, '_force_quit_timer'):
                 self._force_quit_timer = QTimer(self)
@@ -4295,6 +4301,14 @@ class StrikeMachine(QMainWindow):
         if hasattr(self, '_force_quit_timer') and self._force_quit_timer:
             self._force_quit_timer.stop()
 
+        if hasattr(self, '_pipe_handler') and self._pipe_handler:
+            try:
+                self.logger.removeHandler(self._pipe_handler)
+                self._pipe_handler.close()
+            except Exception:
+                pass
+            self._pipe_handler = None
+
         if hasattr(self, '_console_process') and self._console_process:
             try:
                 if self._console_process.poll() is None:
@@ -4304,26 +4318,61 @@ class StrikeMachine(QMainWindow):
             self._console_process = None
 
     def _bring_console_to_front(self):
+        if not hasattr(self, '_console_process') or not self._console_process:
+            return
         try:
             import ctypes
-            WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_int, ctypes.c_int)
+            from ctypes import wintypes
+
+            user32 = ctypes.windll.user32
+
+            # QUAN TRỌNG (lý do warning "window wasn't found yet" luôn bắn):
+            # cmd.spec/SM_Console.spec build kiểu ONEFILE (runtime_tmpdir=None,
+            # không exclude_binaries/COLLECT). Trên Windows, bootloader onefile
+            # tự giải nén ra %TEMP% rồi SPAWN một tiến trình CON để chạy app
+            # thật, còn bootloader chỉ ngồi chờ. => PID mà subprocess.Popen()
+            # trả về (self._console_process.pid) là PID của bootloader, KHÔNG
+            # phải PID sở hữu cửa sổ thật -> lọc theo đúng 1 PID đó sẽ luôn
+            # không khớp. Phải gom cả PID bootloader lẫn toàn bộ tiến trình
+            # con/cháu của nó rồi mới lọc cửa sổ theo tập PID này.
+            target_pids = {self._console_process.pid}
+            try:
+                proc = psutil.Process(self._console_process.pid)
+                for child in proc.children(recursive=True):
+                    target_pids.add(child.pid)
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                pass
+
+            WNDENUMPROC = ctypes.WINFUNCTYPE(
+                wintypes.BOOL, wintypes.HWND, wintypes.LPARAM
+            )
+
+            # GetWindowThreadProcessId là truy vấn nội bộ của window manager,
+            # KHÔNG gửi message sang thread đích -> không bao giờ block/timeout
+            # dù cửa sổ đích có đang bận/treo hay không (khác hẳn GetWindowTextW
+            # kiểu cũ vốn dùng SendMessage và có thể treo UI thread chính).
             hwnds = []
 
-            def enum_callback(hwnd, _):
-                length = ctypes.windll.user32.GetWindowTextLengthW(hwnd)
-                if length > 0:
-                    buf = ctypes.create_unicode_buffer(length + 1)
-                    ctypes.windll.user32.GetWindowTextW(hwnd, buf, length + 1)
-                    if "Strike Machine Console" in buf.value:
-                        hwnds.append(hwnd)
-                return True
+            def enum_callback(hwnd, _lparam):
+                owner_pid = wintypes.DWORD(0)
+                user32.GetWindowThreadProcessId(hwnd, ctypes.byref(owner_pid))
+                if owner_pid.value in target_pids and user32.IsWindow(hwnd):
+                    hwnds.append(hwnd)
+                return True  # tiếp tục enumerate
 
-            ctypes.windll.user32.EnumWindows(WNDENUMPROC(enum_callback), 0)
+            user32.EnumWindows(WNDENUMPROC(enum_callback), 0)
 
-            if hwnds:
-                hwnd = hwnds[0]
-                ctypes.windll.user32.ShowWindow(hwnd, 9)   # SW_RESTORE
-                ctypes.windll.user32.SetForegroundWindow(hwnd)
+            if not hwnds:
+                self.logger.warning(
+                    "[cmd_btn] Console process is alive but its window "
+                    "wasn't found yet (may still be initializing) - skip, "
+                    "keep process running."
+                )
+                return
+
+            hwnd = hwnds[0]
+            user32.ShowWindow(hwnd, 9)   # SW_RESTORE
+            user32.SetForegroundWindow(hwnd)
         except Exception as e:
             self.logger.warning(f"[cmd_btn] Cannot focus console: {e}")
 

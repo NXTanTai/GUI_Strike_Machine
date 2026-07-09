@@ -206,15 +206,11 @@ class ConsoleWindow(QMainWindow):
             
     def closeEvent(self, event):
         self.hide()
-        self._stdin_running = False
-        try:
-            sys.stdin.close()
-        except Exception:
-            pass
-        event.accept()
+        event.ignore()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setQuitOnLastWindowClosed(False)
     win = ConsoleWindow()
     win.show()
     sys.exit(app.exec())

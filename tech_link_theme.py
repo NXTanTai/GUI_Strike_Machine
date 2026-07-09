@@ -10508,7 +10508,7 @@ class Ui_MainWindow(object):
         self.stacked_pressure_sv_a_11.setCurrentIndex(0)
         self.stacked_pressure_sv_c_11.setCurrentIndex(0)
         self.stacked_pressure_sv_b_11.setCurrentIndex(0)
-        self.stacked_cel_fah_press_a_1.setCurrentIndex(1)
+        self.stacked_cel_fah_press_a_1.setCurrentIndex(0)
         self.stacked_cel_fah_press_b_4.setCurrentIndex(0)
         self.stacked_cel_fah_press_c_4.setCurrentIndex(0)
         self.stacked_cel_fah_press_b_2.setCurrentIndex(0)
