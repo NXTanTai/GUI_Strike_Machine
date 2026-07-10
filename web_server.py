@@ -94,9 +94,19 @@ async def favicon():
     icon_path = resource_path(os.path.join("icons", "strike_machine.png"))
     return FileResponse(icon_path, media_type="image/png")
 
+@app.get("/Style_SM.css")
+async def style_css():
+    css_path = resource_path("Style_SM.css")
+    return FileResponse(css_path, media_type="text/css")
+
+@app.get("/Script_SM.js")
+async def script_js():
+    js_path = resource_path("Script_SM.js")
+    return FileResponse(js_path, media_type="application/javascript")
+
 @app.get("/")
 async def index():
-    html_path = resource_path("dashboard.html")
+    html_path = resource_path("Index_SM.html")
     try:
         with open(html_path, encoding="utf-8") as f:
             return HTMLResponse(
@@ -104,7 +114,7 @@ async def index():
             )
     except FileNotFoundError:
         return HTMLResponse(
-            f"<h2>dashboard.html not found at: {html_path}</h2>",
+            f"<h2>Index_SM.html not found at: {html_path}</h2>",
             status_code=404
         )
 

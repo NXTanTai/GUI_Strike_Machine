@@ -205,8 +205,9 @@ class ConsoleWindow(QMainWindow):
             self.text.ensureCursorVisible()
             
     def closeEvent(self, event):
-        self.hide()
-        event.ignore()
+        self._stdin_running = False   # dừng thread đọc stdin
+        event.accept()
+        QApplication.instance().quit()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

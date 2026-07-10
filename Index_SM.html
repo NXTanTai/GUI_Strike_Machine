@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>Strike Machine Dashboard</title>
+  <link rel="stylesheet" href="Style_SM.css">
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;align-items:center;gap:10px">
+    <img src="/favicon.png" width="32" height="32" style="border-radius:6px">
+    <div>
+      <h1>Strike Machine <span>- Live Monitor</span></h1>
+      <small>Author: Nguyen Xuan Tan Tai</small>
+    </div>
+  </div>
+  <div id="status">Connecting...</div>
+</div>
+
+<div class="stats-row">
+
+  <div class="stat-card">
+    <div class="stat-lbl">Total Cycles</div>
+    <div class="stat-val"><span id="st-cycles">—</span></div>
+    <div class="stat-sub" id="st-cycles-sub">A+B+C</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-lbl">Active alarms</div>
+    <div class="stat-val" id="st-alarm-count" style="color:#3fb950">0</div>
+    <div class="stat-sub" id="st-alarm-sub">No alarms</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-lbl">Avg oven temp</div>
+    <div class="stat-val"><span id="st-oven">—</span> <span class="stat-unit">°C</span></div>
+    <div class="stat-sub">SV <span id="st-oven-sv">—</span>°C</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-lbl">Last update</div>
+    <div class="stat-val" id="st-update">—</div>
+    <div class="stat-sub" id="st-update-sub">Waiting for data</div>
+  </div>
+
+</div>
+<div id="groups"></div>
+
+<details id="raw-wrap">
+  <summary>Raw PLC data</summary>
+  <div id="raw">Waiting for data...</div>
+</details>
+
+<script src="Script_SM.js"></script>
+</body>
+</html>

@@ -635,13 +635,13 @@ class StrikeMachine(QMainWindow):
         self.all_timer.append(self.data_training_ai_timer)
         self.data_training_ai_timer.setInterval(1000)
         self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.actual_data))
-        self.data_training_ai_timer.start()
+        # self.data_training_ai_timer.start()
 
         if self._plc_queue is not None:
             self.data_web_socket = QTimer(self)
             self.all_timer.append(self.data_web_socket)
             self.data_web_socket.setInterval(250)
-            self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.actual_data))
+            self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.all_data))
             self.data_web_socket.start()
 
         self.data_temp_timer = QTimer(self)
@@ -4252,8 +4252,8 @@ class StrikeMachine(QMainWindow):
             if self._is_console_running():
                 self._bring_console_to_front()
                 return
-                
-            self._cleanup_console()
+
+            self._cleanup_console()   # dọn sạch mọi thứ còn sót (idempotent)
 
             flag_path = os.path.join(tempfile.gettempdir(), "sm_force_quit.flag")
             if os.path.exists(flag_path):
@@ -4276,18 +4276,33 @@ class StrikeMachine(QMainWindow):
                 start_new_session=True
             )
 
-            self._pipe_handler = SafePipeLogHandler(self._console_process)
-            fmt = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-            self._pipe_handler.setFormatter(fmt)
-            self.logger.addHandler(self._pipe_handler)
+            self._attach_log_handler()   # gán log vào lần này
 
-            if not hasattr(self, '_force_quit_timer'):
-                self._force_quit_timer = QTimer(self)
-                self._force_quit_timer.timeout.connect(self._check_force_quit_flag)
-            self._force_quit_timer.start(500)
+            # Theo dõi process: nếu nó tự thoát (do bấm X, crash...) -> tự cleanup
+            if not hasattr(self, '_watch_timer'):
+                self._watch_timer = QTimer(self)
+                self._watch_timer.timeout.connect(self._watch_console_process)
+            self._watch_timer.start(500)
 
         except Exception as e:
             self.logger.error(f"[cmd_btn] Error: {e}")
+
+
+    def _attach_log_handler(self):
+        self._pipe_handler = SafePipeLogHandler(self._console_process)
+        fmt = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        self._pipe_handler.setFormatter(fmt)
+        self.logger.addHandler(self._pipe_handler)
+
+
+    def _watch_console_process(self):
+        """Poll định kỳ: nếu console đã tự thoát thì dọn dẹp để lần sau mở lại được."""
+        if self._is_console_running():
+            # vẫn còn kiểm tra flag force-quit-app song song
+            self._check_force_quit_flag()
+            return
+        self._cleanup_console()   # process đã chết -> gỡ handler, reset state
+
 
     def _is_console_running(self):
         if not hasattr(self, '_console_process') or self._console_process is None:
@@ -4297,9 +4312,10 @@ class StrikeMachine(QMainWindow):
         except:
             return False
 
+
     def _cleanup_console(self):
-        if hasattr(self, '_force_quit_timer') and self._force_quit_timer:
-            self._force_quit_timer.stop()
+        if hasattr(self, '_watch_timer') and self._watch_timer:
+            self._watch_timer.stop()
 
         if hasattr(self, '_pipe_handler') and self._pipe_handler:
             try:
@@ -4325,16 +4341,6 @@ class StrikeMachine(QMainWindow):
             from ctypes import wintypes
 
             user32 = ctypes.windll.user32
-
-            # QUAN TRỌNG (lý do warning "window wasn't found yet" luôn bắn):
-            # cmd.spec/SM_Console.spec build kiểu ONEFILE (runtime_tmpdir=None,
-            # không exclude_binaries/COLLECT). Trên Windows, bootloader onefile
-            # tự giải nén ra %TEMP% rồi SPAWN một tiến trình CON để chạy app
-            # thật, còn bootloader chỉ ngồi chờ. => PID mà subprocess.Popen()
-            # trả về (self._console_process.pid) là PID của bootloader, KHÔNG
-            # phải PID sở hữu cửa sổ thật -> lọc theo đúng 1 PID đó sẽ luôn
-            # không khớp. Phải gom cả PID bootloader lẫn toàn bộ tiến trình
-            # con/cháu của nó rồi mới lọc cửa sổ theo tập PID này.
             target_pids = {self._console_process.pid}
             try:
                 proc = psutil.Process(self._console_process.pid)
@@ -4347,10 +4353,6 @@ class StrikeMachine(QMainWindow):
                 wintypes.BOOL, wintypes.HWND, wintypes.LPARAM
             )
 
-            # GetWindowThreadProcessId là truy vấn nội bộ của window manager,
-            # KHÔNG gửi message sang thread đích -> không bao giờ block/timeout
-            # dù cửa sổ đích có đang bận/treo hay không (khác hẳn GetWindowTextW
-            # kiểu cũ vốn dùng SendMessage và có thể treo UI thread chính).
             hwnds = []
 
             def enum_callback(hwnd, _lparam):

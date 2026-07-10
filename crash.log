@@ -1,6 +1,11 @@
 Startup errors:
 Traceback (most recent call last):
-  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 172, in <module>
-    from PySide6.QtWidgets import QApplication, QMessageBox
-ModuleNotFoundError: No module named 'PySide6'
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main.py", line 174, in <module>
+    from source            import StrikeMachine
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source.py", line 45, in <module>
+    from console_window import ConsoleWindow
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\console_window.py", line 210
+    QApplication.instance().quit(
+                                ^
+SyntaxError: '(' was never closed
 
