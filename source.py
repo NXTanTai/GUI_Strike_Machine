@@ -20,6 +20,7 @@ import subprocess
 import tempfile
 import psutil
 import webbrowser
+import json
 from PySide6.QtCore import (
     Qt, QTimer, QObject, Slot,
     QTime, QSettings, QDateTime,
@@ -175,11 +176,12 @@ TEMP_SV_REVERSE_MIRROR = {
 }
 
 class SafePipeLogHandler(logging.Handler):
-    def __init__(self, process):
+    def __init__(self, process, stdin_lock=None):
         super().__init__()
         self._process = process
         self._queue = queue.Queue(maxsize=500)
         self._broken = False
+        self._stdin_lock = stdin_lock or threading.Lock()
         self._worker = threading.Thread(target=self._worker_thread, daemon=True)
         self._worker.start()
 
@@ -193,8 +195,9 @@ class SafePipeLogHandler(logging.Handler):
                     continue
 
                 msg = self.format(record) + "\n"
-                self._process.stdin.write(msg)
-                self._process.stdin.flush()
+                with self._stdin_lock:
+                    self._process.stdin.write(msg)
+                    self._process.stdin.flush()
             except queue.Empty:
                 continue
             except Exception:
@@ -1313,7 +1316,7 @@ class StrikeMachine(QMainWindow):
             (self.ui.db_file_path_edit,   None, None),
             (self.ui.plc_ip_address_edit, None, None),
             (self.ui.db_number_input,     None, None),
-            (self.ui.db_data_size_input,  None, None)
+            (self.ui.db_data_size_input,  None, None),
         ])
 
         for name, handler in spinbox_map.items():
@@ -1325,7 +1328,6 @@ class StrikeMachine(QMainWindow):
         self.ui.error_display._speed = 50
 
     def _get_transform(self, key: str):
-        """Trả về hàm transform tương ứng với key chuỗi."""
         if key == "sec_to_msec":
             return self.cal_sec_to_msec
         if key == "fah_to_cel":
@@ -1333,10 +1335,6 @@ class StrikeMachine(QMainWindow):
         return None
     
     def _make_plc_handler(self, widget_name: str, plc_key: str, transform_key):
-        """
-        Factory tạo handler cho 1 spinbox thông thường.
-        Trả về một closure ghi thẳng xuống PLC (có transform nếu cần).
-        """
         def handler(value):
             if not self.plc_writer_connection:
                 return
@@ -1346,10 +1344,6 @@ class StrikeMachine(QMainWindow):
         return handler
     
     def _make_temp_sv_handler(self, widget_name: str, plc_key: str, mirror_widget: str):
-        """
-        Factory đặc biệt cho pressure_sv_a/b/c_1 (Temperature Setting).
-        Ngoài việc ghi PLC, còn đồng bộ sang at_sv / bt_sv / ct_sv.
-        """
         def handler(value):
             # Ghi PLC
             if self.plc_writer_connection:
@@ -1364,11 +1358,6 @@ class StrikeMachine(QMainWindow):
         return handler
     
     def _make_mirror_sv_handler(self, widget_name: str, target_widget: str):
-        """
-        Factory cho at_sv / bt_sv / ct_sv.
-        Chỉ đồng bộ ngược sang pressure_sv_X_1 (không ghi PLC trực tiếp,
-        vì pressure_sv_X_1.valueChanged sẽ lo phần đó).
-        """
         def handler(value):
             target = getattr(self.ui, target_widget)
             target.setValue(value)   # trigger pressure_sv_X_1 handler → ghi PLC
@@ -1386,7 +1375,6 @@ class StrikeMachine(QMainWindow):
         Gọi hàm này 1 lần trong _setup_btn_signals() để đăng ký
         toàn bộ valueChanged handlers — thay thế ~40 hàm on_*_changed cũ.
         """
-        # ── Handlers thông thường (từ SPINBOX_PLC_MAP) ────────────────────────
         for widget_name, (plc_key, transform_key) in SPINBOX_PLC_MAP.items():
             spinbox = getattr(self.ui, widget_name)
             install_clear_on_focus(spinbox)
@@ -4253,7 +4241,7 @@ class StrikeMachine(QMainWindow):
                 self._bring_console_to_front()
                 return
 
-            self._cleanup_console()   # dọn sạch mọi thứ còn sót (idempotent)
+            self._cleanup_console()
 
             flag_path = os.path.join(tempfile.gettempdir(), "sm_force_quit.flag")
             if os.path.exists(flag_path):
@@ -4270,39 +4258,99 @@ class StrikeMachine(QMainWindow):
             self._console_process = subprocess.Popen(
                 cmd,
                 stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 text=True,
                 encoding="utf-8",
                 creationflags=creationflags,
                 start_new_session=True
             )
-
+            self._console_stdin_lock = threading.Lock()
             self._attach_log_handler()   # gán log vào lần này
+            self._start_console_query_reader()
 
-            # Theo dõi process: nếu nó tự thoát (do bấm X, crash...) -> tự cleanup
             if not hasattr(self, '_watch_timer'):
                 self._watch_timer = QTimer(self)
                 self._watch_timer.timeout.connect(self._watch_console_process)
             self._watch_timer.start(500)
 
         except Exception as e:
-            self.logger.error(f"[cmd_btn] Error: {e}")
-
+            self.logger.error(f"[cmd_btn] Error: {e}", exc_info=True)
 
     def _attach_log_handler(self):
-        self._pipe_handler = SafePipeLogHandler(self._console_process)
+        self._pipe_handler = SafePipeLogHandler(
+            self._console_process, stdin_lock=self._console_stdin_lock
+            )
         fmt = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         self._pipe_handler.setFormatter(fmt)
         self.logger.addHandler(self._pipe_handler)
 
+    def _start_console_query_reader(self):
+        proc = self._console_process
+
+        def _read_loop():
+            try:
+                if not proc.stdout:
+                    return
+                for raw_line in proc.stdout:
+                    line = raw_line.rstrip("\n")
+                    if not line:
+                        continue
+                    self._handle_console_query(line)
+            except Exception:
+                pass
+
+        threading.Thread(target=_read_loop, daemon=True).start()
+
+    def _handle_console_query(self, raw_line: str):
+        prefix = "QUERY:"
+        if not raw_line.startswith(prefix):
+            return
+            
+        cmd = raw_line[len(prefix):].strip().lower()
+
+        commands = {
+            "getplcip": self._console_query_plc_ip,
+        }
+
+        handler = commands.get(cmd)
+        if handler is None:
+            self.logger.warning(f"[console-query] Unknown command: '{cmd}'")
+            self._send_console_result(cmd, f"Unknown command: {cmd}")
+            return
+
+        try:
+            result = handler()
+            self._send_console_result(cmd, result)
+        except Exception as e:
+            error_msg = f"Error while handling '{cmd}': {e}"
+            self._send_console_result(cmd, error_msg)
+            self.logger.error(error_msg)
+
+    def _send_console_result(self, cmd: str, text: str, level: str = "INFO"):
+        if not hasattr(self, '_console_process') or self._console_process is None:
+            return
+        try:
+            payload = {
+                "cmd": cmd,
+                "text": str(text),
+                "level": level
+            }
+            self._console_process.stdin.write(f"RESULT:{json.dumps(payload, ensure_ascii=False)}\n")
+            self._console_process.stdin.flush()
+        except Exception as e:
+            self.logger.error(f"Failed to send result to console: {e}")
+
+    def _console_query_plc_ip(self):
+        db = self.db_dict if isinstance(self.db_dict, dict) else {}
+        ip = db.get("ip_plc", "N/A")
+        self._send_console_result("getplcip", ip, "INFO")
 
     def _watch_console_process(self):
-        """Poll định kỳ: nếu console đã tự thoát thì dọn dẹp để lần sau mở lại được."""
         if self._is_console_running():
-            # vẫn còn kiểm tra flag force-quit-app song song
             self._check_force_quit_flag()
             return
-        self._cleanup_console()   # process đã chết -> gỡ handler, reset state
-
+        self._cleanup_console()
 
     def _is_console_running(self):
         if not hasattr(self, '_console_process') or self._console_process is None:
@@ -4311,7 +4359,6 @@ class StrikeMachine(QMainWindow):
             return self._console_process.poll() is None
         except:
             return False
-
 
     def _cleanup_console(self):
         if hasattr(self, '_watch_timer') and self._watch_timer:
@@ -4400,20 +4447,17 @@ class StrikeMachine(QMainWindow):
         """
         errors = []
 
-        # 1. Check minimum columns (at least 5: Param | Group A | Group B | Group C | T0)
         if df.shape[1] < 5:
             return False, (
                 f"File is missing columns!\n"
             )
 
-        # 2. Check minimum rows (at least 15 rows)
         if df.shape[0] < 15:
             return False, (
                 f"File is missing data rows!\n"
                 f"Required at least 15 rows, current file only has {df.shape[0]} row(s)."
             )
 
-        # 3. Check parameter names in column A (rows 2–14)
         for i, expected_name in enumerate(EXPECTED_ROW_NAMES):
             row_idx = i + 2
             if row_idx >= df.shape[0]:
@@ -4425,32 +4469,26 @@ class StrikeMachine(QMainWindow):
                     f"• Row {row_idx + 1}: Parameter name mismatch."
                 )
 
-        # 4. Check numeric values for Group A / B / C columns (rows 2–14)
         group_cols = {"Group A": 1, "Group B": 2, "Group C": 3}
         for row_idx in range(2, min(15, df.shape[0])):
             for group_name, col_idx in group_cols.items():
                 cell = df.iloc[row_idx][col_idx]
                 if pd.isna(cell):
-                    # errors.append(f"• Row {row_idx + 1}, {group_name}: Cell is empty, a numeric value is required.")
                     continue
                 try:
                     float(str(cell).strip())
                 except ValueError:
-                    # errors.append(f"• Row {row_idx + 1}, {group_name}: Value '{cell}' is not a valid number.")
                     pass
 
-        # 5. Check T0 numeric values (column E, rows 9–12 only)
         for row_idx in range(9, 13):
             if row_idx >= df.shape[0]:
                 break
             cell = df.iloc[row_idx][4]
             if pd.isna(cell):
-                # errors.append(f"• Row {row_idx + 1}, T0: Cell is empty, a numeric value is required.")
                 continue
             try:
                 float(str(cell).strip())
             except ValueError:
-                # errors.append(f"• Row {row_idx + 1}, T0: Value '{cell}' is not a valid number.")
                 pass
 
         if errors:
@@ -4468,8 +4506,7 @@ class StrikeMachine(QMainWindow):
         if any(btn.isChecked() for btn in buttons):
             return
         try:
-            stk_mch_file = Path(self.stk_mch_folder)/ "Setting File" 
-            # print("Default path for data file:", stk_mch_file)s
+            stk_mch_file = Path(self.stk_mch_folder)/ "Setting File"
             file_str, _ = QFileDialog.getOpenFileName(
                 self,
                 "Select Group Data File",
@@ -4491,12 +4528,11 @@ class StrikeMachine(QMainWindow):
                 return
 
             self.ui.code_display.setText(str(df.iloc[0][0]).strip() if pd.notna(df.iloc[0][0]) else "")
-            for i in range(2, len(df)): # Đọc từ dòng thứ 3 đến dòng cuối cùng của DataFrame
+            for i in range(2, len(df)):
                 column = df.iloc[i]
                 name_raw = str(column[0]).strip() if pd.notna(column[0]) else ""
                 if name_raw == "" or name_raw.lower() == "nan":
                     break
-                # Cột B: Group A
                 try:
                     if i > 8:
                         value_a_raw = str(column[1]).strip()
@@ -4509,7 +4545,6 @@ class StrikeMachine(QMainWindow):
                 self.list_for_import_a[i-2].blockSignals(True)
                 self.list_for_import_a[i-2].setValue(value_a)   # type: ignore
                 
-                # Cột C: Group B
                 try:
                     if i > 8:
                         value_b_raw = str(column[2]).strip()
@@ -4522,7 +4557,6 @@ class StrikeMachine(QMainWindow):
                 self.list_for_import_b[i-2].blockSignals(True)
                 self.list_for_import_b[i-2].setValue(value_b)   # type: ignore
                 
-                # Cột D: Group C
                 try:
                     if i > 8:
                         value_c_raw = str(column[3]).strip()
@@ -4536,7 +4570,6 @@ class StrikeMachine(QMainWindow):
                 self.list_for_import_c[i-2].setValue(value_c)   # type: ignore
 
                 if i >= 9  and i <=12:
-                    # Cột E: Group T0
                     try:
                         value_t0_raw = str(column[4]).strip()
                         value_t0 = self.for_display_temp(float(value_t0_raw))

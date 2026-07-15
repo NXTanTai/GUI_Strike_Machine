@@ -3,11 +3,17 @@ import os
 import socket
 import tempfile
 import threading
+import ctypes
+import json
 from PySide6.QtCore import Qt, Slot, QLocale
 from PySide6.QtGui import QColor, QTextCharFormat, QTextCursor, QFont, QIcon
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget,
                                 QVBoxLayout, QHBoxLayout, QTextEdit,
                                 QLabel, QLineEdit)
+
+WM_SM_SHOW_CONSOLE = ctypes.windll.user32.RegisterWindowMessageW(
+    "SM_StrikeMachine_ShowConsoleRequest"
+)
 
 def resource_path(relative_path):
     try:
@@ -125,12 +131,46 @@ class ConsoleWindow(QMainWindow):
 
     @Slot(str)
     def _on_stdin_line(self, line: str):
+        if line.startswith("RESULT:"):
+            self._on_query_result(line[len("RESULT:"):])
+            return
+
         level = "INFO"
         if " - WARNING - "   in line: level = "WARNING"
         elif " - ERROR - "   in line: level = "ERROR"
         elif " - CRITICAL - " in line: level = "CRITICAL"
         elif " - DEBUG - "   in line: level = "DEBUG"
         self.append_log(line, level)
+
+    @Slot(str)
+    def _on_query_result(self, payload: str):
+        try:
+            data = json.loads(payload)
+            cmd = data.get("cmd", "").lower().strip()
+            text = data.get("text", "")
+            level = data.get("level", "INFO")
+
+            if cmd == "getplcip":
+                ip = text if isinstance(text, str) else "N/A"
+                self.append_log(
+                    f"  IPv4 Address. . . : {ip}\n"
+                    "  Subnet Mask . . . : 255.255.255.0\n",
+                    level
+                )
+
+            elif cmd == "status":
+                self.append_log(f"System Status: {text}", level)
+
+            else:
+                if text:
+                    self.append_log(text, level)
+                else:
+                    self.append_log(payload, "INFO")
+
+        except json.JSONDecodeError:
+            self.append_log(payload, "INFO")
+        except Exception as e:
+            self.append_log(f"[Console Error] Failed to process result: {e}", "ERROR")
 
     def _on_command(self):
         cmd = self._input.text().strip()
@@ -152,6 +192,12 @@ class ConsoleWindow(QMainWindow):
 
         self.append_log(f"C:\\SM_PRD> {cmd}", "INFO")
 
+        try:
+            self._dispatch_command(cmd)
+        except Exception as e:
+            self.append_log(f"[ERROR] Command '{cmd}' failed: {e}", "ERROR")
+
+    def _dispatch_command(self, cmd: str):
         if cmd.lower() == "cls":
             self.text.clear()
         elif cmd.lower() == "help":
@@ -159,7 +205,8 @@ class ConsoleWindow(QMainWindow):
                 "  cls                - Clear screen\n"
                 "  help               - Show commands\n"
                 "  localsystem        - Show system info\n"
-                "  ipconfig           - Show network info\n",
+                "  ipconfig           - Show network info\n"
+                "  getplcip           - Show plc network info\n",
                 "DEBUG"
             )
         elif cmd.lower() == "localsystem":
@@ -184,11 +231,25 @@ class ConsoleWindow(QMainWindow):
                 f"  Default Gateway . : {'.'.join(ip.split('.')[:3])}.1",
                 "INFO"
             )
+        elif cmd.lower() == "getplcip":
+            self._request_data_from_main("getplcip")
         elif cmd.lower() == "force quitting app":
             self.append_log("Are you sure you want to force quit? (Y/N)", "WARNING")
             self._awaiting_confirm = True
         else:
-            self.append_log(f"'{cmd}' is not recognized as a command. ", "WARNING")
+            self._request_data_from_main(cmd)
+
+    def _request_data_from_main(self, cmd: str):
+        if sys.stdout is None:
+            self.append_log(
+                "[ERROR] Cannot send query: stdout not connected to main ",
+                "ERROR"
+            )
+            return
+        try:
+            print(f"QUERY:{cmd}", flush=True)
+        except Exception as e:
+            self.append_log(f"[ERROR] Failed to send query '{cmd}': {e}", "ERROR")
 
     def append_log(self, msg: str, level: str):
         fmt = QTextCharFormat()
@@ -204,10 +265,27 @@ class ConsoleWindow(QMainWindow):
         if was_at_bottom:
             self.text.ensureCursorVisible()
             
+    def nativeEvent(self, eventType, message):
+        try:
+            from ctypes import wintypes
+            msg = wintypes.MSG.from_address(int(message))
+            if msg.message == WM_SM_SHOW_CONSOLE:
+                self._show_and_raise()
+                return True, 0
+        except Exception:
+            pass
+        return False, 0
+
+    def _show_and_raise(self):
+        if self.isMinimized():
+            self.setWindowState(self.windowState() & ~Qt.WindowState.WindowMinimized)
+        self.showNormal()
+        self.raise_()
+        self.activateWindow()
+
     def closeEvent(self, event):
-        self._stdin_running = False   # dừng thread đọc stdin
         event.accept()
-        QApplication.instance().quit()
+        os._exit(0)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

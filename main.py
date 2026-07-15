@@ -145,10 +145,10 @@ if __name__ == '__main__':
     if WEB_INIT:
         from web_server import run_web_server
 
-        plc_queue = multiprocessing.Queue(maxsize=10)
+        web_queue = multiprocessing.Queue(maxsize=10)
         web_process = multiprocessing.Process(
             target=run_web_server,
-            args=(plc_queue,),
+            args=(web_queue,),
             daemon=True
         )
         web_process.start()
@@ -214,7 +214,7 @@ if __name__ == '__main__':
                 on_hide_loading=_pause_loading,
                 on_show_loading=_resume_loading,
                 info_system=check_full_language_info,  # type: ignore
-                plc_queue=plc_queue  # type: ignore
+                plc_queue=web_queue  # type: ignore
             )
         else:
             window = StrikeMachine(
