@@ -94,12 +94,12 @@ function updateCard(card, pv, sv) {
     return false;  // không tính vào alarmCount
   }
 
-  const threshold = sv * 0.10; // Ngưỡng chênh lệch
+  const threshold = sv * 0.25; // Ngưỡng chênh lệch
   const diff      = pv - sv;  // Giá trị chênh lệch
   const absDiff   = Math.abs(diff);
   // const isOke     =
   const isAlarm   = absDiff > threshold; // Nếu giá trị vượt ra khoảng ngưỡng cho phép thì sẽ hiển thị đỏ còn không thì màu xanh
-  const isWarn    = absDiff > threshold * 0.6 && !isAlarm; // Nếu giá trị vượt ra khoảng ngưỡng cho phép và trong vùng cảnh báo thì sẽ hiển thị màu vàng
+  const isWarn    = absDiff > threshold * 0.5 && !isAlarm; // Nếu giá trị vượt ra khoảng ngưỡng cho phép và trong vùng cảnh báo thì sẽ hiển thị màu vàng
   document.getElementById(card._pvId).textContent = fmt(pv);
   document.getElementById(card._svId).textContent = fmt(sv);
 
@@ -185,7 +185,7 @@ function connect() {
   };
 
   ws.onclose = () => {
-    statusEl.textContent = 'Disconnected – retrying...';
+    statusEl.textContent = 'Disconnected - retrying...';
     statusEl.className   = '';
     setTimeout(connect, 3000);
   };
