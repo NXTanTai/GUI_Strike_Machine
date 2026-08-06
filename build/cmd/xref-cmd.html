@@ -27,6 +27,8 @@ imports:
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#collections">collections</a>
  &#8226;   <a href="#copyreg">copyreg</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
+ &#8226;   <a href="#ctypes.wintypes">ctypes.wintypes</a>
  &#8226;   <a href="#encodings">encodings</a>
  &#8226;   <a href="#encodings._win_cp_codecs">encodings._win_cp_codecs</a>
  &#8226;   <a href="#encodings.aliases">encodings.aliases</a>
@@ -155,6 +157,7 @@ imports:
  &#8226;   <a href="#genericpath">genericpath</a>
  &#8226;   <a href="#heapq">heapq</a>
  &#8226;   <a href="#io">io</a>
+ &#8226;   <a href="#json">json</a>
  &#8226;   <a href="#keyword">keyword</a>
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
@@ -441,6 +444,26 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="_aix_support"></a>
+  <a target="code" href="///C:/Users/automation02/AppData/Local/Python/pythoncore-3.14-64/Lib/_aix_support.py" type="text/plain"><tt>_aix_support</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#contextlib">contextlib</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#subprocess">subprocess</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#sysconfig">sysconfig</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="_ast"></a>
   <tt>_ast</tt> <span class="moduletype"><i>(builtin module)</i></span>  <div class="import">
 imported by:
@@ -681,6 +704,22 @@ imported by:
   <tt>_csv</tt> <span class="moduletype"><i>(builtin module)</i></span>  <div class="import">
 imported by:
     <a href="#csv">csv</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="_ctypes"></a>
+  <tt>_ctypes</tt> <span class="moduletype"><tt>C:\Users\automation02\AppData\Local\Python\pythoncore-3.14-64\DLLs\_ctypes.pyd</tt></span>  <div class="import">
+imports:
+    <a href="#ctypes._layout">ctypes._layout</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#ctypes">ctypes</a>
+ &#8226;   <a href="#ctypes._layout">ctypes._layout</a>
 
   </div>
 
@@ -1241,6 +1280,16 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="_sysconfig"></a>
+  <tt>_sysconfig</tt> <span class="moduletype"><i>(builtin module)</i></span>  <div class="import">
+imported by:
+    <a href="#sysconfig">sysconfig</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="_thread"></a>
   <tt>_thread</tt> <span class="moduletype"><i>(builtin module)</i></span>  <div class="import">
 imported by:
@@ -1365,6 +1414,7 @@ imported by:
  &#8226;   <a href="#pathlib._os">pathlib._os</a>
  &#8226;   <a href="#shutil">shutil</a>
  &#8226;   <a href="#subprocess">subprocess</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
 
   </div>
 
@@ -1992,7 +2042,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#_ast_unparse">_ast_unparse</a>
+    <a href="#_aix_support">_aix_support</a>
+ &#8226;   <a href="#_ast_unparse">_ast_unparse</a>
  &#8226;   <a href="#_threading_local">_threading_local</a>
  &#8226;   <a href="#glob">glob</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
@@ -2089,6 +2140,87 @@ imports:
   <div class="import">
 imported by:
     <a href="#importlib.metadata">importlib.metadata</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="ctypes"></a>
+  <a target="code" href="///C:/Users/automation02/AppData/Local/Python/pythoncore-3.14-64/Lib/ctypes/__init__.py" type="text/plain"><tt>ctypes</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#_ctypes">_ctypes</a>
+ &#8226;   <a href="#ctypes._endian">ctypes._endian</a>
+ &#8226;   <a href="#ctypes.wintypes">ctypes.wintypes</a>
+ &#8226;   <a href="#nt">nt</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#struct">struct</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
+ &#8226;   <a href="#types">types</a>
+ &#8226;   <a href="#warnings">warnings</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#console_window.py">console_window.py</a>
+ &#8226;   <a href="#ctypes._endian">ctypes._endian</a>
+ &#8226;   <a href="#ctypes._layout">ctypes._layout</a>
+ &#8226;   <a href="#ctypes.wintypes">ctypes.wintypes</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="ctypes._endian"></a>
+  <a target="code" href="///C:/Users/automation02/AppData/Local/Python/pythoncore-3.14-64/Lib/ctypes/_endian.py" type="text/plain"><tt>ctypes._endian</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ctypes">ctypes</a>
+ &#8226;   <a href="#sys">sys</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#ctypes">ctypes</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="ctypes._layout"></a>
+  <a target="code" href="///C:/Users/automation02/AppData/Local/Python/pythoncore-3.14-64/Lib/ctypes/_layout.py" type="text/plain"><tt>ctypes._layout</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#_ctypes">_ctypes</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#warnings">warnings</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#_ctypes">_ctypes</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="ctypes.wintypes"></a>
+  <a target="code" href="///C:/Users/automation02/AppData/Local/Python/pythoncore-3.14-64/Lib/ctypes/wintypes.py" type="text/plain"><tt>ctypes.wintypes</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#ctypes">ctypes</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#console_window.py">console_window.py</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
 
   </div>
 
@@ -5674,6 +5806,7 @@ imported by:
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
  &#8226;   <a href="#importlib.util">importlib.util</a>
  &#8226;   <a href="#inspect">inspect</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
 
   </div>
 
@@ -5789,6 +5922,7 @@ imported by:
  &#8226;   <a href="#importlib.abc">importlib.abc</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#py_compile">py_compile</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
 
   </div>
 
@@ -6154,6 +6288,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#py_compile">py_compile</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
  &#8226;   <a href="#zipfile">zipfile</a>
 
   </div>
@@ -6323,7 +6458,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#importlib.metadata">importlib.metadata</a>
+    <a href="#console_window.py">console_window.py</a>
+ &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#json.decoder">json.decoder</a>
  &#8226;   <a href="#json.encoder">json.encoder</a>
  &#8226;   <a href="#json.scanner">json.scanner</a>
@@ -6595,6 +6731,7 @@ imported by:
   <tt>nt</tt> <span class="moduletype"><i>(builtin module)</i></span>  <div class="import">
 imported by:
     <a href="#_colorize">_colorize</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
  &#8226;   <a href="#importlib._bootstrap_external">importlib._bootstrap_external</a>
  &#8226;   <a href="#ntpath">ntpath</a>
  &#8226;   <a href="#os">os</a>
@@ -6723,6 +6860,7 @@ imported by:
  &#8226;   <a href="#PySide6.QtGui">PySide6.QtGui</a>
  &#8226;   <a href="#PySide6.QtNetwork">PySide6.QtNetwork</a>
  &#8226;   <a href="#PySide6.QtWidgets">PySide6.QtWidgets</a>
+ &#8226;   <a href="#_aix_support">_aix_support</a>
  &#8226;   <a href="#_colorize">_colorize</a>
  &#8226;   <a href="#_pyi_rth_utils">_pyi_rth_utils</a>
  &#8226;   <a href="#_pyi_rth_utils.qt">_pyi_rth_utils.qt</a>
@@ -6732,6 +6870,7 @@ imported by:
  &#8226;   <a href="#compression.zstd._zstdfile">compression.zstd._zstdfile</a>
  &#8226;   <a href="#console_window.py">console_window.py</a>
  &#8226;   <a href="#contextlib">contextlib</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
  &#8226;   <a href="#email.utils">email.utils</a>
  &#8226;   <a href="#fnmatch">fnmatch</a>
  &#8226;   <a href="#functools">functools</a>
@@ -6766,6 +6905,7 @@ imported by:
  &#8226;   <a href="#socket">socket</a>
  &#8226;   <a href="#ssl">ssl</a>
  &#8226;   <a href="#subprocess">subprocess</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#tempfile">tempfile</a>
  &#8226;   <a href="#threading">threading</a>
@@ -6790,6 +6930,7 @@ imports:
 imported by:
     <a href="#os">os</a>
  &#8226;   <a href="#py_compile">py_compile</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
  &#8226;   <a href="#tracemalloc">tracemalloc</a>
 
   </div>
@@ -7119,6 +7260,7 @@ imported by:
  &#8226;   <a href="#sre_constants">sre_constants</a>
  &#8226;   <a href="#sre_parse">sre_parse</a>
  &#8226;   <a href="#string">string</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#textwrap">textwrap</a>
  &#8226;   <a href="#tokenize">tokenize</a>
@@ -7612,6 +7754,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#base64">base64</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
  &#8226;   <a href="#gettext">gettext</a>
  &#8226;   <a href="#gzip">gzip</a>
  &#8226;   <a href="#pickle">pickle</a>
@@ -7652,7 +7795,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#os">os</a>
+    <a href="#_aix_support">_aix_support</a>
+ &#8226;   <a href="#os">os</a>
 
   </div>
 
@@ -7663,6 +7807,7 @@ imported by:
   <tt>sys</tt> <span class="moduletype"><i>(builtin module)</i></span>  <div class="import">
 imported by:
     <a href="#PySide6">PySide6</a>
+ &#8226;   <a href="#_aix_support">_aix_support</a>
  &#8226;   <a href="#_ast_unparse">_ast_unparse</a>
  &#8226;   <a href="#_collections_abc">_collections_abc</a>
  &#8226;   <a href="#_colorize">_colorize</a>
@@ -7680,6 +7825,9 @@ imported by:
  &#8226;   <a href="#compression._common._streams">compression._common._streams</a>
  &#8226;   <a href="#console_window.py">console_window.py</a>
  &#8226;   <a href="#contextlib">contextlib</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
+ &#8226;   <a href="#ctypes._endian">ctypes._endian</a>
+ &#8226;   <a href="#ctypes._layout">ctypes._layout</a>
  &#8226;   <a href="#dataclasses">dataclasses</a>
  &#8226;   <a href="#decimal">decimal</a>
  &#8226;   <a href="#dis">dis</a>
@@ -7729,6 +7877,7 @@ imported by:
  &#8226;   <a href="#ssl">ssl</a>
  &#8226;   <a href="#statistics">statistics</a>
  &#8226;   <a href="#subprocess">subprocess</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#tempfile">tempfile</a>
  &#8226;   <a href="#threading">threading</a>
@@ -7741,6 +7890,34 @@ imported by:
  &#8226;   <a href="#weakref">weakref</a>
  &#8226;   <a href="#zipfile">zipfile</a>
  &#8226;   <a href="#zipfile._path">zipfile._path</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="sysconfig"></a>
+  <a target="code" href="///C:/Users/automation02/AppData/Local/Python/pythoncore-3.14-64/Lib/sysconfig/__init__.py" type="text/plain"><tt>sysconfig</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#_aix_support">_aix_support</a>
+ &#8226;   <a href="#_sysconfig">_sysconfig</a>
+ &#8226;   <a href="#_winapi">_winapi</a>
+ &#8226;   <a href="#importlib">importlib</a>
+ &#8226;   <a href="#importlib.machinery">importlib.machinery</a>
+ &#8226;   <a href="#importlib.util">importlib.util</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#os.path">os.path</a>
+ &#8226;   <a href="#re">re</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#threading">threading</a>
+ &#8226;   <a href="#warnings">warnings</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#_aix_support">_aix_support</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
 
   </div>
 
@@ -7858,6 +8035,7 @@ imported by:
  &#8226;   <a href="#importlib.util">importlib.util</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#subprocess">subprocess</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
  &#8226;   <a href="#zipfile">zipfile</a>
 
   </div>
@@ -8017,6 +8195,7 @@ imported by:
  &#8226;   <a href="#contextlib">contextlib</a>
  &#8226;   <a href="#copy">copy</a>
  &#8226;   <a href="#csv">csv</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
  &#8226;   <a href="#dataclasses">dataclasses</a>
  &#8226;   <a href="#difflib">difflib</a>
  &#8226;   <a href="#dis">dis</a>
@@ -8243,6 +8422,8 @@ imported by:
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#codeop">codeop</a>
  &#8226;   <a href="#console_window.py">console_window.py</a>
+ &#8226;   <a href="#ctypes">ctypes</a>
+ &#8226;   <a href="#ctypes._layout">ctypes._layout</a>
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#gettext">gettext</a>
  &#8226;   <a href="#glob">glob</a>
@@ -8269,6 +8450,7 @@ imported by:
  &#8226;   <a href="#sre_parse">sre_parse</a>
  &#8226;   <a href="#ssl">ssl</a>
  &#8226;   <a href="#subprocess">subprocess</a>
+ &#8226;   <a href="#sysconfig">sysconfig</a>
  &#8226;   <a href="#tarfile">tarfile</a>
  &#8226;   <a href="#tempfile">tempfile</a>
  &#8226;   <a href="#threading">threading</a>

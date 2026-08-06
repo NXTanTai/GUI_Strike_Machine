@@ -296,14 +296,17 @@ class StrikeMachine(QMainWindow):
         self.ai_data_folder = Path(self.stk_mch_folder) / "AI_Training_Data"
         self.ai_data_folder.mkdir(parents=True, exist_ok=True)
         
-        self.fast_buffer = []      # Buffer cho tag nhanh (áp suất, ...)
-        self.slow_buffer = []      # Buffer cho tag chậm
+        # self.fast_buffer = []      # Buffer cho tag nhanh (áp suất, ...)
+        # self.slow_buffer = []      # Buffer cho tag chậm
         
-        self.fast_buffer_size = 30    # ~3 giây nếu 100ms
-        self.slow_buffer_size = 10    # ~10 giây nếu 1000ms
+        # self.fast_buffer_size = 30    # ~3 giây nếu 100ms
+        # self.slow_buffer_size = 10    # ~10 giây nếu 1000ms
+
+        self.data_buffer = []
+        self.buffer_size = 10
         
         self.logger.info(f"AI Training folder: {self.ai_data_folder}")
-        self.logger.info("Fast sampling (100ms) enabled for pressure & critical tags")
+        # self.logger.info("Fast sampling (100ms) enabled for pressure & critical tags")
 
     def showEvent(self, event):# type: ignore
         super().showEvent(event)
@@ -637,8 +640,8 @@ class StrikeMachine(QMainWindow):
         self.data_training_ai_timer = QTimer(self)
         self.all_timer.append(self.data_training_ai_timer)
         self.data_training_ai_timer.setInterval(1000)
-        self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.actual_data))
-        # self.data_training_ai_timer.start()
+        self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.all_data))
+        self.data_training_ai_timer.start()
 
         if self._plc_queue is not None:
             self.data_web_socket = QTimer(self)
@@ -652,7 +655,6 @@ class StrikeMachine(QMainWindow):
         self.data_temp_timer.setInterval(500)
         self.data_temp_timer.timeout.connect(lambda: self._data_temp(self.actual_data))
         
-
         self.data_pressure_timer = QTimer(self)
         self.all_timer.append(self.data_pressure_timer)
         self.data_pressure_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
@@ -2443,7 +2445,7 @@ class StrikeMachine(QMainWindow):
             db_size: Optional[int] = None, 
             offsets: int = 198,
             poll_ms: int = 100,
-            logger_parent: str = None
+            logger_parent = None,
         ):
         try:
             if db_number is None:
@@ -2536,7 +2538,7 @@ class StrikeMachine(QMainWindow):
 
     def _setup_read_error_plc_thread(
             self, 
-            name_module: str    = "READ 3",
+            name_module: str = "READ 3",
             ip: str = "172.16.100.100", 
             db_number: Optional[int] = None, 
             db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
@@ -2677,62 +2679,36 @@ class StrikeMachine(QMainWindow):
             self.logger.error("[Main]-[_data_temp]:PLC Data Processing Error: %s", e)
 
     def _data_AI(self, data: dict):
-        """Ghi dữ liệu AI - Fast chỉ cho Current_Pressure"""
         if not data or not isinstance(data, dict):
             return
 
         try:
             self._ai_data_batch_counter += 1
 
-            name = "Unknown"
-            if hasattr(self.ui, 'code_display') and self.ui.code_display is not None:
-                try:
-                    name = self.ui.code_display.text().strip()
-                except:
-                    pass
-
-            base_record = {
-                "timestamp": time.time(),
+            record = {
                 "datetime": time.strftime("%Y-%m-%d %H:%M:%S"),
                 "No.": str(self._ai_data_batch_counter),
-                "Name.": name,
+                "Connection.": str(self.plc_read_connection),
             }
+            record.update(data)
 
-            # Tách fast & slow
-            fast_record = base_record.copy()
-            slow_record = base_record.copy()
+            self.data_buffer.append(record)
 
-            for key, value in data.items():
-                if 'Current_Pressure' in key:
-                    fast_record[key] = value
-                else:
-                    slow_record[key] = value
-
-            # Thêm vào buffer
-            self.fast_buffer.append(fast_record)
-            self.slow_buffer.append(slow_record)
-
-            # Flush fast buffer
-            if len(self.fast_buffer) >= self.fast_buffer_size:
-                self._flush_buffer(self.fast_buffer, "fast")
-                self.fast_buffer.clear()
-
-            # Flush slow buffer
-            if len(self.slow_buffer) >= self.slow_buffer_size:
-                self._flush_buffer(self.slow_buffer, "slow")
-                self.slow_buffer.clear()
+            if len(self.data_buffer) >= self.buffer_size:
+                self._flush_buffer(self.data_buffer)
+                self.data_buffer.clear()
 
         except Exception as e:
             if self.logger:
                 self.logger.error(f"[AI Training] Error: {e}")
 
-    def _flush_buffer(self, buffer: list, mode: str = "fast"):
+    def _flush_buffer(self, buffer: list):
         if not buffer:
             return
-            
+
         df = pd.DataFrame(buffer)
         date_str = time.strftime("%Y%m%d")
-        file_path = self.ai_data_folder / f"ai_{mode}_{date_str}.csv"
+        file_path = self.ai_data_folder / f"ai_{date_str}.csv"
 
         try:
             if file_path.exists():
@@ -2742,15 +2718,10 @@ class StrikeMachine(QMainWindow):
                 # Tạo file mới
                 df.to_csv(file_path, index=False, encoding='utf-8')
 
-            # self.logger.info(f"[AI {mode.upper()}] Saved {len(buffer)} records → {file_path.name}")
-
         except Exception as e:
-            self.logger.error(f"Flush {mode} error: {e}")
+            self.logger.error(f"Flush error: {e}")
             # Clear buffer để tránh tràn bộ nhớ
-            if mode == "fast":
-                self.fast_buffer.clear()
-            else:
-                self.slow_buffer.clear()
+            self.data_buffer.clear()
 
     def _data_pressure(self, data: dict):
         # def _t(label, fn):

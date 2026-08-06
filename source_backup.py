@@ -2363,155 +2363,6 @@ class StrikeMachine(QMainWindow):
                 content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
             ltmessage.error(self, title, content, self._current_lang) # type: ignore
 
-        # time.sleep(0.1)
-        # success = self._setup_read_plc_thread(
-        #         name_module="ALL DATA",
-        #         ip=self.db_dict["ip_plc"],
-        #         db_number=self.db_dict["db_name"],
-        #         db_layout=self.db_dict["DB_LAYOUT"],
-        #         db_size=(self.db_dict["data_size"] + self.db_dict["input_size"] + self.db_dict["error_size"]),
-        #         offsets=self.db_dict["offsets_input"],
-        #         poll_ms=self.db_dict["data_read"],
-        #         logger_parent=self.stk_mch_folder
-        # )
-        # if not success:
-        #     if self._current_lang == "en":
-        #         title = "Error"
-        #         content = "Failed to connect to PLC! Try again later."
-        #     elif self._current_lang == "cn":
-        #         title = "错误"
-        #         content = "无法连接 PLC！请稍后再试."
-        #     elif self._current_lang == "vn":
-        #         title = "Lỗi"
-        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
-        # success = self._setup_read_plc_thread(
-        #     name_module="READ_MULTI",
-        #     ip=self.db_dict["ip_plc"],
-        #     db_number=self.db_dict["db_name"],
-        #     db_layout=self.db_dict["DB_LAYOUT"],
-        #     regions=[("INPUT", 0, 198), ("ACTUAL", 198, 138), ("STRING", 336, 50)],
-        #     poll_ms=333,
-        #     logger_parent=self.stk_mch_folder
-        # )
-        # if not success:
-        #     if self._current_lang == "en":
-        #         title = "Error"
-        #         content = "Failed to connect to PLC! Try again later."
-        #     elif self._current_lang == "cn":
-        #         title = "错误"
-        #         content = "无法连接 PLC！请稍后再试."
-        #     elif self._current_lang == "vn":
-        #         title = "Lỗi"
-        #         content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-        #     ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-    # def setup_simulate_threads(self):
-    #     try:
-    #         simulate_thread = DataSimulator()
-    #         simulate_thread.db_data_convert.connect(self._data_group_filter)
-    #         simulate_thread.start()
-    #         self.thread_dict["data_simulator"] = simulate_thread
-
-    #         if not simulate_thread.isRunning():
-    #             raise Exception("DataSimulator thread failed to start")
-
-    #         time.sleep(0.1)
-
-    #     except Exception as e:
-    #         return 
-        
-    # def _setup_read_plc_thread(
-        #     self,
-        #     name_module: str,
-        #     ip: str = "172.16.100.100",
-        #     db_number: Optional[int] = None,
-        #     db_layout: Optional[list[tuple[str, str, int, Any]]] = None,
-        #     regions: Optional[list[tuple[str, int, int]]] = None,
-        #     poll_ms: int = 250,
-        #     logger_parent = None,
-        # ) -> bool:
-        # """
-        # Khởi tạo PLCRead worker + QThread cho một Module.
-        
-        # Args:
-        #     name_module: Tên module (ví dụ: "ACTUAL", "INPUT", "ROBOT", ...)
-        #     db_number, db_layout, regions: Thông tin cấu hình DB
-        # """
-        # try:
-        #     if not name_module:
-        #         raise ValueError("name_module is required")
-        #     if db_number is None:
-        #         raise ValueError(f"DB number is not defined for module '{name_module}'")
-        #     if db_layout is None:
-        #         raise ValueError(f"DB layout is not defined for module '{name_module}'")
-
-        #     # Tự động tạo region bao trọn nếu người gọi không truyền
-        #     if regions is None:
-        #         # Giả sử bạn có self.offsets và self.db_size theo module
-        #         offsets = getattr(self, 'offsets', {}).get(name_module, 0)
-        #         db_size = getattr(self, 'db_size', {}).get(name_module, 0) or 1024
-                
-        #         if db_size <= 0:
-        #             raise ValueError(f"db_size chưa được định nghĩa cho module '{name_module}'")
-                
-        #         regions = [(name_module, offsets, db_size)]
-
-        #     # Kiểm tra tính hợp lệ của regions
-        #     total_region_size = sum(size for (_, _, size) in regions)
-        #     max_db_size = getattr(self, 'db_size', {}).get(name_module, 8192)
-            
-        #     if total_region_size > max_db_size:
-        #         raise ValueError(
-        #             f"Tổng size các region ({total_region_size}) vượt quá "
-        #             f"db_size tối đa ({max_db_size}) cho module '{name_module}'."
-        #         )
-
-        #     # ── Tạo Thread + Worker ─────────────────────────────────────
-        #     self.plc_read_thread = QThread()
-        #     self.plc_read_worker = PLCReader(
-        #         ip=ip,
-        #         rack=0,
-        #         slot=1,
-        #         db_number=db_number,
-        #         db_layout=db_layout,
-        #         regions=regions,
-        #         poll_ms=poll_ms,
-        #         logger_parent=logger_parent,
-        #         # Các tham số optimizer
-        #         use_optimizer=True,
-        #         multi_read_max_gap=5,
-        #     )
-
-        #     self.plc_read_worker.moveToThread(self.plc_read_thread)
-
-        #     # Kết nối signals
-        #     self.plc_read_thread.started.connect(self.plc_read_worker.run)
-
-        #     self.plc_read_worker.data_ready.connect(self._data_get)
-        #     self.plc_read_worker.init_data.connect(self._set_init_data)
-        #     self.plc_read_worker.connected.connect(self._read_status_plc)
-        #     self.plc_read_worker.error.connect(self._on_plc_read_error)
-        #     self.plc_read_worker.disconnected.connect(self._on_plc_read_disconnected)
-        #     self.plc_read_worker.elapsed_time.connect(self._performance_communication)
-        #     self.plc_read_worker.finished.connect(self.plc_read_thread.quit)
-        #     self.plc_read_worker.finished.connect(self.plc_read_worker.deleteLater)
-        #     self.plc_read_thread.finished.connect(self.plc_read_thread.deleteLater)
-
-        #     if not hasattr(self, "worker_dict"):
-        #         self.worker_dict: dict[str, Any] = {}
-
-        #     self.worker_dict["plc_read_worker"] = self.plc_read_worker
-
-        #     self.plc_read_thread.start()
-        #     self.logger.info(f"[{name_module}] PLC Read thread started successfully")
-
-        #     return True
-
-        # except Exception as e:
-        #     self.logger.exception(f"[{name_module}] PLC Reader setup failed")
-        #     return False
-    
     def _setup_read_plc_thread(
             self, 
             name_module: str    = "READ 1",
@@ -2592,7 +2443,7 @@ class StrikeMachine(QMainWindow):
             db_size: Optional[int] = None, 
             offsets: int = 198,
             poll_ms: int = 100,
-            logger_parent: str = None
+            logger_parent = None,
         ):
         try:
             if db_number is None:
@@ -2685,7 +2536,7 @@ class StrikeMachine(QMainWindow):
 
     def _setup_read_error_plc_thread(
             self, 
-            name_module: str    = "READ 3",
+            name_module: str = "READ 3",
             ip: str = "172.16.100.100", 
             db_number: Optional[int] = None, 
             db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
@@ -5074,7 +4925,7 @@ class StrikeMachine(QMainWindow):
                 content = "是否前往保存文件夹？"
             elif self._current_lang == "vn":
                 title = "Xuất dữ liệu thành công"
-                content = "Chuyển đến thư mục lưu trữ？"
+                content = "Chuyển đến thư mục lưu trữ?"
             reply = ltmessage.custom(
                 self, title, content, # type: ignore
                 msg_type="success", lang=self._current_lang
@@ -5088,8 +4939,6 @@ class StrikeMachine(QMainWindow):
 
     def resizeEvent(self, event): # type: ignore
         super().resizeEvent(event)
-        # self._resize_table_columns(self.ui.list_history)
-        # self._resize_table_columns(self.ui.list_history_2)
         if hasattr(self, '_maximized_chart_idx') and self._maximized_chart_idx == -1:
             QTimer.singleShot(50, self._save_grid_rects)
             
@@ -5152,4 +5001,3 @@ class StrikeMachine(QMainWindow):
                     thread.wait()
                 except:
                     pass
-        
