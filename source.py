@@ -660,7 +660,6 @@ class StrikeMachine(QMainWindow):
         self.data_pressure_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
         self.data_pressure_timer.timeout.connect(lambda: self._data_pressure(self.actual_data))
 
-
         self.data_cycle_timer = QTimer(self)
         self.all_timer.append(self.data_cycle_timer)
         self.data_cycle_timer.setInterval(500)
