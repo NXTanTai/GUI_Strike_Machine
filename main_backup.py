@@ -171,8 +171,8 @@ if __name__ == '__main__':
     try:
         from PySide6.QtWidgets import QApplication, QMessageBox
         from PySide6.QtCore    import QLocale, QSharedMemory, QSystemSemaphore, QTimer
-        from source            import StrikeMachine
-        # from source_backup            import StrikeMachine
+        # from source            import StrikeMachine
+        from source_backup            import StrikeMachine
 
         def check_full_language_info():
             locale = QLocale.system()

@@ -91,7 +91,7 @@ class Ui_MainWindow(object):
         MainWindow.setTabShape(QTabWidget.Rounded)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.centralwidget.setMinimumSize(QSize(1024, 800))
+        self.centralwidget.setMinimumSize(QSize(1024, 724))
         self.centralwidget.setMaximumSize(QSize(16777215, 16777215))
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setSpacing(2)
@@ -7853,7 +7853,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_27.setContentsMargins(0, 0, 0, 0)
         self.device_frame = QFrame(self.connection_page)
         self.device_frame.setObjectName(u"device_frame")
-        self.device_frame.setMinimumSize(QSize(0, 800))
+        self.device_frame.setMinimumSize(QSize(0, 0))
         self.device_frame.setStyleSheet(u"QFrame {\n"
 "    background-color: white;\n"
 "    border-radius: 12px;\n"
@@ -7875,7 +7875,7 @@ class Ui_MainWindow(object):
         self.plc_io_btn.setObjectName(u"plc_io_btn")
         sizePolicy.setHeightForWidth(self.plc_io_btn.sizePolicy().hasHeightForWidth())
         self.plc_io_btn.setSizePolicy(sizePolicy)
-        self.plc_io_btn.setMinimumSize(QSize(0, 300))
+        self.plc_io_btn.setMinimumSize(QSize(0, 0))
         self.plc_io_btn.setStyleSheet(u"font-size: 24px; \n"
 "color: #0B7EC8;\n"
 "border: none;\n"
@@ -7895,6 +7895,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_9.setContentsMargins(10, 10, 10, 5)
         self.connection_group = QGroupBox(self.widget_15)
         self.connection_group.setObjectName(u"connection_group")
+        sizePolicy2.setHeightForWidth(self.connection_group.sizePolicy().hasHeightForWidth())
+        self.connection_group.setSizePolicy(sizePolicy2)
         font19 = QFont()
         font19.setFamilies([u"Segoe UI"])
         font19.setPointSize(15)
@@ -8499,7 +8501,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_40.setContentsMargins(0, 0, 0, 0)
         self.device_frame_2 = QFrame(self.i_o_page)
         self.device_frame_2.setObjectName(u"device_frame_2")
-        self.device_frame_2.setMinimumSize(QSize(0, 800))
+        self.device_frame_2.setMinimumSize(QSize(0, 0))
         self.device_frame_2.setStyleSheet(u"QFrame {\n"
 "    background-color: white;\n"
 "    border-radius: 12px;\n"
@@ -10502,7 +10504,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(1)
+        self.stackedWidget_2.setCurrentIndex(2)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_pressure_sv_a_11.setCurrentIndex(0)

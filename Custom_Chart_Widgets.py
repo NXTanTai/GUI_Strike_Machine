@@ -449,8 +449,10 @@ class CustomChartWidget(QWidget):
 
     def _create_plot_widget(self) -> None:
         self.plot = pg.PlotWidget()
+        # self.plot.setBackground("#DCEEFB")
         self.plot.setBackground(None)
         self.plot.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        
         self.plot.showGrid(x=True, y=True, alpha=0.1)
         self.plot.setYRange(*self.temp_range)
         self.plot.disableAutoRange()

@@ -34,12 +34,13 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import (
     QHeaderView, QAbstractSpinBox, QStyledItemDelegate,
     QMainWindow, QApplication, QLineEdit,
-    QFileDialog, QTableWidget, QTableWidgetItem
+    QFileDialog, QTableWidget, QTableWidgetItem,
+    QAbstractButton
 )
 from typing import List, Optional, Tuple, Any
 from pathlib import Path
 from datetime import datetime
-from tech_link_theme import Ui_MainWindow
+from tech_link_theme_1024x768 import Ui_MainWindow
 from Custom_Widgets import * #type: ignore
 from Custom_Chart_Widgets import CustomChartWidget
 from message_box import LightThemeMessageBox as ltmessage
@@ -47,13 +48,12 @@ from console_window import ConsoleWindow
 from password_dialog import *
 from Data_Simulator import DataSimulator
 from PLC_READ_MODULE import PLCRead
-# from PLC_READ_MODULE_OPTIM import PLCReader
 from PLC_WRITE_MODULE import PLCWrite
 from export_excel_worker import ExportWorker
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
 os.environ["QT_SCALE_FACTOR"] = "1"
-os.environ["QT_FONT_DPI"] = "96"
+os.environ["QT_FONT_DPI"] = "96" # 1024x768
 
 BASE_DIR = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent
 
@@ -238,7 +238,7 @@ class StrikeMachine(QMainWindow):
     hide_loading            = Signal()
     show_loading            = Signal()
 
-    def __init__(self, on_hide_loading=None, on_show_loading=None, info_system=None, plc_queue=None, parent=None):
+    def __init__(self, on_hide_loading=None, on_show_loading=None, info_system=None, plc_queue=None, parent=None, scale_factor: float = 1.0):
         super().__init__(parent)
         if on_hide_loading:
             self.hide_loading.connect(on_hide_loading)
@@ -255,7 +255,16 @@ class StrikeMachine(QMainWindow):
         self._init_logger()
         self.logger.info("----------------------------------------------------------------------------")
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+        self.ui.setupUi(self)        
+        self._scale_factor = scale_factor
+        _BASE_W, _BASE_H = 1280, 960
+        target_w = round(_BASE_W * scale_factor)
+        target_h = round(_BASE_H * scale_factor)
+        self.resize(target_w, target_h)
+        self._scale_icons(scale_factor)
+        self._scale_button_boxes(scale_factor)
+        self._scale_fonts(scale_factor)
+
         self._init_app_data()
         self._init_db_layout_and_size()
         self._init_AI_actual_db()
@@ -265,14 +274,55 @@ class StrikeMachine(QMainWindow):
         self._create_charts()
         self._init_history_database()
         self._init_table_list_history()
-        # self._setup_table()
         self._paint_pv_obj("#E53935")
         self._paint_sv_obj("#43A047")
         self._setup_btn_signals()
         self._setup_plc_threads(SIMULATE)
         self._translator = QTranslator()
         self._init_screen()
-        # QTimer.singleShot(2500, self._test_marquee_label)
+
+    def _scale_icons(self, factor: float = 0.8) -> None:
+        """Scale iconSize của mọi QAbstractButton theo `factor`. Chạy 1 lần sau setupUi."""
+        for btn in self.findChildren(QAbstractButton):
+            size = btn.iconSize()
+            if size.width() <= 0 or size.height() <= 0:
+                continue
+            new_w = max(1, round(size.width()  * factor))
+            new_h = max(1, round(size.height() * factor))
+            btn.setIconSize(QSize(new_w, new_h))
+
+
+    def _scale_button_boxes(self, factor: float = 0.8) -> None:
+        """Scale minimumSize/maximumSize của các nút có icon theo `factor`,
+        để khung nút co theo cùng tỉ lệ với icon — tránh dư khoảng trắng quanh icon."""
+        QWIDGETSIZE_MAX = 16777215
+
+        def _scaled(v: int) -> int:
+            if v <= 0 or v >= QWIDGETSIZE_MAX:
+                return v
+            return max(1, round(v * factor))
+
+        for btn in self.findChildren(QAbstractButton):
+            if btn.icon().isNull():
+                continue
+            min_size = btn.minimumSize()
+            max_size = btn.maximumSize()
+            btn.setMinimumSize(QSize(_scaled(min_size.width()), _scaled(min_size.height())))
+            btn.setMaximumSize(QSize(_scaled(max_size.width()), _scaled(max_size.height())))
+
+
+    def _scale_fonts(self, factor: float = 0.8) -> None:
+        """Scale pointSize font của mọi widget theo `factor`. Chạy 1 lần sau setupUi."""
+        for widget in self.findChildren(QWidget):
+            f = widget.font()
+            pt = f.pointSize()
+            if pt <= 0:
+                continue
+            new_pt = max(1, round(pt * factor))
+            if new_pt == pt:
+                continue
+            f.setPointSize(new_pt)
+            widget.setFont(f)
 
     def _init_screen(self):
 
@@ -296,14 +346,17 @@ class StrikeMachine(QMainWindow):
         self.ai_data_folder = Path(self.stk_mch_folder) / "AI_Training_Data"
         self.ai_data_folder.mkdir(parents=True, exist_ok=True)
         
-        self.fast_buffer = []      # Buffer cho tag nhanh (áp suất, ...)
-        self.slow_buffer = []      # Buffer cho tag chậm
+        # self.fast_buffer = []      # Buffer cho tag nhanh (áp suất, ...)
+        # self.slow_buffer = []      # Buffer cho tag chậm
         
-        self.fast_buffer_size = 30    # ~3 giây nếu 100ms
-        self.slow_buffer_size = 10    # ~10 giây nếu 1000ms
+        # self.fast_buffer_size = 30    # ~3 giây nếu 100ms
+        # self.slow_buffer_size = 10    # ~10 giây nếu 1000ms
+
+        self.data_buffer = []
+        self.buffer_size = 10
         
         self.logger.info(f"AI Training folder: {self.ai_data_folder}")
-        self.logger.info("Fast sampling (100ms) enabled for pressure & critical tags")
+        # self.logger.info("Fast sampling (100ms) enabled for pressure & critical tags")
 
     def showEvent(self, event):# type: ignore
         super().showEvent(event)
@@ -637,8 +690,8 @@ class StrikeMachine(QMainWindow):
         self.data_training_ai_timer = QTimer(self)
         self.all_timer.append(self.data_training_ai_timer)
         self.data_training_ai_timer.setInterval(1000)
-        self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.actual_data))
-        # self.data_training_ai_timer.start()
+        self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.all_data))
+        self.data_training_ai_timer.start()
 
         if self._plc_queue is not None:
             self.data_web_socket = QTimer(self)
@@ -652,12 +705,10 @@ class StrikeMachine(QMainWindow):
         self.data_temp_timer.setInterval(500)
         self.data_temp_timer.timeout.connect(lambda: self._data_temp(self.actual_data))
         
-
         self.data_pressure_timer = QTimer(self)
         self.all_timer.append(self.data_pressure_timer)
         self.data_pressure_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
         self.data_pressure_timer.timeout.connect(lambda: self._data_pressure(self.actual_data))
-
 
         self.data_cycle_timer = QTimer(self)
         self.all_timer.append(self.data_cycle_timer)
@@ -2677,62 +2728,36 @@ class StrikeMachine(QMainWindow):
             self.logger.error("[Main]-[_data_temp]:PLC Data Processing Error: %s", e)
 
     def _data_AI(self, data: dict):
-        """Ghi dữ liệu AI - Fast chỉ cho Current_Pressure"""
         if not data or not isinstance(data, dict):
             return
 
         try:
             self._ai_data_batch_counter += 1
 
-            name = "Unknown"
-            if hasattr(self.ui, 'code_display') and self.ui.code_display is not None:
-                try:
-                    name = self.ui.code_display.text().strip()
-                except:
-                    pass
-
-            base_record = {
-                "timestamp": time.time(),
+            record = {
                 "datetime": time.strftime("%Y-%m-%d %H:%M:%S"),
                 "No.": str(self._ai_data_batch_counter),
-                "Name.": name,
+                "Connection.": str(self.plc_read_connection),
             }
+            record.update(data)
 
-            # Tách fast & slow
-            fast_record = base_record.copy()
-            slow_record = base_record.copy()
+            self.data_buffer.append(record)
 
-            for key, value in data.items():
-                if 'Current_Pressure' in key:
-                    fast_record[key] = value
-                else:
-                    slow_record[key] = value
-
-            # Thêm vào buffer
-            self.fast_buffer.append(fast_record)
-            self.slow_buffer.append(slow_record)
-
-            # Flush fast buffer
-            if len(self.fast_buffer) >= self.fast_buffer_size:
-                self._flush_buffer(self.fast_buffer, "fast")
-                self.fast_buffer.clear()
-
-            # Flush slow buffer
-            if len(self.slow_buffer) >= self.slow_buffer_size:
-                self._flush_buffer(self.slow_buffer, "slow")
-                self.slow_buffer.clear()
+            if len(self.data_buffer) >= self.buffer_size:
+                self._flush_buffer(self.data_buffer)
+                self.data_buffer.clear()
 
         except Exception as e:
             if self.logger:
                 self.logger.error(f"[AI Training] Error: {e}")
 
-    def _flush_buffer(self, buffer: list, mode: str = "fast"):
+    def _flush_buffer(self, buffer: list):
         if not buffer:
             return
-            
+
         df = pd.DataFrame(buffer)
         date_str = time.strftime("%Y%m%d")
-        file_path = self.ai_data_folder / f"ai_{mode}_{date_str}.csv"
+        file_path = self.ai_data_folder / f"ai_{date_str}.csv"
 
         try:
             if file_path.exists():
@@ -2742,15 +2767,10 @@ class StrikeMachine(QMainWindow):
                 # Tạo file mới
                 df.to_csv(file_path, index=False, encoding='utf-8')
 
-            # self.logger.info(f"[AI {mode.upper()}] Saved {len(buffer)} records → {file_path.name}")
-
         except Exception as e:
-            self.logger.error(f"Flush {mode} error: {e}")
+            self.logger.error(f"Flush error: {e}")
             # Clear buffer để tránh tràn bộ nhớ
-            if mode == "fast":
-                self.fast_buffer.clear()
-            else:
-                self.slow_buffer.clear()
+            self.data_buffer.clear()
 
     def _data_pressure(self, data: dict):
         # def _t(label, fn):
