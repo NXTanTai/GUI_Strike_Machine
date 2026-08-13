@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'tech_link_theme_1024x768.ui'
+## Form generated from reading UI file 'tech_link_theme_window_custom.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -148,12 +148,15 @@ class Ui_MainWindow(object):
         self.pc_inform_label.setObjectName(u"pc_inform_label")
         self.error_display = MarqueeLabel(self.header_frame)
         self.error_display.setObjectName(u"error_display")
-        sizePolicy.setHeightForWidth(self.error_display.sizePolicy().hasHeightForWidth())
-        self.error_display.setSizePolicy(sizePolicy)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.error_display.sizePolicy().hasHeightForWidth())
+        self.error_display.setSizePolicy(sizePolicy1)
         self.error_display.setMinimumSize(QSize(0, 0))
         font2 = QFont()
         font2.setFamilies([u"Segoe UI"])
-        font2.setPointSize(20)
+        font2.setPointSize(14)
         font2.setBold(True)
         self.error_display.setFont(font2)
         self.error_display.setStyleSheet(u"padding-left: 50px;\n"
@@ -305,11 +308,11 @@ class Ui_MainWindow(object):
 
         self.body_frame = QFrame(self.centralwidget)
         self.body_frame.setObjectName(u"body_frame")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.body_frame.sizePolicy().hasHeightForWidth())
-        self.body_frame.setSizePolicy(sizePolicy1)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.body_frame.sizePolicy().hasHeightForWidth())
+        self.body_frame.setSizePolicy(sizePolicy2)
         self.body_frame.setStyleSheet(u"QFrame{\n"
 "background: qlineargradient(x1:0, y1:0, x2:0, y2:1,\n"
 "    stop:0 #eaebeb,\n"
@@ -326,11 +329,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.left_side_menu_widget = QCustomSlideMenu(self.body_frame)
         self.left_side_menu_widget.setObjectName(u"left_side_menu_widget")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.left_side_menu_widget.sizePolicy().hasHeightForWidth())
-        self.left_side_menu_widget.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.left_side_menu_widget.sizePolicy().hasHeightForWidth())
+        self.left_side_menu_widget.setSizePolicy(sizePolicy1)
         self.left_side_menu_widget.setMinimumSize(QSize(175, 0))
         self.left_side_menu_widget.setMaximumSize(QSize(175, 16777215))
         self.left_side_menu_widget.setStyleSheet(u"QWidget {\n"
@@ -693,8 +693,8 @@ class Ui_MainWindow(object):
         self.temp_unit_selection_combox.addItem("")
         self.temp_unit_selection_combox.addItem("")
         self.temp_unit_selection_combox.setObjectName(u"temp_unit_selection_combox")
-        sizePolicy2.setHeightForWidth(self.temp_unit_selection_combox.sizePolicy().hasHeightForWidth())
-        self.temp_unit_selection_combox.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.temp_unit_selection_combox.sizePolicy().hasHeightForWidth())
+        self.temp_unit_selection_combox.setSizePolicy(sizePolicy1)
         self.temp_unit_selection_combox.setFont(font7)
         self.temp_unit_selection_combox.setStyleSheet(u"background-color: #F9FAFB;")
 
@@ -5224,8 +5224,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_56.setContentsMargins(0, 5, 0, 0)
         self.widget_77 = QWidget(self.widget_temperature)
         self.widget_77.setObjectName(u"widget_77")
-        sizePolicy2.setHeightForWidth(self.widget_77.sizePolicy().hasHeightForWidth())
-        self.widget_77.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.widget_77.sizePolicy().hasHeightForWidth())
+        self.widget_77.setSizePolicy(sizePolicy1)
         self.widget_77.setStyleSheet(u"QWidget#widget_77 {\n"
 "    background-color: white;\n"
 "    border-left: 4px solid rgb(22, 93, 200);\n"
@@ -7888,8 +7888,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_9.setContentsMargins(10, 10, 10, 5)
         self.connection_group = QGroupBox(self.widget_15)
         self.connection_group.setObjectName(u"connection_group")
-        sizePolicy1.setHeightForWidth(self.connection_group.sizePolicy().hasHeightForWidth())
-        self.connection_group.setSizePolicy(sizePolicy1)
+        sizePolicy2.setHeightForWidth(self.connection_group.sizePolicy().hasHeightForWidth())
+        self.connection_group.setSizePolicy(sizePolicy2)
         self.connection_group.setFont(font8)
         self.connection_group.setStyleSheet(u"QGroupBox {\n"
 "    border: 2px solid #E5E5E5;\n"
@@ -8500,6 +8500,160 @@ class Ui_MainWindow(object):
         self.verticalLayout_28.setSpacing(10)
         self.verticalLayout_28.setObjectName(u"verticalLayout_28")
         self.verticalLayout_28.setContentsMargins(0, 15, 0, 10)
+        self.widget_3 = QWidget(self.device_frame_2)
+        self.widget_3.setObjectName(u"widget_3")
+        self.horizontalLayout_43 = QHBoxLayout(self.widget_3)
+        self.horizontalLayout_43.setObjectName(u"horizontalLayout_43")
+        self.i_o_group_2 = QGroupBox(self.widget_3)
+        self.i_o_group_2.setObjectName(u"i_o_group_2")
+        self.i_o_group_2.setFont(font21)
+        self.i_o_group_2.setStyleSheet(u"QGroupBox {\n"
+"    border: 2px solid #E5E5E5;\n"
+"    border-radius: 6px;\n"
+"    margin-top: 10px;\n"
+"    padding-top: 10px;\n"
+"}\n"
+"QGroupBox::title {\n"
+"    subcontrol-origin: margin;\n"
+"    left: 10px;\n"
+"    padding: 0 5px 0 5px;\n"
+"    color: #374151;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"	color: #D12323;\n"
+"	border: none;\n"
+"}\n"
+"\n"
+"QSpinBox {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QSpinBox:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}")
+        self.gridLayout_6 = QGridLayout(self.i_o_group_2)
+        self.gridLayout_6.setSpacing(10)
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.gridLayout_6.setContentsMargins(10, 15, 10, 10)
+        self.ip_plc_address = QPushButton(self.i_o_group_2)
+        self.ip_plc_address.setObjectName(u"ip_plc_address")
+        sizePolicy.setHeightForWidth(self.ip_plc_address.sizePolicy().hasHeightForWidth())
+        self.ip_plc_address.setSizePolicy(sizePolicy)
+        font23 = QFont()
+        font23.setFamilies([u"MS Shell Dlg 2"])
+        font23.setPointSize(10)
+        font23.setBold(True)
+        self.ip_plc_address.setFont(font23)
+        self.ip_plc_address.setStyleSheet(u"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"    text-align: left;\n"
+"}")
+        icon24 = QIcon()
+        icon24.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.ip_plc_address.setIcon(icon24)
+        self.ip_plc_address.setIconSize(QSize(24, 24))
+        self.ip_plc_address.setCheckable(True)
+
+        self.gridLayout_6.addWidget(self.ip_plc_address, 1, 0, 1, 1)
+
+        self.db_file_path = QPushButton(self.i_o_group_2)
+        self.db_file_path.setObjectName(u"db_file_path")
+        sizePolicy.setHeightForWidth(self.db_file_path.sizePolicy().hasHeightForWidth())
+        self.db_file_path.setSizePolicy(sizePolicy)
+        self.db_file_path.setFont(font23)
+        self.db_file_path.setStyleSheet(u"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"    text-align: left;\n"
+"}")
+        icon25 = QIcon()
+        icon25.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.db_file_path.setIcon(icon25)
+        self.db_file_path.setIconSize(QSize(24, 24))
+        self.db_file_path.setCheckable(True)
+
+        self.gridLayout_6.addWidget(self.db_file_path, 0, 0, 1, 1)
+
+        self.db_file_path_edit = QLineEdit(self.i_o_group_2)
+        self.db_file_path_edit.setObjectName(u"db_file_path_edit")
+        sizePolicy.setHeightForWidth(self.db_file_path_edit.sizePolicy().hasHeightForWidth())
+        self.db_file_path_edit.setSizePolicy(sizePolicy)
+        font24 = QFont()
+        font24.setPointSize(10)
+        font24.setBold(True)
+        self.db_file_path_edit.setFont(font24)
+        self.db_file_path_edit.setPlaceholderText(u"Enter Path Folder")
+
+        self.gridLayout_6.addWidget(self.db_file_path_edit, 0, 1, 1, 1)
+
+        self.plc_ip_address_edit = QLineEdit(self.i_o_group_2)
+        self.plc_ip_address_edit.setObjectName(u"plc_ip_address_edit")
+        sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
+        self.plc_ip_address_edit.setSizePolicy(sizePolicy)
+        self.plc_ip_address_edit.setFont(font24)
+        self.plc_ip_address_edit.setPlaceholderText(u"Enter IP Address: 172.16.100.***")
+
+        self.gridLayout_6.addWidget(self.plc_ip_address_edit, 1, 1, 1, 1)
+
+        self.cmd_btn = QPushButton(self.i_o_group_2)
+        self.cmd_btn.setObjectName(u"cmd_btn")
+        sizePolicy.setHeightForWidth(self.cmd_btn.sizePolicy().hasHeightForWidth())
+        self.cmd_btn.setSizePolicy(sizePolicy)
+        font25 = QFont()
+        font25.setPointSize(19)
+        font25.setBold(True)
+        self.cmd_btn.setFont(font25)
+        self.cmd_btn.setStyleSheet(u"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"    padding: 12px 20px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,\n"
+"                    stop:0 #F8FAFC, stop:1 #E2E8F0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"	border-right: 5px solid #29A1D4;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	border-right: 5px solid #0AB1F9;\n"
+"	color: #0AB1F9;\n"
+"}")
+        icon26 = QIcon()
+        icon26.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.cmd_btn.setIcon(icon26)
+        self.cmd_btn.setIconSize(QSize(40, 40))
+
+        self.gridLayout_6.addWidget(self.cmd_btn, 0, 2, 2, 1)
+
+        self.gridLayout_6.setColumnStretch(1, 2)
+
+        self.horizontalLayout_43.addWidget(self.i_o_group_2)
+
+
+        self.verticalLayout_28.addWidget(self.widget_3)
+
         self.widget_26 = QWidget(self.device_frame_2)
         self.widget_26.setObjectName(u"widget_26")
         self.widget_26.setStyleSheet(u"")
@@ -8554,8 +8708,9 @@ class Ui_MainWindow(object):
 "    background-color: white;\n"
 "}")
         self.gridLayout_7 = QGridLayout(self.i_o_group_1)
-        self.gridLayout_7.setSpacing(10)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.gridLayout_7.setHorizontalSpacing(10)
+        self.gridLayout_7.setVerticalSpacing(0)
         self.gridLayout_7.setContentsMargins(0, 15, 10, 10)
         self.i_o_group_1_switch_3 = QStackedWidget(self.i_o_group_1)
         self.i_o_group_1_switch_3.setObjectName(u"i_o_group_1_switch_3")
@@ -8573,10 +8728,10 @@ class Ui_MainWindow(object):
         self.pushButton_59.setObjectName(u"pushButton_59")
         sizePolicy.setHeightForWidth(self.pushButton_59.sizePolicy().hasHeightForWidth())
         self.pushButton_59.setSizePolicy(sizePolicy)
-        font23 = QFont()
-        font23.setPointSize(11)
-        font23.setBold(True)
-        self.pushButton_59.setFont(font23)
+        font26 = QFont()
+        font26.setPointSize(11)
+        font26.setBold(True)
+        self.pushButton_59.setFont(font26)
         self.pushButton_59.setIcon(icon8)
         self.pushButton_59.setIconSize(QSize(24, 24))
 
@@ -8592,10 +8747,10 @@ class Ui_MainWindow(object):
         self.pushButton_58.setObjectName(u"pushButton_58")
         sizePolicy.setHeightForWidth(self.pushButton_58.sizePolicy().hasHeightForWidth())
         self.pushButton_58.setSizePolicy(sizePolicy)
-        font24 = QFont()
-        font24.setPointSize(15)
-        font24.setBold(True)
-        self.pushButton_58.setFont(font24)
+        font27 = QFont()
+        font27.setPointSize(15)
+        font27.setBold(True)
+        self.pushButton_58.setFont(font27)
         self.pushButton_58.setIcon(icon9)
         self.pushButton_58.setIconSize(QSize(24, 24))
 
@@ -8621,7 +8776,7 @@ class Ui_MainWindow(object):
         self.pushButton_63.setObjectName(u"pushButton_63")
         sizePolicy.setHeightForWidth(self.pushButton_63.sizePolicy().hasHeightForWidth())
         self.pushButton_63.setSizePolicy(sizePolicy)
-        self.pushButton_63.setFont(font23)
+        self.pushButton_63.setFont(font26)
         self.pushButton_63.setIcon(icon8)
         self.pushButton_63.setIconSize(QSize(24, 24))
 
@@ -8637,7 +8792,7 @@ class Ui_MainWindow(object):
         self.pushButton_62.setObjectName(u"pushButton_62")
         sizePolicy.setHeightForWidth(self.pushButton_62.sizePolicy().hasHeightForWidth())
         self.pushButton_62.setSizePolicy(sizePolicy)
-        self.pushButton_62.setFont(font24)
+        self.pushButton_62.setFont(font27)
         self.pushButton_62.setIcon(icon9)
         self.pushButton_62.setIconSize(QSize(24, 24))
 
@@ -8663,7 +8818,7 @@ class Ui_MainWindow(object):
         self.pushButton_65.setObjectName(u"pushButton_65")
         sizePolicy.setHeightForWidth(self.pushButton_65.sizePolicy().hasHeightForWidth())
         self.pushButton_65.setSizePolicy(sizePolicy)
-        self.pushButton_65.setFont(font23)
+        self.pushButton_65.setFont(font26)
         self.pushButton_65.setIcon(icon8)
         self.pushButton_65.setIconSize(QSize(24, 24))
 
@@ -8679,7 +8834,7 @@ class Ui_MainWindow(object):
         self.pushButton_64.setObjectName(u"pushButton_64")
         sizePolicy.setHeightForWidth(self.pushButton_64.sizePolicy().hasHeightForWidth())
         self.pushButton_64.setSizePolicy(sizePolicy)
-        self.pushButton_64.setFont(font24)
+        self.pushButton_64.setFont(font27)
         self.pushButton_64.setIcon(icon9)
         self.pushButton_64.setIconSize(QSize(24, 24))
 
@@ -8705,7 +8860,7 @@ class Ui_MainWindow(object):
         self.pushButton_67.setObjectName(u"pushButton_67")
         sizePolicy.setHeightForWidth(self.pushButton_67.sizePolicy().hasHeightForWidth())
         self.pushButton_67.setSizePolicy(sizePolicy)
-        self.pushButton_67.setFont(font23)
+        self.pushButton_67.setFont(font26)
         self.pushButton_67.setIcon(icon8)
         self.pushButton_67.setIconSize(QSize(24, 24))
 
@@ -8721,7 +8876,7 @@ class Ui_MainWindow(object):
         self.pushButton_66.setObjectName(u"pushButton_66")
         sizePolicy.setHeightForWidth(self.pushButton_66.sizePolicy().hasHeightForWidth())
         self.pushButton_66.setSizePolicy(sizePolicy)
-        self.pushButton_66.setFont(font24)
+        self.pushButton_66.setFont(font27)
         self.pushButton_66.setIcon(icon9)
         self.pushButton_66.setIconSize(QSize(24, 24))
 
@@ -8747,7 +8902,7 @@ class Ui_MainWindow(object):
         self.pushButton_57.setObjectName(u"pushButton_57")
         sizePolicy.setHeightForWidth(self.pushButton_57.sizePolicy().hasHeightForWidth())
         self.pushButton_57.setSizePolicy(sizePolicy)
-        self.pushButton_57.setFont(font23)
+        self.pushButton_57.setFont(font26)
         self.pushButton_57.setIcon(icon8)
         self.pushButton_57.setIconSize(QSize(24, 24))
 
@@ -8763,7 +8918,7 @@ class Ui_MainWindow(object):
         self.pushButton_56.setObjectName(u"pushButton_56")
         sizePolicy.setHeightForWidth(self.pushButton_56.sizePolicy().hasHeightForWidth())
         self.pushButton_56.setSizePolicy(sizePolicy)
-        self.pushButton_56.setFont(font24)
+        self.pushButton_56.setFont(font27)
         self.pushButton_56.setIcon(icon9)
         self.pushButton_56.setIconSize(QSize(24, 24))
 
@@ -8795,7 +8950,7 @@ class Ui_MainWindow(object):
         self.pushButton_43.setObjectName(u"pushButton_43")
         sizePolicy.setHeightForWidth(self.pushButton_43.sizePolicy().hasHeightForWidth())
         self.pushButton_43.setSizePolicy(sizePolicy)
-        self.pushButton_43.setFont(font23)
+        self.pushButton_43.setFont(font26)
         self.pushButton_43.setIcon(icon8)
         self.pushButton_43.setIconSize(QSize(24, 24))
 
@@ -8811,13 +8966,29 @@ class Ui_MainWindow(object):
         self.pushButton_42.setObjectName(u"pushButton_42")
         sizePolicy.setHeightForWidth(self.pushButton_42.sizePolicy().hasHeightForWidth())
         self.pushButton_42.setSizePolicy(sizePolicy)
-        self.pushButton_42.setFont(font24)
+        self.pushButton_42.setFont(font27)
         self.pushButton_42.setIcon(icon9)
         self.pushButton_42.setIconSize(QSize(24, 24))
 
         self.horizontalLayout_470.addWidget(self.pushButton_42)
 
         self.i_o_group_1_switch_1.addWidget(self.on_light_1)
+        self.warning_light_1 = QWidget()
+        self.warning_light_1.setObjectName(u"warning_light_1")
+        self.horizontalLayout_47 = QHBoxLayout(self.warning_light_1)
+        self.horizontalLayout_47.setObjectName(u"horizontalLayout_47")
+        self.horizontalLayout_47.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_44 = QPushButton(self.warning_light_1)
+        self.pushButton_44.setObjectName(u"pushButton_44")
+        sizePolicy.setHeightForWidth(self.pushButton_44.sizePolicy().hasHeightForWidth())
+        self.pushButton_44.setSizePolicy(sizePolicy)
+        self.pushButton_44.setFont(font27)
+        self.pushButton_44.setIcon(icon23)
+        self.pushButton_44.setIconSize(QSize(24, 24))
+
+        self.horizontalLayout_47.addWidget(self.pushButton_44)
+
+        self.i_o_group_1_switch_1.addWidget(self.warning_light_1)
 
         self.gridLayout_7.addWidget(self.i_o_group_1_switch_1, 0, 1, 1, 1)
 
@@ -8837,7 +9008,7 @@ class Ui_MainWindow(object):
         self.pushButton_61.setObjectName(u"pushButton_61")
         sizePolicy.setHeightForWidth(self.pushButton_61.sizePolicy().hasHeightForWidth())
         self.pushButton_61.setSizePolicy(sizePolicy)
-        self.pushButton_61.setFont(font23)
+        self.pushButton_61.setFont(font26)
         self.pushButton_61.setIcon(icon8)
         self.pushButton_61.setIconSize(QSize(24, 24))
 
@@ -8853,7 +9024,7 @@ class Ui_MainWindow(object):
         self.pushButton_60.setObjectName(u"pushButton_60")
         sizePolicy.setHeightForWidth(self.pushButton_60.sizePolicy().hasHeightForWidth())
         self.pushButton_60.setSizePolicy(sizePolicy)
-        self.pushButton_60.setFont(font24)
+        self.pushButton_60.setFont(font27)
         self.pushButton_60.setIcon(icon9)
         self.pushButton_60.setIconSize(QSize(24, 24))
 
@@ -8891,7 +9062,7 @@ class Ui_MainWindow(object):
         self.pushButton_69.setObjectName(u"pushButton_69")
         sizePolicy.setHeightForWidth(self.pushButton_69.sizePolicy().hasHeightForWidth())
         self.pushButton_69.setSizePolicy(sizePolicy)
-        self.pushButton_69.setFont(font23)
+        self.pushButton_69.setFont(font26)
         self.pushButton_69.setIcon(icon8)
         self.pushButton_69.setIconSize(QSize(24, 24))
 
@@ -8907,7 +9078,7 @@ class Ui_MainWindow(object):
         self.pushButton_68.setObjectName(u"pushButton_68")
         sizePolicy.setHeightForWidth(self.pushButton_68.sizePolicy().hasHeightForWidth())
         self.pushButton_68.setSizePolicy(sizePolicy)
-        self.pushButton_68.setFont(font24)
+        self.pushButton_68.setFont(font27)
         self.pushButton_68.setIcon(icon9)
         self.pushButton_68.setIconSize(QSize(24, 24))
 
@@ -8969,7 +9140,7 @@ class Ui_MainWindow(object):
         self.pushButton_74.setObjectName(u"pushButton_74")
         sizePolicy.setHeightForWidth(self.pushButton_74.sizePolicy().hasHeightForWidth())
         self.pushButton_74.setSizePolicy(sizePolicy)
-        self.pushButton_74.setFont(font23)
+        self.pushButton_74.setFont(font26)
         self.pushButton_74.setIcon(icon8)
         self.pushButton_74.setIconSize(QSize(24, 24))
 
@@ -8985,7 +9156,7 @@ class Ui_MainWindow(object):
         self.pushButton_75.setObjectName(u"pushButton_75")
         sizePolicy.setHeightForWidth(self.pushButton_75.sizePolicy().hasHeightForWidth())
         self.pushButton_75.setSizePolicy(sizePolicy)
-        self.pushButton_75.setFont(font24)
+        self.pushButton_75.setFont(font27)
         self.pushButton_75.setIcon(icon9)
         self.pushButton_75.setIconSize(QSize(24, 24))
 
@@ -9029,7 +9200,7 @@ class Ui_MainWindow(object):
         self.pushButton_70.setObjectName(u"pushButton_70")
         sizePolicy.setHeightForWidth(self.pushButton_70.sizePolicy().hasHeightForWidth())
         self.pushButton_70.setSizePolicy(sizePolicy)
-        self.pushButton_70.setFont(font23)
+        self.pushButton_70.setFont(font26)
         self.pushButton_70.setIcon(icon8)
         self.pushButton_70.setIconSize(QSize(24, 24))
 
@@ -9045,7 +9216,7 @@ class Ui_MainWindow(object):
         self.pushButton_71.setObjectName(u"pushButton_71")
         sizePolicy.setHeightForWidth(self.pushButton_71.sizePolicy().hasHeightForWidth())
         self.pushButton_71.setSizePolicy(sizePolicy)
-        self.pushButton_71.setFont(font24)
+        self.pushButton_71.setFont(font27)
         self.pushButton_71.setIcon(icon9)
         self.pushButton_71.setIconSize(QSize(24, 24))
 
@@ -9071,7 +9242,7 @@ class Ui_MainWindow(object):
         self.pushButton_72.setObjectName(u"pushButton_72")
         sizePolicy.setHeightForWidth(self.pushButton_72.sizePolicy().hasHeightForWidth())
         self.pushButton_72.setSizePolicy(sizePolicy)
-        self.pushButton_72.setFont(font23)
+        self.pushButton_72.setFont(font26)
         self.pushButton_72.setIcon(icon8)
         self.pushButton_72.setIconSize(QSize(24, 24))
 
@@ -9087,7 +9258,7 @@ class Ui_MainWindow(object):
         self.pushButton_73.setObjectName(u"pushButton_73")
         sizePolicy.setHeightForWidth(self.pushButton_73.sizePolicy().hasHeightForWidth())
         self.pushButton_73.setSizePolicy(sizePolicy)
-        self.pushButton_73.setFont(font24)
+        self.pushButton_73.setFont(font27)
         self.pushButton_73.setIcon(icon9)
         self.pushButton_73.setIconSize(QSize(24, 24))
 
@@ -9119,7 +9290,7 @@ class Ui_MainWindow(object):
         self.pushButton_76.setObjectName(u"pushButton_76")
         sizePolicy.setHeightForWidth(self.pushButton_76.sizePolicy().hasHeightForWidth())
         self.pushButton_76.setSizePolicy(sizePolicy)
-        self.pushButton_76.setFont(font23)
+        self.pushButton_76.setFont(font26)
         self.pushButton_76.setIcon(icon8)
         self.pushButton_76.setIconSize(QSize(24, 24))
 
@@ -9135,7 +9306,7 @@ class Ui_MainWindow(object):
         self.pushButton_77.setObjectName(u"pushButton_77")
         sizePolicy.setHeightForWidth(self.pushButton_77.sizePolicy().hasHeightForWidth())
         self.pushButton_77.setSizePolicy(sizePolicy)
-        self.pushButton_77.setFont(font24)
+        self.pushButton_77.setFont(font27)
         self.pushButton_77.setIcon(icon9)
         self.pushButton_77.setIconSize(QSize(24, 24))
 
@@ -9161,7 +9332,7 @@ class Ui_MainWindow(object):
         self.pushButton_78.setObjectName(u"pushButton_78")
         sizePolicy.setHeightForWidth(self.pushButton_78.sizePolicy().hasHeightForWidth())
         self.pushButton_78.setSizePolicy(sizePolicy)
-        self.pushButton_78.setFont(font23)
+        self.pushButton_78.setFont(font26)
         self.pushButton_78.setIcon(icon8)
         self.pushButton_78.setIconSize(QSize(24, 24))
 
@@ -9177,7 +9348,7 @@ class Ui_MainWindow(object):
         self.pushButton_79.setObjectName(u"pushButton_79")
         sizePolicy.setHeightForWidth(self.pushButton_79.sizePolicy().hasHeightForWidth())
         self.pushButton_79.setSizePolicy(sizePolicy)
-        self.pushButton_79.setFont(font24)
+        self.pushButton_79.setFont(font27)
         self.pushButton_79.setIcon(icon9)
         self.pushButton_79.setIconSize(QSize(24, 24))
 
@@ -9604,210 +9775,8 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_24.addWidget(self.i_o_group_3)
 
-        self.i_o_group_2 = QGroupBox(self.widget_26)
-        self.i_o_group_2.setObjectName(u"i_o_group_2")
-        self.i_o_group_2.setFont(font21)
-        self.i_o_group_2.setStyleSheet(u"QGroupBox {\n"
-"    border: 2px solid #E5E5E5;\n"
-"    border-radius: 6px;\n"
-"    margin-top: 10px;\n"
-"    padding-top: 10px;\n"
-"}\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    left: 10px;\n"
-"    padding: 0 5px 0 5px;\n"
-"    color: #374151;\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"	color: #D12323;\n"
-"	border: none;\n"
-"}\n"
-"\n"
-"QSpinBox {\n"
-"    border: 1px solid #D1D5DB;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    background-color: #F9FAFB;\n"
-"}\n"
-"QSpinBox:focus {\n"
-"    border: 2px solid #0B7EC8;\n"
-"    background-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit {\n"
-"    border: 1px solid #D1D5DB;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    background-color: #F9FAFB;\n"
-"}\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #0B7EC8;\n"
-"    background-color: white;\n"
-"}")
-        self.gridLayout_6 = QGridLayout(self.i_o_group_2)
-        self.gridLayout_6.setSpacing(10)
-        self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.gridLayout_6.setContentsMargins(10, 15, 10, 10)
-        self.db_file_path = QPushButton(self.i_o_group_2)
-        self.db_file_path.setObjectName(u"db_file_path")
-        sizePolicy.setHeightForWidth(self.db_file_path.sizePolicy().hasHeightForWidth())
-        self.db_file_path.setSizePolicy(sizePolicy)
-        self.db_file_path.setFont(font20)
-        self.db_file_path.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        icon24 = QIcon()
-        icon24.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_file_path.setIcon(icon24)
-        self.db_file_path.setIconSize(QSize(24, 24))
-        self.db_file_path.setCheckable(True)
-
-        self.gridLayout_6.addWidget(self.db_file_path, 0, 0, 1, 1)
-
-        self.ip_plc_address = QPushButton(self.i_o_group_2)
-        self.ip_plc_address.setObjectName(u"ip_plc_address")
-        sizePolicy.setHeightForWidth(self.ip_plc_address.sizePolicy().hasHeightForWidth())
-        self.ip_plc_address.setSizePolicy(sizePolicy)
-        self.ip_plc_address.setFont(font20)
-        self.ip_plc_address.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        icon25 = QIcon()
-        icon25.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.ip_plc_address.setIcon(icon25)
-        self.ip_plc_address.setIconSize(QSize(24, 24))
-        self.ip_plc_address.setCheckable(True)
-
-        self.gridLayout_6.addWidget(self.ip_plc_address, 1, 0, 1, 1)
-
-        self.db_number = QPushButton(self.i_o_group_2)
-        self.db_number.setObjectName(u"db_number")
-        sizePolicy.setHeightForWidth(self.db_number.sizePolicy().hasHeightForWidth())
-        self.db_number.setSizePolicy(sizePolicy)
-        self.db_number.setFont(font20)
-        self.db_number.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        icon26 = QIcon()
-        icon26.addFile(u":/Icons/server-setting.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_number.setIcon(icon26)
-        self.db_number.setIconSize(QSize(24, 24))
-        self.db_number.setCheckable(True)
-
-        self.gridLayout_6.addWidget(self.db_number, 2, 0, 1, 1)
-
-        self.db_file_path_edit = QLineEdit(self.i_o_group_2)
-        self.db_file_path_edit.setObjectName(u"db_file_path_edit")
-        sizePolicy.setHeightForWidth(self.db_file_path_edit.sizePolicy().hasHeightForWidth())
-        self.db_file_path_edit.setSizePolicy(sizePolicy)
-        self.db_file_path_edit.setFont(font22)
-        self.db_file_path_edit.setPlaceholderText(u"Enter Path Folder")
-
-        self.gridLayout_6.addWidget(self.db_file_path_edit, 0, 1, 1, 1)
-
-        self.plc_ip_address_edit = QLineEdit(self.i_o_group_2)
-        self.plc_ip_address_edit.setObjectName(u"plc_ip_address_edit")
-        sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
-        self.plc_ip_address_edit.setSizePolicy(sizePolicy)
-        self.plc_ip_address_edit.setFont(font22)
-        self.plc_ip_address_edit.setPlaceholderText(u"Enter IP Address: 172.16.100.***")
-
-        self.gridLayout_6.addWidget(self.plc_ip_address_edit, 1, 1, 1, 1)
-
-        self.db_data_size_input = QSpinBox(self.i_o_group_2)
-        self.db_data_size_input.setObjectName(u"db_data_size_input")
-        sizePolicy.setHeightForWidth(self.db_data_size_input.sizePolicy().hasHeightForWidth())
-        self.db_data_size_input.setSizePolicy(sizePolicy)
-        self.db_data_size_input.setMinimumSize(QSize(0, 0))
-        self.db_data_size_input.setFont(font22)
-        self.db_data_size_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.db_data_size_input.setMaximum(1024)
-        self.db_data_size_input.setValue(0)
-
-        self.gridLayout_6.addWidget(self.db_data_size_input, 3, 1, 1, 1)
-
-        self.db_number_input = QSpinBox(self.i_o_group_2)
-        self.db_number_input.setObjectName(u"db_number_input")
-        sizePolicy.setHeightForWidth(self.db_number_input.sizePolicy().hasHeightForWidth())
-        self.db_number_input.setSizePolicy(sizePolicy)
-        self.db_number_input.setMinimumSize(QSize(0, 0))
-        self.db_number_input.setFont(font22)
-        self.db_number_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.db_number_input.setSpecialValueText(u"")
-        self.db_number_input.setValue(1)
-
-        self.gridLayout_6.addWidget(self.db_number_input, 2, 1, 1, 1)
-
-        self.write_plc_label_2 = QPushButton(self.i_o_group_2)
-        self.write_plc_label_2.setObjectName(u"write_plc_label_2")
-        sizePolicy.setHeightForWidth(self.write_plc_label_2.sizePolicy().hasHeightForWidth())
-        self.write_plc_label_2.setSizePolicy(sizePolicy)
-        self.write_plc_label_2.setFont(font20)
-        self.write_plc_label_2.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        icon27 = QIcon()
-        icon27.addFile(u":/Icons/security.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.write_plc_label_2.setIcon(icon27)
-        self.write_plc_label_2.setIconSize(QSize(24, 24))
-        self.write_plc_label_2.setCheckable(True)
-
-        self.gridLayout_6.addWidget(self.write_plc_label_2, 3, 0, 1, 1)
-
-        self.cmd_btn = QPushButton(self.i_o_group_2)
-        self.cmd_btn.setObjectName(u"cmd_btn")
-        sizePolicy.setHeightForWidth(self.cmd_btn.sizePolicy().hasHeightForWidth())
-        self.cmd_btn.setSizePolicy(sizePolicy)
-        font25 = QFont()
-        font25.setPointSize(19)
-        font25.setBold(True)
-        self.cmd_btn.setFont(font25)
-        self.cmd_btn.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    padding: 12px 20px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,\n"
-"                    stop:0 #F8FAFC, stop:1 #E2E8F0);\n"
-"}\n"
-"\n"
-"QPushButton:pressed{\n"
-"	border-right: 5px solid #29A1D4;\n"
-"}\n"
-"QPushButton:checked {\n"
-"	border-right: 5px solid #0AB1F9;\n"
-"	color: #0AB1F9;\n"
-"}")
-        icon28 = QIcon()
-        icon28.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.cmd_btn.setIcon(icon28)
-        self.cmd_btn.setIconSize(QSize(40, 40))
-
-        self.gridLayout_6.addWidget(self.cmd_btn, 4, 0, 1, 2)
-
-        self.gridLayout_6.setColumnStretch(1, 1)
-
-        self.horizontalLayout_24.addWidget(self.i_o_group_2)
-
-        self.horizontalLayout_24.setStretch(1, 1)
-        self.horizontalLayout_24.setStretch(2, 1)
+        self.horizontalLayout_24.setStretch(0, 1)
+        self.horizontalLayout_24.setStretch(1, 2)
 
         self.verticalLayout_28.addWidget(self.widget_26)
 
@@ -9869,8 +9838,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_28.addWidget(self.widget_29)
 
-        self.verticalLayout_28.setStretch(0, 8)
-        self.verticalLayout_28.setStretch(1, 1)
+        self.verticalLayout_28.setStretch(1, 8)
+        self.verticalLayout_28.setStretch(2, 1)
 
         self.verticalLayout_40.addWidget(self.device_frame_2)
 
@@ -9913,9 +9882,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.search_icon.sizePolicy().hasHeightForWidth())
         self.search_icon.setSizePolicy(sizePolicy)
         self.search_icon.setStyleSheet(u"padding: 5px;")
-        icon29 = QIcon()
-        icon29.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.search_icon.setIcon(icon29)
+        icon27 = QIcon()
+        icon27.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.search_icon.setIcon(icon27)
         self.search_icon.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_3.addWidget(self.search_icon)
@@ -9924,10 +9893,7 @@ class Ui_MainWindow(object):
         self.search_data.setObjectName(u"search_data")
         sizePolicy.setHeightForWidth(self.search_data.sizePolicy().hasHeightForWidth())
         self.search_data.setSizePolicy(sizePolicy)
-        font26 = QFont()
-        font26.setPointSize(10)
-        font26.setBold(True)
-        self.search_data.setFont(font26)
+        self.search_data.setFont(font24)
         self.search_data.setStyleSheet(u"QLineEdit {\n"
 "    background-color: transparent; \n"
 "	border: none; \n"
@@ -9941,8 +9907,8 @@ class Ui_MainWindow(object):
 
         self.multi_search_data = QWidget(self.widget_2)
         self.multi_search_data.setObjectName(u"multi_search_data")
-        sizePolicy2.setHeightForWidth(self.multi_search_data.sizePolicy().hasHeightForWidth())
-        self.multi_search_data.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.multi_search_data.sizePolicy().hasHeightForWidth())
+        self.multi_search_data.setSizePolicy(sizePolicy1)
         self.horizontalLayout_4 = QHBoxLayout(self.multi_search_data)
         self.horizontalLayout_4.setSpacing(5)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
@@ -9963,7 +9929,7 @@ class Ui_MainWindow(object):
 
         self.search_data_start_label_2 = QLabel(self.multi_search_data)
         self.search_data_start_label_2.setObjectName(u"search_data_start_label_2")
-        self.search_data_start_label_2.setFont(font26)
+        self.search_data_start_label_2.setFont(font24)
         self.search_data_start_label_2.setStyleSheet(u"QLabel {\n"
 "    background-color: transparent; \n"
 "	border: none; \n"
@@ -9984,11 +9950,11 @@ class Ui_MainWindow(object):
         self.select_group_name.setObjectName(u"select_group_name")
         sizePolicy.setHeightForWidth(self.select_group_name.sizePolicy().hasHeightForWidth())
         self.select_group_name.setSizePolicy(sizePolicy)
-        font27 = QFont()
-        font27.setFamilies([u"Segoe UI"])
-        font27.setPointSize(10)
-        font27.setBold(True)
-        self.select_group_name.setFont(font27)
+        font28 = QFont()
+        font28.setFamilies([u"Segoe UI"])
+        font28.setPointSize(10)
+        font28.setBold(True)
+        self.select_group_name.setFont(font28)
 
         self.horizontalLayout_4.addWidget(self.select_group_name)
 
@@ -10005,7 +9971,7 @@ class Ui_MainWindow(object):
 
         self.search_data_start_label = QLabel(self.multi_search_data)
         self.search_data_start_label.setObjectName(u"search_data_start_label")
-        self.search_data_start_label.setFont(font26)
+        self.search_data_start_label.setFont(font24)
         self.search_data_start_label.setStyleSheet(u"QLabel {\n"
 "    background-color: transparent; \n"
 "	border: none; \n"
@@ -10022,7 +9988,7 @@ class Ui_MainWindow(object):
         self.search_data_start_edit.setObjectName(u"search_data_start_edit")
         sizePolicy.setHeightForWidth(self.search_data_start_edit.sizePolicy().hasHeightForWidth())
         self.search_data_start_edit.setSizePolicy(sizePolicy)
-        self.search_data_start_edit.setFont(font26)
+        self.search_data_start_edit.setFont(font24)
         self.search_data_start_edit.setStyleSheet(u"QDateTimeEdit{\n"
 "	border: 2px solid rgb(191, 191, 191);\n"
 "	border-radius: 5px;\n"
@@ -10136,7 +10102,7 @@ class Ui_MainWindow(object):
 
         self.search_data_end_label = QLabel(self.multi_search_data)
         self.search_data_end_label.setObjectName(u"search_data_end_label")
-        self.search_data_end_label.setFont(font26)
+        self.search_data_end_label.setFont(font24)
         self.search_data_end_label.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
         self.horizontalLayout_4.addWidget(self.search_data_end_label)
@@ -10145,7 +10111,7 @@ class Ui_MainWindow(object):
         self.search_data_end_edit.setObjectName(u"search_data_end_edit")
         sizePolicy.setHeightForWidth(self.search_data_end_edit.sizePolicy().hasHeightForWidth())
         self.search_data_end_edit.setSizePolicy(sizePolicy)
-        self.search_data_end_edit.setFont(font26)
+        self.search_data_end_edit.setFont(font24)
         self.search_data_end_edit.setStyleSheet(u"QDateTimeEdit{\n"
 "	border: 2px solid rgb(191, 191, 191);\n"
 "	border-radius: 5px;\n"
@@ -10251,10 +10217,10 @@ class Ui_MainWindow(object):
 
         self.label_info = QLabel(self.widget_2)
         self.label_info.setObjectName(u"label_info")
-        font28 = QFont()
-        font28.setPointSize(13)
-        font28.setItalic(True)
-        self.label_info.setFont(font28)
+        font29 = QFont()
+        font29.setPointSize(13)
+        font29.setItalic(True)
+        self.label_info.setFont(font29)
 
         self.horizontalLayout_3.addWidget(self.label_info)
 
@@ -10263,9 +10229,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.clear_history_search.sizePolicy().hasHeightForWidth())
         self.clear_history_search.setSizePolicy(sizePolicy)
         self.clear_history_search.setMinimumSize(QSize(45, 0))
-        icon30 = QIcon()
-        icon30.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_history_search.setIcon(icon30)
+        icon28 = QIcon()
+        icon28.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_history_search.setIcon(icon28)
         self.clear_history_search.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_3.addWidget(self.clear_history_search)
@@ -10277,7 +10243,7 @@ class Ui_MainWindow(object):
         self.export_all_tables_to_excel_btn.setObjectName(u"export_all_tables_to_excel_btn")
         sizePolicy.setHeightForWidth(self.export_all_tables_to_excel_btn.sizePolicy().hasHeightForWidth())
         self.export_all_tables_to_excel_btn.setSizePolicy(sizePolicy)
-        self.export_all_tables_to_excel_btn.setFont(font26)
+        self.export_all_tables_to_excel_btn.setFont(font24)
         self.export_all_tables_to_excel_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -10295,10 +10261,10 @@ class Ui_MainWindow(object):
 "    background-color: #94A3B8;\n"
 "    color: #CBD5E1;\n"
 "}")
-        icon31 = QIcon()
-        icon31.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.export_all_tables_to_excel_btn.setIcon(icon31)
-        self.export_all_tables_to_excel_btn.setIconSize(QSize(35, 35))
+        icon29 = QIcon()
+        icon29.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.export_all_tables_to_excel_btn.setIcon(icon29)
+        self.export_all_tables_to_excel_btn.setIconSize(QSize(24, 24))
 
         self.list_query_btn.addWidget(self.export_all_tables_to_excel_btn)
 
@@ -10342,7 +10308,7 @@ class Ui_MainWindow(object):
         __qtablewidgetitem8 = QTableWidgetItem()
         self.list_history.setHorizontalHeaderItem(8, __qtablewidgetitem8)
         self.list_history.setObjectName(u"list_history")
-        self.list_history.setFont(font23)
+        self.list_history.setFont(font26)
         self.list_history.setStyleSheet(u"QTableWidget {\n"
 "    border: 1px solid #BFC8D3; \n"
 "    border-radius: 8px;\n"
@@ -10420,7 +10386,7 @@ class Ui_MainWindow(object):
         __qtablewidgetitem17 = QTableWidgetItem()
         self.list_history_2.setHorizontalHeaderItem(8, __qtablewidgetitem17)
         self.list_history_2.setObjectName(u"list_history_2")
-        self.list_history_2.setFont(font23)
+        self.list_history_2.setFont(font26)
         self.list_history_2.setStyleSheet(u"QTableWidget {\n"
 "    background-color: #ffffff; border: 1px solid #BFC8D3; border-radius: 8px;\n"
 "    gridline-color: #BFC8D3; color: #334155;\n"
@@ -10485,7 +10451,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(1)
+        self.stackedWidget_2.setCurrentIndex(2)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_pressure_sv_a_11.setCurrentIndex(1)
@@ -10530,9 +10496,9 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_t0_3.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(0)
-        self.sys_state_stacked_wid_40.setCurrentIndex(0)
-        self.sys_state_stacked_wid_42.setCurrentIndex(0)
+        self.stackedWidget_3.setCurrentIndex(1)
+        self.sys_state_stacked_wid_40.setCurrentIndex(2)
+        self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
         self.i_o_group_1_switch_5.setCurrentIndex(0)
         self.i_o_group_1_switch_6.setCurrentIndex(0)
@@ -10920,6 +10886,12 @@ class Ui_MainWindow(object):
         self.cycle_a_displ_3.setPrefix("")
         self.reset_cycle_a_btn.setText("")
         self.total_cycle_label_a.setText(QCoreApplication.translate("MainWindow", u" Total Test Time A:", None))
+        self.i_o_group_2.setTitle(QCoreApplication.translate("MainWindow", u"PLC Data", None))
+        self.ip_plc_address.setText(QCoreApplication.translate("MainWindow", u" IP:", None))
+        self.db_file_path.setText(QCoreApplication.translate("MainWindow", u" DB Path:", None))
+        self.db_file_path_edit.setText("")
+        self.plc_ip_address_edit.setText("")
+        self.cmd_btn.setText("")
         self.i_o_group_1.setTitle(QCoreApplication.translate("MainWindow", u"DI", None))
         self.pushButton_59.setText("")
         self.pushButton_58.setText("")
@@ -10934,6 +10906,7 @@ class Ui_MainWindow(object):
         self.di_name_1.setText(QCoreApplication.translate("MainWindow", u"T0 Heat:", None))
         self.pushButton_43.setText("")
         self.pushButton_42.setText("")
+        self.pushButton_44.setText("")
         self.pushButton_61.setText("")
         self.pushButton_60.setText("")
         self.di_name_2.setText(QCoreApplication.translate("MainWindow", u"P1 Heat:", None))
@@ -10977,15 +10950,6 @@ class Ui_MainWindow(object):
         self.ai_name_9.setText(QCoreApplication.translate("MainWindow", u"T3-2:", None))
         self.ai_name_10.setText(QCoreApplication.translate("MainWindow", u"T3-3:", None))
         self.ai_name_11.setText(QCoreApplication.translate("MainWindow", u"P1:", None))
-        self.i_o_group_2.setTitle(QCoreApplication.translate("MainWindow", u"PLC Data", None))
-        self.db_file_path.setText(QCoreApplication.translate("MainWindow", u" DB Path:", None))
-        self.ip_plc_address.setText(QCoreApplication.translate("MainWindow", u" IP:", None))
-        self.db_number.setText(QCoreApplication.translate("MainWindow", u" DB:", None))
-        self.db_file_path_edit.setText("")
-        self.plc_ip_address_edit.setText("")
-        self.db_data_size_input.setSuffix(QCoreApplication.translate("MainWindow", u" ~ 2056", None))
-        self.write_plc_label_2.setText(QCoreApplication.translate("MainWindow", u" Size DB:", None))
-        self.cmd_btn.setText("")
         self.back_connection_page_btn.setText(QCoreApplication.translate("MainWindow", u"Connection Page", None))
         self.back_home_page_btn.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
         self.search_icon.setText("")

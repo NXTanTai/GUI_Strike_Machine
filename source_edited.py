@@ -40,7 +40,7 @@ from PySide6.QtWidgets import (
 from typing import List, Optional, Tuple, Any
 from pathlib import Path
 from datetime import datetime
-from tech_link_theme_1024x768 import Ui_MainWindow
+from tech_link_theme_edited_ui import Ui_MainWindow
 from Custom_Widgets import * #type: ignore
 from Custom_Chart_Widgets import CustomChartWidget
 from message_box import LightThemeMessageBox as ltmessage
@@ -282,7 +282,7 @@ class StrikeMachine(QMainWindow):
         self._init_screen()
 
     def _scale_icons(self, factor: float = 0.8) -> None:
-        """Scale iconSize của mọi QAbstractButton theo `factor`. Chạy 1 lần sau setupUi."""
+        """Scale iconSize của mọi QAbstractButton theo factor. Chạy 1 lần sau setupUi."""
         for btn in self.findChildren(QAbstractButton):
             size = btn.iconSize()
             if size.width() <= 0 or size.height() <= 0:
@@ -293,8 +293,10 @@ class StrikeMachine(QMainWindow):
 
 
     def _scale_button_boxes(self, factor: float = 0.8) -> None:
-        """Scale minimumSize/maximumSize của các nút có icon theo `factor`,
-        để khung nút co theo cùng tỉ lệ với icon — tránh dư khoảng trắng quanh icon."""
+        """
+        Scale minimumSize/maximumSize của các nút có icon theo factor
+        để khung nút co theo cùng tỉ lệ với icon — tránh dư khoảng trắng quanh icon
+        """
         QWIDGETSIZE_MAX = 16777215
 
         def _scaled(v: int) -> int:
@@ -312,7 +314,10 @@ class StrikeMachine(QMainWindow):
 
 
     def _scale_fonts(self, factor: float = 0.8) -> None:
-        """Scale pointSize font của mọi widget theo `factor`. Chạy 1 lần sau setupUi."""
+        """
+        Scale pointSize font của mọi widget theo factor
+        Chạy 1 lần sau setupUi
+        """
         for widget in self.findChildren(QWidget):
             f = widget.font()
             pt = f.pointSize()
@@ -339,8 +344,8 @@ class StrikeMachine(QMainWindow):
     def _test_marquee_label(self):
         test_text = "Strike Machine System - Running Normally - No Error Detected"
         # test_text = "Hello Hello Hello"
-        self.ui.error_display.setText(test_text)
-        print(f"MarqueeLabel setText: '{self.ui.error_display.text()}' \nWidget visible: {self.ui.error_display.isVisible()} \nWidget size: {self.ui.error_display.size()}")
+        # self.ui.error_display.setText(test_text)
+        # print(f"MarqueeLabel setText: '{self.ui.error_display.text()}' \nWidget visible: {self.ui.error_display.isVisible()} \nWidget size: {self.ui.error_display.size()}")
     
     def _init_AI_actual_db(self):
         self.ai_data_folder = Path(self.stk_mch_folder) / "AI_Training_Data"
@@ -527,8 +532,9 @@ class StrikeMachine(QMainWindow):
     def _gui_update_connection_group(self, path_get):
         self.ui.plc_ip_address_edit.setText(self.db_dict["ip_plc"]) #type: ignore
         self.ui.db_file_path_edit.setText(str(path_get))
-        self.ui.db_number_input.setValue(self.db_dict["db_name"]) #type: ignore
-        self.ui.db_data_size_input.setValue(self.db_dict["DB_TOTAL_BYTES"]) #type: ignore
+        self._cmd_protect_ms = (float(self.db_dict["input_read"]/1000) + 0.1)
+        # self.ui.db_number_input.setValue(self.db_dict["db_name"]) #type: ignore
+        # self.ui.db_data_size_input.setValue(self.db_dict["DB_TOTAL_BYTES"]) #type: ignore
         self.ui.write_time_input.setValue(self.db_dict["write_time"]) #type: ignore
 
     def _init_logger(self):
@@ -656,6 +662,9 @@ class StrikeMachine(QMainWindow):
         self._last_cur_cycle_a:         list = [None] * 4
         self._last_cur_cycle_b:         list = [None] * 4
         self._last_cur_cycle_c:         list = [None] * 4
+
+        self._last_cmd_time = {}          # key = tag name, value = time.time()
+        self._cmd_protect_ms = 0.6
 
         self.init_signal = False
 
@@ -1359,15 +1368,15 @@ class StrikeMachine(QMainWindow):
 
         install_clear_on_focus(self.ui.db_file_path_edit)
         install_clear_on_focus(self.ui.plc_ip_address_edit)
-        install_clear_on_focus(self.ui.db_number_input)
-        install_clear_on_focus(self.ui.db_data_size_input)
-        install_clear_on_focus(self.ui.error_display)
+        # install_clear_on_focus(self.ui.db_number_input)
+        # install_clear_on_focus(self.ui.db_data_size_input)
+        # install_clear_on_focus(self.ui.error_display)
 
         protect_widgets_on_stacked(self.ui.stackedWidget_2, [
             (self.ui.db_file_path_edit,   None, None),
             (self.ui.plc_ip_address_edit, None, None),
-            (self.ui.db_number_input,     None, None),
-            (self.ui.db_data_size_input,  None, None),
+            # (self.ui.db_number_input,     None, None),
+            # (self.ui.db_data_size_input,  None, None),
         ])
 
         for name, handler in spinbox_map.items():
@@ -1376,7 +1385,7 @@ class StrikeMachine(QMainWindow):
             spinbox.setKeyboardTracking(False)
             spinbox.valueChanged.connect(handler)
 
-        self.ui.error_display._speed = 50
+        # self.ui.error_display._speed = 50
 
     def _get_transform(self, key: str):
         if key == "sec_to_msec":
@@ -2311,7 +2320,6 @@ class StrikeMachine(QMainWindow):
     def _setup_plc_threads(self, state: bool):
         if state:
             self.logger.info("PLC Thread set Off")
-            self.setup_simulate_threads()
             return
         
         if not self.db_dict:
@@ -2933,7 +2941,8 @@ class StrikeMachine(QMainWindow):
                 ])
                 print("Init Button Done")
                 self.init_signal = False
-
+            
+            self._detect_btn_obj(data)
             # _t("input_data", lambda: 
             self._input_data_filter([
                 self.ui.heat_btn_t0.isChecked(),
@@ -3134,6 +3143,39 @@ class StrikeMachine(QMainWindow):
         if list_bool[15]:
             self.logger.info("[Main]-[_init_button_obj]: CYCLE C BOOL: 1")
             self.ui.set_cycle_c_btn.click() if not self.ui.set_cycle_c_btn.isChecked() else None
+
+    def _detect_btn_obj(self, data):
+        button_map = [
+            (self.ui.heat_btn_t0,     "T0_Start_Heat"),
+            (self.ui.heat_btn_a,      "P1_Start_Heat"),
+            (self.ui.vacuum_btn_a,    "P1_Start_Pressure"),
+            (self.ui.refuel_btn_a,    "P1_Start_Oil"),
+            (self.ui.set_cycle_a_btn, "P1_BitCountTimes"),
+
+            (self.ui.heat_btn_b,      "P2_Start_Heat"),
+            (self.ui.vacuum_btn_b,    "P2_Start_Pressure"),
+            (self.ui.refuel_btn_b,    "P2_Start_Oil"),
+            (self.ui.set_cycle_b_btn, "P2_BitCountTimes"),
+
+            (self.ui.heat_btn_c,      "P3_Start_Heat"),
+            (self.ui.vacuum_btn_c,    "P3_Start_Pressure"),
+            (self.ui.refuel_btn_c,    "P3_Start_Oil"),
+            (self.ui.set_cycle_c_btn, "P3_BitCountTimes"),
+        ]
+
+        for btn, tag in button_map:
+            if self._should_ignore_status(tag):
+                continue
+
+            plc_value = bool(data.get(tag, False))
+            if btn.isChecked() != plc_value:
+                btn.setChecked(plc_value)
+
+    def _should_ignore_status(self, tag: str) -> bool:
+        t = self._last_cmd_time.get(tag)
+        if t is None:
+            return False
+        return (time.time() - t) < self._cmd_protect_ms
 
     def _init_pressure_group_sv_obj(self, list_init_a, list_init_b, list_init_c, list_init_t0):
         for i in range(len(self.list_for_import_a)):
@@ -3411,289 +3453,185 @@ class StrikeMachine(QMainWindow):
 
     def _alarm_data_filter(self, alarm_recv):
         if alarm_recv != "":
-            self.ui.error_display.setText(alarm_recv) if self.ui.error_display.text() != alarm_recv else None
+            # self.ui.error_display.setText(alarm_recv) if self.ui.error_display.text() != alarm_recv else None
             self.logger.error("[Main]-[_alarm_data_filter]:PLC Alarm: %s", alarm_recv)
-        else:
-            if self.ui.error_display.text() != "":
-                self.ui.error_display.setText("")
+        # else:
+        #     if self.ui.error_display.text() != "":
+        #         self.ui.error_display.setText("")
 
     def heating_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection and not self.init_signal or self.ui.start_stop_stacked.currentIndex() == 0:
-            # if self._current_lang == "en":
-            #     title = "Error"
-            #     content = "PLC Writer not connected!"
-            # elif self._current_lang == "cn":
-            #     title = "错误"
-            #     content = "PLC Writer 未连接!"
-            # ltmessage.error(self, title, content, self._current_lang)
+        if (not self.plc_writer_connection and not self.init_signal) or self.ui.start_stop_stacked.currentIndex() == 0:
             if btn is not None:
-                btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
+                btn.blockSignals(True)
                 btn.setChecked(False)
                 btn.blockSignals(False)
             return
+
+        tag_map = {
+            "A":  "P1_Start_Heat",
+            "B":  "P2_Start_Heat",
+            "C":  "P3_Start_Heat",
+            "T0": "T0_Start_Heat",
+        }
+        tag = tag_map.get(channel)
+        if not tag:
+            return
+
+        self._last_cmd_time[tag] = time.time()
+
+        if checked:
+            self.ui.new_data_btn.setEnabled(True)
+            self.ui.clear_data_btn.setEnabled(True)
         else:
+            self.ui.new_data_btn.setEnabled(False)
+            self.ui.clear_data_btn.setEnabled(False)
+
+        if channel == "A":
+            if not self.init_signal:
+                self.plc_writer_worker.write_bool.emit("P1_Start_Heat", checked)
+            self.disable_heat_group(channel, not checked)
+            self.logger.info(f"[Main]-[heating_btn]: Group A Heating {'On' if checked else 'Off'}!")
+
+        elif channel == "B":
+            if not self.init_signal:
+                self.plc_writer_worker.write_bool.emit("P2_Start_Heat", checked)
+            self.disable_heat_group(channel, not checked)
+            self.logger.info(f"[Main]-[heating_btn]: Group B Heating {'On' if checked else 'Off'}!")
+
+        elif channel == "C":
+            if not self.init_signal:
+                self.plc_writer_worker.write_bool.emit("P3_Start_Heat", checked)
+            self.disable_heat_group(channel, not checked)
+            self.logger.info(f"[Main]-[heating_btn]: Group C Heating {'On' if checked else 'Off'}!")
+
+        elif channel == "T0":
             if checked:
-                self.ui.new_data_btn.setEnabled(checked)
-                self.ui.clear_data_btn.setEnabled(checked)
+                if not self.init_signal:
+                    self.plc_writer_worker.write_bool.emit("T0_Start_Heat", True)
+                self.disable_heat_group(channel, False)
+                self.logger.info("[Main]-[heating_btn]: T0 Heating On!")
             else:
-                self.ui.new_data_btn.setEnabled(not checked)
-                self.ui.clear_data_btn.setEnabled(not checked)
-                
-            if channel == "A":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P1_Start_Heat", True)   # type: ignore
-                    self.disable_heat_group(channel, False)
-                    self.logger.info("[Main]-[heating_btn]: Group A Heating On!")
-                    # ltmessage.information(self, "Heating", "Group A Heating On!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P1_Start_Heat", False)  # type: ignore
-                    self.disable_heat_group(channel, True)
-                    self.logger.info("[Main]-[heating_btn]: Group A Heating Off!")
-                return
-            if channel == "B":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P2_Start_Heat", True)   # type: ignore
-                    self.disable_heat_group(channel, False)
-                    self.logger.info("[Main]-[heating_btn]: Group B Heating On!")
-                    # ltmessage.information(self, "Heating", "Group B Heating On!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P2_Start_Heat", False)  # type: ignore
-                    self.disable_heat_group(channel, True)
-                    self.logger.info("[Main]-[heating_btn]: Group B Heating Off!")
-                return
-            if channel == "C":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P3_Start_Heat", True)   # type: ignore
-                    self.disable_heat_group(channel, False)
-                    self.logger.info("[Main]-[heating_btn]: Group C Heating On!")
-                    # ltmessage.information(self, "Heating", "Group C Heating On!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("P3_Start_Heat", False)  # type: ignore
-                    self.disable_heat_group(channel, True)
-                    self.logger.info("[Main]-[heating_btn]: Group C Heating Off!")
-                return
-            if channel == "T0":
-                if checked:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("T0_Start_Heat", True)   # type: ignore
-                    self.disable_heat_group(channel, False)
-                    self.logger.info("[Main]-[heating_btn]: T0 Heating On!")
-                    # ltmessage.information(self, "Heating", "T0 Heating On!")
-                else:
-                    if not self.init_signal:
-                        self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", True)    # type: ignore
-                        QTimer.singleShot(100,  lambda: self.plc_writer_worker.write_bool.emit("T0_Start_Heat", False)) # type: ignore
-                        QTimer.singleShot(200,  lambda: self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", False))  # type: ignore
-                    self.disable_heat_group(channel, True)
-                    self.logger.info("[Main]-[heating_btn]: T0 Heating Off!")
-                return
+                if not self.init_signal:
+                    self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", True)
+                    QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("T0_Start_Heat", False))
+                    QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", False))
+                self.disable_heat_group(channel, True)
+                self.logger.info("[Main]-[heating_btn]: T0 Heating Off!")
 
     def pumping_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection and not self.init_signal or self.ui.start_stop_stacked.currentIndex() == 0:
-            # if self._current_lang == "en":
-            #     title = "Error"
-            #     content = "PLC Writer not connected!"
-            # elif self._current_lang == "cn":
-            #     title = "错误"
-            #     content = "PLC Writer 未连接!"
-            # ltmessage.error(self, title, content, self._current_lang)
+        if (not self.plc_writer_connection and not self.init_signal) or self.ui.start_stop_stacked.currentIndex() == 0:
             if btn is not None:
-                btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
+                btn.blockSignals(True)
                 btn.setChecked(False)
                 btn.blockSignals(False)
             return
-        else:
-            try:
-                if checked:
-                    self.ui.new_data_btn.setEnabled(checked)
-                    self.ui.clear_data_btn.setEnabled(checked)
-                else:
-                    self.ui.new_data_btn.setEnabled(not checked)
-                    self.ui.clear_data_btn.setEnabled(not checked)
-                    
-                if channel == "A":
-                    if checked:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", True)   # type: ignore
-                        self.disable_pressure_group(channel, False)
-                        self._sv_cycle_state(channel, False)
-                        self.logger.info("[Main]-[pumping_btn]: Group A Pressure On!")
-                        # ltmessage.information(self, "Pumping", "Group A Pressure On!")
-                    else:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P1_Start_Pressure", False)  # type: ignore
-                        self.disable_pressure_group(channel, True)
-                        self._sv_cycle_state(channel, True)
-                        self.logger.info("[Main]-[pumping_btn]: Group A Pressure Off!")
 
-                elif channel == "B":
-                    if checked:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", True)   # type: ignore
-                        self.disable_pressure_group(channel, False)
-                        self._sv_cycle_state(channel, False)
-                        self.logger.info("[Main]-[pumping_btn]: Group B Pressure On!")
-                        # ltmessage.information(self, "Pumping", "Group B Pressure On!")
-                    else:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P2_Start_Pressure", False)  # type: ignore
-                        self.disable_pressure_group(channel, True)
-                        self._sv_cycle_state(channel, True)
-                        self.logger.info("[Main]-[pumping_btn]: Group B Pressure Off!")
+        tag_map = {
+            "A": "P1_Start_Pressure",
+            "B": "P2_Start_Pressure",
+            "C": "P3_Start_Pressure",
+        }
+        tag = tag_map.get(channel)
+        if not tag:
+            return
 
-                elif channel == "C":
-                    if checked:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", True)   # type: ignore
-                        self.disable_pressure_group(channel, False)
-                        self._sv_cycle_state(channel, False)
-                        self.logger.info("[Main]-[pumping_btn]: Group C Pressure On!")
-                        # ltmessage.information(self, "Pumping", "Group C Pressure On!")
-                    else:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P3_Start_Pressure", False)  # type: ignore
-                        self.disable_pressure_group(channel, True)
-                        self._sv_cycle_state(channel, True)
-                        self.logger.info("[Main]-[pumping_btn]: Group C Pressure Off!")
-                return
-            except Exception as e:
-                self.logger.error(f"[Main]-[pumping_btn]: Error occurred - {str(e)}")
+        # Ghi nhận thời điểm vừa gửi lệnh
+        self._last_cmd_time[tag] = time.time()
+
+        try:
+            if checked:
+                self.ui.new_data_btn.setEnabled(True)
+                self.ui.clear_data_btn.setEnabled(True)
+            else:
+                self.ui.new_data_btn.setEnabled(False)
+                self.ui.clear_data_btn.setEnabled(False)
+
+            if not self.init_signal:
+                self.plc_writer_worker.write_bool.emit(tag, checked)
+
+            self.disable_pressure_group(channel, not checked)
+            self._sv_cycle_state(channel, not checked)
+
+            self.logger.info(
+                f"[Main]-[pumping_btn]: Group {channel} Pressure {'On' if checked else 'Off'}!"
+            )
+        except Exception as e:
+            self.logger.error(f"[Main]-[pumping_btn]: Error occurred - {str(e)}")
 
     def fill_oil_btn(self, channel: str, checked: bool, btn=None):
-        if not self.plc_writer_connection and not self.init_signal or self.ui.start_stop_stacked.currentIndex() == 0:
-            # if self._current_lang == "en":
-            #     title = "Error"
-            #     content = "PLC Writer not connected!"
-            # elif self._current_lang == "cn":
-            #     title = "错误"
-            #     content = "PLC Writer 未连接!"
-            # ltmessage.error(self, title, content, self._current_lang)
+        if (not self.plc_writer_connection and not self.init_signal) or self.ui.start_stop_stacked.currentIndex() == 0:
             if btn is not None:
-                btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
+                btn.blockSignals(True)
                 btn.setChecked(False)
                 btn.blockSignals(False)
             return
-        else:
-            try:
-                if channel == "A":
-                    if checked:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P1_Start_Oil", True)    # type: ignore
-                        self.disable_oil_group(channel, False)
-                        self._sv_cycle_state(channel, False)
-                        self.logger.info("[Main]-[fill_oil_btn]: Group A Oil Filling On!")
-                        # ltmessage.information(self, "Oil Fill", "Group A Oil Filling On!")
-                    else:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P1_Start_Oil", False)   # type: ignore
-                        self.disable_oil_group(channel, True)
-                        self._sv_cycle_state(channel, True)
-                        self.logger.info("[Main]-[fill_oil_btn]: Group A Oil Filling Off!")
 
-                if channel == "B":
-                    if checked:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P2_Start_Oil", True)    # type: ignore
-                        self.disable_oil_group(channel, False)
-                        self._sv_cycle_state(channel, False)
-                        self.logger.info("[Main]-[fill_oil_btn]: Group B Oil Filling On!")
-                        # ltmessage.information(self, "Oil Fill", "Group B Oil Filling On!")
-                    else:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P2_Start_Oil", False)   # type: ignore
-                        self.disable_oil_group(channel, True)
-                        self._sv_cycle_state(channel, True)
-                        self.logger.info("[Main]-[fill_oil_btn]: Group B Oil Filling Off!")
+        tag_map = {
+            "A": "P1_Start_Oil",
+            "B": "P2_Start_Oil",
+            "C": "P3_Start_Oil",
+        }
+        tag = tag_map.get(channel)
+        if not tag:
+            return
 
-                if channel == "C":
-                    if checked:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P3_Start_Oil", True)    # type: ignore
-                        self.disable_oil_group(channel, False)
-                        self._sv_cycle_state(channel, False)
-                        self.logger.info("[Main]-[fill_oil_btn]: Group C Oil Filling On!")
-                        # ltmessage.information(self, "Oil Fill", "Group C Oil Filling On!")
-                    else:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P3_Start_Oil", False)   # type: ignore
-                        self.disable_oil_group(channel, True)
-                        self._sv_cycle_state(channel, True)
-                        self.logger.info("[Main]-[fill_oil_btn]: Group C Oil Filling Off!")
-            except Exception as e:
-                self.logger.error(f"[Main]-[fill_oil_btn]: Error occurred - {str(e)}")
+        # Ghi nhận thời điểm vừa gửi lệnh
+        self._last_cmd_time[tag] = time.time()
+
+        try:
+            if not self.init_signal:
+                self.plc_writer_worker.write_bool.emit(tag, checked)
+
+            self.disable_oil_group(channel, not checked)
+            self._sv_cycle_state(channel, not checked)
+
+            self.logger.info(
+                f"[Main]-[fill_oil_btn]: Group {channel} Oil Filling {'On' if checked else 'Off'}!"
+            )
+        except Exception as e:
+            self.logger.error(f"[Main]-[fill_oil_btn]: Error occurred - {str(e)}")
 
     def cycle_loop_btn(self, channel: str, checked: bool, btn=None):
-        buttons_a = [
-            self.ui.refuel_btn_a, self.ui.vacuum_btn_a
-        ]
-        buttons_b = [
-            self.ui.refuel_btn_b, self.ui.vacuum_btn_b
-        ]
-        buttons_c = [
-            self.ui.refuel_btn_c, self.ui.vacuum_btn_c
-        ]
-        
-        if not self.plc_writer_connection and not self.init_signal or (channel == "A" and any(btn.isChecked() for btn in buttons_a)) or (channel == "B" and any(btn.isChecked() for btn in buttons_b)) or (channel == "C" and any(btn.isChecked() for btn in buttons_c)):
+        buttons_map = {
+            "A": [self.ui.refuel_btn_a, self.ui.vacuum_btn_a],
+            "B": [self.ui.refuel_btn_b, self.ui.vacuum_btn_b],
+            "C": [self.ui.refuel_btn_c, self.ui.vacuum_btn_c],
+        }
+
+        if (not self.plc_writer_connection and not self.init_signal) or \
+        any(b.isChecked() for b in buttons_map.get(channel, [])):
             if btn is not None:
-                btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
+                btn.blockSignals(True)
                 btn.setChecked(False)
                 btn.blockSignals(False)
             return
-        else:
-            try:
-                if channel == "A":
-                    if checked:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", True)    # type: ignore
-                            self.reset_cycle_btn(channel)
-                        self._sv_cycle_state(channel, True)
-                        self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat Off!")
-                        # ltmessage.information(self, "Set Cycle A", "Group A Auto Repeat!")
-                    else:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P1_BitCountTimes", False)   # type: ignore
-                        self._sv_cycle_state(channel, False)
-                        self.logger.info("[Main]-[cycle_loop_btn]: Group A Auto Repeat On!")
-                    self._set_cycle_state(channel)
-                    return
-                if channel == "B":
-                    if checked:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", True)    # type: ignore
-                            self.reset_cycle_btn(channel)
-                        self._sv_cycle_state(channel, True)
-                        self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat Off!")
-                        # ltmessage.information(self, "Set Cycle B", "Group B Auto Repeat!")
-                    else:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P2_BitCountTimes", False)   # type: ignore
-                        self._sv_cycle_state(channel, False)
-                        self.logger.info("[Main]-[cycle_loop_btn]: Group B Auto Repeat On!")
-                    self._set_cycle_state(channel)
-                    return
-                if channel == "C":
-                    if checked:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", True)    # type: ignore
-                            self.reset_cycle_btn(channel)
-                        self._sv_cycle_state(channel, True)
-                        self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat Off!")
-                        # ltmessage.information(self, "Set Cycle C", "Group C Auto Repeat!")
-                    else:
-                        if not self.init_signal:
-                            self.plc_writer_worker.write_bool.emit("P3_BitCountTimes", False)   # type: ignore
-                        self._sv_cycle_state(channel, False)
-                        self.logger.info("[Main]-[cycle_loop_btn]: Group C Auto Repeat On!")
-                    self._set_cycle_state(channel)
-                    return
-            except Exception as e:
-                self.logger.error(f"[Main]-[cycle_loop_btn]: Error occurred - {str(e)}")
+
+        tag_map = {
+            "A": "P1_BitCountTimes",
+            "B": "P2_BitCountTimes",
+            "C": "P3_BitCountTimes",
+        }
+        tag = tag_map.get(channel)
+        if not tag:
+            return
+
+        # Ghi nhận thời điểm vừa gửi lệnh
+        self._last_cmd_time[tag] = time.time()
+
+        try:
+            if not self.init_signal:
+                self.plc_writer_worker.write_bool.emit(tag, checked)
+                if checked:
+                    self.reset_cycle_btn(channel)
+
+            self._sv_cycle_state(channel, checked)
+            self._set_cycle_state(channel)
+
+            self.logger.info(
+                f"[Main]-[cycle_loop_btn]: Group {channel} Auto Repeat {'Off' if checked else 'On'}!"
+            )
+        except Exception as e:
+            self.logger.error(f"[Main]-[cycle_loop_btn]: Error occurred - {str(e)}")
 
     def _sv_cycle_state(self, channel, status):
         if channel == "All":
@@ -4887,13 +4825,13 @@ class StrikeMachine(QMainWindow):
             file_path += ".xlsx"
 
         self._exporting = True
-        if self._current_lang == "en":
-            text_disp = "Exporting... Please wait."
-        elif self._current_lang == "cn":
-            text_disp = "导出中... 请等待."
-        elif self._current_lang == "vn":
-            text_disp = "Đang tạo file..."
-        self.ui.error_display.setText(text_disp) # type: ignore
+        # if self._current_lang == "en":
+        #     text_disp = "Exporting... Please wait."
+        # elif self._current_lang == "cn":
+        #     text_disp = "导出中... 请等待."
+        # elif self._current_lang == "vn":
+        #     text_disp = "Đang tạo file..."
+        # self.ui.error_display.setText(text_disp) # type: ignore
         self._export_thread = QThread()
         if self.ui.stacked_list_history_page.currentIndex() == 0:
             self._export_worker = ExportWorker(
@@ -4924,7 +4862,7 @@ class StrikeMachine(QMainWindow):
 
     def _on_export_done(self, file_path: str, error: str):
         self._exporting = False
-        self.ui.error_display.setText("")
+        # self.ui.error_display.setText("")
         if error:
             if self._current_lang == "en":
                 title = "Error"

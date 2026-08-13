@@ -228,14 +228,20 @@ if __name__ == '__main__':
             )
 
         screen = QApplication.primaryScreen().availableGeometry()
-        window.move(
-            (screen.width()  - window.width())  // 2,
-            (screen.height() - window.height()) // 2,
-        )
-        window.show()
+        # window.move(
+        #     screen.x() + (screen.width()  - window.width())  // 2,
+        #     screen.y() + (screen.height() - window.height()) // 2,
+        # )
+        def _center_on_screen(win):
+            screen_geo = QApplication.primaryScreen().availableGeometry()
+            frame = win.frameGeometry()          
+            frame.moveCenter(screen_geo.center())
+            win.move(frame.topLeft())            
 
+        window.show()                        
+        QTimer.singleShot(0, lambda: _center_on_screen(window))
         QTimer.singleShot(100, lambda: (window.raise_(), window.activateWindow()))
-
+        
     except Exception:
         _close_loading(_loader_proc, _signal_file, _pause_file)
 

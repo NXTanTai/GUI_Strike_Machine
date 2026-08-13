@@ -11,9 +11,12 @@ import multiprocessing
 import subprocess
 import tempfile
 import traceback
+import logging
 import os
 import sys
 from pathlib import Path
+
+from crash_watchdog import setup_crash_watchdog
 
 LOADING_ENV   = 'STRIKE_MACHINE_LOADING'
 LOADING_PAUSE = 'STRIKE_MACHINE_LOADING_PAUSE'
@@ -60,6 +63,11 @@ WEB_INIT = (get_exe_dir() / "web_on.txt").is_file()
 if os.environ.get(LOADING_ENV):
     signal_file = os.environ[LOADING_ENV]
     pause_file  = os.environ.get(LOADING_PAUSE, '')
+
+    _loading_watchdog = setup_crash_watchdog(
+        get_exe_dir(),
+        role="loading",
+    )
 
     from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
     from PySide6.QtCore    import Qt, QFileSystemWatcher
@@ -119,8 +127,8 @@ if os.environ.get(LOADING_ENV):
 
     screen = app.primaryScreen().availableGeometry()
     win.move(
-        (screen.width()  - win.width())  // 2,
-        (screen.height() - win.height()) // 2,
+        screen.x() + (screen.width()  - win.width())  // 2,
+        screen.y() + (screen.height() - win.height()) // 2,
     )
     win.show()
 
@@ -138,10 +146,18 @@ if os.environ.get(LOADING_ENV):
 
         pause_watcher.fileChanged.connect(_on_pause_changed)
 
-    sys.exit(app.exec())
+    _loading_exit_code = app.exec()
+    _loading_watchdog.mark_clean_exit(f"loading window event loop returned exit_code={_loading_exit_code}")
+    sys.exit(_loading_exit_code)
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
+
+    _watchdog = setup_crash_watchdog(
+        get_exe_dir(),
+        role="main",
+    )
+
     if WEB_INIT:
         from web_server import run_web_server
 
@@ -169,10 +185,10 @@ if __name__ == '__main__':
 
     app = None
     try:
-        from PySide6.QtWidgets import QApplication, QMessageBox
+        from PySide6.QtWidgets import QApplication, QMessageBox, QStyle
         from PySide6.QtCore    import QLocale, QSharedMemory, QSystemSemaphore, QTimer
-        # from source            import StrikeMachine
-        from source_backup            import StrikeMachine
+        from source_edited            import StrikeMachine
+        # from source_backup            import StrikeMachine
 
         def check_full_language_info():
             locale = QLocale.system()
@@ -190,14 +206,28 @@ if __name__ == '__main__':
 
         app = QApplication(sys.argv)
         QLocale.setDefault(QLocale(QLocale.Language.C))
+        app.aboutToQuit.connect(
+            lambda: _watchdog.mark_clean_exit("QApplication.aboutToQuit fired")
+        )
 
         semaphore = QSystemSemaphore('StrikeMachine_Instance', 1)
         semaphore.acquire()
         BASE_W, BASE_H = 1024, 724
         _screen_geo = app.primaryScreen().availableGeometry()
+
+        # availableGeometry() đã trừ taskbar, nhưng CHƯA trừ title bar của cửa sổ
+        # (title bar chỉ xuất hiện sau khi show()). Nếu không trừ trước, content
+        # sẽ được scale vừa khít available height, rồi title bar cộng thêm vào
+        # sẽ đẩy đáy cửa sổ lọt xuống dưới, đè lên taskbar.
+        _title_bar_h = QApplication.style().pixelMetric(QStyle.PM_TitleBarHeight)
+        if _title_bar_h <= 0:
+            _title_bar_h = 32  # fallback nếu platform/WM không trả về giá trị hợp lệ
+
+        _usable_h = _screen_geo.height() - _title_bar_h
+
         scale_factor = min(
-            _screen_geo.width()  / BASE_W,
-            _screen_geo.height() / BASE_H,
+            _screen_geo.width() / BASE_W,
+            _usable_h           / BASE_H,
         )
         scale_factor = max(scale_factor, 0.5)
 
@@ -227,12 +257,14 @@ if __name__ == '__main__':
                 scale_factor=scale_factor
             )
 
-        screen = QApplication.primaryScreen().availableGeometry()
-        window.move(
-            (screen.width()  - window.width())  // 2,
-            (screen.height() - window.height()) // 2,
-        )
+        def _center_on_screen(win):
+            screen_geo = QApplication.primaryScreen().availableGeometry()
+            frame = win.frameGeometry()
+            frame.moveCenter(screen_geo.center())
+            win.move(frame.topLeft())
+
         window.show()
+        QTimer.singleShot(0, lambda: _center_on_screen(window))
 
         QTimer.singleShot(100, lambda: (window.raise_(), window.activateWindow()))
 
@@ -240,6 +272,10 @@ if __name__ == '__main__':
         _close_loading(_loader_proc, _signal_file, _pause_file)
 
         error_detail = traceback.format_exc()
+        _watchdog.log_custom(
+            f"STARTUP_EXCEPTION (crash trước khi vào event loop chính):\n{error_detail}",
+            level=logging.CRITICAL,
+        )
         if app is not None:
             QMessageBox.critical(None, 'Startup errors',  # type: ignore
                                  f'The app cannot be launched:\n\n{error_detail}')
@@ -252,4 +288,6 @@ if __name__ == '__main__':
         _close_loading(_loader_proc, _signal_file, _pause_file)
 
     if app is not None:
-        sys.exit(app.exec())
+        _exit_code = app.exec()
+        _watchdog.log_custom(f"app.exec() returned exit_code={_exit_code}")
+        sys.exit(_exit_code)

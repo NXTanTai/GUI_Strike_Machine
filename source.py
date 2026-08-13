@@ -40,7 +40,7 @@ from PySide6.QtWidgets import (
 from typing import List, Optional, Tuple, Any
 from pathlib import Path
 from datetime import datetime
-from tech_link_theme_1024x768 import Ui_MainWindow
+from tech_link_theme import Ui_MainWindow
 from Custom_Widgets import * #type: ignore
 from Custom_Chart_Widgets import CustomChartWidget
 from message_box import LightThemeMessageBox as ltmessage
@@ -2423,7 +2423,7 @@ class StrikeMachine(QMainWindow):
             db_size: Optional[int] = None, 
             offsets: int = 198,
             poll_ms: int = 100,
-            logger_parent: str = None
+            logger_parent: str = None # type: ignore
         ):
         try:
             if db_number is None:
@@ -4080,7 +4080,7 @@ class StrikeMachine(QMainWindow):
                 elif self._current_lang == "vn":
                     title = "Lỗi"
                     content = f"Không thể xoá dữ liệu: {e}"
-                ltmessage.error(self, title, content, self._current_lang)
+                ltmessage.error(self, title, content, self._current_lang) # type: ignore
 
     def reset_cycle_btn(self, channel):
         try:

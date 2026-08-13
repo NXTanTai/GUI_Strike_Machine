@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'tech_link_theme_1024x768.ui'
+## Form generated from reading UI file 'tech_link_theme_edited.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -24,7 +24,6 @@ from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QAbstract
     QVBoxLayout, QWidget)
 
 from Custom_Widgets.QCustomSlideMenu import QCustomSlideMenu
-from marquee_label import MarqueeLabel
 from qtime_only_edit import TimeOnlyEdit
 import Icon_rc
 import resources_rc
@@ -144,25 +143,28 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addLayout(self.company_header_layout)
 
-        self.pc_inform_label = QVBoxLayout()
-        self.pc_inform_label.setObjectName(u"pc_inform_label")
-        self.error_display = MarqueeLabel(self.header_frame)
-        self.error_display.setObjectName(u"error_display")
-        sizePolicy.setHeightForWidth(self.error_display.sizePolicy().hasHeightForWidth())
-        self.error_display.setSizePolicy(sizePolicy)
-        self.error_display.setMinimumSize(QSize(0, 0))
-        font2 = QFont()
-        font2.setFamilies([u"Segoe UI"])
-        font2.setPointSize(20)
-        font2.setBold(True)
-        self.error_display.setFont(font2)
-        self.error_display.setStyleSheet(u"padding-left: 50px;\n"
-"color: #F90A0A;")
+        self.horizontalLayout_49 = QHBoxLayout()
+        self.horizontalLayout_49.setObjectName(u"horizontalLayout_49")
+        self.warning_notification = QPushButton(self.header_frame)
+        self.warning_notification.setObjectName(u"warning_notification")
+        sizePolicy.setHeightForWidth(self.warning_notification.sizePolicy().hasHeightForWidth())
+        self.warning_notification.setSizePolicy(sizePolicy)
+        self.warning_notification.setStyleSheet(u"background-color: transparent;\n"
+"border-radius: 8px;")
 
-        self.pc_inform_label.addWidget(self.error_display)
+        self.horizontalLayout_49.addWidget(self.warning_notification)
+
+        self.error_notification = QPushButton(self.header_frame)
+        self.error_notification.setObjectName(u"error_notification")
+        sizePolicy.setHeightForWidth(self.error_notification.sizePolicy().hasHeightForWidth())
+        self.error_notification.setSizePolicy(sizePolicy)
+        self.error_notification.setStyleSheet(u"background-color: transparent;\n"
+"border-radius: 8px;")
+
+        self.horizontalLayout_49.addWidget(self.error_notification)
 
 
-        self.horizontalLayout.addLayout(self.pc_inform_label)
+        self.horizontalLayout.addLayout(self.horizontalLayout_49)
 
         self.horizontalLayout_10 = QHBoxLayout()
         self.horizontalLayout_10.setSpacing(10)
@@ -281,11 +283,11 @@ class Ui_MainWindow(object):
         self.date_displ.setObjectName(u"date_displ")
         sizePolicy.setHeightForWidth(self.date_displ.sizePolicy().hasHeightForWidth())
         self.date_displ.setSizePolicy(sizePolicy)
-        font3 = QFont()
-        font3.setFamilies([u"MS Shell Dlg 2"])
-        font3.setPointSize(14)
-        font3.setBold(True)
-        self.date_displ.setFont(font3)
+        font2 = QFont()
+        font2.setFamilies([u"MS Shell Dlg 2"])
+        font2.setPointSize(14)
+        font2.setBold(True)
+        self.date_displ.setFont(font2)
         self.date_displ.setStyleSheet(u"color: rgb(0, 0, 0);\n"
 "background-color: rgb(255, 255, 255);\n"
 "border: none;\n"
@@ -370,11 +372,11 @@ class Ui_MainWindow(object):
         self.home_page_btn.setObjectName(u"home_page_btn")
         sizePolicy.setHeightForWidth(self.home_page_btn.sizePolicy().hasHeightForWidth())
         self.home_page_btn.setSizePolicy(sizePolicy)
-        font4 = QFont()
-        font4.setFamilies([u"Segoe UI"])
-        font4.setPointSize(11)
-        font4.setBold(True)
-        self.home_page_btn.setFont(font4)
+        font3 = QFont()
+        font3.setFamilies([u"Segoe UI"])
+        font3.setPointSize(11)
+        font3.setBold(True)
+        self.home_page_btn.setFont(font3)
         self.home_page_btn.setStyleSheet(u"")
         icon4 = QIcon()
         icon4.addFile(u":/Icons/home_off.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
@@ -390,7 +392,7 @@ class Ui_MainWindow(object):
         self.chart_page_btn.setObjectName(u"chart_page_btn")
         sizePolicy.setHeightForWidth(self.chart_page_btn.sizePolicy().hasHeightForWidth())
         self.chart_page_btn.setSizePolicy(sizePolicy)
-        self.chart_page_btn.setFont(font4)
+        self.chart_page_btn.setFont(font3)
         self.chart_page_btn.setStyleSheet(u"")
         icon5 = QIcon()
         icon5.addFile(u":/Icons/chart-line-up-down.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
@@ -406,7 +408,7 @@ class Ui_MainWindow(object):
         self.device_page_btn.setObjectName(u"device_page_btn")
         sizePolicy.setHeightForWidth(self.device_page_btn.sizePolicy().hasHeightForWidth())
         self.device_page_btn.setSizePolicy(sizePolicy)
-        self.device_page_btn.setFont(font4)
+        self.device_page_btn.setFont(font3)
         icon6 = QIcon()
         icon6.addFile(u":/Icons/settings.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         icon6.addFile(u":/Icons/settings (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
@@ -421,7 +423,7 @@ class Ui_MainWindow(object):
         self.history_page_btn.setObjectName(u"history_page_btn")
         sizePolicy.setHeightForWidth(self.history_page_btn.sizePolicy().hasHeightForWidth())
         self.history_page_btn.setSizePolicy(sizePolicy)
-        self.history_page_btn.setFont(font4)
+        self.history_page_btn.setFont(font3)
         icon7 = QIcon()
         icon7.addFile(u":/Icons/stats.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         icon7.addFile(u":/Icons/stats (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
@@ -438,11 +440,11 @@ class Ui_MainWindow(object):
         self.open_side_menu_btn.setObjectName(u"open_side_menu_btn")
         sizePolicy.setHeightForWidth(self.open_side_menu_btn.sizePolicy().hasHeightForWidth())
         self.open_side_menu_btn.setSizePolicy(sizePolicy)
-        font5 = QFont()
-        font5.setFamilies([u"Segoe UI"])
-        font5.setPointSize(17)
-        font5.setBold(True)
-        self.open_side_menu_btn.setFont(font5)
+        font4 = QFont()
+        font4.setFamilies([u"Segoe UI"])
+        font4.setPointSize(17)
+        font4.setBold(True)
+        self.open_side_menu_btn.setFont(font4)
         self.open_side_menu_btn.setLayoutDirection(Qt.LeftToRight)
         self.open_side_menu_btn.setStyleSheet(u"QPushButton {\n"
 "    color: black;\n"
@@ -616,9 +618,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.next_group_page_btn.sizePolicy().hasHeightForWidth())
         self.next_group_page_btn.setSizePolicy(sizePolicy)
         self.next_group_page_btn.setMaximumSize(QSize(16777215, 150))
-        font6 = QFont()
-        font6.setBold(True)
-        self.next_group_page_btn.setFont(font6)
+        font5 = QFont()
+        font5.setBold(True)
+        self.next_group_page_btn.setFont(font5)
         self.next_group_page_btn.setStyleSheet(u"QPushButton{\n"
 "	image: url(:/Icons/arrow-alt-circle-right.png)\n"
 "}\n"
@@ -648,10 +650,10 @@ class Ui_MainWindow(object):
         self.stop_light.setObjectName(u"stop_light")
         sizePolicy.setHeightForWidth(self.stop_light.sizePolicy().hasHeightForWidth())
         self.stop_light.setSizePolicy(sizePolicy)
-        font7 = QFont()
-        font7.setPointSize(13)
-        font7.setBold(True)
-        self.stop_light.setFont(font7)
+        font6 = QFont()
+        font6.setPointSize(13)
+        font6.setBold(True)
+        self.stop_light.setFont(font6)
         self.stop_light.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: #F90A0A; \n"
@@ -673,7 +675,7 @@ class Ui_MainWindow(object):
         self.start_light.setObjectName(u"start_light")
         sizePolicy.setHeightForWidth(self.start_light.sizePolicy().hasHeightForWidth())
         self.start_light.setSizePolicy(sizePolicy)
-        self.start_light.setFont(font7)
+        self.start_light.setFont(font6)
         self.start_light.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: #10B981; \n"
@@ -695,7 +697,7 @@ class Ui_MainWindow(object):
         self.temp_unit_selection_combox.setObjectName(u"temp_unit_selection_combox")
         sizePolicy2.setHeightForWidth(self.temp_unit_selection_combox.sizePolicy().hasHeightForWidth())
         self.temp_unit_selection_combox.setSizePolicy(sizePolicy2)
-        self.temp_unit_selection_combox.setFont(font7)
+        self.temp_unit_selection_combox.setFont(font6)
         self.temp_unit_selection_combox.setStyleSheet(u"background-color: #F9FAFB;")
 
         self.horizontalLayout_15.addWidget(self.temp_unit_selection_combox)
@@ -725,11 +727,11 @@ class Ui_MainWindow(object):
         self.clear_data_btn.setObjectName(u"clear_data_btn")
         sizePolicy.setHeightForWidth(self.clear_data_btn.sizePolicy().hasHeightForWidth())
         self.clear_data_btn.setSizePolicy(sizePolicy)
-        font8 = QFont()
-        font8.setFamilies([u"Segoe UI"])
-        font8.setPointSize(13)
-        font8.setBold(True)
-        self.clear_data_btn.setFont(font8)
+        font7 = QFont()
+        font7.setFamilies([u"Segoe UI"])
+        font7.setPointSize(13)
+        font7.setBold(True)
+        self.clear_data_btn.setFont(font7)
         icon10 = QIcon()
         icon10.addFile(u":/Icons/data-cleaning.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.clear_data_btn.setIcon(icon10)
@@ -741,7 +743,7 @@ class Ui_MainWindow(object):
         self.new_data_btn.setObjectName(u"new_data_btn")
         sizePolicy.setHeightForWidth(self.new_data_btn.sizePolicy().hasHeightForWidth())
         self.new_data_btn.setSizePolicy(sizePolicy)
-        self.new_data_btn.setFont(font8)
+        self.new_data_btn.setFont(font7)
         icon11 = QIcon()
         icon11.addFile(u":/Icons/folder-upload.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.new_data_btn.setIcon(icon11)
@@ -760,9 +762,9 @@ class Ui_MainWindow(object):
 
         self.stackedWidget = QStackedWidget(self.temp_press_page)
         self.stackedWidget.setObjectName(u"stackedWidget")
-        font9 = QFont()
-        font9.setPointSize(15)
-        self.stackedWidget.setFont(font9)
+        font8 = QFont()
+        font8.setPointSize(15)
+        self.stackedWidget.setFont(font8)
         self.stackedWidget.setStyleSheet(u"QStackedWidget {\n"
 "    border: none;\n"
 "}")
@@ -801,31 +803,31 @@ class Ui_MainWindow(object):
         self.code_display.setObjectName(u"code_display")
         sizePolicy.setHeightForWidth(self.code_display.sizePolicy().hasHeightForWidth())
         self.code_display.setSizePolicy(sizePolicy)
-        font10 = QFont()
-        font10.setFamilies([u"Segoe UI"])
-        font10.setPointSize(19)
-        font10.setBold(True)
-        self.code_display.setFont(font10)
+        font9 = QFont()
+        font9.setFamilies([u"Segoe UI"])
+        font9.setPointSize(19)
+        font9.setBold(True)
+        self.code_display.setFont(font9)
         self.code_display.setAlignment(Qt.AlignCenter)
 
         self.gridLayout.addWidget(self.code_display, 0, 0, 1, 1)
 
         self.label_name_1 = QWidget(self.widget_6)
         self.label_name_1.setObjectName(u"label_name_1")
-        font11 = QFont()
-        font11.setPointSize(12)
-        self.label_name_1.setFont(font11)
+        font10 = QFont()
+        font10.setPointSize(12)
+        self.label_name_1.setFont(font10)
         self.horizontalLayout_11 = QHBoxLayout(self.label_name_1)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
         self.horizontalLayout_11.setContentsMargins(3, 3, 3, 3)
         self.label_85 = QLabel(self.label_name_1)
         self.label_85.setObjectName(u"label_85")
-        font12 = QFont()
-        font12.setFamilies([u"Segoe UI"])
-        font12.setPointSize(12)
-        font12.setBold(True)
-        font12.setItalic(False)
-        self.label_85.setFont(font12)
+        font11 = QFont()
+        font11.setFamilies([u"Segoe UI"])
+        font11.setPointSize(12)
+        font11.setBold(True)
+        font11.setItalic(False)
+        self.label_85.setFont(font11)
         self.label_85.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -869,12 +871,12 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_11.setObjectName(u"pressure_pv_a_11")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_11.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_11.setSizePolicy(sizePolicy)
-        font13 = QFont()
-        font13.setFamilies([u"Segoe UI"])
-        font13.setPointSize(13)
-        font13.setBold(True)
-        font13.setItalic(False)
-        self.pressure_pv_a_11.setFont(font13)
+        font12 = QFont()
+        font12.setFamilies([u"Segoe UI"])
+        font12.setPointSize(13)
+        font12.setBold(True)
+        font12.setItalic(False)
+        self.pressure_pv_a_11.setFont(font12)
         self.pressure_pv_a_11.setStyleSheet(u"")
         self.pressure_pv_a_11.setWrapping(True)
         self.pressure_pv_a_11.setAlignment(Qt.AlignCenter)
@@ -928,7 +930,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_11.setObjectName(u"pressure_sv_a_11")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_11.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_11.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_11.setFont(font13)
+        self.pressure_sv_a_11.setFont(font12)
         self.pressure_sv_a_11.setStyleSheet(u"QSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -954,7 +956,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.set_cycle_a_btn.sizePolicy().hasHeightForWidth())
         self.set_cycle_a_btn.setSizePolicy(sizePolicy)
         self.set_cycle_a_btn.setMinimumSize(QSize(0, 0))
-        self.set_cycle_a_btn.setFont(font4)
+        self.set_cycle_a_btn.setFont(font3)
         self.set_cycle_a_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #10B981;\n"
 "    color: white;\n"
@@ -1007,12 +1009,12 @@ class Ui_MainWindow(object):
         self.verticalLayout_18.setContentsMargins(0, 0, 0, 0)
         self.label_156 = QLabel(self.widget)
         self.label_156.setObjectName(u"label_156")
-        font14 = QFont()
-        font14.setFamilies([u"MS Shell Dlg 2"])
-        font14.setPointSize(13)
-        font14.setBold(True)
-        font14.setItalic(False)
-        self.label_156.setFont(font14)
+        font13 = QFont()
+        font13.setFamilies([u"MS Shell Dlg 2"])
+        font13.setPointSize(13)
+        font13.setBold(True)
+        font13.setItalic(False)
+        self.label_156.setFont(font13)
         self.label_156.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_18.addWidget(self.label_156)
@@ -1032,12 +1034,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_18.setContentsMargins(0, 2, 2, 2)
         self.label_165 = QLabel(self.widget_17)
         self.label_165.setObjectName(u"label_165")
-        font15 = QFont()
-        font15.setFamilies([u"MS Shell Dlg 2"])
-        font15.setPointSize(11)
-        font15.setBold(True)
-        font15.setItalic(False)
-        self.label_165.setFont(font15)
+        font14 = QFont()
+        font14.setFamilies([u"MS Shell Dlg 2"])
+        font14.setPointSize(11)
+        font14.setBold(True)
+        font14.setItalic(False)
+        self.label_165.setFont(font14)
         self.label_165.setStyleSheet(u"color: rgb(229, 57, 53);")
         self.label_165.setAlignment(Qt.AlignCenter)
 
@@ -1053,7 +1055,7 @@ class Ui_MainWindow(object):
 
         self.label_167 = QLabel(self.widget_17)
         self.label_167.setObjectName(u"label_167")
-        self.label_167.setFont(font15)
+        self.label_167.setFont(font14)
         self.label_167.setStyleSheet(u"color: rgb(67, 160, 71);")
         self.label_167.setAlignment(Qt.AlignCenter)
 
@@ -1101,7 +1103,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_20.setContentsMargins(0, 0, 0, 0)
         self.label_164 = QLabel(self.widget_19)
         self.label_164.setObjectName(u"label_164")
-        self.label_164.setFont(font14)
+        self.label_164.setFont(font13)
         self.label_164.setStyleSheet(u"")
         self.label_164.setAlignment(Qt.AlignCenter)
 
@@ -1121,7 +1123,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_20.setContentsMargins(0, 2, 2, 2)
         self.label_168 = QLabel(self.widget_21)
         self.label_168.setObjectName(u"label_168")
-        self.label_168.setFont(font15)
+        self.label_168.setFont(font14)
         self.label_168.setStyleSheet(u"color: rgb(229, 57, 53);")
         self.label_168.setAlignment(Qt.AlignCenter)
 
@@ -1137,7 +1139,7 @@ class Ui_MainWindow(object):
 
         self.label_170 = QLabel(self.widget_21)
         self.label_170.setObjectName(u"label_170")
-        self.label_170.setFont(font15)
+        self.label_170.setFont(font14)
         self.label_170.setStyleSheet(u"color: rgb(67, 160, 71);")
         self.label_170.setAlignment(Qt.AlignCenter)
 
@@ -1183,7 +1185,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_22.setContentsMargins(0, 0, 0, 0)
         self.label_171 = QLabel(self.widget_22)
         self.label_171.setObjectName(u"label_171")
-        self.label_171.setFont(font14)
+        self.label_171.setFont(font13)
         self.label_171.setStyleSheet(u"")
         self.label_171.setAlignment(Qt.AlignCenter)
 
@@ -1203,7 +1205,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_23.setContentsMargins(0, 2, 2, 2)
         self.label_172 = QLabel(self.widget_24)
         self.label_172.setObjectName(u"label_172")
-        self.label_172.setFont(font15)
+        self.label_172.setFont(font14)
         self.label_172.setStyleSheet(u"color: rgb(229, 57, 53);")
         self.label_172.setAlignment(Qt.AlignCenter)
 
@@ -1219,7 +1221,7 @@ class Ui_MainWindow(object):
 
         self.label_175 = QLabel(self.widget_24)
         self.label_175.setObjectName(u"label_175")
-        self.label_175.setFont(font15)
+        self.label_175.setFont(font14)
         self.label_175.setStyleSheet(u"color: rgb(67, 160, 71);")
         self.label_175.setAlignment(Qt.AlignCenter)
 
@@ -1274,7 +1276,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_12.setContentsMargins(3, 3, 3, 3)
         self.label_83 = QLabel(self.label_name_2)
         self.label_83.setObjectName(u"label_83")
-        self.label_83.setFont(font12)
+        self.label_83.setFont(font11)
         self.label_83.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -1318,7 +1320,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_9.setObjectName(u"pressure_pv_a_9")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_9.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_9.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_9.setFont(font13)
+        self.pressure_pv_a_9.setFont(font12)
         self.pressure_pv_a_9.setStyleSheet(u"")
         self.pressure_pv_a_9.setWrapping(True)
         self.pressure_pv_a_9.setAlignment(Qt.AlignCenter)
@@ -1342,7 +1344,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_9.setObjectName(u"pressure_sv_a_9")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_9.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_9.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_9.setFont(font13)
+        self.pressure_sv_a_9.setFont(font12)
         self.pressure_sv_a_9.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1363,12 +1365,12 @@ class Ui_MainWindow(object):
 
         self.label_245 = QLabel(self.group_1_val_2)
         self.label_245.setObjectName(u"label_245")
-        font16 = QFont()
-        font16.setFamilies([u"Segoe UI"])
-        font16.setPointSize(11)
-        font16.setBold(True)
-        font16.setItalic(False)
-        self.label_245.setFont(font16)
+        font15 = QFont()
+        font15.setFamilies([u"Segoe UI"])
+        font15.setPointSize(11)
+        font15.setBold(True)
+        font15.setItalic(False)
+        self.label_245.setFont(font15)
         self.label_245.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -1408,7 +1410,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_11.setObjectName(u"pressure_pv_c_11")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_11.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_11.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_11.setFont(font13)
+        self.pressure_pv_c_11.setFont(font12)
         self.pressure_pv_c_11.setStyleSheet(u"")
         self.pressure_pv_c_11.setWrapping(True)
         self.pressure_pv_c_11.setAlignment(Qt.AlignCenter)
@@ -1460,7 +1462,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_11.setObjectName(u"pressure_sv_c_11")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_11.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_11.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_11.setFont(font13)
+        self.pressure_sv_c_11.setFont(font12)
         self.pressure_sv_c_11.setStyleSheet(u"QSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1486,7 +1488,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.set_cycle_c_btn.sizePolicy().hasHeightForWidth())
         self.set_cycle_c_btn.setSizePolicy(sizePolicy)
         self.set_cycle_c_btn.setMinimumSize(QSize(0, 0))
-        self.set_cycle_c_btn.setFont(font4)
+        self.set_cycle_c_btn.setFont(font3)
         self.set_cycle_c_btn.setToolTipDuration(-1)
         self.set_cycle_c_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #10B981;\n"
@@ -1545,7 +1547,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_11.setObjectName(u"pressure_pv_b_11")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_11.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_11.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_11.setFont(font13)
+        self.pressure_pv_b_11.setFont(font12)
         self.pressure_pv_b_11.setStyleSheet(u"")
         self.pressure_pv_b_11.setWrapping(True)
         self.pressure_pv_b_11.setAlignment(Qt.AlignCenter)
@@ -1597,7 +1599,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_11.setObjectName(u"pressure_sv_b_11")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_11.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_11.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_11.setFont(font13)
+        self.pressure_sv_b_11.setFont(font12)
         self.pressure_sv_b_11.setStyleSheet(u"QSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1623,7 +1625,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.set_cycle_b_btn.sizePolicy().hasHeightForWidth())
         self.set_cycle_b_btn.setSizePolicy(sizePolicy)
         self.set_cycle_b_btn.setMinimumSize(QSize(0, 0))
-        self.set_cycle_b_btn.setFont(font4)
+        self.set_cycle_b_btn.setFont(font3)
         self.set_cycle_b_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #10B981;\n"
 "    color: white;\n"
@@ -1677,7 +1679,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_10.setObjectName(u"pressure_pv_a_10")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_10.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_10.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_10.setFont(font13)
+        self.pressure_pv_a_10.setFont(font12)
         self.pressure_pv_a_10.setStyleSheet(u"")
         self.pressure_pv_a_10.setWrapping(True)
         self.pressure_pv_a_10.setAlignment(Qt.AlignCenter)
@@ -1701,7 +1703,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_10.setObjectName(u"pressure_sv_a_10")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_10.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_10.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_10.setFont(font13)
+        self.pressure_sv_a_10.setFont(font12)
         self.pressure_sv_a_10.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1722,7 +1724,7 @@ class Ui_MainWindow(object):
 
         self.label_246 = QLabel(self.group_1_val_3)
         self.label_246.setObjectName(u"label_246")
-        self.label_246.setFont(font16)
+        self.label_246.setFont(font15)
         self.label_246.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -1762,7 +1764,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_9.setObjectName(u"pressure_pv_c_9")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_9.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_9.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_9.setFont(font13)
+        self.pressure_pv_c_9.setFont(font12)
         self.pressure_pv_c_9.setStyleSheet(u"")
         self.pressure_pv_c_9.setWrapping(True)
         self.pressure_pv_c_9.setAlignment(Qt.AlignCenter)
@@ -1786,7 +1788,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_9.setObjectName(u"pressure_sv_c_9")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_9.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_9.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_9.setFont(font13)
+        self.pressure_sv_c_9.setFont(font12)
         self.pressure_sv_c_9.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1807,7 +1809,7 @@ class Ui_MainWindow(object):
 
         self.label_261 = QLabel(self.group_3_val_2)
         self.label_261.setObjectName(u"label_261")
-        self.label_261.setFont(font16)
+        self.label_261.setFont(font15)
         self.label_261.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -1847,7 +1849,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_10.setObjectName(u"pressure_pv_b_10")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_10.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_10.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_10.setFont(font13)
+        self.pressure_pv_b_10.setFont(font12)
         self.pressure_pv_b_10.setStyleSheet(u"")
         self.pressure_pv_b_10.setWrapping(True)
         self.pressure_pv_b_10.setAlignment(Qt.AlignCenter)
@@ -1871,7 +1873,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_10.setObjectName(u"pressure_sv_b_10")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_10.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_10.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_10.setFont(font13)
+        self.pressure_sv_b_10.setFont(font12)
         self.pressure_sv_b_10.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1892,7 +1894,7 @@ class Ui_MainWindow(object):
 
         self.label_248 = QLabel(self.group_2_val_3)
         self.label_248.setObjectName(u"label_248")
-        self.label_248.setFont(font16)
+        self.label_248.setFont(font15)
         self.label_248.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -1932,7 +1934,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_9.setObjectName(u"pressure_pv_b_9")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_9.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_9.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_9.setFont(font13)
+        self.pressure_pv_b_9.setFont(font12)
         self.pressure_pv_b_9.setStyleSheet(u"")
         self.pressure_pv_b_9.setWrapping(True)
         self.pressure_pv_b_9.setAlignment(Qt.AlignCenter)
@@ -1956,7 +1958,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_9.setObjectName(u"pressure_sv_b_9")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_9.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_9.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_9.setFont(font13)
+        self.pressure_sv_b_9.setFont(font12)
         self.pressure_sv_b_9.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -1977,7 +1979,7 @@ class Ui_MainWindow(object):
 
         self.label_247 = QLabel(self.group_2_val_2)
         self.label_247.setObjectName(u"label_247")
-        self.label_247.setFont(font16)
+        self.label_247.setFont(font15)
         self.label_247.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2017,7 +2019,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_10.setObjectName(u"pressure_pv_c_10")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_10.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_10.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_10.setFont(font13)
+        self.pressure_pv_c_10.setFont(font12)
         self.pressure_pv_c_10.setStyleSheet(u"")
         self.pressure_pv_c_10.setWrapping(True)
         self.pressure_pv_c_10.setAlignment(Qt.AlignCenter)
@@ -2041,7 +2043,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_10.setObjectName(u"pressure_sv_c_10")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_10.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_10.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_10.setFont(font13)
+        self.pressure_sv_c_10.setFont(font12)
         self.pressure_sv_c_10.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2062,7 +2064,7 @@ class Ui_MainWindow(object):
 
         self.label_262 = QLabel(self.group_3_val_3)
         self.label_262.setObjectName(u"label_262")
-        self.label_262.setFont(font16)
+        self.label_262.setFont(font15)
         self.label_262.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2142,7 +2144,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_5.setObjectName(u"pressure_pv_b_5")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_5.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_5.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_5.setFont(font13)
+        self.pressure_pv_b_5.setFont(font12)
         self.pressure_pv_b_5.setWrapping(False)
         self.pressure_pv_b_5.setAlignment(Qt.AlignCenter)
         self.pressure_pv_b_5.setReadOnly(True)
@@ -2159,7 +2161,7 @@ class Ui_MainWindow(object):
 
         self.label_268 = QLabel(self.group_2_val_9)
         self.label_268.setObjectName(u"label_268")
-        self.label_268.setFont(font16)
+        self.label_268.setFont(font15)
         self.label_268.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2200,7 +2202,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_5.setObjectName(u"pressure_pv_c_5")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_5.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_5.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_5.setFont(font13)
+        self.pressure_pv_c_5.setFont(font12)
         self.pressure_pv_c_5.setWrapping(False)
         self.pressure_pv_c_5.setAlignment(Qt.AlignCenter)
         self.pressure_pv_c_5.setReadOnly(True)
@@ -2217,7 +2219,7 @@ class Ui_MainWindow(object):
 
         self.label_269 = QLabel(self.group_3_val_9)
         self.label_269.setObjectName(u"label_269")
-        self.label_269.setFont(font16)
+        self.label_269.setFont(font15)
         self.label_269.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2258,7 +2260,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_5.setObjectName(u"pressure_pv_a_5")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_5.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_5.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_5.setFont(font13)
+        self.pressure_pv_a_5.setFont(font12)
         self.pressure_pv_a_5.setWrapping(False)
         self.pressure_pv_a_5.setAlignment(Qt.AlignCenter)
         self.pressure_pv_a_5.setReadOnly(True)
@@ -2275,7 +2277,7 @@ class Ui_MainWindow(object):
 
         self.label_267 = QLabel(self.group_1_val_9)
         self.label_267.setObjectName(u"label_267")
-        self.label_267.setFont(font16)
+        self.label_267.setFont(font15)
         self.label_267.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2297,7 +2299,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_37.setContentsMargins(3, 3, 3, 3)
         self.label_104 = QLabel(self.label_name_10)
         self.label_104.setObjectName(u"label_104")
-        self.label_104.setFont(font12)
+        self.label_104.setFont(font11)
         self.label_104.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -2342,7 +2344,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_1.setObjectName(u"pressure_sv_a_1")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_1.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_1.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_1.setFont(font13)
+        self.pressure_sv_a_1.setFont(font12)
         self.pressure_sv_a_1.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2369,7 +2371,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_512.setContentsMargins(0, 0, 0, 0)
         self.label_280 = QLabel(self.celsius_ap_39)
         self.label_280.setObjectName(u"label_280")
-        self.label_280.setFont(font16)
+        self.label_280.setFont(font15)
         self.label_280.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -2385,7 +2387,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_513.setContentsMargins(0, 0, 0, 0)
         self.label_340 = QLabel(self.fahrenheit_ap_39)
         self.label_340.setObjectName(u"label_340")
-        self.label_340.setFont(font16)
+        self.label_340.setFont(font15)
         self.label_340.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -2428,7 +2430,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_6.setObjectName(u"pressure_pv_a_6")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_6.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_6.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_6.setFont(font13)
+        self.pressure_pv_a_6.setFont(font12)
         self.pressure_pv_a_6.setStyleSheet(u"")
         self.pressure_pv_a_6.setWrapping(True)
         self.pressure_pv_a_6.setAlignment(Qt.AlignCenter)
@@ -2452,7 +2454,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_6.setObjectName(u"pressure_sv_a_6")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_6.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_6.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_6.setFont(font13)
+        self.pressure_sv_a_6.setFont(font12)
         self.pressure_sv_a_6.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2473,7 +2475,7 @@ class Ui_MainWindow(object):
 
         self.label_242 = QLabel(self.group_1_val_4)
         self.label_242.setObjectName(u"label_242")
-        self.label_242.setFont(font16)
+        self.label_242.setFont(font15)
         self.label_242.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2513,7 +2515,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_7.setObjectName(u"pressure_pv_a_7")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_7.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_7.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_7.setFont(font13)
+        self.pressure_pv_a_7.setFont(font12)
         self.pressure_pv_a_7.setStyleSheet(u"")
         self.pressure_pv_a_7.setWrapping(True)
         self.pressure_pv_a_7.setAlignment(Qt.AlignCenter)
@@ -2537,7 +2539,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_7.setObjectName(u"pressure_sv_a_7")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_7.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_7.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_7.setFont(font13)
+        self.pressure_sv_a_7.setFont(font12)
         self.pressure_sv_a_7.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2558,7 +2560,7 @@ class Ui_MainWindow(object):
 
         self.label_243 = QLabel(self.group_1_val_5)
         self.label_243.setObjectName(u"label_243")
-        self.label_243.setFont(font16)
+        self.label_243.setFont(font15)
         self.label_243.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2598,7 +2600,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_6.setObjectName(u"pressure_pv_c_6")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_6.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_6.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_6.setFont(font13)
+        self.pressure_pv_c_6.setFont(font12)
         self.pressure_pv_c_6.setStyleSheet(u"")
         self.pressure_pv_c_6.setWrapping(True)
         self.pressure_pv_c_6.setAlignment(Qt.AlignCenter)
@@ -2622,7 +2624,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_6.setObjectName(u"pressure_sv_c_6")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_6.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_6.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_6.setFont(font13)
+        self.pressure_sv_c_6.setFont(font12)
         self.pressure_sv_c_6.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2643,7 +2645,7 @@ class Ui_MainWindow(object):
 
         self.label_264 = QLabel(self.group_3_val_4)
         self.label_264.setObjectName(u"label_264")
-        self.label_264.setFont(font16)
+        self.label_264.setFont(font15)
         self.label_264.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2664,7 +2666,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_16.setContentsMargins(3, 3, 3, 3)
         self.label_101 = QLabel(self.label_name_5)
         self.label_101.setObjectName(u"label_101")
-        self.label_101.setFont(font12)
+        self.label_101.setFont(font11)
         self.label_101.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -2708,7 +2710,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_6.setObjectName(u"pressure_pv_b_6")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_6.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_6.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_6.setFont(font13)
+        self.pressure_pv_b_6.setFont(font12)
         self.pressure_pv_b_6.setStyleSheet(u"")
         self.pressure_pv_b_6.setWrapping(True)
         self.pressure_pv_b_6.setAlignment(Qt.AlignCenter)
@@ -2732,7 +2734,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_6.setObjectName(u"pressure_sv_b_6")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_6.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_6.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_6.setFont(font13)
+        self.pressure_sv_b_6.setFont(font12)
         self.pressure_sv_b_6.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2753,7 +2755,7 @@ class Ui_MainWindow(object):
 
         self.label_254 = QLabel(self.group_2_val_4)
         self.label_254.setObjectName(u"label_254")
-        self.label_254.setFont(font16)
+        self.label_254.setFont(font15)
         self.label_254.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2774,7 +2776,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_14.setContentsMargins(3, 3, 3, 3)
         self.label_100 = QLabel(self.label_name_4)
         self.label_100.setObjectName(u"label_100")
-        self.label_100.setFont(font12)
+        self.label_100.setFont(font11)
         self.label_100.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -2818,7 +2820,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_8.setObjectName(u"pressure_pv_b_8")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_8.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_8.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_8.setFont(font13)
+        self.pressure_pv_b_8.setFont(font12)
         self.pressure_pv_b_8.setStyleSheet(u"")
         self.pressure_pv_b_8.setWrapping(True)
         self.pressure_pv_b_8.setAlignment(Qt.AlignCenter)
@@ -2842,7 +2844,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_8.setObjectName(u"pressure_sv_b_8")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_8.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_8.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_8.setFont(font13)
+        self.pressure_sv_b_8.setFont(font12)
         self.pressure_sv_b_8.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2863,7 +2865,7 @@ class Ui_MainWindow(object):
 
         self.label_256 = QLabel(self.group_2_val_6)
         self.label_256.setObjectName(u"label_256")
-        self.label_256.setFont(font16)
+        self.label_256.setFont(font15)
         self.label_256.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -2884,7 +2886,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_28.setContentsMargins(3, 3, 3, 3)
         self.label_102 = QLabel(self.label_name_6)
         self.label_102.setObjectName(u"label_102")
-        self.label_102.setFont(font12)
+        self.label_102.setFont(font11)
         self.label_102.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -2928,7 +2930,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_8.setObjectName(u"pressure_pv_a_8")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_8.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_8.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_8.setFont(font13)
+        self.pressure_pv_a_8.setFont(font12)
         self.pressure_pv_a_8.setStyleSheet(u"")
         self.pressure_pv_a_8.setWrapping(True)
         self.pressure_pv_a_8.setAlignment(Qt.AlignCenter)
@@ -2952,7 +2954,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_8.setObjectName(u"pressure_sv_a_8")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_8.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_8.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_8.setFont(font13)
+        self.pressure_sv_a_8.setFont(font12)
         self.pressure_sv_a_8.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -2973,7 +2975,7 @@ class Ui_MainWindow(object):
 
         self.label_244 = QLabel(self.group_1_val_6)
         self.label_244.setObjectName(u"label_244")
-        self.label_244.setFont(font16)
+        self.label_244.setFont(font15)
         self.label_244.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3013,7 +3015,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_7.setObjectName(u"pressure_pv_b_7")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_7.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_7.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_7.setFont(font13)
+        self.pressure_pv_b_7.setFont(font12)
         self.pressure_pv_b_7.setStyleSheet(u"")
         self.pressure_pv_b_7.setWrapping(True)
         self.pressure_pv_b_7.setAlignment(Qt.AlignCenter)
@@ -3037,7 +3039,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_7.setObjectName(u"pressure_sv_b_7")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_7.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_7.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_7.setFont(font13)
+        self.pressure_sv_b_7.setFont(font12)
         self.pressure_sv_b_7.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -3058,7 +3060,7 @@ class Ui_MainWindow(object):
 
         self.label_255 = QLabel(self.group_2_val_5)
         self.label_255.setObjectName(u"label_255")
-        self.label_255.setFont(font16)
+        self.label_255.setFont(font15)
         self.label_255.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3098,7 +3100,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_7.setObjectName(u"pressure_pv_c_7")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_7.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_7.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_7.setFont(font13)
+        self.pressure_pv_c_7.setFont(font12)
         self.pressure_pv_c_7.setStyleSheet(u"")
         self.pressure_pv_c_7.setWrapping(True)
         self.pressure_pv_c_7.setAlignment(Qt.AlignCenter)
@@ -3122,7 +3124,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_7.setObjectName(u"pressure_sv_c_7")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_7.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_7.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_7.setFont(font13)
+        self.pressure_sv_c_7.setFont(font12)
         self.pressure_sv_c_7.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -3143,7 +3145,7 @@ class Ui_MainWindow(object):
 
         self.label_265 = QLabel(self.group_3_val_5)
         self.label_265.setObjectName(u"label_265")
-        self.label_265.setFont(font16)
+        self.label_265.setFont(font15)
         self.label_265.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3183,7 +3185,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_5.setObjectName(u"pressure_sv_b_5")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_5.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_5.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_5.setFont(font13)
+        self.pressure_sv_b_5.setFont(font12)
         self.pressure_sv_b_5.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -3203,7 +3205,7 @@ class Ui_MainWindow(object):
 
         self.label_253 = QLabel(self.group_2_val_7)
         self.label_253.setObjectName(u"label_253")
-        self.label_253.setFont(font16)
+        self.label_253.setFont(font15)
         self.label_253.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3244,7 +3246,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_8.setObjectName(u"pressure_pv_c_8")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_8.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_8.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_8.setFont(font13)
+        self.pressure_pv_c_8.setFont(font12)
         self.pressure_pv_c_8.setStyleSheet(u"")
         self.pressure_pv_c_8.setWrapping(True)
         self.pressure_pv_c_8.setAlignment(Qt.AlignCenter)
@@ -3268,7 +3270,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_8.setObjectName(u"pressure_sv_c_8")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_8.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_8.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_8.setFont(font13)
+        self.pressure_sv_c_8.setFont(font12)
         self.pressure_sv_c_8.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -3289,7 +3291,7 @@ class Ui_MainWindow(object):
 
         self.label_266 = QLabel(self.group_3_val_6)
         self.label_266.setObjectName(u"label_266")
-        self.label_266.setFont(font16)
+        self.label_266.setFont(font15)
         self.label_266.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3310,7 +3312,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_32.setContentsMargins(3, 3, 3, 3)
         self.label_99 = QLabel(self.label_name_7)
         self.label_99.setObjectName(u"label_99")
-        self.label_99.setFont(font12)
+        self.label_99.setFont(font11)
         self.label_99.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -3354,7 +3356,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_5.setObjectName(u"pressure_sv_c_5")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_5.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_5.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_5.setFont(font13)
+        self.pressure_sv_c_5.setFont(font12)
         self.pressure_sv_c_5.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -3374,7 +3376,7 @@ class Ui_MainWindow(object):
 
         self.label_263 = QLabel(self.group_3_val_7)
         self.label_263.setObjectName(u"label_263")
-        self.label_263.setFont(font16)
+        self.label_263.setFont(font15)
         self.label_263.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3396,7 +3398,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_35.setContentsMargins(3, 3, 3, 3)
         self.label_106 = QLabel(self.label_name_8)
         self.label_106.setObjectName(u"label_106")
-        self.label_106.setFont(font12)
+        self.label_106.setFont(font11)
         self.label_106.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -3440,7 +3442,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_a_5.setObjectName(u"pressure_sv_a_5")
         sizePolicy.setHeightForWidth(self.pressure_sv_a_5.sizePolicy().hasHeightForWidth())
         self.pressure_sv_a_5.setSizePolicy(sizePolicy)
-        self.pressure_sv_a_5.setFont(font13)
+        self.pressure_sv_a_5.setFont(font12)
         self.pressure_sv_a_5.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -3460,7 +3462,7 @@ class Ui_MainWindow(object):
 
         self.label_241 = QLabel(self.group_1_val_7)
         self.label_241.setObjectName(u"label_241")
-        self.label_241.setFont(font16)
+        self.label_241.setFont(font15)
         self.label_241.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3482,7 +3484,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_36.setContentsMargins(3, 3, 3, 3)
         self.label_105 = QLabel(self.label_name_9)
         self.label_105.setObjectName(u"label_105")
-        self.label_105.setFont(font12)
+        self.label_105.setFont(font11)
         self.label_105.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -3526,7 +3528,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_12.setObjectName(u"pressure_pv_b_12")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_12.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_12.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_12.setFont(font13)
+        self.pressure_pv_b_12.setFont(font12)
         self.pressure_pv_b_12.setWrapping(False)
         self.pressure_pv_b_12.setAlignment(Qt.AlignCenter)
         self.pressure_pv_b_12.setReadOnly(True)
@@ -3543,7 +3545,7 @@ class Ui_MainWindow(object):
 
         self.label_272 = QLabel(self.group_2_val_8)
         self.label_272.setObjectName(u"label_272")
-        self.label_272.setFont(font16)
+        self.label_272.setFont(font15)
         self.label_272.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3584,7 +3586,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_12.setObjectName(u"pressure_pv_a_12")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_12.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_12.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_12.setFont(font13)
+        self.pressure_pv_a_12.setFont(font12)
         self.pressure_pv_a_12.setWrapping(False)
         self.pressure_pv_a_12.setAlignment(Qt.AlignCenter)
         self.pressure_pv_a_12.setReadOnly(True)
@@ -3601,7 +3603,7 @@ class Ui_MainWindow(object):
 
         self.label_270 = QLabel(self.group_1_val_8)
         self.label_270.setObjectName(u"label_270")
-        self.label_270.setFont(font16)
+        self.label_270.setFont(font15)
         self.label_270.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3642,7 +3644,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_12.setObjectName(u"pressure_pv_c_12")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_12.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_12.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_12.setFont(font13)
+        self.pressure_pv_c_12.setFont(font12)
         self.pressure_pv_c_12.setWrapping(False)
         self.pressure_pv_c_12.setAlignment(Qt.AlignCenter)
         self.pressure_pv_c_12.setReadOnly(True)
@@ -3659,7 +3661,7 @@ class Ui_MainWindow(object):
 
         self.label_271 = QLabel(self.group_3_val_8)
         self.label_271.setObjectName(u"label_271")
-        self.label_271.setFont(font16)
+        self.label_271.setFont(font15)
         self.label_271.setStyleSheet(u"QLabel{\n"
 "	border-left: none;\n"
 "	color: rgb(97, 97, 97);\n"
@@ -3725,7 +3727,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_4.setObjectName(u"pressure_pv_b_4")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_4.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_4.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_4.setFont(font13)
+        self.pressure_pv_b_4.setFont(font12)
         self.pressure_pv_b_4.setStyleSheet(u"")
         self.pressure_pv_b_4.setWrapping(True)
         self.pressure_pv_b_4.setAlignment(Qt.AlignCenter)
@@ -3750,7 +3752,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_542.setContentsMargins(0, 0, 0, 0)
         self.label_396 = QLabel(self.celsius_ap_46)
         self.label_396.setObjectName(u"label_396")
-        self.label_396.setFont(font16)
+        self.label_396.setFont(font15)
         self.label_396.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -3766,7 +3768,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_543.setContentsMargins(0, 0, 0, 0)
         self.label_397 = QLabel(self.fahrenheit_ap_46)
         self.label_397.setObjectName(u"label_397")
-        self.label_397.setFont(font16)
+        self.label_397.setFont(font15)
         self.label_397.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -3794,7 +3796,11 @@ class Ui_MainWindow(object):
         self.refuel_btn_b.setSizePolicy(sizePolicy)
         self.refuel_btn_b.setMinimumSize(QSize(0, 30))
         self.refuel_btn_b.setMaximumSize(QSize(16777215, 75))
-        self.refuel_btn_b.setFont(font8)
+        font16 = QFont()
+        font16.setFamilies([u"Segoe UI"])
+        font16.setPointSize(14)
+        font16.setBold(True)
+        self.refuel_btn_b.setFont(font16)
         self.refuel_btn_b.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -3852,7 +3858,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_4.setObjectName(u"pressure_pv_c_4")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_4.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_4.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_4.setFont(font13)
+        self.pressure_pv_c_4.setFont(font12)
         self.pressure_pv_c_4.setStyleSheet(u"")
         self.pressure_pv_c_4.setWrapping(True)
         self.pressure_pv_c_4.setAlignment(Qt.AlignCenter)
@@ -3877,7 +3883,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_570.setContentsMargins(0, 0, 0, 0)
         self.label_403 = QLabel(self.celsius_ap_50)
         self.label_403.setObjectName(u"label_403")
-        self.label_403.setFont(font16)
+        self.label_403.setFont(font15)
         self.label_403.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -3893,7 +3899,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_571.setContentsMargins(0, 0, 0, 0)
         self.label_404 = QLabel(self.fahrenheit_ap_50)
         self.label_404.setObjectName(u"label_404")
-        self.label_404.setFont(font16)
+        self.label_404.setFont(font15)
         self.label_404.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -3921,7 +3927,7 @@ class Ui_MainWindow(object):
         self.refuel_btn_a.setSizePolicy(sizePolicy)
         self.refuel_btn_a.setMinimumSize(QSize(0, 30))
         self.refuel_btn_a.setMaximumSize(QSize(16777215, 75))
-        self.refuel_btn_a.setFont(font8)
+        self.refuel_btn_a.setFont(font16)
         self.refuel_btn_a.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -3961,7 +3967,7 @@ class Ui_MainWindow(object):
         self.vacuum_btn_b.setSizePolicy(sizePolicy)
         self.vacuum_btn_b.setMinimumSize(QSize(0, 30))
         self.vacuum_btn_b.setMaximumSize(QSize(16777215, 75))
-        self.vacuum_btn_b.setFont(font8)
+        self.vacuum_btn_b.setFont(font16)
         self.vacuum_btn_b.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -4003,7 +4009,7 @@ class Ui_MainWindow(object):
         self.refuel_btn_c.setSizePolicy(sizePolicy)
         self.refuel_btn_c.setMinimumSize(QSize(0, 30))
         self.refuel_btn_c.setMaximumSize(QSize(16777215, 75))
-        self.refuel_btn_c.setFont(font8)
+        self.refuel_btn_c.setFont(font16)
         self.refuel_btn_c.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -4043,7 +4049,7 @@ class Ui_MainWindow(object):
         self.vacuum_btn_a.setSizePolicy(sizePolicy)
         self.vacuum_btn_a.setMinimumSize(QSize(0, 30))
         self.vacuum_btn_a.setMaximumSize(QSize(16777215, 75))
-        self.vacuum_btn_a.setFont(font8)
+        self.vacuum_btn_a.setFont(font16)
         self.vacuum_btn_a.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -4099,7 +4105,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_2.setObjectName(u"pressure_pv_b_2")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_2.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_2.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_2.setFont(font13)
+        self.pressure_pv_b_2.setFont(font12)
         self.pressure_pv_b_2.setStyleSheet(u"")
         self.pressure_pv_b_2.setWrapping(True)
         self.pressure_pv_b_2.setAlignment(Qt.AlignCenter)
@@ -4124,7 +4130,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_534.setContentsMargins(0, 0, 0, 0)
         self.label_392 = QLabel(self.celsius_ap_44)
         self.label_392.setObjectName(u"label_392")
-        self.label_392.setFont(font16)
+        self.label_392.setFont(font15)
         self.label_392.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4140,7 +4146,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_535.setContentsMargins(0, 0, 0, 0)
         self.label_393 = QLabel(self.fahrenheit_ap_44)
         self.label_393.setObjectName(u"label_393")
-        self.label_393.setFont(font16)
+        self.label_393.setFont(font15)
         self.label_393.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4184,7 +4190,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_c_1.setObjectName(u"pressure_sv_c_1")
         sizePolicy.setHeightForWidth(self.pressure_sv_c_1.sizePolicy().hasHeightForWidth())
         self.pressure_sv_c_1.setSizePolicy(sizePolicy)
-        self.pressure_sv_c_1.setFont(font13)
+        self.pressure_sv_c_1.setFont(font12)
         self.pressure_sv_c_1.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -4210,7 +4216,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_558.setContentsMargins(0, 0, 0, 0)
         self.label_398 = QLabel(self.celsius_ap_47)
         self.label_398.setObjectName(u"label_398")
-        self.label_398.setFont(font16)
+        self.label_398.setFont(font15)
         self.label_398.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4226,7 +4232,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_559.setContentsMargins(0, 0, 0, 0)
         self.label_399 = QLabel(self.fahrenheit_ap_47)
         self.label_399.setObjectName(u"label_399")
-        self.label_399.setFont(font16)
+        self.label_399.setFont(font15)
         self.label_399.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4250,7 +4256,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_38.setContentsMargins(3, 3, 3, 3)
         self.label_103 = QLabel(self.label_name_11)
         self.label_103.setObjectName(u"label_103")
-        self.label_103.setFont(font12)
+        self.label_103.setFont(font11)
         self.label_103.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -4276,7 +4282,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_528.setContentsMargins(3, 3, 6, 3)
         self.widget_285 = QWidget(self.group_2_val_10)
         self.widget_285.setObjectName(u"widget_285")
-        self.widget_285.setFont(font11)
+        self.widget_285.setFont(font10)
         self.widget_285.setStyleSheet(u"QWidget{\n"
 "    border: 2px solid #D1D5DB;\n"
 "    border-radius: 10px;\n"
@@ -4296,7 +4302,7 @@ class Ui_MainWindow(object):
         self.pressure_sv_b_1.setObjectName(u"pressure_sv_b_1")
         sizePolicy.setHeightForWidth(self.pressure_sv_b_1.sizePolicy().hasHeightForWidth())
         self.pressure_sv_b_1.setSizePolicy(sizePolicy)
-        self.pressure_sv_b_1.setFont(font13)
+        self.pressure_sv_b_1.setFont(font12)
         self.pressure_sv_b_1.setStyleSheet(u"QDoubleSpinBox:hover{\n"
 "    border: 2px solid #43A047;\n"
 "}")
@@ -4323,7 +4329,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_530.setContentsMargins(0, 0, 0, 0)
         self.label_281 = QLabel(self.celsius_ap_43)
         self.label_281.setObjectName(u"label_281")
-        self.label_281.setFont(font16)
+        self.label_281.setFont(font15)
         self.label_281.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4339,7 +4345,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_531.setContentsMargins(0, 0, 0, 0)
         self.label_366 = QLabel(self.fahrenheit_ap_43)
         self.label_366.setObjectName(u"label_366")
-        self.label_366.setFont(font16)
+        self.label_366.setFont(font15)
         self.label_366.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4383,7 +4389,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_2.setObjectName(u"pressure_pv_a_2")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_2.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_2.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_2.setFont(font13)
+        self.pressure_pv_a_2.setFont(font12)
         self.pressure_pv_a_2.setStyleSheet(u"")
         self.pressure_pv_a_2.setWrapping(True)
         self.pressure_pv_a_2.setAlignment(Qt.AlignCenter)
@@ -4408,7 +4414,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_514.setContentsMargins(0, 0, 0, 0)
         self.label_379 = QLabel(self.celsius_ap_40)
         self.label_379.setObjectName(u"label_379")
-        self.label_379.setFont(font16)
+        self.label_379.setFont(font15)
         self.label_379.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4424,7 +4430,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_515.setContentsMargins(0, 0, 0, 0)
         self.label_380 = QLabel(self.fahrenheit_ap_40)
         self.label_380.setObjectName(u"label_380")
-        self.label_380.setFont(font16)
+        self.label_380.setFont(font15)
         self.label_380.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4468,7 +4474,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_3.setObjectName(u"pressure_pv_a_3")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_3.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_3.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_3.setFont(font13)
+        self.pressure_pv_a_3.setFont(font12)
         self.pressure_pv_a_3.setStyleSheet(u"")
         self.pressure_pv_a_3.setWrapping(True)
         self.pressure_pv_a_3.setAlignment(Qt.AlignCenter)
@@ -4493,7 +4499,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_516.setContentsMargins(0, 0, 0, 0)
         self.label_381 = QLabel(self.celsius_ap_41)
         self.label_381.setObjectName(u"label_381")
-        self.label_381.setFont(font16)
+        self.label_381.setFont(font15)
         self.label_381.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4509,7 +4515,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_517.setContentsMargins(0, 0, 0, 0)
         self.label_382 = QLabel(self.fahrenheit_ap_41)
         self.label_382.setObjectName(u"label_382")
-        self.label_382.setFont(font16)
+        self.label_382.setFont(font15)
         self.label_382.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4553,7 +4559,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_2.setObjectName(u"pressure_pv_c_2")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_2.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_2.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_2.setFont(font13)
+        self.pressure_pv_c_2.setFont(font12)
         self.pressure_pv_c_2.setStyleSheet(u"")
         self.pressure_pv_c_2.setWrapping(True)
         self.pressure_pv_c_2.setAlignment(Qt.AlignCenter)
@@ -4578,7 +4584,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_562.setContentsMargins(0, 0, 0, 0)
         self.label_282 = QLabel(self.celsius_ap_48)
         self.label_282.setObjectName(u"label_282")
-        self.label_282.setFont(font16)
+        self.label_282.setFont(font15)
         self.label_282.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4594,7 +4600,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_563.setContentsMargins(0, 0, 0, 0)
         self.label_400 = QLabel(self.fahrenheit_ap_48)
         self.label_400.setObjectName(u"label_400")
-        self.label_400.setFont(font16)
+        self.label_400.setFont(font15)
         self.label_400.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4638,7 +4644,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_b_3.setObjectName(u"pressure_pv_b_3")
         sizePolicy.setHeightForWidth(self.pressure_pv_b_3.sizePolicy().hasHeightForWidth())
         self.pressure_pv_b_3.setSizePolicy(sizePolicy)
-        self.pressure_pv_b_3.setFont(font13)
+        self.pressure_pv_b_3.setFont(font12)
         self.pressure_pv_b_3.setStyleSheet(u"")
         self.pressure_pv_b_3.setWrapping(True)
         self.pressure_pv_b_3.setAlignment(Qt.AlignCenter)
@@ -4663,7 +4669,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_538.setContentsMargins(0, 0, 0, 0)
         self.label_394 = QLabel(self.celsius_ap_45)
         self.label_394.setObjectName(u"label_394")
-        self.label_394.setFont(font16)
+        self.label_394.setFont(font15)
         self.label_394.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4679,7 +4685,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_539.setContentsMargins(0, 0, 0, 0)
         self.label_395 = QLabel(self.fahrenheit_ap_45)
         self.label_395.setObjectName(u"label_395")
-        self.label_395.setFont(font16)
+        self.label_395.setFont(font15)
         self.label_395.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4703,7 +4709,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_39.setContentsMargins(3, 3, 3, 3)
         self.label_98 = QLabel(self.label_name_12)
         self.label_98.setObjectName(u"label_98")
-        self.label_98.setFont(font12)
+        self.label_98.setFont(font11)
         self.label_98.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -4748,7 +4754,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_a_4.setObjectName(u"pressure_pv_a_4")
         sizePolicy.setHeightForWidth(self.pressure_pv_a_4.sizePolicy().hasHeightForWidth())
         self.pressure_pv_a_4.setSizePolicy(sizePolicy)
-        self.pressure_pv_a_4.setFont(font13)
+        self.pressure_pv_a_4.setFont(font12)
         self.pressure_pv_a_4.setStyleSheet(u"")
         self.pressure_pv_a_4.setWrapping(True)
         self.pressure_pv_a_4.setAlignment(Qt.AlignCenter)
@@ -4773,7 +4779,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_518.setContentsMargins(0, 0, 0, 0)
         self.label_383 = QLabel(self.celsius_ap_42)
         self.label_383.setObjectName(u"label_383")
-        self.label_383.setFont(font16)
+        self.label_383.setFont(font15)
         self.label_383.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4789,7 +4795,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_519.setContentsMargins(0, 0, 0, 0)
         self.label_384 = QLabel(self.fahrenheit_ap_42)
         self.label_384.setObjectName(u"label_384")
-        self.label_384.setFont(font16)
+        self.label_384.setFont(font15)
         self.label_384.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4833,7 +4839,7 @@ class Ui_MainWindow(object):
         self.pressure_pv_c_3.setObjectName(u"pressure_pv_c_3")
         sizePolicy.setHeightForWidth(self.pressure_pv_c_3.sizePolicy().hasHeightForWidth())
         self.pressure_pv_c_3.setSizePolicy(sizePolicy)
-        self.pressure_pv_c_3.setFont(font13)
+        self.pressure_pv_c_3.setFont(font12)
         self.pressure_pv_c_3.setStyleSheet(u"")
         self.pressure_pv_c_3.setWrapping(True)
         self.pressure_pv_c_3.setAlignment(Qt.AlignCenter)
@@ -4858,7 +4864,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_566.setContentsMargins(0, 0, 0, 0)
         self.label_401 = QLabel(self.celsius_ap_49)
         self.label_401.setObjectName(u"label_401")
-        self.label_401.setFont(font16)
+        self.label_401.setFont(font15)
         self.label_401.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4874,7 +4880,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_567.setContentsMargins(0, 0, 0, 0)
         self.label_402 = QLabel(self.fahrenheit_ap_49)
         self.label_402.setObjectName(u"label_402")
-        self.label_402.setFont(font16)
+        self.label_402.setFont(font15)
         self.label_402.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -4898,7 +4904,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_40.setContentsMargins(3, 3, 3, 3)
         self.label_97 = QLabel(self.label_name_13)
         self.label_97.setObjectName(u"label_97")
-        self.label_97.setFont(font12)
+        self.label_97.setFont(font11)
         self.label_97.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -4962,11 +4968,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.stop_btn.sizePolicy().hasHeightForWidth())
         self.stop_btn.setSizePolicy(sizePolicy)
         self.stop_btn.setMaximumSize(QSize(16777215, 16777215))
-        font17 = QFont()
-        font17.setFamilies([u"Segoe UI"])
-        font17.setPointSize(15)
-        font17.setBold(True)
-        self.stop_btn.setFont(font17)
+        self.stop_btn.setFont(font1)
         self.stop_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #EF4444;\n"
 "    color: white;\n"
@@ -5004,7 +5006,7 @@ class Ui_MainWindow(object):
         self.vacuum_btn_c.setSizePolicy(sizePolicy)
         self.vacuum_btn_c.setMinimumSize(QSize(0, 30))
         self.vacuum_btn_c.setMaximumSize(QSize(16777215, 75))
-        self.vacuum_btn_c.setFont(font8)
+        self.vacuum_btn_c.setFont(font16)
         self.vacuum_btn_c.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -5044,7 +5046,7 @@ class Ui_MainWindow(object):
         self.heat_btn_c.setSizePolicy(sizePolicy)
         self.heat_btn_c.setMinimumSize(QSize(0, 30))
         self.heat_btn_c.setMaximumSize(QSize(16777215, 75))
-        self.heat_btn_c.setFont(font8)
+        self.heat_btn_c.setFont(font16)
         self.heat_btn_c.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -5086,7 +5088,7 @@ class Ui_MainWindow(object):
         self.heat_btn_a.setSizePolicy(sizePolicy)
         self.heat_btn_a.setMinimumSize(QSize(0, 30))
         self.heat_btn_a.setMaximumSize(QSize(16777215, 75))
-        self.heat_btn_a.setFont(font8)
+        self.heat_btn_a.setFont(font16)
         self.heat_btn_a.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -5126,7 +5128,7 @@ class Ui_MainWindow(object):
         self.heat_btn_b.setSizePolicy(sizePolicy)
         self.heat_btn_b.setMinimumSize(QSize(0, 30))
         self.heat_btn_b.setMaximumSize(QSize(16777215, 75))
-        self.heat_btn_b.setFont(font8)
+        self.heat_btn_b.setFont(font16)
         self.heat_btn_b.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -5162,7 +5164,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_13.setContentsMargins(3, 3, 3, 3)
         self.label_84 = QLabel(self.label_name_3)
         self.label_84.setObjectName(u"label_84")
-        self.label_84.setFont(font12)
+        self.label_84.setFont(font11)
         self.label_84.setStyleSheet(u"QLabel{\n"
 "	border-radius: 10px;\n"
 "	border-left: none;\n"
@@ -5305,12 +5307,12 @@ class Ui_MainWindow(object):
         self.bt_l_alm_value.setObjectName(u"bt_l_alm_value")
         sizePolicy.setHeightForWidth(self.bt_l_alm_value.sizePolicy().hasHeightForWidth())
         self.bt_l_alm_value.setSizePolicy(sizePolicy)
-        font18 = QFont()
-        font18.setFamilies([u"Segoe UI"])
-        font18.setPointSize(14)
-        font18.setBold(True)
-        font18.setItalic(False)
-        self.bt_l_alm_value.setFont(font18)
+        font17 = QFont()
+        font17.setFamilies([u"Segoe UI"])
+        font17.setPointSize(14)
+        font17.setBold(True)
+        font17.setItalic(False)
+        self.bt_l_alm_value.setFont(font17)
         self.bt_l_alm_value.setStyleSheet(u"")
         self.bt_l_alm_value.setWrapping(False)
         self.bt_l_alm_value.setAlignment(Qt.AlignCenter)
@@ -5334,7 +5336,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_428.setContentsMargins(0, 0, 0, 0)
         self.label_342 = QLabel(self.celsius_bt_5)
         self.label_342.setObjectName(u"label_342")
-        self.label_342.setFont(font18)
+        self.label_342.setFont(font17)
         self.label_342.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5350,7 +5352,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_429.setContentsMargins(0, 0, 0, 0)
         self.label_343 = QLabel(self.fahrenheit_at_25)
         self.label_343.setObjectName(u"label_343")
-        self.label_343.setFont(font18)
+        self.label_343.setFont(font17)
         self.label_343.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5397,7 +5399,7 @@ class Ui_MainWindow(object):
         self.bt_t3_offset_value.setObjectName(u"bt_t3_offset_value")
         sizePolicy.setHeightForWidth(self.bt_t3_offset_value.sizePolicy().hasHeightForWidth())
         self.bt_t3_offset_value.setSizePolicy(sizePolicy)
-        self.bt_t3_offset_value.setFont(font18)
+        self.bt_t3_offset_value.setFont(font17)
         self.bt_t3_offset_value.setStyleSheet(u"")
         self.bt_t3_offset_value.setWrapping(False)
         self.bt_t3_offset_value.setAlignment(Qt.AlignCenter)
@@ -5422,7 +5424,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_437.setContentsMargins(0, 0, 0, 0)
         self.label_348 = QLabel(self.celsius_bt_8)
         self.label_348.setObjectName(u"label_348")
-        self.label_348.setFont(font18)
+        self.label_348.setFont(font17)
         self.label_348.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5438,7 +5440,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_438.setContentsMargins(0, 0, 0, 0)
         self.label_349 = QLabel(self.fahrenheit_at_28)
         self.label_349.setObjectName(u"label_349")
-        self.label_349.setFont(font18)
+        self.label_349.setFont(font17)
         self.label_349.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5485,7 +5487,7 @@ class Ui_MainWindow(object):
         self.bt_sv.setObjectName(u"bt_sv")
         sizePolicy.setHeightForWidth(self.bt_sv.sizePolicy().hasHeightForWidth())
         self.bt_sv.setSizePolicy(sizePolicy)
-        self.bt_sv.setFont(font18)
+        self.bt_sv.setFont(font17)
         self.bt_sv.setStyleSheet(u"")
         self.bt_sv.setWrapping(False)
         self.bt_sv.setAlignment(Qt.AlignCenter)
@@ -5509,7 +5511,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_422.setContentsMargins(0, 0, 0, 0)
         self.label_336 = QLabel(self.celsius_bt_2)
         self.label_336.setObjectName(u"label_336")
-        self.label_336.setFont(font18)
+        self.label_336.setFont(font17)
         self.label_336.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5525,7 +5527,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_423.setContentsMargins(0, 0, 0, 0)
         self.label_337 = QLabel(self.fahrenheit_at_22)
         self.label_337.setObjectName(u"label_337")
-        self.label_337.setFont(font18)
+        self.label_337.setFont(font17)
         self.label_337.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5572,7 +5574,7 @@ class Ui_MainWindow(object):
         self.bt_pv.setObjectName(u"bt_pv")
         sizePolicy.setHeightForWidth(self.bt_pv.sizePolicy().hasHeightForWidth())
         self.bt_pv.setSizePolicy(sizePolicy)
-        self.bt_pv.setFont(font18)
+        self.bt_pv.setFont(font17)
         self.bt_pv.setStyleSheet(u"")
         self.bt_pv.setWrapping(True)
         self.bt_pv.setAlignment(Qt.AlignCenter)
@@ -5596,7 +5598,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_420.setContentsMargins(0, 0, 0, 0)
         self.label_334 = QLabel(self.celsius_bt_1)
         self.label_334.setObjectName(u"label_334")
-        self.label_334.setFont(font18)
+        self.label_334.setFont(font17)
         self.label_334.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5612,7 +5614,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_421.setContentsMargins(0, 0, 0, 0)
         self.label_335 = QLabel(self.fahrenheit_at_21)
         self.label_335.setObjectName(u"label_335")
-        self.label_335.setFont(font18)
+        self.label_335.setFont(font17)
         self.label_335.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5633,11 +5635,11 @@ class Ui_MainWindow(object):
         self.label_150.setObjectName(u"label_150")
         sizePolicy.setHeightForWidth(self.label_150.sizePolicy().hasHeightForWidth())
         self.label_150.setSizePolicy(sizePolicy)
-        font19 = QFont()
-        font19.setPointSize(12)
-        font19.setBold(True)
-        font19.setItalic(False)
-        self.label_150.setFont(font19)
+        font18 = QFont()
+        font18.setPointSize(12)
+        font18.setBold(True)
+        font18.setItalic(False)
+        self.label_150.setFont(font18)
         self.label_150.setStyleSheet(u"color: rgb(30, 136, 229);")
         self.label_150.setAlignment(Qt.AlignCenter)
 
@@ -5645,7 +5647,7 @@ class Ui_MainWindow(object):
 
         self.label_123 = QLabel(self.widget_77)
         self.label_123.setObjectName(u"label_123")
-        self.label_123.setFont(font16)
+        self.label_123.setFont(font15)
         self.label_123.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -5659,7 +5661,7 @@ class Ui_MainWindow(object):
 
         self.label_124 = QLabel(self.widget_77)
         self.label_124.setObjectName(u"label_124")
-        self.label_124.setFont(font16)
+        self.label_124.setFont(font15)
         self.label_124.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -5673,7 +5675,7 @@ class Ui_MainWindow(object):
 
         self.label_125 = QLabel(self.widget_77)
         self.label_125.setObjectName(u"label_125")
-        self.label_125.setFont(font16)
+        self.label_125.setFont(font15)
         self.label_125.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -5687,7 +5689,7 @@ class Ui_MainWindow(object):
 
         self.label_126 = QLabel(self.widget_77)
         self.label_126.setObjectName(u"label_126")
-        self.label_126.setFont(font16)
+        self.label_126.setFont(font15)
         self.label_126.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -5729,7 +5731,7 @@ class Ui_MainWindow(object):
         self.at_t3_offset_value.setObjectName(u"at_t3_offset_value")
         sizePolicy.setHeightForWidth(self.at_t3_offset_value.sizePolicy().hasHeightForWidth())
         self.at_t3_offset_value.setSizePolicy(sizePolicy)
-        self.at_t3_offset_value.setFont(font18)
+        self.at_t3_offset_value.setFont(font17)
         self.at_t3_offset_value.setStyleSheet(u"")
         self.at_t3_offset_value.setWrapping(False)
         self.at_t3_offset_value.setAlignment(Qt.AlignCenter)
@@ -5754,7 +5756,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_418.setContentsMargins(0, 0, 0, 0)
         self.label_332 = QLabel(self.celsius_at_20)
         self.label_332.setObjectName(u"label_332")
-        self.label_332.setFont(font18)
+        self.label_332.setFont(font17)
         self.label_332.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5770,7 +5772,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_419.setContentsMargins(0, 0, 0, 0)
         self.label_333 = QLabel(self.fahrenheit_at_20)
         self.label_333.setObjectName(u"label_333")
-        self.label_333.setFont(font18)
+        self.label_333.setFont(font17)
         self.label_333.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5817,7 +5819,7 @@ class Ui_MainWindow(object):
         self.bt_h_alm_value.setObjectName(u"bt_h_alm_value")
         sizePolicy.setHeightForWidth(self.bt_h_alm_value.sizePolicy().hasHeightForWidth())
         self.bt_h_alm_value.setSizePolicy(sizePolicy)
-        self.bt_h_alm_value.setFont(font18)
+        self.bt_h_alm_value.setFont(font17)
         self.bt_h_alm_value.setStyleSheet(u"")
         self.bt_h_alm_value.setWrapping(False)
         self.bt_h_alm_value.setAlignment(Qt.AlignCenter)
@@ -5841,7 +5843,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_424.setContentsMargins(0, 0, 0, 0)
         self.label_338 = QLabel(self.celsius_bt_3)
         self.label_338.setObjectName(u"label_338")
-        self.label_338.setFont(font18)
+        self.label_338.setFont(font17)
         self.label_338.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5857,7 +5859,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_425.setContentsMargins(0, 0, 0, 0)
         self.label_339 = QLabel(self.fahrenheit_at_23)
         self.label_339.setObjectName(u"label_339")
-        self.label_339.setFont(font18)
+        self.label_339.setFont(font17)
         self.label_339.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -5960,7 +5962,7 @@ class Ui_MainWindow(object):
         self.at_h_alm_value.setObjectName(u"at_h_alm_value")
         sizePolicy.setHeightForWidth(self.at_h_alm_value.sizePolicy().hasHeightForWidth())
         self.at_h_alm_value.setSizePolicy(sizePolicy)
-        self.at_h_alm_value.setFont(font18)
+        self.at_h_alm_value.setFont(font17)
         self.at_h_alm_value.setStyleSheet(u"")
         self.at_h_alm_value.setWrapping(False)
         self.at_h_alm_value.setAlignment(Qt.AlignCenter)
@@ -5984,7 +5986,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_410.setContentsMargins(0, 0, 0, 0)
         self.label_324 = QLabel(self.celsius_at_16)
         self.label_324.setObjectName(u"label_324")
-        self.label_324.setFont(font18)
+        self.label_324.setFont(font17)
         self.label_324.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6000,7 +6002,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_411.setContentsMargins(0, 0, 0, 0)
         self.label_325 = QLabel(self.fahrenheit_at_16)
         self.label_325.setObjectName(u"label_325")
-        self.label_325.setFont(font18)
+        self.label_325.setFont(font17)
         self.label_325.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6047,7 +6049,7 @@ class Ui_MainWindow(object):
         self.ct_t2_offset_value.setObjectName(u"ct_t2_offset_value")
         sizePolicy.setHeightForWidth(self.ct_t2_offset_value.sizePolicy().hasHeightForWidth())
         self.ct_t2_offset_value.setSizePolicy(sizePolicy)
-        self.ct_t2_offset_value.setFont(font18)
+        self.ct_t2_offset_value.setFont(font17)
         self.ct_t2_offset_value.setStyleSheet(u"")
         self.ct_t2_offset_value.setWrapping(False)
         self.ct_t2_offset_value.setAlignment(Qt.AlignCenter)
@@ -6072,7 +6074,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_452.setContentsMargins(0, 0, 0, 0)
         self.label_360 = QLabel(self.celsius_ct_6)
         self.label_360.setObjectName(u"label_360")
-        self.label_360.setFont(font18)
+        self.label_360.setFont(font17)
         self.label_360.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6088,7 +6090,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_453.setContentsMargins(0, 0, 0, 0)
         self.label_361 = QLabel(self.fahrenheit_ct_6)
         self.label_361.setObjectName(u"label_361")
-        self.label_361.setFont(font18)
+        self.label_361.setFont(font17)
         self.label_361.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6135,7 +6137,7 @@ class Ui_MainWindow(object):
         self.at_l_alm_value.setObjectName(u"at_l_alm_value")
         sizePolicy.setHeightForWidth(self.at_l_alm_value.sizePolicy().hasHeightForWidth())
         self.at_l_alm_value.setSizePolicy(sizePolicy)
-        self.at_l_alm_value.setFont(font18)
+        self.at_l_alm_value.setFont(font17)
         self.at_l_alm_value.setStyleSheet(u"")
         self.at_l_alm_value.setWrapping(False)
         self.at_l_alm_value.setAlignment(Qt.AlignCenter)
@@ -6159,7 +6161,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_412.setContentsMargins(0, 0, 0, 0)
         self.label_326 = QLabel(self.celsius_at_17)
         self.label_326.setObjectName(u"label_326")
-        self.label_326.setFont(font18)
+        self.label_326.setFont(font17)
         self.label_326.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6175,7 +6177,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_413.setContentsMargins(0, 0, 0, 0)
         self.label_327 = QLabel(self.fahrenheit_at_17)
         self.label_327.setObjectName(u"label_327")
-        self.label_327.setFont(font18)
+        self.label_327.setFont(font17)
         self.label_327.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6222,7 +6224,7 @@ class Ui_MainWindow(object):
         self.ct_t1_offset_value.setObjectName(u"ct_t1_offset_value")
         sizePolicy.setHeightForWidth(self.ct_t1_offset_value.sizePolicy().hasHeightForWidth())
         self.ct_t1_offset_value.setSizePolicy(sizePolicy)
-        self.ct_t1_offset_value.setFont(font18)
+        self.ct_t1_offset_value.setFont(font17)
         self.ct_t1_offset_value.setStyleSheet(u"")
         self.ct_t1_offset_value.setWrapping(False)
         self.ct_t1_offset_value.setAlignment(Qt.AlignCenter)
@@ -6247,7 +6249,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_450.setContentsMargins(0, 0, 0, 0)
         self.label_358 = QLabel(self.celsius_ct_5)
         self.label_358.setObjectName(u"label_358")
-        self.label_358.setFont(font18)
+        self.label_358.setFont(font17)
         self.label_358.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6263,7 +6265,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_451.setContentsMargins(0, 0, 0, 0)
         self.label_359 = QLabel(self.fahrenheit_ct_5)
         self.label_359.setObjectName(u"label_359")
-        self.label_359.setFont(font18)
+        self.label_359.setFont(font17)
         self.label_359.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6310,7 +6312,7 @@ class Ui_MainWindow(object):
         self.bt_t1_offset_value.setObjectName(u"bt_t1_offset_value")
         sizePolicy.setHeightForWidth(self.bt_t1_offset_value.sizePolicy().hasHeightForWidth())
         self.bt_t1_offset_value.setSizePolicy(sizePolicy)
-        self.bt_t1_offset_value.setFont(font18)
+        self.bt_t1_offset_value.setFont(font17)
         self.bt_t1_offset_value.setStyleSheet(u"")
         self.bt_t1_offset_value.setWrapping(False)
         self.bt_t1_offset_value.setAlignment(Qt.AlignCenter)
@@ -6335,7 +6337,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_430.setContentsMargins(0, 0, 0, 0)
         self.label_344 = QLabel(self.celsius_bt_6)
         self.label_344.setObjectName(u"label_344")
-        self.label_344.setFont(font18)
+        self.label_344.setFont(font17)
         self.label_344.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6351,7 +6353,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_431.setContentsMargins(0, 0, 0, 0)
         self.label_345 = QLabel(self.fahrenheit_at_26)
         self.label_345.setObjectName(u"label_345")
-        self.label_345.setFont(font18)
+        self.label_345.setFont(font17)
         self.label_345.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6398,7 +6400,7 @@ class Ui_MainWindow(object):
         self.bt_t2_offset_value.setObjectName(u"bt_t2_offset_value")
         sizePolicy.setHeightForWidth(self.bt_t2_offset_value.sizePolicy().hasHeightForWidth())
         self.bt_t2_offset_value.setSizePolicy(sizePolicy)
-        self.bt_t2_offset_value.setFont(font18)
+        self.bt_t2_offset_value.setFont(font17)
         self.bt_t2_offset_value.setStyleSheet(u"")
         self.bt_t2_offset_value.setWrapping(False)
         self.bt_t2_offset_value.setAlignment(Qt.AlignCenter)
@@ -6423,7 +6425,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_435.setContentsMargins(0, 0, 0, 0)
         self.label_346 = QLabel(self.celsius_bt_7)
         self.label_346.setObjectName(u"label_346")
-        self.label_346.setFont(font18)
+        self.label_346.setFont(font17)
         self.label_346.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6439,7 +6441,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_436.setContentsMargins(0, 0, 0, 0)
         self.label_347 = QLabel(self.fahrenheit_at_27)
         self.label_347.setObjectName(u"label_347")
-        self.label_347.setFont(font18)
+        self.label_347.setFont(font17)
         self.label_347.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6460,7 +6462,7 @@ class Ui_MainWindow(object):
         self.label_139.setObjectName(u"label_139")
         sizePolicy.setHeightForWidth(self.label_139.sizePolicy().hasHeightForWidth())
         self.label_139.setSizePolicy(sizePolicy)
-        self.label_139.setFont(font19)
+        self.label_139.setFont(font18)
         self.label_139.setStyleSheet(u"color: rgb(0, 0, 0);")
         self.label_139.setAlignment(Qt.AlignCenter)
 
@@ -6470,7 +6472,7 @@ class Ui_MainWindow(object):
         self.label_183.setObjectName(u"label_183")
         sizePolicy.setHeightForWidth(self.label_183.sizePolicy().hasHeightForWidth())
         self.label_183.setSizePolicy(sizePolicy)
-        self.label_183.setFont(font19)
+        self.label_183.setFont(font18)
         self.label_183.setStyleSheet(u"color: #6F00FF;")
         self.label_183.setAlignment(Qt.AlignCenter)
 
@@ -6480,7 +6482,7 @@ class Ui_MainWindow(object):
         self.label_173.setObjectName(u"label_173")
         sizePolicy.setHeightForWidth(self.label_173.sizePolicy().hasHeightForWidth())
         self.label_173.setSizePolicy(sizePolicy)
-        self.label_173.setFont(font19)
+        self.label_173.setFont(font18)
         self.label_173.setStyleSheet(u"color: rgb(251, 140, 0);")
         self.label_173.setAlignment(Qt.AlignCenter)
 
@@ -6540,7 +6542,7 @@ class Ui_MainWindow(object):
         self.ct_sv.setObjectName(u"ct_sv")
         sizePolicy.setHeightForWidth(self.ct_sv.sizePolicy().hasHeightForWidth())
         self.ct_sv.setSizePolicy(sizePolicy)
-        self.ct_sv.setFont(font18)
+        self.ct_sv.setFont(font17)
         self.ct_sv.setStyleSheet(u"")
         self.ct_sv.setWrapping(False)
         self.ct_sv.setAlignment(Qt.AlignCenter)
@@ -6564,7 +6566,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_444.setContentsMargins(0, 0, 0, 0)
         self.label_352 = QLabel(self.celsius_ct_2)
         self.label_352.setObjectName(u"label_352")
-        self.label_352.setFont(font18)
+        self.label_352.setFont(font17)
         self.label_352.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6580,7 +6582,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_445.setContentsMargins(0, 0, 0, 0)
         self.label_353 = QLabel(self.fahrenheit_ct_2)
         self.label_353.setObjectName(u"label_353")
-        self.label_353.setFont(font18)
+        self.label_353.setFont(font17)
         self.label_353.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6627,7 +6629,7 @@ class Ui_MainWindow(object):
         self.at_pv.setObjectName(u"at_pv")
         sizePolicy.setHeightForWidth(self.at_pv.sizePolicy().hasHeightForWidth())
         self.at_pv.setSizePolicy(sizePolicy)
-        self.at_pv.setFont(font18)
+        self.at_pv.setFont(font17)
         self.at_pv.setStyleSheet(u"")
         self.at_pv.setWrapping(True)
         self.at_pv.setAlignment(Qt.AlignCenter)
@@ -6651,7 +6653,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_406.setContentsMargins(0, 0, 0, 0)
         self.label_320 = QLabel(self.celsius_at_14)
         self.label_320.setObjectName(u"label_320")
-        self.label_320.setFont(font18)
+        self.label_320.setFont(font17)
         self.label_320.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6667,7 +6669,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_407.setContentsMargins(0, 0, 0, 0)
         self.label_321 = QLabel(self.fahrenheit_at_14)
         self.label_321.setObjectName(u"label_321")
-        self.label_321.setFont(font18)
+        self.label_321.setFont(font17)
         self.label_321.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6714,7 +6716,7 @@ class Ui_MainWindow(object):
         self.ct_h_alm_value.setObjectName(u"ct_h_alm_value")
         sizePolicy.setHeightForWidth(self.ct_h_alm_value.sizePolicy().hasHeightForWidth())
         self.ct_h_alm_value.setSizePolicy(sizePolicy)
-        self.ct_h_alm_value.setFont(font18)
+        self.ct_h_alm_value.setFont(font17)
         self.ct_h_alm_value.setStyleSheet(u"")
         self.ct_h_alm_value.setWrapping(False)
         self.ct_h_alm_value.setAlignment(Qt.AlignCenter)
@@ -6738,7 +6740,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_446.setContentsMargins(0, 0, 0, 0)
         self.label_354 = QLabel(self.celsius_ct_3)
         self.label_354.setObjectName(u"label_354")
-        self.label_354.setFont(font18)
+        self.label_354.setFont(font17)
         self.label_354.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6754,7 +6756,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_447.setContentsMargins(0, 0, 0, 0)
         self.label_355 = QLabel(self.fahrenheit_ct_3)
         self.label_355.setObjectName(u"label_355")
-        self.label_355.setFont(font18)
+        self.label_355.setFont(font17)
         self.label_355.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6801,7 +6803,7 @@ class Ui_MainWindow(object):
         self.ct_pv.setObjectName(u"ct_pv")
         sizePolicy.setHeightForWidth(self.ct_pv.sizePolicy().hasHeightForWidth())
         self.ct_pv.setSizePolicy(sizePolicy)
-        self.ct_pv.setFont(font18)
+        self.ct_pv.setFont(font17)
         self.ct_pv.setStyleSheet(u"")
         self.ct_pv.setWrapping(True)
         self.ct_pv.setAlignment(Qt.AlignCenter)
@@ -6825,7 +6827,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_442.setContentsMargins(0, 0, 0, 0)
         self.label_350 = QLabel(self.celsius_ct_1)
         self.label_350.setObjectName(u"label_350")
-        self.label_350.setFont(font18)
+        self.label_350.setFont(font17)
         self.label_350.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6841,7 +6843,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_443.setContentsMargins(0, 0, 0, 0)
         self.label_351 = QLabel(self.fahrenheit_ct_1)
         self.label_351.setObjectName(u"label_351")
-        self.label_351.setFont(font18)
+        self.label_351.setFont(font17)
         self.label_351.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6888,7 +6890,7 @@ class Ui_MainWindow(object):
         self.at_sv.setObjectName(u"at_sv")
         sizePolicy.setHeightForWidth(self.at_sv.sizePolicy().hasHeightForWidth())
         self.at_sv.setSizePolicy(sizePolicy)
-        self.at_sv.setFont(font18)
+        self.at_sv.setFont(font17)
         self.at_sv.setStyleSheet(u"")
         self.at_sv.setWrapping(False)
         self.at_sv.setAlignment(Qt.AlignCenter)
@@ -6912,7 +6914,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_408.setContentsMargins(0, 0, 0, 0)
         self.label_322 = QLabel(self.celsius_at_15)
         self.label_322.setObjectName(u"label_322")
-        self.label_322.setFont(font18)
+        self.label_322.setFont(font17)
         self.label_322.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6928,7 +6930,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_409.setContentsMargins(0, 0, 0, 0)
         self.label_323 = QLabel(self.fahrenheit_at_15)
         self.label_323.setObjectName(u"label_323")
-        self.label_323.setFont(font18)
+        self.label_323.setFont(font17)
         self.label_323.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -6975,7 +6977,7 @@ class Ui_MainWindow(object):
         self.ct_l_alm_value.setObjectName(u"ct_l_alm_value")
         sizePolicy.setHeightForWidth(self.ct_l_alm_value.sizePolicy().hasHeightForWidth())
         self.ct_l_alm_value.setSizePolicy(sizePolicy)
-        self.ct_l_alm_value.setFont(font18)
+        self.ct_l_alm_value.setFont(font17)
         self.ct_l_alm_value.setStyleSheet(u"")
         self.ct_l_alm_value.setWrapping(False)
         self.ct_l_alm_value.setAlignment(Qt.AlignCenter)
@@ -6999,7 +7001,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_448.setContentsMargins(0, 0, 0, 0)
         self.label_356 = QLabel(self.celsius_ct_4)
         self.label_356.setObjectName(u"label_356")
-        self.label_356.setFont(font18)
+        self.label_356.setFont(font17)
         self.label_356.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7015,7 +7017,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_449.setContentsMargins(0, 0, 0, 0)
         self.label_357 = QLabel(self.fahrenheit_ct_4)
         self.label_357.setObjectName(u"label_357")
-        self.label_357.setFont(font18)
+        self.label_357.setFont(font17)
         self.label_357.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7062,7 +7064,7 @@ class Ui_MainWindow(object):
         self.ct_t3_offset_value.setObjectName(u"ct_t3_offset_value")
         sizePolicy.setHeightForWidth(self.ct_t3_offset_value.sizePolicy().hasHeightForWidth())
         self.ct_t3_offset_value.setSizePolicy(sizePolicy)
-        self.ct_t3_offset_value.setFont(font18)
+        self.ct_t3_offset_value.setFont(font17)
         self.ct_t3_offset_value.setStyleSheet(u"")
         self.ct_t3_offset_value.setWrapping(False)
         self.ct_t3_offset_value.setAlignment(Qt.AlignCenter)
@@ -7087,7 +7089,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_454.setContentsMargins(0, 0, 0, 0)
         self.label_362 = QLabel(self.celsius_ct_7)
         self.label_362.setObjectName(u"label_362")
-        self.label_362.setFont(font18)
+        self.label_362.setFont(font17)
         self.label_362.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7103,7 +7105,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_455.setContentsMargins(0, 0, 0, 0)
         self.label_363 = QLabel(self.fahrenheit_ct_7)
         self.label_363.setObjectName(u"label_363")
-        self.label_363.setFont(font18)
+        self.label_363.setFont(font17)
         self.label_363.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7122,7 +7124,7 @@ class Ui_MainWindow(object):
 
         self.label_135 = QLabel(self.widget_77)
         self.label_135.setObjectName(u"label_135")
-        self.label_135.setFont(font16)
+        self.label_135.setFont(font15)
         self.label_135.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -7164,7 +7166,7 @@ class Ui_MainWindow(object):
         self.t0_offset_value.setObjectName(u"t0_offset_value")
         sizePolicy.setHeightForWidth(self.t0_offset_value.sizePolicy().hasHeightForWidth())
         self.t0_offset_value.setSizePolicy(sizePolicy)
-        self.t0_offset_value.setFont(font18)
+        self.t0_offset_value.setFont(font17)
         self.t0_offset_value.setStyleSheet(u"")
         self.t0_offset_value.setWrapping(False)
         self.t0_offset_value.setAlignment(Qt.AlignCenter)
@@ -7189,7 +7191,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_464.setContentsMargins(0, 0, 0, 0)
         self.label_364 = QLabel(self.celsius_t0_5)
         self.label_364.setObjectName(u"label_364")
-        self.label_364.setFont(font18)
+        self.label_364.setFont(font17)
         self.label_364.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7205,7 +7207,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_465.setContentsMargins(0, 0, 0, 0)
         self.label_365 = QLabel(self.fahrenheit_t0_5)
         self.label_365.setObjectName(u"label_365")
-        self.label_365.setFont(font18)
+        self.label_365.setFont(font17)
         self.label_365.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7252,7 +7254,7 @@ class Ui_MainWindow(object):
         self.t0_l_alm_value.setObjectName(u"t0_l_alm_value")
         sizePolicy.setHeightForWidth(self.t0_l_alm_value.sizePolicy().hasHeightForWidth())
         self.t0_l_alm_value.setSizePolicy(sizePolicy)
-        self.t0_l_alm_value.setFont(font18)
+        self.t0_l_alm_value.setFont(font17)
         self.t0_l_alm_value.setStyleSheet(u"")
         self.t0_l_alm_value.setWrapping(False)
         self.t0_l_alm_value.setAlignment(Qt.AlignCenter)
@@ -7276,7 +7278,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_462.setContentsMargins(0, 0, 0, 0)
         self.label_259 = QLabel(self.celsius_t0_4)
         self.label_259.setObjectName(u"label_259")
-        self.label_259.setFont(font18)
+        self.label_259.setFont(font17)
         self.label_259.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7292,7 +7294,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_463.setContentsMargins(0, 0, 0, 0)
         self.label_260 = QLabel(self.fahrenheit_t0_4)
         self.label_260.setObjectName(u"label_260")
-        self.label_260.setFont(font18)
+        self.label_260.setFont(font17)
         self.label_260.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7339,7 +7341,7 @@ class Ui_MainWindow(object):
         self.t0_pv.setObjectName(u"t0_pv")
         sizePolicy.setHeightForWidth(self.t0_pv.sizePolicy().hasHeightForWidth())
         self.t0_pv.setSizePolicy(sizePolicy)
-        self.t0_pv.setFont(font18)
+        self.t0_pv.setFont(font17)
         self.t0_pv.setStyleSheet(u"")
         self.t0_pv.setWrapping(True)
         self.t0_pv.setAlignment(Qt.AlignCenter)
@@ -7363,7 +7365,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_456.setContentsMargins(0, 0, 0, 0)
         self.label_249 = QLabel(self.celsius_t0_1)
         self.label_249.setObjectName(u"label_249")
-        self.label_249.setFont(font18)
+        self.label_249.setFont(font17)
         self.label_249.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7379,7 +7381,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_457.setContentsMargins(0, 0, 0, 0)
         self.label_250 = QLabel(self.fahrenheit_t0_1)
         self.label_250.setObjectName(u"label_250")
-        self.label_250.setFont(font18)
+        self.label_250.setFont(font17)
         self.label_250.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7426,7 +7428,7 @@ class Ui_MainWindow(object):
         self.t0_sv.setObjectName(u"t0_sv")
         sizePolicy.setHeightForWidth(self.t0_sv.sizePolicy().hasHeightForWidth())
         self.t0_sv.setSizePolicy(sizePolicy)
-        self.t0_sv.setFont(font18)
+        self.t0_sv.setFont(font17)
         self.t0_sv.setStyleSheet(u"")
         self.t0_sv.setWrapping(False)
         self.t0_sv.setAlignment(Qt.AlignCenter)
@@ -7450,7 +7452,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_458.setContentsMargins(0, 0, 0, 0)
         self.label_251 = QLabel(self.celsius_t0_2)
         self.label_251.setObjectName(u"label_251")
-        self.label_251.setFont(font18)
+        self.label_251.setFont(font17)
         self.label_251.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7466,7 +7468,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_459.setContentsMargins(0, 0, 0, 0)
         self.label_252 = QLabel(self.fahrenheit_t0_2)
         self.label_252.setObjectName(u"label_252")
-        self.label_252.setFont(font18)
+        self.label_252.setFont(font17)
         self.label_252.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7513,7 +7515,7 @@ class Ui_MainWindow(object):
         self.t0_h_alm_value.setObjectName(u"t0_h_alm_value")
         sizePolicy.setHeightForWidth(self.t0_h_alm_value.sizePolicy().hasHeightForWidth())
         self.t0_h_alm_value.setSizePolicy(sizePolicy)
-        self.t0_h_alm_value.setFont(font18)
+        self.t0_h_alm_value.setFont(font17)
         self.t0_h_alm_value.setStyleSheet(u"")
         self.t0_h_alm_value.setWrapping(False)
         self.t0_h_alm_value.setAlignment(Qt.AlignCenter)
@@ -7537,7 +7539,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_460.setContentsMargins(0, 0, 0, 0)
         self.label_257 = QLabel(self.celsius_t0_3)
         self.label_257.setObjectName(u"label_257")
-        self.label_257.setFont(font18)
+        self.label_257.setFont(font17)
         self.label_257.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7553,7 +7555,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_461.setContentsMargins(0, 0, 0, 0)
         self.label_258 = QLabel(self.fahrenheit_t0_3)
         self.label_258.setObjectName(u"label_258")
-        self.label_258.setFont(font18)
+        self.label_258.setFont(font17)
         self.label_258.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7600,7 +7602,7 @@ class Ui_MainWindow(object):
         self.at_t1_offset_value.setObjectName(u"at_t1_offset_value")
         sizePolicy.setHeightForWidth(self.at_t1_offset_value.sizePolicy().hasHeightForWidth())
         self.at_t1_offset_value.setSizePolicy(sizePolicy)
-        self.at_t1_offset_value.setFont(font18)
+        self.at_t1_offset_value.setFont(font17)
         self.at_t1_offset_value.setStyleSheet(u"")
         self.at_t1_offset_value.setWrapping(False)
         self.at_t1_offset_value.setAlignment(Qt.AlignCenter)
@@ -7625,7 +7627,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_414.setContentsMargins(0, 0, 0, 0)
         self.label_328 = QLabel(self.celsius_at_18)
         self.label_328.setObjectName(u"label_328")
-        self.label_328.setFont(font18)
+        self.label_328.setFont(font17)
         self.label_328.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7641,7 +7643,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_415.setContentsMargins(0, 0, 0, 0)
         self.label_329 = QLabel(self.fahrenheit_at_18)
         self.label_329.setObjectName(u"label_329")
-        self.label_329.setFont(font18)
+        self.label_329.setFont(font17)
         self.label_329.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7688,7 +7690,7 @@ class Ui_MainWindow(object):
         self.at_t2_offset_value.setObjectName(u"at_t2_offset_value")
         sizePolicy.setHeightForWidth(self.at_t2_offset_value.sizePolicy().hasHeightForWidth())
         self.at_t2_offset_value.setSizePolicy(sizePolicy)
-        self.at_t2_offset_value.setFont(font18)
+        self.at_t2_offset_value.setFont(font17)
         self.at_t2_offset_value.setStyleSheet(u"")
         self.at_t2_offset_value.setWrapping(False)
         self.at_t2_offset_value.setAlignment(Qt.AlignCenter)
@@ -7713,7 +7715,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_416.setContentsMargins(0, 0, 0, 0)
         self.label_330 = QLabel(self.celsius_at_19)
         self.label_330.setObjectName(u"label_330")
-        self.label_330.setFont(font18)
+        self.label_330.setFont(font17)
         self.label_330.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7729,7 +7731,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_417.setContentsMargins(0, 0, 0, 0)
         self.label_331 = QLabel(self.fahrenheit_at_19)
         self.label_331.setObjectName(u"label_331")
-        self.label_331.setFont(font18)
+        self.label_331.setFont(font17)
         self.label_331.setStyleSheet(u"QLabel{\n"
 "	color: rgb(97, 97, 97)\n"
 "}")
@@ -7748,7 +7750,7 @@ class Ui_MainWindow(object):
 
         self.label_133 = QLabel(self.widget_77)
         self.label_133.setObjectName(u"label_133")
-        self.label_133.setFont(font16)
+        self.label_133.setFont(font15)
         self.label_133.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -7762,7 +7764,7 @@ class Ui_MainWindow(object):
 
         self.label_134 = QLabel(self.widget_77)
         self.label_134.setObjectName(u"label_134")
-        self.label_134.setFont(font16)
+        self.label_134.setFont(font15)
         self.label_134.setStyleSheet(u"\n"
 "	background: qlineargradient(\n"
 "                x1:0, y1:0,\n"
@@ -7807,7 +7809,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.heat_btn_t0.sizePolicy().hasHeightForWidth())
         self.heat_btn_t0.setSizePolicy(sizePolicy)
         self.heat_btn_t0.setMaximumSize(QSize(16777215, 150))
-        self.heat_btn_t0.setFont(font4)
+        self.heat_btn_t0.setFont(font7)
         self.heat_btn_t0.setStyleSheet(u"")
         self.heat_btn_t0.setIcon(icon20)
         self.heat_btn_t0.setIconSize(QSize(24, 24))
@@ -7890,7 +7892,7 @@ class Ui_MainWindow(object):
         self.connection_group.setObjectName(u"connection_group")
         sizePolicy1.setHeightForWidth(self.connection_group.sizePolicy().hasHeightForWidth())
         self.connection_group.setSizePolicy(sizePolicy1)
-        self.connection_group.setFont(font8)
+        self.connection_group.setFont(font7)
         self.connection_group.setStyleSheet(u"QGroupBox {\n"
 "    border: 2px solid #E5E5E5;\n"
 "    border-radius: 6px;\n"
@@ -7952,11 +7954,11 @@ class Ui_MainWindow(object):
         self.read_plc_label.setObjectName(u"read_plc_label")
         sizePolicy.setHeightForWidth(self.read_plc_label.sizePolicy().hasHeightForWidth())
         self.read_plc_label.setSizePolicy(sizePolicy)
-        font20 = QFont()
-        font20.setFamilies([u"MS Shell Dlg 2"])
-        font20.setPointSize(12)
-        font20.setBold(True)
-        self.read_plc_label.setFont(font20)
+        font19 = QFont()
+        font19.setFamilies([u"MS Shell Dlg 2"])
+        font19.setPointSize(12)
+        font19.setBold(True)
+        self.read_plc_label.setFont(font19)
         self.read_plc_label.setStyleSheet(u"QPushButton {\n"
 "    color: black;\n"
 "    background-color: transparent;\n"
@@ -7972,7 +7974,7 @@ class Ui_MainWindow(object):
         self.write_plc_label.setObjectName(u"write_plc_label")
         sizePolicy.setHeightForWidth(self.write_plc_label.sizePolicy().hasHeightForWidth())
         self.write_plc_label.setSizePolicy(sizePolicy)
-        self.write_plc_label.setFont(font20)
+        self.write_plc_label.setFont(font19)
         self.write_plc_label.setStyleSheet(u"QPushButton {\n"
 "    color: black;\n"
 "    background-color: transparent;\n"
@@ -7989,7 +7991,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.table_write_cycle.sizePolicy().hasHeightForWidth())
         self.table_write_cycle.setSizePolicy(sizePolicy)
         self.table_write_cycle.setMinimumSize(QSize(0, 0))
-        self.table_write_cycle.setFont(font8)
+        self.table_write_cycle.setFont(font7)
         self.table_write_cycle.setAlignment(Qt.AlignCenter)
         self.table_write_cycle.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.table_write_cycle.setDecimals(1)
@@ -8002,7 +8004,7 @@ class Ui_MainWindow(object):
         self.write_table_label.setObjectName(u"write_table_label")
         sizePolicy.setHeightForWidth(self.write_table_label.sizePolicy().hasHeightForWidth())
         self.write_table_label.setSizePolicy(sizePolicy)
-        self.write_table_label.setFont(font20)
+        self.write_table_label.setFont(font19)
         self.write_table_label.setStyleSheet(u"QPushButton {\n"
 "    color: black;\n"
 "    background-color: transparent;\n"
@@ -8021,7 +8023,7 @@ class Ui_MainWindow(object):
         self.total_cycle_label_c.setObjectName(u"total_cycle_label_c")
         sizePolicy.setHeightForWidth(self.total_cycle_label_c.sizePolicy().hasHeightForWidth())
         self.total_cycle_label_c.setSizePolicy(sizePolicy)
-        self.total_cycle_label_c.setFont(font20)
+        self.total_cycle_label_c.setFont(font19)
         self.total_cycle_label_c.setStyleSheet(u"QPushButton {\n"
 "    color: #6F00FF;\n"
 "    background-color: transparent;\n"
@@ -8037,7 +8039,7 @@ class Ui_MainWindow(object):
         self.total_cycle_label_b.setObjectName(u"total_cycle_label_b")
         sizePolicy.setHeightForWidth(self.total_cycle_label_b.sizePolicy().hasHeightForWidth())
         self.total_cycle_label_b.setSizePolicy(sizePolicy)
-        self.total_cycle_label_b.setFont(font20)
+        self.total_cycle_label_b.setFont(font19)
         self.total_cycle_label_b.setStyleSheet(u"QPushButton {\n"
 "    color: rgb(251, 140, 0);\n"
 "    background-color: transparent;\n"
@@ -8068,7 +8070,7 @@ class Ui_MainWindow(object):
         self.cycle_c_displ_3.setObjectName(u"cycle_c_displ_3")
         sizePolicy.setHeightForWidth(self.cycle_c_displ_3.sizePolicy().hasHeightForWidth())
         self.cycle_c_displ_3.setSizePolicy(sizePolicy)
-        self.cycle_c_displ_3.setFont(font13)
+        self.cycle_c_displ_3.setFont(font12)
         self.cycle_c_displ_3.setStyleSheet(u"color: #6F00FF;\n"
 "padding-left: 20px;")
         self.cycle_c_displ_3.setLocale(QLocale(QLocale.English, QLocale.UnitedStates))
@@ -8088,11 +8090,11 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.reset_cycle_c_btn.sizePolicy().hasHeightForWidth())
         self.reset_cycle_c_btn.setSizePolicy(sizePolicy)
         self.reset_cycle_c_btn.setMinimumSize(QSize(75, 0))
-        font21 = QFont()
-        font21.setFamilies([u"Segoe UI"])
-        font21.setPointSize(12)
-        font21.setBold(True)
-        self.reset_cycle_c_btn.setFont(font21)
+        font20 = QFont()
+        font20.setFamilies([u"Segoe UI"])
+        font20.setPointSize(12)
+        font20.setBold(True)
+        self.reset_cycle_c_btn.setFont(font20)
         self.reset_cycle_c_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
@@ -8137,7 +8139,7 @@ class Ui_MainWindow(object):
         self.cycle_b_displ_3.setObjectName(u"cycle_b_displ_3")
         sizePolicy.setHeightForWidth(self.cycle_b_displ_3.sizePolicy().hasHeightForWidth())
         self.cycle_b_displ_3.setSizePolicy(sizePolicy)
-        self.cycle_b_displ_3.setFont(font13)
+        self.cycle_b_displ_3.setFont(font12)
         self.cycle_b_displ_3.setStyleSheet(u"color: rgb(251, 140, 0);\n"
 "padding-left: 20px;")
         self.cycle_b_displ_3.setWrapping(True)
@@ -8156,7 +8158,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.reset_cycle_b_btn.sizePolicy().hasHeightForWidth())
         self.reset_cycle_b_btn.setSizePolicy(sizePolicy)
         self.reset_cycle_b_btn.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_b_btn.setFont(font21)
+        self.reset_cycle_b_btn.setFont(font20)
         self.reset_cycle_b_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
@@ -8200,10 +8202,10 @@ class Ui_MainWindow(object):
         self.pushButton_4.setObjectName(u"pushButton_4")
         sizePolicy.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
         self.pushButton_4.setSizePolicy(sizePolicy)
-        font22 = QFont()
-        font22.setPointSize(12)
-        font22.setBold(True)
-        self.pushButton_4.setFont(font22)
+        font21 = QFont()
+        font21.setPointSize(12)
+        font21.setBold(True)
+        self.pushButton_4.setFont(font21)
         self.pushButton_4.setStyleSheet(u"QPushButton{	\n"
 "	border: 2px solid #E5E5E5; \n"
 "	border-radius: 10px;\n"
@@ -8228,7 +8230,7 @@ class Ui_MainWindow(object):
         self.pushButton_21.setObjectName(u"pushButton_21")
         sizePolicy.setHeightForWidth(self.pushButton_21.sizePolicy().hasHeightForWidth())
         self.pushButton_21.setSizePolicy(sizePolicy)
-        self.pushButton_21.setFont(font22)
+        self.pushButton_21.setFont(font21)
         self.pushButton_21.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: #F90A0A; \n"
@@ -8248,7 +8250,7 @@ class Ui_MainWindow(object):
         self.pushButton_24.setObjectName(u"pushButton_24")
         sizePolicy.setHeightForWidth(self.pushButton_24.sizePolicy().hasHeightForWidth())
         self.pushButton_24.setSizePolicy(sizePolicy)
-        self.pushButton_24.setFont(font22)
+        self.pushButton_24.setFont(font21)
         self.pushButton_24.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: orange; \n"
@@ -8269,7 +8271,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.read_time_input.sizePolicy().hasHeightForWidth())
         self.read_time_input.setSizePolicy(sizePolicy)
         self.read_time_input.setMinimumSize(QSize(0, 0))
-        self.read_time_input.setFont(font8)
+        self.read_time_input.setFont(font7)
         self.read_time_input.setAlignment(Qt.AlignCenter)
         self.read_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.read_time_input.setMinimum(16)
@@ -8303,7 +8305,7 @@ class Ui_MainWindow(object):
         self.pushButton_6.setObjectName(u"pushButton_6")
         sizePolicy.setHeightForWidth(self.pushButton_6.sizePolicy().hasHeightForWidth())
         self.pushButton_6.setSizePolicy(sizePolicy)
-        self.pushButton_6.setFont(font22)
+        self.pushButton_6.setFont(font21)
         self.pushButton_6.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: #10B981; \n"
@@ -8323,7 +8325,7 @@ class Ui_MainWindow(object):
         self.pushButton_23.setObjectName(u"pushButton_23")
         sizePolicy.setHeightForWidth(self.pushButton_23.sizePolicy().hasHeightForWidth())
         self.pushButton_23.setSizePolicy(sizePolicy)
-        self.pushButton_23.setFont(font22)
+        self.pushButton_23.setFont(font21)
         self.pushButton_23.setStyleSheet(u"QPushButton{	\n"
 "	border: 2px solid #E5E5E5; \n"
 "	border-radius: 10px;\n"
@@ -8349,7 +8351,7 @@ class Ui_MainWindow(object):
         self.pushButton_22.setObjectName(u"pushButton_22")
         sizePolicy.setHeightForWidth(self.pushButton_22.sizePolicy().hasHeightForWidth())
         self.pushButton_22.setSizePolicy(sizePolicy)
-        self.pushButton_22.setFont(font22)
+        self.pushButton_22.setFont(font21)
         self.pushButton_22.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: orange; \n"
@@ -8368,7 +8370,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.write_time_input.sizePolicy().hasHeightForWidth())
         self.write_time_input.setSizePolicy(sizePolicy)
         self.write_time_input.setMinimumSize(QSize(0, 0))
-        self.write_time_input.setFont(font8)
+        self.write_time_input.setFont(font7)
         self.write_time_input.setAlignment(Qt.AlignCenter)
         self.write_time_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
         self.write_time_input.setMinimum(16)
@@ -8402,7 +8404,7 @@ class Ui_MainWindow(object):
         self.cycle_a_displ_3.setObjectName(u"cycle_a_displ_3")
         sizePolicy.setHeightForWidth(self.cycle_a_displ_3.sizePolicy().hasHeightForWidth())
         self.cycle_a_displ_3.setSizePolicy(sizePolicy)
-        self.cycle_a_displ_3.setFont(font13)
+        self.cycle_a_displ_3.setFont(font12)
         self.cycle_a_displ_3.setStyleSheet(u"color: rgb(30, 136, 229);\n"
 "padding-left: 20px;")
         self.cycle_a_displ_3.setWrapping(True)
@@ -8420,7 +8422,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.reset_cycle_a_btn.sizePolicy().hasHeightForWidth())
         self.reset_cycle_a_btn.setSizePolicy(sizePolicy)
         self.reset_cycle_a_btn.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_a_btn.setFont(font21)
+        self.reset_cycle_a_btn.setFont(font20)
         self.reset_cycle_a_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
@@ -8447,7 +8449,7 @@ class Ui_MainWindow(object):
         self.total_cycle_label_a.setObjectName(u"total_cycle_label_a")
         sizePolicy.setHeightForWidth(self.total_cycle_label_a.sizePolicy().hasHeightForWidth())
         self.total_cycle_label_a.setSizePolicy(sizePolicy)
-        self.total_cycle_label_a.setFont(font20)
+        self.total_cycle_label_a.setFont(font19)
         self.total_cycle_label_a.setStyleSheet(u"QPushButton {\n"
 "    color: rgb(30, 136, 229);\n"
 "    background-color: transparent;\n"
@@ -8500,6 +8502,152 @@ class Ui_MainWindow(object):
         self.verticalLayout_28.setSpacing(10)
         self.verticalLayout_28.setObjectName(u"verticalLayout_28")
         self.verticalLayout_28.setContentsMargins(0, 15, 0, 10)
+        self.widget_3 = QWidget(self.device_frame_2)
+        self.widget_3.setObjectName(u"widget_3")
+        self.horizontalLayout_43 = QHBoxLayout(self.widget_3)
+        self.horizontalLayout_43.setObjectName(u"horizontalLayout_43")
+        self.i_o_group_2 = QGroupBox(self.widget_3)
+        self.i_o_group_2.setObjectName(u"i_o_group_2")
+        self.i_o_group_2.setFont(font20)
+        self.i_o_group_2.setStyleSheet(u"QGroupBox {\n"
+"    border: 2px solid #E5E5E5;\n"
+"    border-radius: 6px;\n"
+"    margin-top: 10px;\n"
+"    padding-top: 10px;\n"
+"}\n"
+"QGroupBox::title {\n"
+"    subcontrol-origin: margin;\n"
+"    left: 10px;\n"
+"    padding: 0 5px 0 5px;\n"
+"    color: #374151;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"	color: #D12323;\n"
+"	border: none;\n"
+"}\n"
+"\n"
+"QSpinBox {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QSpinBox:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    border: 1px solid #D1D5DB;\n"
+"    border-radius: 6px;\n"
+"    padding: 8px 12px;\n"
+"    background-color: #F9FAFB;\n"
+"}\n"
+"QLineEdit:focus {\n"
+"    border: 2px solid #0B7EC8;\n"
+"    background-color: white;\n"
+"}")
+        self.gridLayout_6 = QGridLayout(self.i_o_group_2)
+        self.gridLayout_6.setSpacing(10)
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.gridLayout_6.setContentsMargins(10, 15, 10, 10)
+        self.ip_plc_address = QPushButton(self.i_o_group_2)
+        self.ip_plc_address.setObjectName(u"ip_plc_address")
+        sizePolicy.setHeightForWidth(self.ip_plc_address.sizePolicy().hasHeightForWidth())
+        self.ip_plc_address.setSizePolicy(sizePolicy)
+        self.ip_plc_address.setFont(font19)
+        self.ip_plc_address.setStyleSheet(u"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"    text-align: left;\n"
+"}")
+        icon24 = QIcon()
+        icon24.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.ip_plc_address.setIcon(icon24)
+        self.ip_plc_address.setIconSize(QSize(24, 24))
+        self.ip_plc_address.setCheckable(True)
+
+        self.gridLayout_6.addWidget(self.ip_plc_address, 1, 0, 1, 1)
+
+        self.db_file_path = QPushButton(self.i_o_group_2)
+        self.db_file_path.setObjectName(u"db_file_path")
+        sizePolicy.setHeightForWidth(self.db_file_path.sizePolicy().hasHeightForWidth())
+        self.db_file_path.setSizePolicy(sizePolicy)
+        self.db_file_path.setFont(font19)
+        self.db_file_path.setStyleSheet(u"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"    text-align: left;\n"
+"}")
+        icon25 = QIcon()
+        icon25.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.db_file_path.setIcon(icon25)
+        self.db_file_path.setIconSize(QSize(24, 24))
+        self.db_file_path.setCheckable(True)
+
+        self.gridLayout_6.addWidget(self.db_file_path, 0, 0, 1, 1)
+
+        self.db_file_path_edit = QLineEdit(self.i_o_group_2)
+        self.db_file_path_edit.setObjectName(u"db_file_path_edit")
+        sizePolicy.setHeightForWidth(self.db_file_path_edit.sizePolicy().hasHeightForWidth())
+        self.db_file_path_edit.setSizePolicy(sizePolicy)
+        self.db_file_path_edit.setFont(font21)
+        self.db_file_path_edit.setPlaceholderText(u"Enter Path Folder")
+
+        self.gridLayout_6.addWidget(self.db_file_path_edit, 0, 1, 1, 1)
+
+        self.plc_ip_address_edit = QLineEdit(self.i_o_group_2)
+        self.plc_ip_address_edit.setObjectName(u"plc_ip_address_edit")
+        sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
+        self.plc_ip_address_edit.setSizePolicy(sizePolicy)
+        self.plc_ip_address_edit.setFont(font21)
+        self.plc_ip_address_edit.setPlaceholderText(u"Enter IP Address: 172.16.100.***")
+
+        self.gridLayout_6.addWidget(self.plc_ip_address_edit, 1, 1, 1, 1)
+
+        self.cmd_btn = QPushButton(self.i_o_group_2)
+        self.cmd_btn.setObjectName(u"cmd_btn")
+        sizePolicy.setHeightForWidth(self.cmd_btn.sizePolicy().hasHeightForWidth())
+        self.cmd_btn.setSizePolicy(sizePolicy)
+        font22 = QFont()
+        font22.setPointSize(19)
+        font22.setBold(True)
+        self.cmd_btn.setFont(font22)
+        self.cmd_btn.setStyleSheet(u"QPushButton {\n"
+"    color: black;\n"
+"    background-color: transparent;\n"
+"    border: none;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,\n"
+"                    stop:0 #F8FAFC, stop:1 #E2E8F0);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"	border-right: 5px solid #29A1D4;\n"
+"}\n"
+"QPushButton:checked {\n"
+"	border-right: 5px solid #0AB1F9;\n"
+"	color: #0AB1F9;\n"
+"}")
+        icon26 = QIcon()
+        icon26.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.cmd_btn.setIcon(icon26)
+        self.cmd_btn.setIconSize(QSize(60, 60))
+
+        self.gridLayout_6.addWidget(self.cmd_btn, 0, 2, 2, 1)
+
+        self.gridLayout_6.setColumnStretch(1, 2)
+
+        self.horizontalLayout_43.addWidget(self.i_o_group_2)
+
+
+        self.verticalLayout_28.addWidget(self.widget_3)
+
         self.widget_26 = QWidget(self.device_frame_2)
         self.widget_26.setObjectName(u"widget_26")
         self.widget_26.setStyleSheet(u"")
@@ -8509,7 +8657,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_24.setContentsMargins(10, 0, 10, 0)
         self.i_o_group_1 = QGroupBox(self.widget_26)
         self.i_o_group_1.setObjectName(u"i_o_group_1")
-        self.i_o_group_1.setFont(font21)
+        self.i_o_group_1.setFont(font20)
         self.i_o_group_1.setStyleSheet(u"QWidget{\n"
 "	border: 2px solid #E5E5E5; \n"
 "	border-radius: 20px;\n"
@@ -8554,8 +8702,9 @@ class Ui_MainWindow(object):
 "    background-color: white;\n"
 "}")
         self.gridLayout_7 = QGridLayout(self.i_o_group_1)
-        self.gridLayout_7.setSpacing(10)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.gridLayout_7.setHorizontalSpacing(10)
+        self.gridLayout_7.setVerticalSpacing(0)
         self.gridLayout_7.setContentsMargins(0, 15, 10, 10)
         self.i_o_group_1_switch_3 = QStackedWidget(self.i_o_group_1)
         self.i_o_group_1_switch_3.setObjectName(u"i_o_group_1_switch_3")
@@ -8775,7 +8924,7 @@ class Ui_MainWindow(object):
 
         self.di_name_1 = QLabel(self.i_o_group_1)
         self.di_name_1.setObjectName(u"di_name_1")
-        self.di_name_1.setFont(font22)
+        self.di_name_1.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_1, 0, 0, 1, 1)
 
@@ -8818,6 +8967,22 @@ class Ui_MainWindow(object):
         self.horizontalLayout_470.addWidget(self.pushButton_42)
 
         self.i_o_group_1_switch_1.addWidget(self.on_light_1)
+        self.warning_light_1 = QWidget()
+        self.warning_light_1.setObjectName(u"warning_light_1")
+        self.horizontalLayout_47 = QHBoxLayout(self.warning_light_1)
+        self.horizontalLayout_47.setObjectName(u"horizontalLayout_47")
+        self.horizontalLayout_47.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_44 = QPushButton(self.warning_light_1)
+        self.pushButton_44.setObjectName(u"pushButton_44")
+        sizePolicy.setHeightForWidth(self.pushButton_44.sizePolicy().hasHeightForWidth())
+        self.pushButton_44.setSizePolicy(sizePolicy)
+        self.pushButton_44.setFont(font24)
+        self.pushButton_44.setIcon(icon23)
+        self.pushButton_44.setIconSize(QSize(24, 24))
+
+        self.horizontalLayout_47.addWidget(self.pushButton_44)
+
+        self.i_o_group_1_switch_1.addWidget(self.warning_light_1)
 
         self.gridLayout_7.addWidget(self.i_o_group_1_switch_1, 0, 1, 1, 1)
 
@@ -8865,13 +9030,13 @@ class Ui_MainWindow(object):
 
         self.di_name_2 = QLabel(self.i_o_group_1)
         self.di_name_2.setObjectName(u"di_name_2")
-        self.di_name_2.setFont(font22)
+        self.di_name_2.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_2, 1, 0, 1, 1)
 
         self.di_name_3 = QLabel(self.i_o_group_1)
         self.di_name_3.setObjectName(u"di_name_3")
-        self.di_name_3.setFont(font22)
+        self.di_name_3.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_3, 2, 0, 1, 1)
 
@@ -8919,37 +9084,37 @@ class Ui_MainWindow(object):
 
         self.di_name_4 = QLabel(self.i_o_group_1)
         self.di_name_4.setObjectName(u"di_name_4")
-        self.di_name_4.setFont(font22)
+        self.di_name_4.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_4, 3, 0, 1, 1)
 
         self.di_name_5 = QLabel(self.i_o_group_1)
         self.di_name_5.setObjectName(u"di_name_5")
-        self.di_name_5.setFont(font22)
+        self.di_name_5.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_5, 4, 0, 1, 1)
 
         self.di_name_6 = QLabel(self.i_o_group_1)
         self.di_name_6.setObjectName(u"di_name_6")
-        self.di_name_6.setFont(font22)
+        self.di_name_6.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_6, 5, 0, 1, 1)
 
         self.di_name_7 = QLabel(self.i_o_group_1)
         self.di_name_7.setObjectName(u"di_name_7")
-        self.di_name_7.setFont(font22)
+        self.di_name_7.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_7, 6, 0, 1, 1)
 
         self.di_name_8 = QLabel(self.i_o_group_1)
         self.di_name_8.setObjectName(u"di_name_8")
-        self.di_name_8.setFont(font22)
+        self.di_name_8.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_8, 7, 0, 1, 1)
 
         self.di_name_11 = QLabel(self.i_o_group_1)
         self.di_name_11.setObjectName(u"di_name_11")
-        self.di_name_11.setFont(font22)
+        self.di_name_11.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_11, 10, 0, 1, 1)
 
@@ -8997,19 +9162,19 @@ class Ui_MainWindow(object):
 
         self.di_name_12 = QLabel(self.i_o_group_1)
         self.di_name_12.setObjectName(u"di_name_12")
-        self.di_name_12.setFont(font22)
+        self.di_name_12.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_12, 11, 0, 1, 1)
 
         self.di_name_9 = QLabel(self.i_o_group_1)
         self.di_name_9.setObjectName(u"di_name_9")
-        self.di_name_9.setFont(font22)
+        self.di_name_9.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_9, 8, 0, 1, 1)
 
         self.di_name_10 = QLabel(self.i_o_group_1)
         self.di_name_10.setObjectName(u"di_name_10")
-        self.di_name_10.setFont(font22)
+        self.di_name_10.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_10, 9, 0, 1, 1)
 
@@ -9099,7 +9264,7 @@ class Ui_MainWindow(object):
 
         self.di_name_13 = QLabel(self.i_o_group_1)
         self.di_name_13.setObjectName(u"di_name_13")
-        self.di_name_13.setFont(font22)
+        self.di_name_13.setFont(font21)
 
         self.gridLayout_7.addWidget(self.di_name_13, 12, 0, 1, 1)
 
@@ -9193,7 +9358,7 @@ class Ui_MainWindow(object):
 
         self.i_o_group_3 = QGroupBox(self.widget_26)
         self.i_o_group_3.setObjectName(u"i_o_group_3")
-        self.i_o_group_3.setFont(font21)
+        self.i_o_group_3.setFont(font20)
         self.i_o_group_3.setStyleSheet(u"QGroupBox {\n"
 "    border: 2px solid #E5E5E5;\n"
 "    border-radius: 6px;\n"
@@ -9241,7 +9406,7 @@ class Ui_MainWindow(object):
         self.t0_value.setObjectName(u"t0_value")
         sizePolicy.setHeightForWidth(self.t0_value.sizePolicy().hasHeightForWidth())
         self.t0_value.setSizePolicy(sizePolicy)
-        self.t0_value.setFont(font7)
+        self.t0_value.setFont(font6)
         self.t0_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9256,7 +9421,7 @@ class Ui_MainWindow(object):
 
         self.ai_name_1 = QLabel(self.i_o_group_3)
         self.ai_name_1.setObjectName(u"ai_name_1")
-        self.ai_name_1.setFont(font22)
+        self.ai_name_1.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_1, 0, 0, 1, 1)
 
@@ -9264,7 +9429,7 @@ class Ui_MainWindow(object):
         self.t1_1_value.setObjectName(u"t1_1_value")
         sizePolicy.setHeightForWidth(self.t1_1_value.sizePolicy().hasHeightForWidth())
         self.t1_1_value.setSizePolicy(sizePolicy)
-        self.t1_1_value.setFont(font7)
+        self.t1_1_value.setFont(font6)
         self.t1_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9279,91 +9444,91 @@ class Ui_MainWindow(object):
 
         self.ai_name_15 = QLabel(self.i_o_group_3)
         self.ai_name_15.setObjectName(u"ai_name_15")
-        self.ai_name_15.setFont(font22)
+        self.ai_name_15.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_15, 7, 2, 1, 1)
 
         self.ai_name_14 = QLabel(self.i_o_group_3)
         self.ai_name_14.setObjectName(u"ai_name_14")
-        self.ai_name_14.setFont(font22)
+        self.ai_name_14.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_14, 6, 2, 1, 1)
 
         self.ai_name_12 = QLabel(self.i_o_group_3)
         self.ai_name_12.setObjectName(u"ai_name_12")
-        self.ai_name_12.setFont(font22)
+        self.ai_name_12.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_12, 7, 0, 1, 1)
 
         self.ai_name_13 = QLabel(self.i_o_group_3)
         self.ai_name_13.setObjectName(u"ai_name_13")
-        self.ai_name_13.setFont(font22)
+        self.ai_name_13.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_13, 9, 0, 1, 1)
 
         self.ai_name_16 = QLabel(self.i_o_group_3)
         self.ai_name_16.setObjectName(u"ai_name_16")
-        self.ai_name_16.setFont(font22)
+        self.ai_name_16.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_16, 9, 2, 1, 1)
 
         self.ai_name_4 = QLabel(self.i_o_group_3)
         self.ai_name_4.setObjectName(u"ai_name_4")
-        self.ai_name_4.setFont(font22)
+        self.ai_name_4.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_4, 1, 2, 1, 1)
 
         self.ai_name_3 = QLabel(self.i_o_group_3)
         self.ai_name_3.setObjectName(u"ai_name_3")
-        self.ai_name_3.setFont(font22)
+        self.ai_name_3.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_3, 1, 0, 1, 1)
 
         self.ai_name_5 = QLabel(self.i_o_group_3)
         self.ai_name_5.setObjectName(u"ai_name_5")
-        self.ai_name_5.setFont(font22)
+        self.ai_name_5.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_5, 2, 0, 1, 1)
 
         self.ai_name_2 = QLabel(self.i_o_group_3)
         self.ai_name_2.setObjectName(u"ai_name_2")
-        self.ai_name_2.setFont(font22)
+        self.ai_name_2.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_2, 0, 2, 1, 1)
 
         self.ai_name_6 = QLabel(self.i_o_group_3)
         self.ai_name_6.setObjectName(u"ai_name_6")
-        self.ai_name_6.setFont(font22)
+        self.ai_name_6.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_6, 2, 2, 1, 1)
 
         self.ai_name_7 = QLabel(self.i_o_group_3)
         self.ai_name_7.setObjectName(u"ai_name_7")
-        self.ai_name_7.setFont(font22)
+        self.ai_name_7.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_7, 3, 0, 1, 1)
 
         self.ai_name_8 = QLabel(self.i_o_group_3)
         self.ai_name_8.setObjectName(u"ai_name_8")
-        self.ai_name_8.setFont(font22)
+        self.ai_name_8.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_8, 3, 2, 1, 1)
 
         self.ai_name_9 = QLabel(self.i_o_group_3)
         self.ai_name_9.setObjectName(u"ai_name_9")
-        self.ai_name_9.setFont(font22)
+        self.ai_name_9.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_9, 4, 0, 1, 1)
 
         self.ai_name_10 = QLabel(self.i_o_group_3)
         self.ai_name_10.setObjectName(u"ai_name_10")
-        self.ai_name_10.setFont(font22)
+        self.ai_name_10.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_10, 4, 2, 1, 1)
 
         self.ai_name_11 = QLabel(self.i_o_group_3)
         self.ai_name_11.setObjectName(u"ai_name_11")
-        self.ai_name_11.setFont(font22)
+        self.ai_name_11.setFont(font21)
 
         self.gridLayout_5.addWidget(self.ai_name_11, 6, 0, 1, 1)
 
@@ -9371,7 +9536,7 @@ class Ui_MainWindow(object):
         self.t1_2_value.setObjectName(u"t1_2_value")
         sizePolicy.setHeightForWidth(self.t1_2_value.sizePolicy().hasHeightForWidth())
         self.t1_2_value.setSizePolicy(sizePolicy)
-        self.t1_2_value.setFont(font7)
+        self.t1_2_value.setFont(font6)
         self.t1_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9388,7 +9553,7 @@ class Ui_MainWindow(object):
         self.t1_3_value.setObjectName(u"t1_3_value")
         sizePolicy.setHeightForWidth(self.t1_3_value.sizePolicy().hasHeightForWidth())
         self.t1_3_value.setSizePolicy(sizePolicy)
-        self.t1_3_value.setFont(font7)
+        self.t1_3_value.setFont(font6)
         self.t1_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9405,7 +9570,7 @@ class Ui_MainWindow(object):
         self.t2_1_value.setObjectName(u"t2_1_value")
         sizePolicy.setHeightForWidth(self.t2_1_value.sizePolicy().hasHeightForWidth())
         self.t2_1_value.setSizePolicy(sizePolicy)
-        self.t2_1_value.setFont(font7)
+        self.t2_1_value.setFont(font6)
         self.t2_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9422,7 +9587,7 @@ class Ui_MainWindow(object):
         self.t2_2_value.setObjectName(u"t2_2_value")
         sizePolicy.setHeightForWidth(self.t2_2_value.sizePolicy().hasHeightForWidth())
         self.t2_2_value.setSizePolicy(sizePolicy)
-        self.t2_2_value.setFont(font7)
+        self.t2_2_value.setFont(font6)
         self.t2_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9439,7 +9604,7 @@ class Ui_MainWindow(object):
         self.t2_3_value.setObjectName(u"t2_3_value")
         sizePolicy.setHeightForWidth(self.t2_3_value.sizePolicy().hasHeightForWidth())
         self.t2_3_value.setSizePolicy(sizePolicy)
-        self.t2_3_value.setFont(font7)
+        self.t2_3_value.setFont(font6)
         self.t2_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9456,7 +9621,7 @@ class Ui_MainWindow(object):
         self.t3_1_value.setObjectName(u"t3_1_value")
         sizePolicy.setHeightForWidth(self.t3_1_value.sizePolicy().hasHeightForWidth())
         self.t3_1_value.setSizePolicy(sizePolicy)
-        self.t3_1_value.setFont(font7)
+        self.t3_1_value.setFont(font6)
         self.t3_1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9473,7 +9638,7 @@ class Ui_MainWindow(object):
         self.t3_2_value.setObjectName(u"t3_2_value")
         sizePolicy.setHeightForWidth(self.t3_2_value.sizePolicy().hasHeightForWidth())
         self.t3_2_value.setSizePolicy(sizePolicy)
-        self.t3_2_value.setFont(font7)
+        self.t3_2_value.setFont(font6)
         self.t3_2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9490,7 +9655,7 @@ class Ui_MainWindow(object):
         self.t3_3_value.setObjectName(u"t3_3_value")
         sizePolicy.setHeightForWidth(self.t3_3_value.sizePolicy().hasHeightForWidth())
         self.t3_3_value.setSizePolicy(sizePolicy)
-        self.t3_3_value.setFont(font7)
+        self.t3_3_value.setFont(font6)
         self.t3_3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9507,7 +9672,7 @@ class Ui_MainWindow(object):
         self.p1_value.setObjectName(u"p1_value")
         sizePolicy.setHeightForWidth(self.p1_value.sizePolicy().hasHeightForWidth())
         self.p1_value.setSizePolicy(sizePolicy)
-        self.p1_value.setFont(font7)
+        self.p1_value.setFont(font6)
         self.p1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9523,7 +9688,7 @@ class Ui_MainWindow(object):
         self.p2_value.setObjectName(u"p2_value")
         sizePolicy.setHeightForWidth(self.p2_value.sizePolicy().hasHeightForWidth())
         self.p2_value.setSizePolicy(sizePolicy)
-        self.p2_value.setFont(font7)
+        self.p2_value.setFont(font6)
         self.p2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9539,7 +9704,7 @@ class Ui_MainWindow(object):
         self.p3_value.setObjectName(u"p3_value")
         sizePolicy.setHeightForWidth(self.p3_value.sizePolicy().hasHeightForWidth())
         self.p3_value.setSizePolicy(sizePolicy)
-        self.p3_value.setFont(font7)
+        self.p3_value.setFont(font6)
         self.p3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9555,7 +9720,7 @@ class Ui_MainWindow(object):
         self.fp1_value.setObjectName(u"fp1_value")
         sizePolicy.setHeightForWidth(self.fp1_value.sizePolicy().hasHeightForWidth())
         self.fp1_value.setSizePolicy(sizePolicy)
-        self.fp1_value.setFont(font7)
+        self.fp1_value.setFont(font6)
         self.fp1_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9571,7 +9736,7 @@ class Ui_MainWindow(object):
         self.fp2_value.setObjectName(u"fp2_value")
         sizePolicy.setHeightForWidth(self.fp2_value.sizePolicy().hasHeightForWidth())
         self.fp2_value.setSizePolicy(sizePolicy)
-        self.fp2_value.setFont(font7)
+        self.fp2_value.setFont(font6)
         self.fp2_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9587,7 +9752,7 @@ class Ui_MainWindow(object):
         self.fp3_value.setObjectName(u"fp3_value")
         sizePolicy.setHeightForWidth(self.fp3_value.sizePolicy().hasHeightForWidth())
         self.fp3_value.setSizePolicy(sizePolicy)
-        self.fp3_value.setFont(font7)
+        self.fp3_value.setFont(font6)
         self.fp3_value.setStyleSheet(u"border: 3px solid #E5E5E5; \n"
 "border-radius: 20px;\n"
 "color: #10B981;")
@@ -9604,210 +9769,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_24.addWidget(self.i_o_group_3)
 
-        self.i_o_group_2 = QGroupBox(self.widget_26)
-        self.i_o_group_2.setObjectName(u"i_o_group_2")
-        self.i_o_group_2.setFont(font21)
-        self.i_o_group_2.setStyleSheet(u"QGroupBox {\n"
-"    border: 2px solid #E5E5E5;\n"
-"    border-radius: 6px;\n"
-"    margin-top: 10px;\n"
-"    padding-top: 10px;\n"
-"}\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    left: 10px;\n"
-"    padding: 0 5px 0 5px;\n"
-"    color: #374151;\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"	color: #D12323;\n"
-"	border: none;\n"
-"}\n"
-"\n"
-"QSpinBox {\n"
-"    border: 1px solid #D1D5DB;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    background-color: #F9FAFB;\n"
-"}\n"
-"QSpinBox:focus {\n"
-"    border: 2px solid #0B7EC8;\n"
-"    background-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit {\n"
-"    border: 1px solid #D1D5DB;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    background-color: #F9FAFB;\n"
-"}\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #0B7EC8;\n"
-"    background-color: white;\n"
-"}")
-        self.gridLayout_6 = QGridLayout(self.i_o_group_2)
-        self.gridLayout_6.setSpacing(10)
-        self.gridLayout_6.setObjectName(u"gridLayout_6")
-        self.gridLayout_6.setContentsMargins(10, 15, 10, 10)
-        self.db_file_path = QPushButton(self.i_o_group_2)
-        self.db_file_path.setObjectName(u"db_file_path")
-        sizePolicy.setHeightForWidth(self.db_file_path.sizePolicy().hasHeightForWidth())
-        self.db_file_path.setSizePolicy(sizePolicy)
-        self.db_file_path.setFont(font20)
-        self.db_file_path.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        icon24 = QIcon()
-        icon24.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_file_path.setIcon(icon24)
-        self.db_file_path.setIconSize(QSize(24, 24))
-        self.db_file_path.setCheckable(True)
-
-        self.gridLayout_6.addWidget(self.db_file_path, 0, 0, 1, 1)
-
-        self.ip_plc_address = QPushButton(self.i_o_group_2)
-        self.ip_plc_address.setObjectName(u"ip_plc_address")
-        sizePolicy.setHeightForWidth(self.ip_plc_address.sizePolicy().hasHeightForWidth())
-        self.ip_plc_address.setSizePolicy(sizePolicy)
-        self.ip_plc_address.setFont(font20)
-        self.ip_plc_address.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        icon25 = QIcon()
-        icon25.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.ip_plc_address.setIcon(icon25)
-        self.ip_plc_address.setIconSize(QSize(24, 24))
-        self.ip_plc_address.setCheckable(True)
-
-        self.gridLayout_6.addWidget(self.ip_plc_address, 1, 0, 1, 1)
-
-        self.db_number = QPushButton(self.i_o_group_2)
-        self.db_number.setObjectName(u"db_number")
-        sizePolicy.setHeightForWidth(self.db_number.sizePolicy().hasHeightForWidth())
-        self.db_number.setSizePolicy(sizePolicy)
-        self.db_number.setFont(font20)
-        self.db_number.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        icon26 = QIcon()
-        icon26.addFile(u":/Icons/server-setting.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_number.setIcon(icon26)
-        self.db_number.setIconSize(QSize(24, 24))
-        self.db_number.setCheckable(True)
-
-        self.gridLayout_6.addWidget(self.db_number, 2, 0, 1, 1)
-
-        self.db_file_path_edit = QLineEdit(self.i_o_group_2)
-        self.db_file_path_edit.setObjectName(u"db_file_path_edit")
-        sizePolicy.setHeightForWidth(self.db_file_path_edit.sizePolicy().hasHeightForWidth())
-        self.db_file_path_edit.setSizePolicy(sizePolicy)
-        self.db_file_path_edit.setFont(font22)
-        self.db_file_path_edit.setPlaceholderText(u"Enter Path Folder")
-
-        self.gridLayout_6.addWidget(self.db_file_path_edit, 0, 1, 1, 1)
-
-        self.plc_ip_address_edit = QLineEdit(self.i_o_group_2)
-        self.plc_ip_address_edit.setObjectName(u"plc_ip_address_edit")
-        sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
-        self.plc_ip_address_edit.setSizePolicy(sizePolicy)
-        self.plc_ip_address_edit.setFont(font22)
-        self.plc_ip_address_edit.setPlaceholderText(u"Enter IP Address: 172.16.100.***")
-
-        self.gridLayout_6.addWidget(self.plc_ip_address_edit, 1, 1, 1, 1)
-
-        self.db_data_size_input = QSpinBox(self.i_o_group_2)
-        self.db_data_size_input.setObjectName(u"db_data_size_input")
-        sizePolicy.setHeightForWidth(self.db_data_size_input.sizePolicy().hasHeightForWidth())
-        self.db_data_size_input.setSizePolicy(sizePolicy)
-        self.db_data_size_input.setMinimumSize(QSize(0, 0))
-        self.db_data_size_input.setFont(font22)
-        self.db_data_size_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.db_data_size_input.setMaximum(1024)
-        self.db_data_size_input.setValue(0)
-
-        self.gridLayout_6.addWidget(self.db_data_size_input, 3, 1, 1, 1)
-
-        self.db_number_input = QSpinBox(self.i_o_group_2)
-        self.db_number_input.setObjectName(u"db_number_input")
-        sizePolicy.setHeightForWidth(self.db_number_input.sizePolicy().hasHeightForWidth())
-        self.db_number_input.setSizePolicy(sizePolicy)
-        self.db_number_input.setMinimumSize(QSize(0, 0))
-        self.db_number_input.setFont(font22)
-        self.db_number_input.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.db_number_input.setSpecialValueText(u"")
-        self.db_number_input.setValue(1)
-
-        self.gridLayout_6.addWidget(self.db_number_input, 2, 1, 1, 1)
-
-        self.write_plc_label_2 = QPushButton(self.i_o_group_2)
-        self.write_plc_label_2.setObjectName(u"write_plc_label_2")
-        sizePolicy.setHeightForWidth(self.write_plc_label_2.sizePolicy().hasHeightForWidth())
-        self.write_plc_label_2.setSizePolicy(sizePolicy)
-        self.write_plc_label_2.setFont(font20)
-        self.write_plc_label_2.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    text-align: left;\n"
-"}")
-        icon27 = QIcon()
-        icon27.addFile(u":/Icons/security.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.write_plc_label_2.setIcon(icon27)
-        self.write_plc_label_2.setIconSize(QSize(24, 24))
-        self.write_plc_label_2.setCheckable(True)
-
-        self.gridLayout_6.addWidget(self.write_plc_label_2, 3, 0, 1, 1)
-
-        self.cmd_btn = QPushButton(self.i_o_group_2)
-        self.cmd_btn.setObjectName(u"cmd_btn")
-        sizePolicy.setHeightForWidth(self.cmd_btn.sizePolicy().hasHeightForWidth())
-        self.cmd_btn.setSizePolicy(sizePolicy)
-        font25 = QFont()
-        font25.setPointSize(19)
-        font25.setBold(True)
-        self.cmd_btn.setFont(font25)
-        self.cmd_btn.setStyleSheet(u"QPushButton {\n"
-"    color: black;\n"
-"    background-color: transparent;\n"
-"    border: none;\n"
-"    padding: 12px 20px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"	background: qlineargradient(x1:0, y1:0, x2:0, y2:1,\n"
-"                    stop:0 #F8FAFC, stop:1 #E2E8F0);\n"
-"}\n"
-"\n"
-"QPushButton:pressed{\n"
-"	border-right: 5px solid #29A1D4;\n"
-"}\n"
-"QPushButton:checked {\n"
-"	border-right: 5px solid #0AB1F9;\n"
-"	color: #0AB1F9;\n"
-"}")
-        icon28 = QIcon()
-        icon28.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.cmd_btn.setIcon(icon28)
-        self.cmd_btn.setIconSize(QSize(40, 40))
-
-        self.gridLayout_6.addWidget(self.cmd_btn, 4, 0, 1, 2)
-
-        self.gridLayout_6.setColumnStretch(1, 1)
-
-        self.horizontalLayout_24.addWidget(self.i_o_group_2)
-
-        self.horizontalLayout_24.setStretch(1, 1)
-        self.horizontalLayout_24.setStretch(2, 1)
+        self.horizontalLayout_24.setStretch(1, 2)
 
         self.verticalLayout_28.addWidget(self.widget_26)
 
@@ -9842,7 +9804,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.back_connection_page_btn.sizePolicy().hasHeightForWidth())
         self.back_connection_page_btn.setSizePolicy(sizePolicy)
         self.back_connection_page_btn.setMaximumSize(QSize(16777215, 16777215))
-        self.back_connection_page_btn.setFont(font7)
+        self.back_connection_page_btn.setFont(font6)
         self.back_connection_page_btn.setStyleSheet(u"")
         self.back_connection_page_btn.setIconSize(QSize(24, 24))
         self.back_connection_page_btn.setCheckable(False)
@@ -9854,7 +9816,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.back_home_page_btn.sizePolicy().hasHeightForWidth())
         self.back_home_page_btn.setSizePolicy(sizePolicy)
         self.back_home_page_btn.setMaximumSize(QSize(16777215, 16777215))
-        self.back_home_page_btn.setFont(font7)
+        self.back_home_page_btn.setFont(font6)
         self.back_home_page_btn.setStyleSheet(u"")
         self.back_home_page_btn.setIconSize(QSize(24, 24))
         self.back_home_page_btn.setCheckable(False)
@@ -9869,8 +9831,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_28.addWidget(self.widget_29)
 
-        self.verticalLayout_28.setStretch(0, 8)
-        self.verticalLayout_28.setStretch(1, 1)
+        self.verticalLayout_28.setStretch(1, 8)
+        self.verticalLayout_28.setStretch(2, 1)
 
         self.verticalLayout_40.addWidget(self.device_frame_2)
 
@@ -9913,9 +9875,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.search_icon.sizePolicy().hasHeightForWidth())
         self.search_icon.setSizePolicy(sizePolicy)
         self.search_icon.setStyleSheet(u"padding: 5px;")
-        icon29 = QIcon()
-        icon29.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.search_icon.setIcon(icon29)
+        icon27 = QIcon()
+        icon27.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.search_icon.setIcon(icon27)
         self.search_icon.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_3.addWidget(self.search_icon)
@@ -9924,10 +9886,10 @@ class Ui_MainWindow(object):
         self.search_data.setObjectName(u"search_data")
         sizePolicy.setHeightForWidth(self.search_data.sizePolicy().hasHeightForWidth())
         self.search_data.setSizePolicy(sizePolicy)
-        font26 = QFont()
-        font26.setPointSize(10)
-        font26.setBold(True)
-        self.search_data.setFont(font26)
+        font25 = QFont()
+        font25.setPointSize(10)
+        font25.setBold(True)
+        self.search_data.setFont(font25)
         self.search_data.setStyleSheet(u"QLineEdit {\n"
 "    background-color: transparent; \n"
 "	border: none; \n"
@@ -9963,7 +9925,7 @@ class Ui_MainWindow(object):
 
         self.search_data_start_label_2 = QLabel(self.multi_search_data)
         self.search_data_start_label_2.setObjectName(u"search_data_start_label_2")
-        self.search_data_start_label_2.setFont(font26)
+        self.search_data_start_label_2.setFont(font25)
         self.search_data_start_label_2.setStyleSheet(u"QLabel {\n"
 "    background-color: transparent; \n"
 "	border: none; \n"
@@ -9984,11 +9946,11 @@ class Ui_MainWindow(object):
         self.select_group_name.setObjectName(u"select_group_name")
         sizePolicy.setHeightForWidth(self.select_group_name.sizePolicy().hasHeightForWidth())
         self.select_group_name.setSizePolicy(sizePolicy)
-        font27 = QFont()
-        font27.setFamilies([u"Segoe UI"])
-        font27.setPointSize(10)
-        font27.setBold(True)
-        self.select_group_name.setFont(font27)
+        font26 = QFont()
+        font26.setFamilies([u"Segoe UI"])
+        font26.setPointSize(10)
+        font26.setBold(True)
+        self.select_group_name.setFont(font26)
 
         self.horizontalLayout_4.addWidget(self.select_group_name)
 
@@ -10005,7 +9967,7 @@ class Ui_MainWindow(object):
 
         self.search_data_start_label = QLabel(self.multi_search_data)
         self.search_data_start_label.setObjectName(u"search_data_start_label")
-        self.search_data_start_label.setFont(font26)
+        self.search_data_start_label.setFont(font25)
         self.search_data_start_label.setStyleSheet(u"QLabel {\n"
 "    background-color: transparent; \n"
 "	border: none; \n"
@@ -10022,7 +9984,7 @@ class Ui_MainWindow(object):
         self.search_data_start_edit.setObjectName(u"search_data_start_edit")
         sizePolicy.setHeightForWidth(self.search_data_start_edit.sizePolicy().hasHeightForWidth())
         self.search_data_start_edit.setSizePolicy(sizePolicy)
-        self.search_data_start_edit.setFont(font26)
+        self.search_data_start_edit.setFont(font25)
         self.search_data_start_edit.setStyleSheet(u"QDateTimeEdit{\n"
 "	border: 2px solid rgb(191, 191, 191);\n"
 "	border-radius: 5px;\n"
@@ -10136,7 +10098,7 @@ class Ui_MainWindow(object):
 
         self.search_data_end_label = QLabel(self.multi_search_data)
         self.search_data_end_label.setObjectName(u"search_data_end_label")
-        self.search_data_end_label.setFont(font26)
+        self.search_data_end_label.setFont(font25)
         self.search_data_end_label.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
         self.horizontalLayout_4.addWidget(self.search_data_end_label)
@@ -10145,7 +10107,7 @@ class Ui_MainWindow(object):
         self.search_data_end_edit.setObjectName(u"search_data_end_edit")
         sizePolicy.setHeightForWidth(self.search_data_end_edit.sizePolicy().hasHeightForWidth())
         self.search_data_end_edit.setSizePolicy(sizePolicy)
-        self.search_data_end_edit.setFont(font26)
+        self.search_data_end_edit.setFont(font25)
         self.search_data_end_edit.setStyleSheet(u"QDateTimeEdit{\n"
 "	border: 2px solid rgb(191, 191, 191);\n"
 "	border-radius: 5px;\n"
@@ -10251,10 +10213,10 @@ class Ui_MainWindow(object):
 
         self.label_info = QLabel(self.widget_2)
         self.label_info.setObjectName(u"label_info")
-        font28 = QFont()
-        font28.setPointSize(13)
-        font28.setItalic(True)
-        self.label_info.setFont(font28)
+        font27 = QFont()
+        font27.setPointSize(13)
+        font27.setItalic(True)
+        self.label_info.setFont(font27)
 
         self.horizontalLayout_3.addWidget(self.label_info)
 
@@ -10263,9 +10225,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.clear_history_search.sizePolicy().hasHeightForWidth())
         self.clear_history_search.setSizePolicy(sizePolicy)
         self.clear_history_search.setMinimumSize(QSize(45, 0))
-        icon30 = QIcon()
-        icon30.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_history_search.setIcon(icon30)
+        icon28 = QIcon()
+        icon28.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_history_search.setIcon(icon28)
         self.clear_history_search.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_3.addWidget(self.clear_history_search)
@@ -10277,7 +10239,7 @@ class Ui_MainWindow(object):
         self.export_all_tables_to_excel_btn.setObjectName(u"export_all_tables_to_excel_btn")
         sizePolicy.setHeightForWidth(self.export_all_tables_to_excel_btn.sizePolicy().hasHeightForWidth())
         self.export_all_tables_to_excel_btn.setSizePolicy(sizePolicy)
-        self.export_all_tables_to_excel_btn.setFont(font26)
+        self.export_all_tables_to_excel_btn.setFont(font25)
         self.export_all_tables_to_excel_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -10295,10 +10257,10 @@ class Ui_MainWindow(object):
 "    background-color: #94A3B8;\n"
 "    color: #CBD5E1;\n"
 "}")
-        icon31 = QIcon()
-        icon31.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.export_all_tables_to_excel_btn.setIcon(icon31)
-        self.export_all_tables_to_excel_btn.setIconSize(QSize(35, 35))
+        icon29 = QIcon()
+        icon29.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.export_all_tables_to_excel_btn.setIcon(icon29)
+        self.export_all_tables_to_excel_btn.setIconSize(QSize(24, 24))
 
         self.list_query_btn.addWidget(self.export_all_tables_to_excel_btn)
 
@@ -10530,9 +10492,9 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_t0_3.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(0)
-        self.sys_state_stacked_wid_40.setCurrentIndex(0)
-        self.sys_state_stacked_wid_42.setCurrentIndex(0)
+        self.stackedWidget_3.setCurrentIndex(1)
+        self.sys_state_stacked_wid_40.setCurrentIndex(2)
+        self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
         self.i_o_group_1_switch_5.setCurrentIndex(0)
         self.i_o_group_1_switch_6.setCurrentIndex(0)
@@ -10556,7 +10518,8 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Tech-Link - Strike Machine System", None))
         self.logo_btn.setText("")
         self.company_name.setText(QCoreApplication.translate("MainWindow", u"TECH-LINK", None))
-        self.error_display.setText("")
+        self.warning_notification.setText("")
+        self.error_notification.setText("")
         self.eng_language.setText("")
         self.vn_language.setText("")
         self.cn_language.setText("")
@@ -10920,6 +10883,12 @@ class Ui_MainWindow(object):
         self.cycle_a_displ_3.setPrefix("")
         self.reset_cycle_a_btn.setText("")
         self.total_cycle_label_a.setText(QCoreApplication.translate("MainWindow", u" Total Test Time A:", None))
+        self.i_o_group_2.setTitle(QCoreApplication.translate("MainWindow", u"PLC Data", None))
+        self.ip_plc_address.setText(QCoreApplication.translate("MainWindow", u" IP:", None))
+        self.db_file_path.setText(QCoreApplication.translate("MainWindow", u" DB Path:", None))
+        self.db_file_path_edit.setText("")
+        self.plc_ip_address_edit.setText("")
+        self.cmd_btn.setText("")
         self.i_o_group_1.setTitle(QCoreApplication.translate("MainWindow", u"DI", None))
         self.pushButton_59.setText("")
         self.pushButton_58.setText("")
@@ -10934,6 +10903,7 @@ class Ui_MainWindow(object):
         self.di_name_1.setText(QCoreApplication.translate("MainWindow", u"T0 Heat:", None))
         self.pushButton_43.setText("")
         self.pushButton_42.setText("")
+        self.pushButton_44.setText("")
         self.pushButton_61.setText("")
         self.pushButton_60.setText("")
         self.di_name_2.setText(QCoreApplication.translate("MainWindow", u"P1 Heat:", None))
@@ -10977,15 +10947,6 @@ class Ui_MainWindow(object):
         self.ai_name_9.setText(QCoreApplication.translate("MainWindow", u"T3-2:", None))
         self.ai_name_10.setText(QCoreApplication.translate("MainWindow", u"T3-3:", None))
         self.ai_name_11.setText(QCoreApplication.translate("MainWindow", u"P1:", None))
-        self.i_o_group_2.setTitle(QCoreApplication.translate("MainWindow", u"PLC Data", None))
-        self.db_file_path.setText(QCoreApplication.translate("MainWindow", u" DB Path:", None))
-        self.ip_plc_address.setText(QCoreApplication.translate("MainWindow", u" IP:", None))
-        self.db_number.setText(QCoreApplication.translate("MainWindow", u" DB:", None))
-        self.db_file_path_edit.setText("")
-        self.plc_ip_address_edit.setText("")
-        self.db_data_size_input.setSuffix(QCoreApplication.translate("MainWindow", u" ~ 2056", None))
-        self.write_plc_label_2.setText(QCoreApplication.translate("MainWindow", u" Size DB:", None))
-        self.cmd_btn.setText("")
         self.back_connection_page_btn.setText(QCoreApplication.translate("MainWindow", u"Connection Page", None))
         self.back_home_page_btn.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
         self.search_icon.setText("")
