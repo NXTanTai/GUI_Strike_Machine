@@ -532,7 +532,7 @@ class StrikeMachine(QMainWindow):
     def _gui_update_connection_group(self, path_get):
         self.ui.plc_ip_address_edit.setText(self.db_dict["ip_plc"]) #type: ignore
         self.ui.db_file_path_edit.setText(str(path_get))
-        self._cmd_protect_ms = (float(self.db_dict["input_read"]/1000) + 0.1)
+        self._cmd_protect_ms = ((float(self.db_dict["input_read"])/1000) + 0.1)
         # self.ui.db_number_input.setValue(self.db_dict["db_name"]) #type: ignore
         # self.ui.db_data_size_input.setValue(self.db_dict["DB_TOTAL_BYTES"]) #type: ignore
         self.ui.write_time_input.setValue(self.db_dict["write_time"]) #type: ignore
