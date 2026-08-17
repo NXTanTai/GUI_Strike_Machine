@@ -716,7 +716,6 @@ class StrikeMachine(QMainWindow):
         self.data_table.timeout.connect(lambda: self._data_table(self.actual_data))
         # self.data_table.start()
 
-
         # if self._plc_queue is not None:
         #     self.data_web_socket = QTimer(self)
         #     self.all_timer.append(self.data_web_socket)
@@ -746,7 +745,7 @@ class StrikeMachine(QMainWindow):
         
         self.data_alarm_timer = QTimer(self)
         self.all_timer.append(self.data_alarm_timer)
-        self.data_alarm_timer.setInterval(1500)
+        self.data_alarm_timer.setInterval(self.db_dict["error_read"] if self.db_dict else 1500)
         self.data_alarm_timer.timeout.connect(lambda: self._data_alarm(self.error_data))
 
         self.timer_alarm = QTimer(self)
