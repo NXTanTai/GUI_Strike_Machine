@@ -632,6 +632,7 @@ class StrikeMachine(QMainWindow):
         self.worker_dict = {}
         self.thread_dict = {}
         self.all_data = {}
+        self.ai_data = {}
         self.actual_data = {}
         self.input_data = {}
         self.error_data = {}
@@ -705,7 +706,7 @@ class StrikeMachine(QMainWindow):
 
         self.data_plc_timer = QTimer(self)
         self.all_timer.append(self.data_plc_timer)
-        self.data_plc_timer.setInterval(200)
+        self.data_plc_timer.setInterval(self.db_dict["input_read"] if self.db_dict else 500)
         self.data_plc_timer.timeout.connect(lambda: self._data_ready(self.input_data))
         self.data_plc_timer.start()
 
@@ -715,18 +716,13 @@ class StrikeMachine(QMainWindow):
         self.data_table.timeout.connect(lambda: self._data_table(self.actual_data))
         # self.data_table.start()
 
-        self.data_training_ai_timer = QTimer(self)
-        self.all_timer.append(self.data_training_ai_timer)
-        self.data_training_ai_timer.setInterval(1000)
-        self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.all_data))
-        self.data_training_ai_timer.start()
 
-        if self._plc_queue is not None:
-            self.data_web_socket = QTimer(self)
-            self.all_timer.append(self.data_web_socket)
-            self.data_web_socket.setInterval(250)
-            self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.all_data))
-            self.data_web_socket.start()
+        # if self._plc_queue is not None:
+        #     self.data_web_socket = QTimer(self)
+        #     self.all_timer.append(self.data_web_socket)
+        #     self.data_web_socket.setInterval(250)
+        #     self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.all_data))
+        #     self.data_web_socket.start()
 
         self.data_temp_timer = QTimer(self)
         self.all_timer.append(self.data_temp_timer)
@@ -742,7 +738,6 @@ class StrikeMachine(QMainWindow):
         self.all_timer.append(self.data_cycle_timer)
         self.data_cycle_timer.setInterval(500)
         self.data_cycle_timer.timeout.connect(lambda: self._data_cycle(self.actual_data))
-        
 
         self.data_temp_group_timer = QTimer(self)
         self.all_timer.append(self.data_temp_group_timer)
@@ -789,6 +784,12 @@ class StrikeMachine(QMainWindow):
         self.datetime_timer.timeout.connect(self.update_clock)
         self.datetime_timer.start(1000)
         self.update_clock()
+        
+        self.data_training_ai_timer = QTimer(self)
+        self.all_timer.append(self.data_training_ai_timer)
+        self.data_training_ai_timer.setInterval(1000)
+        self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.actual_data, self.input_data, self.error_data))
+        self.data_training_ai_timer.start()
 
     def _update_all_charts(self):
         self.update_chart_temp()
@@ -1289,8 +1290,8 @@ class StrikeMachine(QMainWindow):
 
         self.ui.new_data_btn.clicked.connect(self.new_data_btn)
 
-        self.ui.start_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.start_btn))
-        self.ui.stop_btn.clicked.connect(lambda: self.start_stop_btn(self.ui.stop_btn))
+        self.ui.start_stop_btn.toggled.connect(lambda checked: self.start_stop_btn("Start", checked, self.ui.start_stop_btn))
+        # self.ui.stop_btn.toggled.connect(lambda checked: self.start_stop_btn("Stop", checked, self.ui.stop_btn))
 
         self.ui.heat_btn_a.toggled.connect(lambda checked: self.heating_btn("A", checked, self.ui.heat_btn_a)) 
         self.ui.heat_btn_b.toggled.connect(lambda checked: self.heating_btn("B", checked, self.ui.heat_btn_b))
@@ -2670,19 +2671,19 @@ class StrikeMachine(QMainWindow):
         with self._data_lock:
             # print("Actual: ", len(data))
             self.actual_data.update(data)
-            self.all_data.update(data)
+            # self.all_data.update(data)
 
     def _data_input(self, data: dict):
         with self._data_lock:
             # print("Input: ", len(data))
             self.input_data.update(data)
-            self.all_data.update(data)
+            # self.all_data.update(data)
 
     def _data_error(self, data: dict):
         with self._data_lock:
             # print("Error: ", len(data))
             self.error_data.update(data)
-            self.all_data.update(data)
+            # self.all_data.update(data)
 
     def _setup_write_plc_thread(
             self, 
@@ -2754,10 +2755,13 @@ class StrikeMachine(QMainWindow):
         except Exception as e:
             self.logger.error("[Main]-[_data_temp]:PLC Data Processing Error: %s", e)
 
-    def _data_AI(self, data: dict):
-        if not data or not isinstance(data, dict):
+    def _data_AI(self, data_actual: dict, data_input: dict, data_error: dict):
+        if not data_actual or not isinstance(data_actual, dict):
             return
-
+        elif not data_input or not isinstance(data_input, dict):
+            return
+        elif not data_error or not isinstance(data_error, dict):
+            return
         try:
             self._ai_data_batch_counter += 1
 
@@ -2766,7 +2770,9 @@ class StrikeMachine(QMainWindow):
                 "No.": str(self._ai_data_batch_counter),
                 "Connection.": str(self.plc_read_connection),
             }
-            record.update(data)
+            record.update(data_actual)
+            record.update(data_input)
+            record.update(data_error)
 
             self.data_buffer.append(record)
 
@@ -2938,28 +2944,29 @@ class StrikeMachine(QMainWindow):
                     self.for_display_temp(float(data.get('T0_TempLimitLOW', 0.0))),
                     self.for_display_temp(float(data.get('T0_TempOffset', 0.0)))
                 ])
-                print("Init Value Done")
+                # print("Init Value Done")
                 
-                self._init_button_obj([
-                    bool(data.get('START', False)),
-                    bool(data.get('STOP', False)),
-                    bool(data.get('T0_Start_Heat', False)),
-                    bool(data.get('T0_Stop_Heat', False)),
-                    bool(data.get('P1_Start_Heat', False)),
-                    bool(data.get('P1_Start_Pressure', False)),
-                    bool(data.get('P1_Start_Oil', False)),
-                    bool(data.get('P1_BitCountTimes', False)),
-                    bool(data.get('P2_Start_Heat', False)),
-                    bool(data.get('P2_Start_Pressure', False)),
-                    bool(data.get('P2_Start_Oil', False)),
-                    bool(data.get('P2_BitCountTimes', False)),
-                    bool(data.get('P3_Start_Heat', False)),
-                    bool(data.get('P3_Start_Pressure', False)),
-                    bool(data.get('P3_Start_Oil', False)),
-                    bool(data.get('P3_BitCountTimes', False)),
-                ])
-                print("Init Button Done")
+                # self._init_button_obj([
+                #     bool(data.get('START', False)),
+                #     bool(data.get('STOP', False)),
+                #     bool(data.get('T0_Start_Heat', False)),
+                #     bool(data.get('T0_Stop_Heat', False)),
+                #     bool(data.get('P1_Start_Heat', False)),
+                #     bool(data.get('P1_Start_Pressure', False)),
+                #     bool(data.get('P1_Start_Oil', False)),
+                #     bool(data.get('P1_BitCountTimes', False)),
+                #     bool(data.get('P2_Start_Heat', False)),
+                #     bool(data.get('P2_Start_Pressure', False)),
+                #     bool(data.get('P2_Start_Oil', False)),
+                #     bool(data.get('P2_BitCountTimes', False)),
+                #     bool(data.get('P3_Start_Heat', False)),
+                #     bool(data.get('P3_Start_Pressure', False)),
+                #     bool(data.get('P3_Start_Oil', False)),
+                #     bool(data.get('P3_BitCountTimes', False)),
+                # ])
+                # print("Init Button Done")
                 self.init_signal = False
+                return
             
             self._detect_btn_obj(data)
             # _t("input_data", lambda: 
@@ -3052,7 +3059,7 @@ class StrikeMachine(QMainWindow):
         #     if ms > 1.0:
         #         print(f"  [{label}] {ms:.1f}ms")
 
-        # # if self.ui.start_stop_stacked.currentIndex() != 1:
+        # # if self.ui.start_stop_btn.isChecked() != 1:
         # #     return
 
         # # _t("_data_table", lambda: self._process_groups(data))
@@ -3166,46 +3173,32 @@ class StrikeMachine(QMainWindow):
     def _detect_btn_obj(self, data):
         if self.init_signal:
             return
-        button_map = [
-            (self.ui.heat_btn_a,      "P1_Start_Heat", self._heating_a_flag),
-            (self.ui.vacuum_btn_a,    "P1_Start_Pressure", self._vacuum_a_flag),
-            (self.ui.refuel_btn_a,    "P1_Start_Oil", self._oil_a_flag),
-            (self.ui.set_cycle_a_btn, "P1_BitCountTimes", self._count_a_flag),
+        sync_map = [
+            (self.ui.start_stop_btn,            "START",             "_start_flag"),
+            (self.ui.heat_btn_t0,          "T0_Start_Heat",     "_t0_heat_flag"),
+            (self.ui.heat_btn_a,      "P1_Start_Heat",     "_heating_a_flag"),
+            (self.ui.vacuum_btn_a,    "P1_Start_Pressure", "_vacuum_a_flag"),
+            (self.ui.refuel_btn_a,    "P1_Start_Oil",      "_oil_a_flag"),
+            (self.ui.set_cycle_a_btn, "P1_BitCountTimes",  "_count_a_flag"),
 
-            (self.ui.heat_btn_b,      "P2_Start_Heat", self._heating_b_flag),
-            (self.ui.vacuum_btn_b,    "P2_Start_Pressure", self._vacuum_b_flag),
-            (self.ui.refuel_btn_b,    "P2_Start_Oil", self._oil_b_flag),
-            (self.ui.set_cycle_b_btn, "P2_BitCountTimes", self._count_b_flag),
+            (self.ui.heat_btn_b,      "P2_Start_Heat",     "_heating_b_flag"),
+            (self.ui.vacuum_btn_b,    "P2_Start_Pressure", "_vacuum_b_flag"),
+            (self.ui.refuel_btn_b,    "P2_Start_Oil",      "_oil_b_flag"),
+            (self.ui.set_cycle_b_btn, "P2_BitCountTimes",  "_count_b_flag"),
 
-            (self.ui.heat_btn_c,      "P3_Start_Heat", self._heating_c_flag),
-            (self.ui.vacuum_btn_c,    "P3_Start_Pressure", self._vacuum_c_flag),
-            (self.ui.refuel_btn_c,    "P3_Start_Oil", self._oil_c_flag),
-            (self.ui.set_cycle_c_btn, "P3_BitCountTimes", self._count_c_flag),
+            (self.ui.heat_btn_c,      "P3_Start_Heat",     "_heating_c_flag"),
+            (self.ui.vacuum_btn_c,    "P3_Start_Pressure", "_vacuum_c_flag"),
+            (self.ui.refuel_btn_c,    "P3_Start_Oil",      "_oil_c_flag"),
+            (self.ui.set_cycle_c_btn, "P3_BitCountTimes",  "_count_c_flag"),
         ]
-        is_start_on = bool(data.get("START", False))
-        is_stop_on = bool(data.get("STOP", False))
-        is_t0_heat_on = bool(data.get("T0_Start_Heat", False))
-        is_t0_stop_on = bool(data.get("T0_Stop_Heat", False))
-        if is_start_on and not is_stop_on:
-            self._start_flag = True
-            self.ui.start_btn.click()
-        elif not is_start_on or is_stop_on:
-            self._stop_flag = True
-            self.ui.stop_btn.click()
-        if is_t0_heat_on and not is_t0_stop_on:
-            self._t0_heat_flag = True
-            self.ui.heat_btn_t0.setChecked(True)
-        elif not is_t0_heat_on or is_t0_stop_on:
-            self._t0_stop_flag = True
-            self.ui.heat_btn_t0.setChecked(False)
-
-        for btn, tag, flag in button_map:
+        def on(tag):
+            return bool(data.get(tag, False))
+        for btn, tag, flag_name in sync_map:
             if self._should_ignore_status(tag):
                 continue
-
-            plc_value = bool(data.get(tag, False))
+            plc_value = on(tag)
             if btn.isChecked() != plc_value:
-                flag = True
+                setattr(self, flag_name, True)
                 btn.setChecked(plc_value)
 
     def _should_ignore_status(self, tag: str) -> bool:
@@ -3497,7 +3490,7 @@ class StrikeMachine(QMainWindow):
         #         self.ui.error_display.setText("")
 
     def heating_btn(self, channel: str, checked: bool, btn=None):
-        if (not self.plc_writer_connection and not self.init_signal) or self.ui.start_stop_stacked.currentIndex() == 0:
+        if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_btn.isChecked():
             if btn is not None:
                 btn.blockSignals(True)
                 btn.setChecked(False)
@@ -3571,7 +3564,7 @@ class StrikeMachine(QMainWindow):
                 self.logger.info("[Main]-[heating_btn]: T0 Heating Off!")
 
     def pumping_btn(self, channel: str, checked: bool, btn=None):
-        if (not self.plc_writer_connection and not self.init_signal) or self.ui.start_stop_stacked.currentIndex() == 0:
+        if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_btn.isChecked():
             if btn is not None:
                 btn.blockSignals(True)
                 btn.setChecked(False)
@@ -3587,7 +3580,6 @@ class StrikeMachine(QMainWindow):
         if not tag:
             return
 
-        # Ghi nhận thời điểm vừa gửi lệnh
         self._last_cmd_time[tag] = time.time()
 
         try:
@@ -3606,7 +3598,7 @@ class StrikeMachine(QMainWindow):
                 elif self._vacuum_c_flag and channel == "C":
                     self._vacuum_c_flag = False
                 else:
-                    self.plc_writer_worker.write_bool.emit(tag, checked)
+                    self.plc_writer_worker.write_bool.emit(tag, checked) #type: ignore
 
             self.disable_pressure_group(channel, not checked)
             self._sv_cycle_state(channel, not checked)
@@ -3618,7 +3610,7 @@ class StrikeMachine(QMainWindow):
             self.logger.error(f"[Main]-[pumping_btn]: Error occurred - {str(e)}")
 
     def fill_oil_btn(self, channel: str, checked: bool, btn=None):
-        if (not self.plc_writer_connection and not self.init_signal) or self.ui.start_stop_stacked.currentIndex() == 0:
+        if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_btn.isChecked():
             if btn is not None:
                 btn.blockSignals(True)
                 btn.setChecked(False)
@@ -3634,7 +3626,6 @@ class StrikeMachine(QMainWindow):
         if not tag:
             return
 
-        # Ghi nhận thời điểm vừa gửi lệnh
         self._last_cmd_time[tag] = time.time()
 
         try:
@@ -3646,7 +3637,7 @@ class StrikeMachine(QMainWindow):
                 elif self._oil_c_flag and channel == "C":
                     self._oil_c_flag = False
                 else:
-                    self.plc_writer_worker.write_bool.emit(tag, checked)
+                    self.plc_writer_worker.write_bool.emit(tag, checked) #type: ignore
 
             self.disable_oil_group(channel, not checked)
             self._sv_cycle_state(channel, not checked)
@@ -3686,14 +3677,14 @@ class StrikeMachine(QMainWindow):
 
         try:
             if not self.init_signal:
-                if self._cycle_a_flag and channel == "A":
-                    self._cycle_a_flag = False
-                elif self._cycle_b_flag and channel == "B":
-                    self._cycle_b_flag = False
-                elif self._cycle_c_flag and channel == "C":
-                    self._cycle_c_flag = False
+                if self._count_a_flag and channel == "A":
+                    self._count_a_flag = False
+                elif self._count_b_flag and channel == "B":
+                    self._count_b_flag = False
+                elif self._count_c_flag and channel == "C":
+                    self._count_c_flag = False
                 else:
-                    self.plc_writer_worker.write_bool.emit(tag, checked)
+                    self.plc_writer_worker.write_bool.emit(tag, checked) #type: ignore
                 if checked:
                     self.reset_cycle_btn(channel)
 
@@ -3736,7 +3727,7 @@ class StrikeMachine(QMainWindow):
         if channel == "C":
             self.ui.stacked_pressure_sv_c_11.setCurrentIndex(1) if self.ui.set_cycle_c_btn.isChecked() else self.ui.stacked_pressure_sv_c_11.setCurrentIndex(0)
 
-    def start_stop_btn(self, btn=None):
+    def start_stop_btn(self, channel: str, checked: bool, btn=None):
         try:
             if not self.plc_writer_connection and not self.init_signal:
                 if self._current_lang == "en":
@@ -3754,22 +3745,39 @@ class StrikeMachine(QMainWindow):
                     btn.setChecked(False)
                     btn.blockSignals(False)
                 return
-            if self.ui.start_stop_stacked.currentIndex() == 0:
+            tag_map = {
+                "Start":  "START",
+            }
+            tag = tag_map.get(channel)
+            if not tag:
+                return
+
+            self._last_cmd_time[tag] = time.time()
+
+            if checked:
                 self.ui.sys_state_stacked_wid_39.setCurrentIndex(1)
-                self.ui.start_stop_stacked.setCurrentIndex(1)
+                if self._current_lang == "en":
+                    self.ui.start_stop_btn.setText("Stop")
+                elif self._current_lang == "cn":
+                    self.ui.start_stop_btn.setText("停止")
+                elif self._current_lang == "vn":
+                    self.ui.start_stop_btn.setText("Tắt")
                 if self._start_flag:
                     self._start_flag = False
                 else:
                     self.plc_writer_worker.write_bool.emit("START", True)   # type: ignore
                 self.data_table.start()
                 self.logger.info("[Main]-[start_stop_btn]: System On")
-                # QTimer.singleShot(250, lambda: self.plc_writer_worker.write_bool.emit("START", False))
-                # ltmessage.information(self, "Strike Machine", "System On!")
-            elif self.ui.start_stop_stacked.currentIndex() == 1:
+            else:
                 self.ui.sys_state_stacked_wid_39.setCurrentIndex(0)
-                self.ui.start_stop_stacked.setCurrentIndex(0)
-                if self._stop_flag:
-                    self._stop_flag = False
+                if self._current_lang == "en":
+                    self.ui.start_stop_btn.setText("Start")
+                elif self._current_lang == "cn":
+                    self.ui.start_stop_btn.setText("开始")
+                elif self._current_lang == "vn":
+                    self.ui.start_stop_btn.setText("Bật")
+                if self._start_flag:
+                    self._start_flag = False
                 else:
                     self.plc_writer_worker.write_bool.emit("STOP", True)    # type: ignore
                     QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("START", False))  # type: ignore
@@ -4594,6 +4602,8 @@ class StrikeMachine(QMainWindow):
                 charts[3].plot.setLabel("left", "温度 (°C)") if self._current_unit == 0 else charts[3].plot.setLabel("left", "温度 (°F)")
                 charts[3].plot.plotItem.axes["right"]["item"].setLabel("压力 (bar)")    # type: ignore
 
+                self.ui.start_stop_btn.setText("开始") if not self.ui.start_stop_btn.isChecked() else self.ui.start_stop_btn.setText("停止")
+
             elif self._current_lang == "vn":
                 self.ui.plc_ip_address_edit.setPlaceholderText("Vui lòng nhập địa chỉ IP: 172.16.100.***")
                 self.ui.db_file_path_edit.setPlaceholderText("Nhập đường dẫn thư mục")
@@ -4612,6 +4622,8 @@ class StrikeMachine(QMainWindow):
                 charts[3].btn_setting.setText("Nhóm C")
                 charts[3].plot.setLabel("left", "Nhiệt độ (°C)") if self._current_unit == 0 else charts[3].plot.setLabel("left", "Nhiệt độ (°F)")
                 charts[3].plot.plotItem.axes["right"]["item"].setLabel("Áp suất (bar)")    # type: ignore
+
+                self.ui.start_stop_btn.setText("Bật") if not self.ui.start_stop_btn.isChecked() else self.ui.start_stop_btn.setText("Tắt")
 
             elif self._current_lang == "en":
                 self.ui.plc_ip_address_edit.setPlaceholderText("Enter IP Address: 172.16.100.***")
@@ -4632,9 +4644,10 @@ class StrikeMachine(QMainWindow):
                 charts[3].plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else charts[3].plot.setLabel("left", "Temperature (°F)")
                 charts[3].plot.plotItem.axes["right"]["item"].setLabel("Pressure (bar)")    # type: ignore
                 
+                self.ui.start_stop_btn.setText("Start") if not self.ui.start_stop_btn.isChecked() else self.ui.start_stop_btn.setText("Stop")
             self.ui.plc_ip_address_edit.setText(ip_text)
             self.ui.db_file_path_edit.setText(db_text)
-
+            
     def _set_cur_unit(self):
         index = self.ui.temp_unit_selection_combox.currentIndex()
         for i in range(len(self.cel_fah_change)):
