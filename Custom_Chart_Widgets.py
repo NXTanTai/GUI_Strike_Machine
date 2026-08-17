@@ -281,7 +281,7 @@ class CustomChartWidget(QWidget):
         self._root.setSpacing(2)
 
     def _setup_chart(self) -> None:
-        pg.setConfigOptions(antialias=False, useOpenGL=True)
+        pg.setConfigOptions(antialias=False, useOpenGL=False)
 
         self._create_title()
         self._create_legend()

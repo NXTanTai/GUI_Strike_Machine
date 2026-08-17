@@ -3064,7 +3064,6 @@ class StrikeMachine(QMainWindow):
         # # _t("_data_table", lambda: self._process_groups(data))
         self._process_groups(data)
 
-
     def _process_groups(self, data: dict):
         groups = []
 

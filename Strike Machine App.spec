@@ -2,9 +2,9 @@
 
 
 a = Analysis(
-    ['main.py'],
+    ['main_edited.py'],
     pathex=[],
-    binaries=[],
+    binaries=[('lib\\snap7.dll', '.')],
     datas=[('gifs', 'gifs'), ('tech_link_theme_vn.qm', '.'), ('tech_link_theme_cn.qm', '.')],
     hiddenimports=[],
     hookspath=[],
