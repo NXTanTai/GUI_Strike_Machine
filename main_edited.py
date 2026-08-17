@@ -219,7 +219,7 @@ if __name__ == '__main__':
         # (title bar chỉ xuất hiện sau khi show()). Nếu không trừ trước, content
         # sẽ được scale vừa khít available height, rồi title bar cộng thêm vào
         # sẽ đẩy đáy cửa sổ lọt xuống dưới, đè lên taskbar.
-        _title_bar_h = QApplication.style().pixelMetric(QStyle.PM_TitleBarHeight)
+        _title_bar_h = QApplication.style().pixelMetric(QStyle.PM_TitleBarHeight) #type: ignore
         if _title_bar_h <= 0:
             _title_bar_h = 32  # fallback nếu platform/WM không trả về giá trị hợp lệ
 

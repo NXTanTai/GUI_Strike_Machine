@@ -1572,13 +1572,16 @@ border-radius: 15px;</string>
                               <property name="font">
                                <font>
                                 <family>Segoe UI</family>
-                                <pointsize>19</pointsize>
+                                <pointsize>12</pointsize>
                                 <weight>75</weight>
                                 <bold>true</bold>
                                </font>
                               </property>
                               <property name="alignment">
                                <set>Qt::AlignCenter</set>
+                              </property>
+                              <property name="placeholderText">
+                               <string>Enter name</string>
                               </property>
                              </widget>
                             </item>
@@ -21974,7 +21977,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="language_group_btn"/>
   <buttongroup name="left_side_btn_group"/>
+  <buttongroup name="language_group_btn"/>
  </buttongroups>
 </ui>

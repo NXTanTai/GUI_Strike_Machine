@@ -680,7 +680,26 @@ class StrikeMachine(QMainWindow):
         self._sv_cycle_state("All", False)
         self._set_cycle_state("All")
         self._shutting_down = False
-        
+        self._button_flag()
+
+    def _button_flag(self):
+        self._start_flag = False
+        self._stop_flag = False
+        self._t0_heat_flag = False
+        self._t0_stop_flag = False
+        self._heating_a_flag = False
+        self._heating_b_flag = False
+        self._heating_c_flag = False    
+        self._vacuum_a_flag = False
+        self._vacuum_b_flag = False
+        self._vacuum_c_flag = False
+        self._oil_a_flag = False
+        self._oil_b_flag = False
+        self._oil_c_flag = False
+        self._count_a_flag = False
+        self._count_b_flag = False
+        self._count_c_flag = False
+
     def _init_timer(self):
         self.all_timer = []
 
@@ -3145,30 +3164,48 @@ class StrikeMachine(QMainWindow):
             self.ui.set_cycle_c_btn.click() if not self.ui.set_cycle_c_btn.isChecked() else None
 
     def _detect_btn_obj(self, data):
+        if self.init_signal:
+            return
         button_map = [
-            (self.ui.heat_btn_t0,     "T0_Start_Heat"),
-            (self.ui.heat_btn_a,      "P1_Start_Heat"),
-            (self.ui.vacuum_btn_a,    "P1_Start_Pressure"),
-            (self.ui.refuel_btn_a,    "P1_Start_Oil"),
-            (self.ui.set_cycle_a_btn, "P1_BitCountTimes"),
+            (self.ui.heat_btn_a,      "P1_Start_Heat", self._heating_a_flag),
+            (self.ui.vacuum_btn_a,    "P1_Start_Pressure", self._vacuum_a_flag),
+            (self.ui.refuel_btn_a,    "P1_Start_Oil", self._oil_a_flag),
+            (self.ui.set_cycle_a_btn, "P1_BitCountTimes", self._count_a_flag),
 
-            (self.ui.heat_btn_b,      "P2_Start_Heat"),
-            (self.ui.vacuum_btn_b,    "P2_Start_Pressure"),
-            (self.ui.refuel_btn_b,    "P2_Start_Oil"),
-            (self.ui.set_cycle_b_btn, "P2_BitCountTimes"),
+            (self.ui.heat_btn_b,      "P2_Start_Heat", self._heating_b_flag),
+            (self.ui.vacuum_btn_b,    "P2_Start_Pressure", self._vacuum_b_flag),
+            (self.ui.refuel_btn_b,    "P2_Start_Oil", self._oil_b_flag),
+            (self.ui.set_cycle_b_btn, "P2_BitCountTimes", self._count_b_flag),
 
-            (self.ui.heat_btn_c,      "P3_Start_Heat"),
-            (self.ui.vacuum_btn_c,    "P3_Start_Pressure"),
-            (self.ui.refuel_btn_c,    "P3_Start_Oil"),
-            (self.ui.set_cycle_c_btn, "P3_BitCountTimes"),
+            (self.ui.heat_btn_c,      "P3_Start_Heat", self._heating_c_flag),
+            (self.ui.vacuum_btn_c,    "P3_Start_Pressure", self._vacuum_c_flag),
+            (self.ui.refuel_btn_c,    "P3_Start_Oil", self._oil_c_flag),
+            (self.ui.set_cycle_c_btn, "P3_BitCountTimes", self._count_c_flag),
         ]
+        is_start_on = bool(data.get("START", False))
+        is_stop_on = bool(data.get("STOP", False))
+        is_t0_heat_on = bool(data.get("T0_Start_Heat", False))
+        is_t0_stop_on = bool(data.get("T0_Stop_Heat", False))
+        if is_start_on and not is_stop_on:
+            self._start_flag = True
+            self.ui.start_btn.click()
+        elif not is_start_on or is_stop_on:
+            self._stop_flag = True
+            self.ui.stop_btn.click()
+        if is_t0_heat_on and not is_t0_stop_on:
+            self._t0_heat_flag = True
+            self.ui.heat_btn_t0.setChecked(True)
+        elif not is_t0_heat_on or is_t0_stop_on:
+            self._t0_stop_flag = True
+            self.ui.heat_btn_t0.setChecked(False)
 
-        for btn, tag in button_map:
+        for btn, tag, flag in button_map:
             if self._should_ignore_status(tag):
                 continue
 
             plc_value = bool(data.get(tag, False))
             if btn.isChecked() != plc_value:
+                flag = True
                 btn.setChecked(plc_value)
 
     def _should_ignore_status(self, tag: str) -> bool:
@@ -3488,33 +3525,48 @@ class StrikeMachine(QMainWindow):
 
         if channel == "A":
             if not self.init_signal:
-                self.plc_writer_worker.write_bool.emit("P1_Start_Heat", checked)
+                if self._heating_a_flag:
+                    self._heating_a_flag = False
+                else:
+                    self.plc_writer_worker.write_bool.emit("P1_Start_Heat", checked)
             self.disable_heat_group(channel, not checked)
             self.logger.info(f"[Main]-[heating_btn]: Group A Heating {'On' if checked else 'Off'}!")
 
         elif channel == "B":
             if not self.init_signal:
-                self.plc_writer_worker.write_bool.emit("P2_Start_Heat", checked)
+                if self._heating_b_flag:
+                    self._heating_b_flag = False
+                else:
+                    self.plc_writer_worker.write_bool.emit("P2_Start_Heat", checked)
             self.disable_heat_group(channel, not checked)
             self.logger.info(f"[Main]-[heating_btn]: Group B Heating {'On' if checked else 'Off'}!")
 
         elif channel == "C":
             if not self.init_signal:
-                self.plc_writer_worker.write_bool.emit("P3_Start_Heat", checked)
+                if self._heating_c_flag:
+                    self._heating_c_flag = False
+                else:
+                    self.plc_writer_worker.write_bool.emit("P3_Start_Heat", checked)
             self.disable_heat_group(channel, not checked)
             self.logger.info(f"[Main]-[heating_btn]: Group C Heating {'On' if checked else 'Off'}!")
 
         elif channel == "T0":
             if checked:
                 if not self.init_signal:
-                    self.plc_writer_worker.write_bool.emit("T0_Start_Heat", True)
+                    if self._t0_heat_flag:
+                        self._t0_heat_flag = False
+                    else:
+                        self.plc_writer_worker.write_bool.emit("T0_Start_Heat", True)
                 self.disable_heat_group(channel, False)
                 self.logger.info("[Main]-[heating_btn]: T0 Heating On!")
             else:
                 if not self.init_signal:
-                    self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", True)
-                    QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("T0_Start_Heat", False))
-                    QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", False))
+                    if self._t0_stop_flag:
+                        self._t0_stop_flag = False
+                    else:    
+                        self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", True)
+                        QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("T0_Start_Heat", False))
+                        QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", False))
                 self.disable_heat_group(channel, True)
                 self.logger.info("[Main]-[heating_btn]: T0 Heating Off!")
 
@@ -3547,7 +3599,14 @@ class StrikeMachine(QMainWindow):
                 self.ui.clear_data_btn.setEnabled(False)
 
             if not self.init_signal:
-                self.plc_writer_worker.write_bool.emit(tag, checked)
+                if self._vacuum_a_flag and channel == "A":
+                    self._vacuum_a_flag = False
+                elif self._vacuum_b_flag and channel == "B":
+                    self._vacuum_b_flag = False
+                elif self._vacuum_c_flag and channel == "C":
+                    self._vacuum_c_flag = False
+                else:
+                    self.plc_writer_worker.write_bool.emit(tag, checked)
 
             self.disable_pressure_group(channel, not checked)
             self._sv_cycle_state(channel, not checked)
@@ -3580,7 +3639,14 @@ class StrikeMachine(QMainWindow):
 
         try:
             if not self.init_signal:
-                self.plc_writer_worker.write_bool.emit(tag, checked)
+                if self._oil_a_flag and channel == "A":
+                    self._oil_a_flag = False
+                elif self._oil_b_flag and channel == "B":
+                    self._oil_b_flag = False
+                elif self._oil_c_flag and channel == "C":
+                    self._oil_c_flag = False
+                else:
+                    self.plc_writer_worker.write_bool.emit(tag, checked)
 
             self.disable_oil_group(channel, not checked)
             self._sv_cycle_state(channel, not checked)
@@ -3620,7 +3686,14 @@ class StrikeMachine(QMainWindow):
 
         try:
             if not self.init_signal:
-                self.plc_writer_worker.write_bool.emit(tag, checked)
+                if self._cycle_a_flag and channel == "A":
+                    self._cycle_a_flag = False
+                elif self._cycle_b_flag and channel == "B":
+                    self._cycle_b_flag = False
+                elif self._cycle_c_flag and channel == "C":
+                    self._cycle_c_flag = False
+                else:
+                    self.plc_writer_worker.write_bool.emit(tag, checked)
                 if checked:
                     self.reset_cycle_btn(channel)
 
@@ -3684,7 +3757,10 @@ class StrikeMachine(QMainWindow):
             if self.ui.start_stop_stacked.currentIndex() == 0:
                 self.ui.sys_state_stacked_wid_39.setCurrentIndex(1)
                 self.ui.start_stop_stacked.setCurrentIndex(1)
-                self.plc_writer_worker.write_bool.emit("START", True)   # type: ignore
+                if self._start_flag:
+                    self._start_flag = False
+                else:
+                    self.plc_writer_worker.write_bool.emit("START", True)   # type: ignore
                 self.data_table.start()
                 self.logger.info("[Main]-[start_stop_btn]: System On")
                 # QTimer.singleShot(250, lambda: self.plc_writer_worker.write_bool.emit("START", False))
@@ -3692,9 +3768,12 @@ class StrikeMachine(QMainWindow):
             elif self.ui.start_stop_stacked.currentIndex() == 1:
                 self.ui.sys_state_stacked_wid_39.setCurrentIndex(0)
                 self.ui.start_stop_stacked.setCurrentIndex(0)
-                self.plc_writer_worker.write_bool.emit("STOP", True)    # type: ignore
-                QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("START", False))  # type: ignore
-                QTimer.singleShot(200, lambda: self.plc_writer_worker.write_bool.emit("STOP", False))   # type: ignore
+                if self._stop_flag:
+                    self._stop_flag = False
+                else:
+                    self.plc_writer_worker.write_bool.emit("STOP", True)    # type: ignore
+                    QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("START", False))  # type: ignore
+                    QTimer.singleShot(200, lambda: self.plc_writer_worker.write_bool.emit("STOP", False))   # type: ignore
                 QTimer.singleShot(250, self._set_off_oil_btn)
                 QTimer.singleShot(250, self._set_off_vacuum_btn)
                 QTimer.singleShot(250, self._set_off_heating_btn)

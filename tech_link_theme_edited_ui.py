@@ -805,7 +805,7 @@ class Ui_MainWindow(object):
         self.code_display.setSizePolicy(sizePolicy)
         font9 = QFont()
         font9.setFamilies([u"Segoe UI"])
-        font9.setPointSize(19)
+        font9.setPointSize(12)
         font9.setBold(True)
         self.code_display.setFont(font9)
         self.code_display.setAlignment(Qt.AlignCenter)
@@ -8090,11 +8090,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.reset_cycle_c_btn.sizePolicy().hasHeightForWidth())
         self.reset_cycle_c_btn.setSizePolicy(sizePolicy)
         self.reset_cycle_c_btn.setMinimumSize(QSize(75, 0))
-        font20 = QFont()
-        font20.setFamilies([u"Segoe UI"])
-        font20.setPointSize(12)
-        font20.setBold(True)
-        self.reset_cycle_c_btn.setFont(font20)
+        self.reset_cycle_c_btn.setFont(font9)
         self.reset_cycle_c_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
@@ -8158,7 +8154,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.reset_cycle_b_btn.sizePolicy().hasHeightForWidth())
         self.reset_cycle_b_btn.setSizePolicy(sizePolicy)
         self.reset_cycle_b_btn.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_b_btn.setFont(font20)
+        self.reset_cycle_b_btn.setFont(font9)
         self.reset_cycle_b_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
@@ -8202,10 +8198,10 @@ class Ui_MainWindow(object):
         self.pushButton_4.setObjectName(u"pushButton_4")
         sizePolicy.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
         self.pushButton_4.setSizePolicy(sizePolicy)
-        font21 = QFont()
-        font21.setPointSize(12)
-        font21.setBold(True)
-        self.pushButton_4.setFont(font21)
+        font20 = QFont()
+        font20.setPointSize(12)
+        font20.setBold(True)
+        self.pushButton_4.setFont(font20)
         self.pushButton_4.setStyleSheet(u"QPushButton{	\n"
 "	border: 2px solid #E5E5E5; \n"
 "	border-radius: 10px;\n"
@@ -8230,7 +8226,7 @@ class Ui_MainWindow(object):
         self.pushButton_21.setObjectName(u"pushButton_21")
         sizePolicy.setHeightForWidth(self.pushButton_21.sizePolicy().hasHeightForWidth())
         self.pushButton_21.setSizePolicy(sizePolicy)
-        self.pushButton_21.setFont(font21)
+        self.pushButton_21.setFont(font20)
         self.pushButton_21.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: #F90A0A; \n"
@@ -8250,7 +8246,7 @@ class Ui_MainWindow(object):
         self.pushButton_24.setObjectName(u"pushButton_24")
         sizePolicy.setHeightForWidth(self.pushButton_24.sizePolicy().hasHeightForWidth())
         self.pushButton_24.setSizePolicy(sizePolicy)
-        self.pushButton_24.setFont(font21)
+        self.pushButton_24.setFont(font20)
         self.pushButton_24.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: orange; \n"
@@ -8305,7 +8301,7 @@ class Ui_MainWindow(object):
         self.pushButton_6.setObjectName(u"pushButton_6")
         sizePolicy.setHeightForWidth(self.pushButton_6.sizePolicy().hasHeightForWidth())
         self.pushButton_6.setSizePolicy(sizePolicy)
-        self.pushButton_6.setFont(font21)
+        self.pushButton_6.setFont(font20)
         self.pushButton_6.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: #10B981; \n"
@@ -8325,7 +8321,7 @@ class Ui_MainWindow(object):
         self.pushButton_23.setObjectName(u"pushButton_23")
         sizePolicy.setHeightForWidth(self.pushButton_23.sizePolicy().hasHeightForWidth())
         self.pushButton_23.setSizePolicy(sizePolicy)
-        self.pushButton_23.setFont(font21)
+        self.pushButton_23.setFont(font20)
         self.pushButton_23.setStyleSheet(u"QPushButton{	\n"
 "	border: 2px solid #E5E5E5; \n"
 "	border-radius: 10px;\n"
@@ -8351,7 +8347,7 @@ class Ui_MainWindow(object):
         self.pushButton_22.setObjectName(u"pushButton_22")
         sizePolicy.setHeightForWidth(self.pushButton_22.sizePolicy().hasHeightForWidth())
         self.pushButton_22.setSizePolicy(sizePolicy)
-        self.pushButton_22.setFont(font21)
+        self.pushButton_22.setFont(font20)
         self.pushButton_22.setStyleSheet(u"border: 2px solid #E5E5E5; \n"
 "border-radius: 10px;\n"
 "color: orange; \n"
@@ -8422,7 +8418,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.reset_cycle_a_btn.sizePolicy().hasHeightForWidth())
         self.reset_cycle_a_btn.setSizePolicy(sizePolicy)
         self.reset_cycle_a_btn.setMinimumSize(QSize(75, 0))
-        self.reset_cycle_a_btn.setFont(font20)
+        self.reset_cycle_a_btn.setFont(font9)
         self.reset_cycle_a_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: white;\n"
 "    color: #0B7EC8;\n"
@@ -8508,7 +8504,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_43.setObjectName(u"horizontalLayout_43")
         self.i_o_group_2 = QGroupBox(self.widget_3)
         self.i_o_group_2.setObjectName(u"i_o_group_2")
-        self.i_o_group_2.setFont(font20)
+        self.i_o_group_2.setFont(font9)
         self.i_o_group_2.setStyleSheet(u"QGroupBox {\n"
 "    border: 2px solid #E5E5E5;\n"
 "    border-radius: 6px;\n"
@@ -8594,7 +8590,7 @@ class Ui_MainWindow(object):
         self.db_file_path_edit.setObjectName(u"db_file_path_edit")
         sizePolicy.setHeightForWidth(self.db_file_path_edit.sizePolicy().hasHeightForWidth())
         self.db_file_path_edit.setSizePolicy(sizePolicy)
-        self.db_file_path_edit.setFont(font21)
+        self.db_file_path_edit.setFont(font20)
         self.db_file_path_edit.setPlaceholderText(u"Enter Path Folder")
 
         self.gridLayout_6.addWidget(self.db_file_path_edit, 0, 1, 1, 1)
@@ -8603,7 +8599,7 @@ class Ui_MainWindow(object):
         self.plc_ip_address_edit.setObjectName(u"plc_ip_address_edit")
         sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
         self.plc_ip_address_edit.setSizePolicy(sizePolicy)
-        self.plc_ip_address_edit.setFont(font21)
+        self.plc_ip_address_edit.setFont(font20)
         self.plc_ip_address_edit.setPlaceholderText(u"Enter IP Address: 172.16.100.***")
 
         self.gridLayout_6.addWidget(self.plc_ip_address_edit, 1, 1, 1, 1)
@@ -8612,10 +8608,10 @@ class Ui_MainWindow(object):
         self.cmd_btn.setObjectName(u"cmd_btn")
         sizePolicy.setHeightForWidth(self.cmd_btn.sizePolicy().hasHeightForWidth())
         self.cmd_btn.setSizePolicy(sizePolicy)
-        font22 = QFont()
-        font22.setPointSize(19)
-        font22.setBold(True)
-        self.cmd_btn.setFont(font22)
+        font21 = QFont()
+        font21.setPointSize(19)
+        font21.setBold(True)
+        self.cmd_btn.setFont(font21)
         self.cmd_btn.setStyleSheet(u"QPushButton {\n"
 "    color: black;\n"
 "    background-color: transparent;\n"
@@ -8657,7 +8653,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_24.setContentsMargins(10, 0, 10, 0)
         self.i_o_group_1 = QGroupBox(self.widget_26)
         self.i_o_group_1.setObjectName(u"i_o_group_1")
-        self.i_o_group_1.setFont(font20)
+        self.i_o_group_1.setFont(font9)
         self.i_o_group_1.setStyleSheet(u"QWidget{\n"
 "	border: 2px solid #E5E5E5; \n"
 "	border-radius: 20px;\n"
@@ -8722,10 +8718,10 @@ class Ui_MainWindow(object):
         self.pushButton_59.setObjectName(u"pushButton_59")
         sizePolicy.setHeightForWidth(self.pushButton_59.sizePolicy().hasHeightForWidth())
         self.pushButton_59.setSizePolicy(sizePolicy)
-        font23 = QFont()
-        font23.setPointSize(11)
-        font23.setBold(True)
-        self.pushButton_59.setFont(font23)
+        font22 = QFont()
+        font22.setPointSize(11)
+        font22.setBold(True)
+        self.pushButton_59.setFont(font22)
         self.pushButton_59.setIcon(icon8)
         self.pushButton_59.setIconSize(QSize(24, 24))
 
@@ -8741,10 +8737,10 @@ class Ui_MainWindow(object):
         self.pushButton_58.setObjectName(u"pushButton_58")
         sizePolicy.setHeightForWidth(self.pushButton_58.sizePolicy().hasHeightForWidth())
         self.pushButton_58.setSizePolicy(sizePolicy)
-        font24 = QFont()
-        font24.setPointSize(15)
-        font24.setBold(True)
-        self.pushButton_58.setFont(font24)
+        font23 = QFont()
+        font23.setPointSize(15)
+        font23.setBold(True)
+        self.pushButton_58.setFont(font23)
         self.pushButton_58.setIcon(icon9)
         self.pushButton_58.setIconSize(QSize(24, 24))
 
@@ -8770,7 +8766,7 @@ class Ui_MainWindow(object):
         self.pushButton_63.setObjectName(u"pushButton_63")
         sizePolicy.setHeightForWidth(self.pushButton_63.sizePolicy().hasHeightForWidth())
         self.pushButton_63.setSizePolicy(sizePolicy)
-        self.pushButton_63.setFont(font23)
+        self.pushButton_63.setFont(font22)
         self.pushButton_63.setIcon(icon8)
         self.pushButton_63.setIconSize(QSize(24, 24))
 
@@ -8786,7 +8782,7 @@ class Ui_MainWindow(object):
         self.pushButton_62.setObjectName(u"pushButton_62")
         sizePolicy.setHeightForWidth(self.pushButton_62.sizePolicy().hasHeightForWidth())
         self.pushButton_62.setSizePolicy(sizePolicy)
-        self.pushButton_62.setFont(font24)
+        self.pushButton_62.setFont(font23)
         self.pushButton_62.setIcon(icon9)
         self.pushButton_62.setIconSize(QSize(24, 24))
 
@@ -8812,7 +8808,7 @@ class Ui_MainWindow(object):
         self.pushButton_65.setObjectName(u"pushButton_65")
         sizePolicy.setHeightForWidth(self.pushButton_65.sizePolicy().hasHeightForWidth())
         self.pushButton_65.setSizePolicy(sizePolicy)
-        self.pushButton_65.setFont(font23)
+        self.pushButton_65.setFont(font22)
         self.pushButton_65.setIcon(icon8)
         self.pushButton_65.setIconSize(QSize(24, 24))
 
@@ -8828,7 +8824,7 @@ class Ui_MainWindow(object):
         self.pushButton_64.setObjectName(u"pushButton_64")
         sizePolicy.setHeightForWidth(self.pushButton_64.sizePolicy().hasHeightForWidth())
         self.pushButton_64.setSizePolicy(sizePolicy)
-        self.pushButton_64.setFont(font24)
+        self.pushButton_64.setFont(font23)
         self.pushButton_64.setIcon(icon9)
         self.pushButton_64.setIconSize(QSize(24, 24))
 
@@ -8854,7 +8850,7 @@ class Ui_MainWindow(object):
         self.pushButton_67.setObjectName(u"pushButton_67")
         sizePolicy.setHeightForWidth(self.pushButton_67.sizePolicy().hasHeightForWidth())
         self.pushButton_67.setSizePolicy(sizePolicy)
-        self.pushButton_67.setFont(font23)
+        self.pushButton_67.setFont(font22)
         self.pushButton_67.setIcon(icon8)
         self.pushButton_67.setIconSize(QSize(24, 24))
 
@@ -8870,7 +8866,7 @@ class Ui_MainWindow(object):
         self.pushButton_66.setObjectName(u"pushButton_66")
         sizePolicy.setHeightForWidth(self.pushButton_66.sizePolicy().hasHeightForWidth())
         self.pushButton_66.setSizePolicy(sizePolicy)
-        self.pushButton_66.setFont(font24)
+        self.pushButton_66.setFont(font23)
         self.pushButton_66.setIcon(icon9)
         self.pushButton_66.setIconSize(QSize(24, 24))
 
@@ -8896,7 +8892,7 @@ class Ui_MainWindow(object):
         self.pushButton_57.setObjectName(u"pushButton_57")
         sizePolicy.setHeightForWidth(self.pushButton_57.sizePolicy().hasHeightForWidth())
         self.pushButton_57.setSizePolicy(sizePolicy)
-        self.pushButton_57.setFont(font23)
+        self.pushButton_57.setFont(font22)
         self.pushButton_57.setIcon(icon8)
         self.pushButton_57.setIconSize(QSize(24, 24))
 
@@ -8912,7 +8908,7 @@ class Ui_MainWindow(object):
         self.pushButton_56.setObjectName(u"pushButton_56")
         sizePolicy.setHeightForWidth(self.pushButton_56.sizePolicy().hasHeightForWidth())
         self.pushButton_56.setSizePolicy(sizePolicy)
-        self.pushButton_56.setFont(font24)
+        self.pushButton_56.setFont(font23)
         self.pushButton_56.setIcon(icon9)
         self.pushButton_56.setIconSize(QSize(24, 24))
 
@@ -8924,7 +8920,7 @@ class Ui_MainWindow(object):
 
         self.di_name_1 = QLabel(self.i_o_group_1)
         self.di_name_1.setObjectName(u"di_name_1")
-        self.di_name_1.setFont(font21)
+        self.di_name_1.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_1, 0, 0, 1, 1)
 
@@ -8944,7 +8940,7 @@ class Ui_MainWindow(object):
         self.pushButton_43.setObjectName(u"pushButton_43")
         sizePolicy.setHeightForWidth(self.pushButton_43.sizePolicy().hasHeightForWidth())
         self.pushButton_43.setSizePolicy(sizePolicy)
-        self.pushButton_43.setFont(font23)
+        self.pushButton_43.setFont(font22)
         self.pushButton_43.setIcon(icon8)
         self.pushButton_43.setIconSize(QSize(24, 24))
 
@@ -8960,7 +8956,7 @@ class Ui_MainWindow(object):
         self.pushButton_42.setObjectName(u"pushButton_42")
         sizePolicy.setHeightForWidth(self.pushButton_42.sizePolicy().hasHeightForWidth())
         self.pushButton_42.setSizePolicy(sizePolicy)
-        self.pushButton_42.setFont(font24)
+        self.pushButton_42.setFont(font23)
         self.pushButton_42.setIcon(icon9)
         self.pushButton_42.setIconSize(QSize(24, 24))
 
@@ -8976,7 +8972,7 @@ class Ui_MainWindow(object):
         self.pushButton_44.setObjectName(u"pushButton_44")
         sizePolicy.setHeightForWidth(self.pushButton_44.sizePolicy().hasHeightForWidth())
         self.pushButton_44.setSizePolicy(sizePolicy)
-        self.pushButton_44.setFont(font24)
+        self.pushButton_44.setFont(font23)
         self.pushButton_44.setIcon(icon23)
         self.pushButton_44.setIconSize(QSize(24, 24))
 
@@ -9002,7 +8998,7 @@ class Ui_MainWindow(object):
         self.pushButton_61.setObjectName(u"pushButton_61")
         sizePolicy.setHeightForWidth(self.pushButton_61.sizePolicy().hasHeightForWidth())
         self.pushButton_61.setSizePolicy(sizePolicy)
-        self.pushButton_61.setFont(font23)
+        self.pushButton_61.setFont(font22)
         self.pushButton_61.setIcon(icon8)
         self.pushButton_61.setIconSize(QSize(24, 24))
 
@@ -9018,7 +9014,7 @@ class Ui_MainWindow(object):
         self.pushButton_60.setObjectName(u"pushButton_60")
         sizePolicy.setHeightForWidth(self.pushButton_60.sizePolicy().hasHeightForWidth())
         self.pushButton_60.setSizePolicy(sizePolicy)
-        self.pushButton_60.setFont(font24)
+        self.pushButton_60.setFont(font23)
         self.pushButton_60.setIcon(icon9)
         self.pushButton_60.setIconSize(QSize(24, 24))
 
@@ -9030,13 +9026,13 @@ class Ui_MainWindow(object):
 
         self.di_name_2 = QLabel(self.i_o_group_1)
         self.di_name_2.setObjectName(u"di_name_2")
-        self.di_name_2.setFont(font21)
+        self.di_name_2.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_2, 1, 0, 1, 1)
 
         self.di_name_3 = QLabel(self.i_o_group_1)
         self.di_name_3.setObjectName(u"di_name_3")
-        self.di_name_3.setFont(font21)
+        self.di_name_3.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_3, 2, 0, 1, 1)
 
@@ -9056,7 +9052,7 @@ class Ui_MainWindow(object):
         self.pushButton_69.setObjectName(u"pushButton_69")
         sizePolicy.setHeightForWidth(self.pushButton_69.sizePolicy().hasHeightForWidth())
         self.pushButton_69.setSizePolicy(sizePolicy)
-        self.pushButton_69.setFont(font23)
+        self.pushButton_69.setFont(font22)
         self.pushButton_69.setIcon(icon8)
         self.pushButton_69.setIconSize(QSize(24, 24))
 
@@ -9072,7 +9068,7 @@ class Ui_MainWindow(object):
         self.pushButton_68.setObjectName(u"pushButton_68")
         sizePolicy.setHeightForWidth(self.pushButton_68.sizePolicy().hasHeightForWidth())
         self.pushButton_68.setSizePolicy(sizePolicy)
-        self.pushButton_68.setFont(font24)
+        self.pushButton_68.setFont(font23)
         self.pushButton_68.setIcon(icon9)
         self.pushButton_68.setIconSize(QSize(24, 24))
 
@@ -9084,37 +9080,37 @@ class Ui_MainWindow(object):
 
         self.di_name_4 = QLabel(self.i_o_group_1)
         self.di_name_4.setObjectName(u"di_name_4")
-        self.di_name_4.setFont(font21)
+        self.di_name_4.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_4, 3, 0, 1, 1)
 
         self.di_name_5 = QLabel(self.i_o_group_1)
         self.di_name_5.setObjectName(u"di_name_5")
-        self.di_name_5.setFont(font21)
+        self.di_name_5.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_5, 4, 0, 1, 1)
 
         self.di_name_6 = QLabel(self.i_o_group_1)
         self.di_name_6.setObjectName(u"di_name_6")
-        self.di_name_6.setFont(font21)
+        self.di_name_6.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_6, 5, 0, 1, 1)
 
         self.di_name_7 = QLabel(self.i_o_group_1)
         self.di_name_7.setObjectName(u"di_name_7")
-        self.di_name_7.setFont(font21)
+        self.di_name_7.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_7, 6, 0, 1, 1)
 
         self.di_name_8 = QLabel(self.i_o_group_1)
         self.di_name_8.setObjectName(u"di_name_8")
-        self.di_name_8.setFont(font21)
+        self.di_name_8.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_8, 7, 0, 1, 1)
 
         self.di_name_11 = QLabel(self.i_o_group_1)
         self.di_name_11.setObjectName(u"di_name_11")
-        self.di_name_11.setFont(font21)
+        self.di_name_11.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_11, 10, 0, 1, 1)
 
@@ -9134,7 +9130,7 @@ class Ui_MainWindow(object):
         self.pushButton_74.setObjectName(u"pushButton_74")
         sizePolicy.setHeightForWidth(self.pushButton_74.sizePolicy().hasHeightForWidth())
         self.pushButton_74.setSizePolicy(sizePolicy)
-        self.pushButton_74.setFont(font23)
+        self.pushButton_74.setFont(font22)
         self.pushButton_74.setIcon(icon8)
         self.pushButton_74.setIconSize(QSize(24, 24))
 
@@ -9150,7 +9146,7 @@ class Ui_MainWindow(object):
         self.pushButton_75.setObjectName(u"pushButton_75")
         sizePolicy.setHeightForWidth(self.pushButton_75.sizePolicy().hasHeightForWidth())
         self.pushButton_75.setSizePolicy(sizePolicy)
-        self.pushButton_75.setFont(font24)
+        self.pushButton_75.setFont(font23)
         self.pushButton_75.setIcon(icon9)
         self.pushButton_75.setIconSize(QSize(24, 24))
 
@@ -9162,19 +9158,19 @@ class Ui_MainWindow(object):
 
         self.di_name_12 = QLabel(self.i_o_group_1)
         self.di_name_12.setObjectName(u"di_name_12")
-        self.di_name_12.setFont(font21)
+        self.di_name_12.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_12, 11, 0, 1, 1)
 
         self.di_name_9 = QLabel(self.i_o_group_1)
         self.di_name_9.setObjectName(u"di_name_9")
-        self.di_name_9.setFont(font21)
+        self.di_name_9.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_9, 8, 0, 1, 1)
 
         self.di_name_10 = QLabel(self.i_o_group_1)
         self.di_name_10.setObjectName(u"di_name_10")
-        self.di_name_10.setFont(font21)
+        self.di_name_10.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_10, 9, 0, 1, 1)
 
@@ -9194,7 +9190,7 @@ class Ui_MainWindow(object):
         self.pushButton_70.setObjectName(u"pushButton_70")
         sizePolicy.setHeightForWidth(self.pushButton_70.sizePolicy().hasHeightForWidth())
         self.pushButton_70.setSizePolicy(sizePolicy)
-        self.pushButton_70.setFont(font23)
+        self.pushButton_70.setFont(font22)
         self.pushButton_70.setIcon(icon8)
         self.pushButton_70.setIconSize(QSize(24, 24))
 
@@ -9210,7 +9206,7 @@ class Ui_MainWindow(object):
         self.pushButton_71.setObjectName(u"pushButton_71")
         sizePolicy.setHeightForWidth(self.pushButton_71.sizePolicy().hasHeightForWidth())
         self.pushButton_71.setSizePolicy(sizePolicy)
-        self.pushButton_71.setFont(font24)
+        self.pushButton_71.setFont(font23)
         self.pushButton_71.setIcon(icon9)
         self.pushButton_71.setIconSize(QSize(24, 24))
 
@@ -9236,7 +9232,7 @@ class Ui_MainWindow(object):
         self.pushButton_72.setObjectName(u"pushButton_72")
         sizePolicy.setHeightForWidth(self.pushButton_72.sizePolicy().hasHeightForWidth())
         self.pushButton_72.setSizePolicy(sizePolicy)
-        self.pushButton_72.setFont(font23)
+        self.pushButton_72.setFont(font22)
         self.pushButton_72.setIcon(icon8)
         self.pushButton_72.setIconSize(QSize(24, 24))
 
@@ -9252,7 +9248,7 @@ class Ui_MainWindow(object):
         self.pushButton_73.setObjectName(u"pushButton_73")
         sizePolicy.setHeightForWidth(self.pushButton_73.sizePolicy().hasHeightForWidth())
         self.pushButton_73.setSizePolicy(sizePolicy)
-        self.pushButton_73.setFont(font24)
+        self.pushButton_73.setFont(font23)
         self.pushButton_73.setIcon(icon9)
         self.pushButton_73.setIconSize(QSize(24, 24))
 
@@ -9264,7 +9260,7 @@ class Ui_MainWindow(object):
 
         self.di_name_13 = QLabel(self.i_o_group_1)
         self.di_name_13.setObjectName(u"di_name_13")
-        self.di_name_13.setFont(font21)
+        self.di_name_13.setFont(font20)
 
         self.gridLayout_7.addWidget(self.di_name_13, 12, 0, 1, 1)
 
@@ -9284,7 +9280,7 @@ class Ui_MainWindow(object):
         self.pushButton_76.setObjectName(u"pushButton_76")
         sizePolicy.setHeightForWidth(self.pushButton_76.sizePolicy().hasHeightForWidth())
         self.pushButton_76.setSizePolicy(sizePolicy)
-        self.pushButton_76.setFont(font23)
+        self.pushButton_76.setFont(font22)
         self.pushButton_76.setIcon(icon8)
         self.pushButton_76.setIconSize(QSize(24, 24))
 
@@ -9300,7 +9296,7 @@ class Ui_MainWindow(object):
         self.pushButton_77.setObjectName(u"pushButton_77")
         sizePolicy.setHeightForWidth(self.pushButton_77.sizePolicy().hasHeightForWidth())
         self.pushButton_77.setSizePolicy(sizePolicy)
-        self.pushButton_77.setFont(font24)
+        self.pushButton_77.setFont(font23)
         self.pushButton_77.setIcon(icon9)
         self.pushButton_77.setIconSize(QSize(24, 24))
 
@@ -9326,7 +9322,7 @@ class Ui_MainWindow(object):
         self.pushButton_78.setObjectName(u"pushButton_78")
         sizePolicy.setHeightForWidth(self.pushButton_78.sizePolicy().hasHeightForWidth())
         self.pushButton_78.setSizePolicy(sizePolicy)
-        self.pushButton_78.setFont(font23)
+        self.pushButton_78.setFont(font22)
         self.pushButton_78.setIcon(icon8)
         self.pushButton_78.setIconSize(QSize(24, 24))
 
@@ -9342,7 +9338,7 @@ class Ui_MainWindow(object):
         self.pushButton_79.setObjectName(u"pushButton_79")
         sizePolicy.setHeightForWidth(self.pushButton_79.sizePolicy().hasHeightForWidth())
         self.pushButton_79.setSizePolicy(sizePolicy)
-        self.pushButton_79.setFont(font24)
+        self.pushButton_79.setFont(font23)
         self.pushButton_79.setIcon(icon9)
         self.pushButton_79.setIconSize(QSize(24, 24))
 
@@ -9358,7 +9354,7 @@ class Ui_MainWindow(object):
 
         self.i_o_group_3 = QGroupBox(self.widget_26)
         self.i_o_group_3.setObjectName(u"i_o_group_3")
-        self.i_o_group_3.setFont(font20)
+        self.i_o_group_3.setFont(font9)
         self.i_o_group_3.setStyleSheet(u"QGroupBox {\n"
 "    border: 2px solid #E5E5E5;\n"
 "    border-radius: 6px;\n"
@@ -9421,7 +9417,7 @@ class Ui_MainWindow(object):
 
         self.ai_name_1 = QLabel(self.i_o_group_3)
         self.ai_name_1.setObjectName(u"ai_name_1")
-        self.ai_name_1.setFont(font21)
+        self.ai_name_1.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_1, 0, 0, 1, 1)
 
@@ -9444,91 +9440,91 @@ class Ui_MainWindow(object):
 
         self.ai_name_15 = QLabel(self.i_o_group_3)
         self.ai_name_15.setObjectName(u"ai_name_15")
-        self.ai_name_15.setFont(font21)
+        self.ai_name_15.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_15, 7, 2, 1, 1)
 
         self.ai_name_14 = QLabel(self.i_o_group_3)
         self.ai_name_14.setObjectName(u"ai_name_14")
-        self.ai_name_14.setFont(font21)
+        self.ai_name_14.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_14, 6, 2, 1, 1)
 
         self.ai_name_12 = QLabel(self.i_o_group_3)
         self.ai_name_12.setObjectName(u"ai_name_12")
-        self.ai_name_12.setFont(font21)
+        self.ai_name_12.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_12, 7, 0, 1, 1)
 
         self.ai_name_13 = QLabel(self.i_o_group_3)
         self.ai_name_13.setObjectName(u"ai_name_13")
-        self.ai_name_13.setFont(font21)
+        self.ai_name_13.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_13, 9, 0, 1, 1)
 
         self.ai_name_16 = QLabel(self.i_o_group_3)
         self.ai_name_16.setObjectName(u"ai_name_16")
-        self.ai_name_16.setFont(font21)
+        self.ai_name_16.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_16, 9, 2, 1, 1)
 
         self.ai_name_4 = QLabel(self.i_o_group_3)
         self.ai_name_4.setObjectName(u"ai_name_4")
-        self.ai_name_4.setFont(font21)
+        self.ai_name_4.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_4, 1, 2, 1, 1)
 
         self.ai_name_3 = QLabel(self.i_o_group_3)
         self.ai_name_3.setObjectName(u"ai_name_3")
-        self.ai_name_3.setFont(font21)
+        self.ai_name_3.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_3, 1, 0, 1, 1)
 
         self.ai_name_5 = QLabel(self.i_o_group_3)
         self.ai_name_5.setObjectName(u"ai_name_5")
-        self.ai_name_5.setFont(font21)
+        self.ai_name_5.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_5, 2, 0, 1, 1)
 
         self.ai_name_2 = QLabel(self.i_o_group_3)
         self.ai_name_2.setObjectName(u"ai_name_2")
-        self.ai_name_2.setFont(font21)
+        self.ai_name_2.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_2, 0, 2, 1, 1)
 
         self.ai_name_6 = QLabel(self.i_o_group_3)
         self.ai_name_6.setObjectName(u"ai_name_6")
-        self.ai_name_6.setFont(font21)
+        self.ai_name_6.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_6, 2, 2, 1, 1)
 
         self.ai_name_7 = QLabel(self.i_o_group_3)
         self.ai_name_7.setObjectName(u"ai_name_7")
-        self.ai_name_7.setFont(font21)
+        self.ai_name_7.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_7, 3, 0, 1, 1)
 
         self.ai_name_8 = QLabel(self.i_o_group_3)
         self.ai_name_8.setObjectName(u"ai_name_8")
-        self.ai_name_8.setFont(font21)
+        self.ai_name_8.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_8, 3, 2, 1, 1)
 
         self.ai_name_9 = QLabel(self.i_o_group_3)
         self.ai_name_9.setObjectName(u"ai_name_9")
-        self.ai_name_9.setFont(font21)
+        self.ai_name_9.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_9, 4, 0, 1, 1)
 
         self.ai_name_10 = QLabel(self.i_o_group_3)
         self.ai_name_10.setObjectName(u"ai_name_10")
-        self.ai_name_10.setFont(font21)
+        self.ai_name_10.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_10, 4, 2, 1, 1)
 
         self.ai_name_11 = QLabel(self.i_o_group_3)
         self.ai_name_11.setObjectName(u"ai_name_11")
-        self.ai_name_11.setFont(font21)
+        self.ai_name_11.setFont(font20)
 
         self.gridLayout_5.addWidget(self.ai_name_11, 6, 0, 1, 1)
 
@@ -9886,10 +9882,10 @@ class Ui_MainWindow(object):
         self.search_data.setObjectName(u"search_data")
         sizePolicy.setHeightForWidth(self.search_data.sizePolicy().hasHeightForWidth())
         self.search_data.setSizePolicy(sizePolicy)
-        font25 = QFont()
-        font25.setPointSize(10)
-        font25.setBold(True)
-        self.search_data.setFont(font25)
+        font24 = QFont()
+        font24.setPointSize(10)
+        font24.setBold(True)
+        self.search_data.setFont(font24)
         self.search_data.setStyleSheet(u"QLineEdit {\n"
 "    background-color: transparent; \n"
 "	border: none; \n"
@@ -9925,7 +9921,7 @@ class Ui_MainWindow(object):
 
         self.search_data_start_label_2 = QLabel(self.multi_search_data)
         self.search_data_start_label_2.setObjectName(u"search_data_start_label_2")
-        self.search_data_start_label_2.setFont(font25)
+        self.search_data_start_label_2.setFont(font24)
         self.search_data_start_label_2.setStyleSheet(u"QLabel {\n"
 "    background-color: transparent; \n"
 "	border: none; \n"
@@ -9946,11 +9942,11 @@ class Ui_MainWindow(object):
         self.select_group_name.setObjectName(u"select_group_name")
         sizePolicy.setHeightForWidth(self.select_group_name.sizePolicy().hasHeightForWidth())
         self.select_group_name.setSizePolicy(sizePolicy)
-        font26 = QFont()
-        font26.setFamilies([u"Segoe UI"])
-        font26.setPointSize(10)
-        font26.setBold(True)
-        self.select_group_name.setFont(font26)
+        font25 = QFont()
+        font25.setFamilies([u"Segoe UI"])
+        font25.setPointSize(10)
+        font25.setBold(True)
+        self.select_group_name.setFont(font25)
 
         self.horizontalLayout_4.addWidget(self.select_group_name)
 
@@ -9967,7 +9963,7 @@ class Ui_MainWindow(object):
 
         self.search_data_start_label = QLabel(self.multi_search_data)
         self.search_data_start_label.setObjectName(u"search_data_start_label")
-        self.search_data_start_label.setFont(font25)
+        self.search_data_start_label.setFont(font24)
         self.search_data_start_label.setStyleSheet(u"QLabel {\n"
 "    background-color: transparent; \n"
 "	border: none; \n"
@@ -9984,7 +9980,7 @@ class Ui_MainWindow(object):
         self.search_data_start_edit.setObjectName(u"search_data_start_edit")
         sizePolicy.setHeightForWidth(self.search_data_start_edit.sizePolicy().hasHeightForWidth())
         self.search_data_start_edit.setSizePolicy(sizePolicy)
-        self.search_data_start_edit.setFont(font25)
+        self.search_data_start_edit.setFont(font24)
         self.search_data_start_edit.setStyleSheet(u"QDateTimeEdit{\n"
 "	border: 2px solid rgb(191, 191, 191);\n"
 "	border-radius: 5px;\n"
@@ -10098,7 +10094,7 @@ class Ui_MainWindow(object):
 
         self.search_data_end_label = QLabel(self.multi_search_data)
         self.search_data_end_label.setObjectName(u"search_data_end_label")
-        self.search_data_end_label.setFont(font25)
+        self.search_data_end_label.setFont(font24)
         self.search_data_end_label.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
         self.horizontalLayout_4.addWidget(self.search_data_end_label)
@@ -10107,7 +10103,7 @@ class Ui_MainWindow(object):
         self.search_data_end_edit.setObjectName(u"search_data_end_edit")
         sizePolicy.setHeightForWidth(self.search_data_end_edit.sizePolicy().hasHeightForWidth())
         self.search_data_end_edit.setSizePolicy(sizePolicy)
-        self.search_data_end_edit.setFont(font25)
+        self.search_data_end_edit.setFont(font24)
         self.search_data_end_edit.setStyleSheet(u"QDateTimeEdit{\n"
 "	border: 2px solid rgb(191, 191, 191);\n"
 "	border-radius: 5px;\n"
@@ -10213,10 +10209,10 @@ class Ui_MainWindow(object):
 
         self.label_info = QLabel(self.widget_2)
         self.label_info.setObjectName(u"label_info")
-        font27 = QFont()
-        font27.setPointSize(13)
-        font27.setItalic(True)
-        self.label_info.setFont(font27)
+        font26 = QFont()
+        font26.setPointSize(13)
+        font26.setItalic(True)
+        self.label_info.setFont(font26)
 
         self.horizontalLayout_3.addWidget(self.label_info)
 
@@ -10239,7 +10235,7 @@ class Ui_MainWindow(object):
         self.export_all_tables_to_excel_btn.setObjectName(u"export_all_tables_to_excel_btn")
         sizePolicy.setHeightForWidth(self.export_all_tables_to_excel_btn.sizePolicy().hasHeightForWidth())
         self.export_all_tables_to_excel_btn.setSizePolicy(sizePolicy)
-        self.export_all_tables_to_excel_btn.setFont(font25)
+        self.export_all_tables_to_excel_btn.setFont(font24)
         self.export_all_tables_to_excel_btn.setStyleSheet(u"QPushButton {\n"
 "    background-color: #0B7EC8;\n"
 "    color: white;\n"
@@ -10304,7 +10300,7 @@ class Ui_MainWindow(object):
         __qtablewidgetitem8 = QTableWidgetItem()
         self.list_history.setHorizontalHeaderItem(8, __qtablewidgetitem8)
         self.list_history.setObjectName(u"list_history")
-        self.list_history.setFont(font23)
+        self.list_history.setFont(font22)
         self.list_history.setStyleSheet(u"QTableWidget {\n"
 "    border: 1px solid #BFC8D3; \n"
 "    border-radius: 8px;\n"
@@ -10382,7 +10378,7 @@ class Ui_MainWindow(object):
         __qtablewidgetitem17 = QTableWidgetItem()
         self.list_history_2.setHorizontalHeaderItem(8, __qtablewidgetitem17)
         self.list_history_2.setObjectName(u"list_history_2")
-        self.list_history_2.setFont(font23)
+        self.list_history_2.setFont(font22)
         self.list_history_2.setStyleSheet(u"QTableWidget {\n"
 "    background-color: #ffffff; border: 1px solid #BFC8D3; border-radius: 8px;\n"
 "    gridline-color: #BFC8D3; color: #334155;\n"
@@ -10537,6 +10533,7 @@ class Ui_MainWindow(object):
 
         self.clear_data_btn.setText(QCoreApplication.translate("MainWindow", u" Clear Data", None))
         self.new_data_btn.setText(QCoreApplication.translate("MainWindow", u" Import Data", None))
+        self.code_display.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter name", None))
         self.label_85.setText(QCoreApplication.translate("MainWindow", u"Cycle Setting:", None))
         self.pushButton.setText("")
 #if QT_CONFIG(tooltip)
