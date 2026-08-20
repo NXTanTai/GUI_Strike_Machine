@@ -22,7 +22,6 @@ def get_exe_dir() -> Path:
         return Path(sys.executable).parent
     return Path(__file__).parent
 
-
 def _spawn_loading():
     """Spawn process loading GIF riêng."""
     sig = tempfile.NamedTemporaryFile(delete=False, suffix=".lock")

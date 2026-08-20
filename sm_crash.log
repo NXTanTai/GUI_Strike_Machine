@@ -2274,3 +2274,38 @@ Current thread's C stack trace (most recent call first):
   <cannot get C stack on this system>
 2026-08-17 15:05:28,315 - [main] - WARNING - OS_SIGNAL nhận được: SIGINT (2) -> app bị yêu cầu tắt từ bên ngoài (Task Manager, kill, logoff, tắt máy...).
 2026-08-17 15:05:28,316 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: terminated_by_signal=SIGINT
+
+===== [main] Process start: PID=12832 at 2026-08-20 11:26:08.906599 =====
+2026-08-20 11:26:08,917 - [main] - WARNING - PREVIOUS_SESSION_DID_NOT_EXIT_CLEANLY -> lần chạy trước có thể đã bị kill cứng (Task Manager 'End task', kill -9, mất điện, treo máy...). Thông tin phiên trước: pid=23580
+started_at=2026-08-17T15:05:00.717398
+
+2026-08-20 11:26:08,918 - [main] - INFO - Watchdog initialized. PID=12832 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=24232 at 2026-08-20 11:26:09.353572 =====
+2026-08-20 11:26:09,353 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-08-20 11:26:09,354 - [loading] - INFO - Watchdog initialized. PID=24232 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00003824 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 202 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-08-20 11:26:41,076 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-08-20 11:26:41,085 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Thread 0x00005484 [Thread-7 (_fetch)] (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source_edited.py", line 2024 in _fetch
+  File "C:\Users\automation02\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1024 in run
+  File "C:\Users\automation02\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1082 in _bootstrap_inner
+  File "C:\Users\automation02\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1044 in _bootstrap
+
+Current thread 0x00004f5c (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 325 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-08-20 11:27:06,043 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-08-20 11:27:06,044 - [main] - INFO - app.exec() returned exit_code=0
+2026-08-20 11:27:06,124 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.

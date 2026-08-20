@@ -330,7 +330,7 @@ class StrikeMachine(QMainWindow):
             widget.setFont(f)
 
     def _init_screen(self):
-
+        self._set_style()
         self.ui.home_page_btn.click()
         self.ui.clear_history_search.hide()
         self._set_time_search_data_start_edit()
@@ -340,6 +340,44 @@ class StrikeMachine(QMainWindow):
             Qt.ConnectionType.QueuedConnection
         )
         self.ui.stacked_list_history_page.setCurrentIndex(0)
+
+    def _set_style(self):
+        self.ui.i_o_group_3.setStyleSheet("""
+            QGroupBox {
+                border: 2px solid #E5E5E5;
+                border-radius: 6px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #374151;
+            }
+
+            QLabel {
+                border: none;
+                color: #E6AC2E;
+            }
+
+            QDoubleSpinBox {
+                border: 3px solid #E5E5E5; 
+                border-radius: 10px;
+                color: #10B981;
+            }
+            QLineEdit {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QLineEdit:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+            """)
+        
 
     def _test_marquee_label(self):
         test_text = "Strike Machine System - Running Normally - No Error Detected"
