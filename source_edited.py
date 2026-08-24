@@ -647,7 +647,6 @@ class StrikeMachine(QMainWindow):
         self._db_offset = 0
         self._search_keyword = ""
         self._search_offset = 0
-        self._search_cache = []
         self._search_total = 0
         self._search_db_offset = 0
         self._loading_search_chunk = False
@@ -670,7 +669,6 @@ class StrikeMachine(QMainWindow):
         self.worker_dict = {}
         self.thread_dict = {}
         self.all_data = {}
-        self.ai_data = {}
         self.actual_data = {}
         self.input_data = {}
         self.error_data = {}
@@ -761,48 +759,35 @@ class StrikeMachine(QMainWindow):
         #     self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.all_data))
         #     self.data_web_socket.start()
 
-        self.data_temp_timer = QTimer(self)
-        self.all_timer.append(self.data_temp_timer)
-        self.data_temp_timer.setInterval(500)
-        self.data_temp_timer.timeout.connect(lambda: self._data_temp(self.actual_data))
-        
         self.data_pressure_timer = QTimer(self)
         self.all_timer.append(self.data_pressure_timer)
         self.data_pressure_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
         self.data_pressure_timer.timeout.connect(lambda: self._data_pressure(self.actual_data))
 
-        self.data_cycle_timer = QTimer(self)
-        self.all_timer.append(self.data_cycle_timer)
-        self.data_cycle_timer.setInterval(500)
-        self.data_cycle_timer.timeout.connect(lambda: self._data_cycle(self.actual_data))
-
-        self.data_temp_group_timer = QTimer(self)
-        self.all_timer.append(self.data_temp_group_timer)
-        self.data_temp_group_timer.setInterval(500)
-        self.data_temp_group_timer.timeout.connect(lambda: self._data_temp_group(self.actual_data))
+        self.data_group_timer = QTimer(self)
+        self.all_timer.append(self.data_group_timer)
+        self.data_group_timer.setInterval(500)
+        self.data_group_timer.timeout.connect(lambda: self._data_temp(self.actual_data))
+        self.data_group_timer.timeout.connect(lambda: self._data_cycle(self.actual_data))
+        self.data_group_timer.timeout.connect(lambda: self._data_temp_group(self.actual_data))
         
         self.data_alarm_timer = QTimer(self)
         self.all_timer.append(self.data_alarm_timer)
         self.data_alarm_timer.setInterval(self.db_dict["error_read"] if self.db_dict else 1500)
         self.data_alarm_timer.timeout.connect(lambda: self._data_alarm(self.error_data))
 
-        self.timer_alarm = QTimer(self)
-        self.all_timer.append(self.timer_alarm)
+        # self.timer_alarm = QTimer(self)
+        # self.all_timer.append(self.timer_alarm)
 
-        self.timer_stacked_pressure_page = QTimer(self)
-        self.all_timer.append(self.timer_stacked_pressure_page)
+        # self.timer_stacked_pressure_page = QTimer(self)
+        # self.all_timer.append(self.timer_stacked_pressure_page)
         
         self.chart_timer = QTimer(self)
         self.all_timer.append(self.chart_timer)
         self.chart_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
         self.chart_timer.timeout.connect(self._update_all_charts)
+        self.chart_timer.timeout.connect(self._render_all_charts)
         self.chart_timer.start()
-
-        self._chart_render_timer = QTimer(self)
-        self.all_timer.append(self._chart_render_timer)
-        self._chart_render_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
-        self._chart_render_timer.timeout.connect(self._render_all_charts)
-        self._chart_render_timer.start()
         
         self._history_flush_timer = QTimer(self)
         self.all_timer.append(self._history_flush_timer)
@@ -1628,6 +1613,7 @@ class StrikeMachine(QMainWindow):
             self.ui.list_history.scrollToBottom()
             self.logger.info(f"Total {total_db:,} records, showing last {self._table_display}")
             self._resize_table_columns(self.ui.list_history)
+            self._all_rows_cache.clear()
 
         except Exception as e:
             self.logger.error(f"Error loading history: {e}")
@@ -1759,6 +1745,13 @@ class StrikeMachine(QMainWindow):
 
         table.setUpdatesEnabled(True)
         self._apply_span(self.ui.list_history)
+
+        self._all_rows_cache.extend(ui_rows)
+        overflow = len(self._all_rows_cache) - self._table_display
+        if overflow > 0:
+            del self._all_rows_cache[:overflow]
+            if hasattr(self, "_db_offset"):
+                self._db_offset += overflow
 
         if was_at_bottom:
             table.scrollToBottom()
@@ -2017,6 +2010,7 @@ class StrikeMachine(QMainWindow):
         is_reset = reset
 
         def _fetch():
+            conn = None
             try:
                 conn = sqlite3.connect(str(self.history_db_path), check_same_thread=False)
                 conn.row_factory = sqlite3.Row
@@ -2041,6 +2035,9 @@ class StrikeMachine(QMainWindow):
             except Exception as e:
                 self.logger.error(f"_search_fetch_chunk fetch error: {e}")
                 self._search_result_ready.emit((0, 0, []))
+            finally:
+                if conn:
+                    conn.close()
 
         threading.Thread(target=_fetch, daemon=True).start()
 
@@ -2706,21 +2703,15 @@ class StrikeMachine(QMainWindow):
 
     def _data_actual(self, data: dict):
         with self._data_lock:
-            # print("Actual: ", len(data))
             self.actual_data.update(data)
-            # self.all_data.update(data)
 
     def _data_input(self, data: dict):
         with self._data_lock:
-            # print("Input: ", len(data))
             self.input_data.update(data)
-            # self.all_data.update(data)
 
     def _data_error(self, data: dict):
         with self._data_lock:
-            # print("Error: ", len(data))
             self.error_data.update(data)
-            # self.all_data.update(data)
 
     def _setup_write_plc_thread(
             self, 
@@ -3267,23 +3258,21 @@ class StrikeMachine(QMainWindow):
             return
 
         self.plc_read_connection = connected
-        if connected:
-            self.ui.sys_state_stacked_wid_40.setCurrentIndex(0)
-            self.data_temp_timer.start()
-            self.data_pressure_timer.start()
-            self.data_cycle_timer.start()
-            self.data_temp_group_timer.start()
-        else:
-            self.ui.sys_state_stacked_wid_40.setCurrentIndex(1)
-            if not self._shutting_down:
-                if self.data_temp_timer.isActive():
-                    self.data_temp_timer.stop()
-                if self.data_pressure_timer.isActive():
-                    self.data_pressure_timer.stop()
-                if self.data_cycle_timer.isActive():
-                    self.data_cycle_timer.stop()
-                if self.data_temp_group_timer.isActive():
-                    self.data_temp_group_timer.stop()
+        try:
+            if connected:
+                self.ui.sys_state_stacked_wid_40.setCurrentIndex(0)
+                self.data_pressure_timer.start()
+                self.data_group_timer.start()
+                self.data_alarm_timer.start()
+            else:
+                self.ui.sys_state_stacked_wid_40.setCurrentIndex(1)
+                if not self._shutting_down:
+                    if self.data_group_timer.isActive():
+                        self.data_group_timer.stop()
+                    if self.data_alarm_timer.isActive():
+                        self.data_alarm_timer.stop()
+        except Exception as e:
+            self.logger.error(f"Error occurred while reading PLC status: {e}")
 
     def _write_status_plc(self, connected: bool):
         if connected == self.plc_writer_connection:
