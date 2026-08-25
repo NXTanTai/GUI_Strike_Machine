@@ -342,6 +342,102 @@ class StrikeMachine(QMainWindow):
         self.ui.stacked_list_history_page.setCurrentIndex(0)
 
     def _set_style(self):
+        self._i_o_group_1_style()
+        self._i_o_group_2_style()
+        self._i_o_group_3_style()
+        self._back_page_widget_styles()
+        
+    def _i_o_group_1_style(self):
+        self.ui.i_o_group_1.setStyleSheet("""
+            QWidget{
+                border: 2px solid #E5E5E5; 
+                border-radius: 20px;
+            }
+            QGroupBox {
+                border: 2px solid #E5E5E5;
+                border-radius: 6px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #374151;
+            }
+
+            QLabel {
+                color: #D12323;
+                border: none;
+            }
+
+            QSpinBox {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QSpinBox:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+
+            QLineEdit {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QLineEdit:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+        """)
+
+    def _i_o_group_2_style(self):
+        self.ui.i_o_group_2.setStyleSheet("""
+            QGroupBox {
+                border: 2px solid #E5E5E5;
+                border-radius: 6px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #374151;
+            }
+
+            QLabel {
+                color: #D12323;
+                border: none;
+            }
+
+            QSpinBox {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QSpinBox:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+
+            QLineEdit {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QLineEdit:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+            """)
+
+    def _i_o_group_3_style(self):
         self.ui.i_o_group_3.setStyleSheet("""
             QGroupBox {
                 border: 2px solid #E5E5E5;
@@ -377,7 +473,23 @@ class StrikeMachine(QMainWindow):
                 background-color: white;
             }
             """)
-        
+
+    def _back_page_widget_styles(self):
+        self.ui.back_page_widget.setStyleSheet("""
+            QPushButton {
+                background-color: white;
+                color: #0B7EC8;
+                border: 2px solid #0B7EC8;
+                padding: 4px 4px;
+                border-radius: 8px;
+            }
+            QPushButton:hover {
+                background-color: #F0F9FF;
+            }
+            QPushButton:pressed {
+                background-color: #E0F2FE;
+            }
+        """)
 
     def _test_marquee_label(self):
         test_text = "Strike Machine System - Running Normally - No Error Detected"
@@ -638,6 +750,7 @@ class StrikeMachine(QMainWindow):
         self._pending_rows = []
         self._all_rows_cache = []
         self._table_display = 102
+        self._search_table_display = 1000
         self._displayed_offset = 0
         self.history_db_path = None
         self.conn = None
@@ -2071,7 +2184,7 @@ class StrikeMachine(QMainWindow):
         batch_counter    = existing_batches
 
         table.setUpdatesEnabled(False)
-
+        
         for i, row_data in enumerate(new_chunk):
             current_no = str(row_data[0]) if row_data[0] else ""
             if current_no != prev_no:
@@ -2084,6 +2197,12 @@ class StrikeMachine(QMainWindow):
                     self._make_colored_item(str(value), batch_counter))
 
         table.setUpdatesEnabled(True)
+
+        overflow = table.rowCount() - self._search_table_display
+        if overflow > 0:
+            for _ in range(overflow):
+                table.removeRow(table.rowCount() - 1)
+
         self._apply_span(table)
 
         table.scrollTo(

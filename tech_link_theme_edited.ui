@@ -910,187 +910,8 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>2</number>
+              <number>0</number>
              </property>
-             <widget class="QWidget" name="menu_page">
-              <property name="styleSheet">
-               <string notr="true">QFrame {	
-	background: qlineargradient(
-                x1:0, y1:0,
-                x2:1, y2:0,
-                stop:0 #f8f9fc,
-                stop:1 #bfe2f7
-            );
-	border-radius: 20px;
-}
-QFrame:hover {	
-	border: 1px solid rgb(0, 170, 255);
-}</string>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_14">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,1" columnstretch="1,1">
-                 <property name="rightMargin">
-                  <number>3</number>
-                 </property>
-                 <property name="bottomMargin">
-                  <number>3</number>
-                 </property>
-                 <property name="spacing">
-                  <number>5</number>
-                 </property>
-                 <item row="0" column="1">
-                  <widget class="QFrame" name="card_frame_7">
-                   <property name="styleSheet">
-                    <string notr="true">color: black;</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::NoFrame</enum>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_21" stretch="0">
-                    <property name="spacing">
-                     <number>5</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>5</number>
-                    </property>
-                    <item>
-                     <layout class="QVBoxLayout" name="card_pressure_1">
-                      <property name="spacing">
-                       <number>10</number>
-                      </property>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QFrame" name="card_frame_8">
-                   <property name="styleSheet">
-                    <string notr="true">color: black;</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::NoFrame</enum>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_25" stretch="0">
-                    <property name="spacing">
-                     <number>5</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>5</number>
-                    </property>
-                    <item>
-                     <layout class="QVBoxLayout" name="card_pressure_2">
-                      <property name="spacing">
-                       <number>10</number>
-                      </property>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QFrame" name="card_frame_9">
-                   <property name="styleSheet">
-                    <string notr="true">color: black;</string>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::NoFrame</enum>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_26" stretch="0">
-                    <property name="spacing">
-                     <number>5</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>5</number>
-                    </property>
-                    <item>
-                     <layout class="QVBoxLayout" name="card_pressure_3">
-                      <property name="spacing">
-                       <number>10</number>
-                      </property>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QFrame" name="card_frame_6">
-                   <property name="styleSheet">
-                    <string notr="true"/>
-                   </property>
-                   <property name="frameShape">
-                    <enum>QFrame::NoFrame</enum>
-                   </property>
-                   <layout class="QVBoxLayout" name="verticalLayout_19" stretch="0">
-                    <property name="spacing">
-                     <number>5</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>5</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>5</number>
-                    </property>
-                    <item>
-                     <layout class="QVBoxLayout" name="card_temperature">
-                      <property name="spacing">
-                       <number>10</number>
-                      </property>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
              <widget class="QWidget" name="temp_press_page">
               <layout class="QVBoxLayout" name="verticalLayout_12">
                <property name="spacing">
@@ -10670,7 +10491,7 @@ QSpinBox
                                  <number>0</number>
                                 </property>
                                 <property name="topMargin">
-                                 <number>5</number>
+                                 <number>3</number>
                                 </property>
                                 <property name="rightMargin">
                                  <number>4</number>
@@ -16408,6 +16229,185 @@ QPushButton:checked {
                </item>
               </layout>
              </widget>
+             <widget class="QWidget" name="menu_page">
+              <property name="styleSheet">
+               <string notr="true">QFrame {	
+	background: qlineargradient(
+                x1:0, y1:0,
+                x2:1, y2:0,
+                stop:0 #f8f9fc,
+                stop:1 #bfe2f7
+            );
+	border-radius: 20px;
+}
+QFrame:hover {	
+	border: 1px solid rgb(0, 170, 255);
+}</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_14">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,1" columnstretch="1,1">
+                 <property name="rightMargin">
+                  <number>3</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>3</number>
+                 </property>
+                 <property name="spacing">
+                  <number>5</number>
+                 </property>
+                 <item row="0" column="1">
+                  <widget class="QFrame" name="card_frame_7">
+                   <property name="styleSheet">
+                    <string notr="true">color: black;</string>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_21" stretch="0">
+                    <property name="spacing">
+                     <number>5</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <layout class="QVBoxLayout" name="card_pressure_1">
+                      <property name="spacing">
+                       <number>10</number>
+                      </property>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QFrame" name="card_frame_8">
+                   <property name="styleSheet">
+                    <string notr="true">color: black;</string>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_25" stretch="0">
+                    <property name="spacing">
+                     <number>5</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <layout class="QVBoxLayout" name="card_pressure_2">
+                      <property name="spacing">
+                       <number>10</number>
+                      </property>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QFrame" name="card_frame_9">
+                   <property name="styleSheet">
+                    <string notr="true">color: black;</string>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_26" stretch="0">
+                    <property name="spacing">
+                     <number>5</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <layout class="QVBoxLayout" name="card_pressure_3">
+                      <property name="spacing">
+                       <number>10</number>
+                      </property>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QFrame" name="card_frame_6">
+                   <property name="styleSheet">
+                    <string notr="true"/>
+                   </property>
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_19" stretch="0">
+                    <property name="spacing">
+                     <number>5</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <layout class="QVBoxLayout" name="card_temperature">
+                      <property name="spacing">
+                       <number>10</number>
+                      </property>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
              <widget class="QWidget" name="device_page">
               <layout class="QVBoxLayout" name="verticalLayout_5">
                <property name="leftMargin">
@@ -17894,45 +17894,7 @@ QFrame:hover {
                               </font>
                              </property>
                              <property name="styleSheet">
-                              <string notr="true">QGroupBox {
-    border: 2px solid #E5E5E5;
-    border-radius: 6px;
-    margin-top: 10px;
-    padding-top: 10px;
-}
-QGroupBox::title {
-    subcontrol-origin: margin;
-    left: 10px;
-    padding: 0 5px 0 5px;
-    color: #374151;
-}
-
-QLabel {
-	color: #D12323;
-	border: none;
-}
-
-QSpinBox {
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    padding: 8px 12px;
-    background-color: #F9FAFB;
-}
-QSpinBox:focus {
-    border: 2px solid #0B7EC8;
-    background-color: white;
-}
-
-QLineEdit {
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    padding: 8px 12px;
-    background-color: #F9FAFB;
-}
-QLineEdit:focus {
-    border: 2px solid #0B7EC8;
-    background-color: white;
-}</string>
+                              <string notr="true"/>
                              </property>
                              <property name="title">
                               <string>PLC Data</string>
@@ -18171,49 +18133,7 @@ QPushButton:checked {
                               </font>
                              </property>
                              <property name="styleSheet">
-                              <string notr="true">QWidget{
-	border: 2px solid #E5E5E5; 
-	border-radius: 20px;
-}
-QGroupBox {
-    border: 2px solid #E5E5E5;
-    border-radius: 6px;
-    margin-top: 10px;
-    padding-top: 10px;
-}
-QGroupBox::title {
-    subcontrol-origin: margin;
-    left: 10px;
-    padding: 0 5px 0 5px;
-    color: #374151;
-}
-
-QLabel {
-	color: #D12323;
-	border: none;
-}
-
-QSpinBox {
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    padding: 8px 12px;
-    background-color: #F9FAFB;
-}
-QSpinBox:focus {
-    border: 2px solid #0B7EC8;
-    background-color: white;
-}
-
-QLineEdit {
-    border: 1px solid #D1D5DB;
-    border-radius: 6px;
-    padding: 8px 12px;
-    background-color: #F9FAFB;
-}
-QLineEdit:focus {
-    border: 2px solid #0B7EC8;
-    background-color: white;
-}</string>
+                              <string notr="true"/>
                              </property>
                              <property name="title">
                               <string>DI</string>
@@ -20721,7 +20641,7 @@ QLineEdit:focus {
                             <number>0</number>
                            </property>
                            <item>
-                            <widget class="QWidget" name="widget_30" native="true">
+                            <widget class="QWidget" name="back_page_widget" native="true">
                              <property name="maximumSize">
                               <size>
                                <width>16777215</width>
@@ -20729,19 +20649,7 @@ QLineEdit:focus {
                               </size>
                              </property>
                              <property name="styleSheet">
-                              <string notr="true">QPushButton {
-    background-color: white;
-    color: #0B7EC8;
-    border: 2px solid #0B7EC8;
-    padding: 4px 4px;
-    border-radius: 8px;
-}
-QPushButton:hover {
-    background-color: #F0F9FF;
-}
-QPushButton:pressed {
-    background-color: #E0F2FE;
-}</string>
+                              <string notr="true"/>
                              </property>
                              <layout class="QHBoxLayout" name="horizontalLayout_30" stretch="1,1">
                               <property name="spacing">

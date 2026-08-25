@@ -493,103 +493,6 @@ class Ui_MainWindow(object):
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
         self.stackedWidget_2 = QStackedWidget(self.body_frame)
         self.stackedWidget_2.setObjectName(u"stackedWidget_2")
-        self.menu_page = QWidget()
-        self.menu_page.setObjectName(u"menu_page")
-        self.menu_page.setStyleSheet(u"QFrame {	\n"
-"	background: qlineargradient(\n"
-"                x1:0, y1:0,\n"
-"                x2:1, y2:0,\n"
-"                stop:0 #f8f9fc,\n"
-"                stop:1 #bfe2f7\n"
-"            );\n"
-"	border-radius: 20px;\n"
-"}\n"
-"QFrame:hover {	\n"
-"	border: 1px solid rgb(0, 170, 255);\n"
-"}")
-        self.verticalLayout_14 = QVBoxLayout(self.menu_page)
-        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
-        self.verticalLayout_14.setContentsMargins(0, 0, 0, 0)
-        self.gridLayout_2 = QGridLayout()
-        self.gridLayout_2.setSpacing(5)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.gridLayout_2.setContentsMargins(-1, -1, 3, 3)
-        self.card_frame_7 = QFrame(self.menu_page)
-        self.card_frame_7.setObjectName(u"card_frame_7")
-        self.card_frame_7.setStyleSheet(u"color: black;")
-        self.card_frame_7.setFrameShape(QFrame.NoFrame)
-        self.verticalLayout_21 = QVBoxLayout(self.card_frame_7)
-        self.verticalLayout_21.setSpacing(5)
-        self.verticalLayout_21.setObjectName(u"verticalLayout_21")
-        self.verticalLayout_21.setContentsMargins(5, 5, 5, 5)
-        self.card_pressure_1 = QVBoxLayout()
-        self.card_pressure_1.setSpacing(10)
-        self.card_pressure_1.setObjectName(u"card_pressure_1")
-
-        self.verticalLayout_21.addLayout(self.card_pressure_1)
-
-
-        self.gridLayout_2.addWidget(self.card_frame_7, 0, 1, 1, 1)
-
-        self.card_frame_8 = QFrame(self.menu_page)
-        self.card_frame_8.setObjectName(u"card_frame_8")
-        self.card_frame_8.setStyleSheet(u"color: black;")
-        self.card_frame_8.setFrameShape(QFrame.NoFrame)
-        self.verticalLayout_25 = QVBoxLayout(self.card_frame_8)
-        self.verticalLayout_25.setSpacing(5)
-        self.verticalLayout_25.setObjectName(u"verticalLayout_25")
-        self.verticalLayout_25.setContentsMargins(5, 5, 5, 5)
-        self.card_pressure_2 = QVBoxLayout()
-        self.card_pressure_2.setSpacing(10)
-        self.card_pressure_2.setObjectName(u"card_pressure_2")
-
-        self.verticalLayout_25.addLayout(self.card_pressure_2)
-
-
-        self.gridLayout_2.addWidget(self.card_frame_8, 1, 0, 1, 1)
-
-        self.card_frame_9 = QFrame(self.menu_page)
-        self.card_frame_9.setObjectName(u"card_frame_9")
-        self.card_frame_9.setStyleSheet(u"color: black;")
-        self.card_frame_9.setFrameShape(QFrame.NoFrame)
-        self.verticalLayout_26 = QVBoxLayout(self.card_frame_9)
-        self.verticalLayout_26.setSpacing(5)
-        self.verticalLayout_26.setObjectName(u"verticalLayout_26")
-        self.verticalLayout_26.setContentsMargins(5, 5, 5, 5)
-        self.card_pressure_3 = QVBoxLayout()
-        self.card_pressure_3.setSpacing(10)
-        self.card_pressure_3.setObjectName(u"card_pressure_3")
-
-        self.verticalLayout_26.addLayout(self.card_pressure_3)
-
-
-        self.gridLayout_2.addWidget(self.card_frame_9, 1, 1, 1, 1)
-
-        self.card_frame_6 = QFrame(self.menu_page)
-        self.card_frame_6.setObjectName(u"card_frame_6")
-        self.card_frame_6.setStyleSheet(u"")
-        self.card_frame_6.setFrameShape(QFrame.NoFrame)
-        self.verticalLayout_19 = QVBoxLayout(self.card_frame_6)
-        self.verticalLayout_19.setSpacing(5)
-        self.verticalLayout_19.setObjectName(u"verticalLayout_19")
-        self.verticalLayout_19.setContentsMargins(5, 5, 5, 5)
-        self.card_temperature = QVBoxLayout()
-        self.card_temperature.setSpacing(10)
-        self.card_temperature.setObjectName(u"card_temperature")
-
-        self.verticalLayout_19.addLayout(self.card_temperature)
-
-
-        self.gridLayout_2.addWidget(self.card_frame_6, 0, 0, 1, 1)
-
-        self.gridLayout_2.setRowStretch(0, 1)
-        self.gridLayout_2.setRowStretch(1, 1)
-        self.gridLayout_2.setColumnStretch(0, 1)
-        self.gridLayout_2.setColumnStretch(1, 1)
-
-        self.verticalLayout_14.addLayout(self.gridLayout_2)
-
-        self.stackedWidget_2.addWidget(self.menu_page)
         self.temp_press_page = QWidget()
         self.temp_press_page.setObjectName(u"temp_press_page")
         self.verticalLayout_12 = QVBoxLayout(self.temp_press_page)
@@ -5135,7 +5038,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_36 = QVBoxLayout(self.page)
         self.verticalLayout_36.setSpacing(5)
         self.verticalLayout_36.setObjectName(u"verticalLayout_36")
-        self.verticalLayout_36.setContentsMargins(0, 5, 4, 3)
+        self.verticalLayout_36.setContentsMargins(0, 3, 4, 3)
         self.start_stop_btn = QPushButton(self.page)
         self.start_stop_btn.setObjectName(u"start_stop_btn")
         sizePolicy.setHeightForWidth(self.start_stop_btn.sizePolicy().hasHeightForWidth())
@@ -7831,6 +7734,103 @@ class Ui_MainWindow(object):
         self.verticalLayout_12.addWidget(self.stackedWidget)
 
         self.stackedWidget_2.addWidget(self.temp_press_page)
+        self.menu_page = QWidget()
+        self.menu_page.setObjectName(u"menu_page")
+        self.menu_page.setStyleSheet(u"QFrame {	\n"
+"	background: qlineargradient(\n"
+"                x1:0, y1:0,\n"
+"                x2:1, y2:0,\n"
+"                stop:0 #f8f9fc,\n"
+"                stop:1 #bfe2f7\n"
+"            );\n"
+"	border-radius: 20px;\n"
+"}\n"
+"QFrame:hover {	\n"
+"	border: 1px solid rgb(0, 170, 255);\n"
+"}")
+        self.verticalLayout_14 = QVBoxLayout(self.menu_page)
+        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
+        self.verticalLayout_14.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout_2 = QGridLayout()
+        self.gridLayout_2.setSpacing(5)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.gridLayout_2.setContentsMargins(-1, -1, 3, 3)
+        self.card_frame_7 = QFrame(self.menu_page)
+        self.card_frame_7.setObjectName(u"card_frame_7")
+        self.card_frame_7.setStyleSheet(u"color: black;")
+        self.card_frame_7.setFrameShape(QFrame.NoFrame)
+        self.verticalLayout_21 = QVBoxLayout(self.card_frame_7)
+        self.verticalLayout_21.setSpacing(5)
+        self.verticalLayout_21.setObjectName(u"verticalLayout_21")
+        self.verticalLayout_21.setContentsMargins(5, 5, 5, 5)
+        self.card_pressure_1 = QVBoxLayout()
+        self.card_pressure_1.setSpacing(10)
+        self.card_pressure_1.setObjectName(u"card_pressure_1")
+
+        self.verticalLayout_21.addLayout(self.card_pressure_1)
+
+
+        self.gridLayout_2.addWidget(self.card_frame_7, 0, 1, 1, 1)
+
+        self.card_frame_8 = QFrame(self.menu_page)
+        self.card_frame_8.setObjectName(u"card_frame_8")
+        self.card_frame_8.setStyleSheet(u"color: black;")
+        self.card_frame_8.setFrameShape(QFrame.NoFrame)
+        self.verticalLayout_25 = QVBoxLayout(self.card_frame_8)
+        self.verticalLayout_25.setSpacing(5)
+        self.verticalLayout_25.setObjectName(u"verticalLayout_25")
+        self.verticalLayout_25.setContentsMargins(5, 5, 5, 5)
+        self.card_pressure_2 = QVBoxLayout()
+        self.card_pressure_2.setSpacing(10)
+        self.card_pressure_2.setObjectName(u"card_pressure_2")
+
+        self.verticalLayout_25.addLayout(self.card_pressure_2)
+
+
+        self.gridLayout_2.addWidget(self.card_frame_8, 1, 0, 1, 1)
+
+        self.card_frame_9 = QFrame(self.menu_page)
+        self.card_frame_9.setObjectName(u"card_frame_9")
+        self.card_frame_9.setStyleSheet(u"color: black;")
+        self.card_frame_9.setFrameShape(QFrame.NoFrame)
+        self.verticalLayout_26 = QVBoxLayout(self.card_frame_9)
+        self.verticalLayout_26.setSpacing(5)
+        self.verticalLayout_26.setObjectName(u"verticalLayout_26")
+        self.verticalLayout_26.setContentsMargins(5, 5, 5, 5)
+        self.card_pressure_3 = QVBoxLayout()
+        self.card_pressure_3.setSpacing(10)
+        self.card_pressure_3.setObjectName(u"card_pressure_3")
+
+        self.verticalLayout_26.addLayout(self.card_pressure_3)
+
+
+        self.gridLayout_2.addWidget(self.card_frame_9, 1, 1, 1, 1)
+
+        self.card_frame_6 = QFrame(self.menu_page)
+        self.card_frame_6.setObjectName(u"card_frame_6")
+        self.card_frame_6.setStyleSheet(u"")
+        self.card_frame_6.setFrameShape(QFrame.NoFrame)
+        self.verticalLayout_19 = QVBoxLayout(self.card_frame_6)
+        self.verticalLayout_19.setSpacing(5)
+        self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.verticalLayout_19.setContentsMargins(5, 5, 5, 5)
+        self.card_temperature = QVBoxLayout()
+        self.card_temperature.setSpacing(10)
+        self.card_temperature.setObjectName(u"card_temperature")
+
+        self.verticalLayout_19.addLayout(self.card_temperature)
+
+
+        self.gridLayout_2.addWidget(self.card_frame_6, 0, 0, 1, 1)
+
+        self.gridLayout_2.setRowStretch(0, 1)
+        self.gridLayout_2.setRowStretch(1, 1)
+        self.gridLayout_2.setColumnStretch(0, 1)
+        self.gridLayout_2.setColumnStretch(1, 1)
+
+        self.verticalLayout_14.addLayout(self.gridLayout_2)
+
+        self.stackedWidget_2.addWidget(self.menu_page)
         self.device_page = QWidget()
         self.device_page.setObjectName(u"device_page")
         self.verticalLayout_5 = QVBoxLayout(self.device_page)
@@ -8509,45 +8509,7 @@ class Ui_MainWindow(object):
         self.i_o_group_2 = QGroupBox(self.widget_3)
         self.i_o_group_2.setObjectName(u"i_o_group_2")
         self.i_o_group_2.setFont(font20)
-        self.i_o_group_2.setStyleSheet(u"QGroupBox {\n"
-"    border: 2px solid #E5E5E5;\n"
-"    border-radius: 6px;\n"
-"    margin-top: 10px;\n"
-"    padding-top: 10px;\n"
-"}\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    left: 10px;\n"
-"    padding: 0 5px 0 5px;\n"
-"    color: #374151;\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"	color: #D12323;\n"
-"	border: none;\n"
-"}\n"
-"\n"
-"QSpinBox {\n"
-"    border: 1px solid #D1D5DB;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    background-color: #F9FAFB;\n"
-"}\n"
-"QSpinBox:focus {\n"
-"    border: 2px solid #0B7EC8;\n"
-"    background-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit {\n"
-"    border: 1px solid #D1D5DB;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    background-color: #F9FAFB;\n"
-"}\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #0B7EC8;\n"
-"    background-color: white;\n"
-"}")
+        self.i_o_group_2.setStyleSheet(u"")
         self.gridLayout_6 = QGridLayout(self.i_o_group_2)
         self.gridLayout_6.setSpacing(10)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
@@ -8658,49 +8620,7 @@ class Ui_MainWindow(object):
         self.i_o_group_1 = QGroupBox(self.widget_26)
         self.i_o_group_1.setObjectName(u"i_o_group_1")
         self.i_o_group_1.setFont(font20)
-        self.i_o_group_1.setStyleSheet(u"QWidget{\n"
-"	border: 2px solid #E5E5E5; \n"
-"	border-radius: 20px;\n"
-"}\n"
-"QGroupBox {\n"
-"    border: 2px solid #E5E5E5;\n"
-"    border-radius: 6px;\n"
-"    margin-top: 10px;\n"
-"    padding-top: 10px;\n"
-"}\n"
-"QGroupBox::title {\n"
-"    subcontrol-origin: margin;\n"
-"    left: 10px;\n"
-"    padding: 0 5px 0 5px;\n"
-"    color: #374151;\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"	color: #D12323;\n"
-"	border: none;\n"
-"}\n"
-"\n"
-"QSpinBox {\n"
-"    border: 1px solid #D1D5DB;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    background-color: #F9FAFB;\n"
-"}\n"
-"QSpinBox:focus {\n"
-"    border: 2px solid #0B7EC8;\n"
-"    background-color: white;\n"
-"}\n"
-"\n"
-"QLineEdit {\n"
-"    border: 1px solid #D1D5DB;\n"
-"    border-radius: 6px;\n"
-"    padding: 8px 12px;\n"
-"    background-color: #F9FAFB;\n"
-"}\n"
-"QLineEdit:focus {\n"
-"    border: 2px solid #0B7EC8;\n"
-"    background-color: white;\n"
-"}")
+        self.i_o_group_1.setStyleSheet(u"")
         self.gridLayout_7 = QGridLayout(self.i_o_group_1)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.gridLayout_7.setHorizontalSpacing(10)
@@ -9693,27 +9613,15 @@ class Ui_MainWindow(object):
         self.horizontalLayout_27.setSpacing(10)
         self.horizontalLayout_27.setObjectName(u"horizontalLayout_27")
         self.horizontalLayout_27.setContentsMargins(0, 0, 0, 0)
-        self.widget_30 = QWidget(self.widget_29)
-        self.widget_30.setObjectName(u"widget_30")
-        self.widget_30.setMaximumSize(QSize(16777215, 16777215))
-        self.widget_30.setStyleSheet(u"QPushButton {\n"
-"    background-color: white;\n"
-"    color: #0B7EC8;\n"
-"    border: 2px solid #0B7EC8;\n"
-"    padding: 4px 4px;\n"
-"    border-radius: 8px;\n"
-"}\n"
-"QPushButton:hover {\n"
-"    background-color: #F0F9FF;\n"
-"}\n"
-"QPushButton:pressed {\n"
-"    background-color: #E0F2FE;\n"
-"}")
-        self.horizontalLayout_30 = QHBoxLayout(self.widget_30)
+        self.back_page_widget = QWidget(self.widget_29)
+        self.back_page_widget.setObjectName(u"back_page_widget")
+        self.back_page_widget.setMaximumSize(QSize(16777215, 16777215))
+        self.back_page_widget.setStyleSheet(u"")
+        self.horizontalLayout_30 = QHBoxLayout(self.back_page_widget)
         self.horizontalLayout_30.setSpacing(10)
         self.horizontalLayout_30.setObjectName(u"horizontalLayout_30")
         self.horizontalLayout_30.setContentsMargins(10, 0, 10, 10)
-        self.back_connection_page_btn = QPushButton(self.widget_30)
+        self.back_connection_page_btn = QPushButton(self.back_page_widget)
         self.back_connection_page_btn.setObjectName(u"back_connection_page_btn")
         sizePolicy.setHeightForWidth(self.back_connection_page_btn.sizePolicy().hasHeightForWidth())
         self.back_connection_page_btn.setSizePolicy(sizePolicy)
@@ -9725,7 +9633,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_30.addWidget(self.back_connection_page_btn)
 
-        self.back_home_page_btn = QPushButton(self.widget_30)
+        self.back_home_page_btn = QPushButton(self.back_page_widget)
         self.back_home_page_btn.setObjectName(u"back_home_page_btn")
         sizePolicy.setHeightForWidth(self.back_home_page_btn.sizePolicy().hasHeightForWidth())
         self.back_home_page_btn.setSizePolicy(sizePolicy)
@@ -9740,7 +9648,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_30.setStretch(0, 1)
         self.horizontalLayout_30.setStretch(1, 1)
 
-        self.horizontalLayout_27.addWidget(self.widget_30)
+        self.horizontalLayout_27.addWidget(self.back_page_widget)
 
 
         self.verticalLayout_28.addWidget(self.widget_29)
@@ -10413,7 +10321,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(2)
+        self.stackedWidget_2.setCurrentIndex(0)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_pressure_sv_a_11.setCurrentIndex(1)
