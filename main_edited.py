@@ -1,4 +1,4 @@
-# pyinstaller --onedir --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
+# pyinstaller --onedir --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main_edited.py
 
 import multiprocessing
 import subprocess
@@ -8,7 +8,6 @@ import logging
 import os
 import sys
 from pathlib import Path
-
 from crash_watchdog import setup_crash_watchdog
 
 LOADING_ENV         = "STRIKE_MACHINE_LOADING"

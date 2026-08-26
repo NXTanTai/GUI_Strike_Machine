@@ -14,7 +14,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>724</height>
+    <height>725</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -910,7 +910,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>0</number>
+              <number>3</number>
              </property>
              <widget class="QWidget" name="temp_press_page">
               <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -1340,7 +1340,7 @@ QPushButton:hover {
 }</string>
                  </property>
                  <property name="currentIndex">
-                  <number>0</number>
+                  <number>1</number>
                  </property>
                  <widget class="QWidget" name="pressure_page">
                   <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -13254,7 +13254,7 @@ QSpinBox
                             <string notr="true">color: rgb(0, 0, 0);</string>
                            </property>
                            <property name="text">
-                            <string>Temperature Oven</string>
+                            <string>Furnace</string>
                            </property>
                            <property name="alignment">
                             <set>Qt::AlignCenter</set>
@@ -18018,7 +18018,7 @@ QFrame:hover {
                                  <string/>
                                 </property>
                                 <property name="placeholderText">
-                                 <string notr="true">Enter Path Folder</string>
+                                 <string notr="true"> Enter Path Folder</string>
                                 </property>
                                </widget>
                               </item>
@@ -18041,7 +18041,7 @@ QFrame:hover {
                                  <string/>
                                 </property>
                                 <property name="placeholderText">
-                                 <string notr="true">Enter IP Address: 172.16.100.***</string>
+                                 <string notr="true"> Enter IP Address: 172.16.100.***</string>
                                 </property>
                                </widget>
                               </item>
@@ -18102,11 +18102,11 @@ QPushButton:checked {
                          </widget>
                         </item>
                         <item>
-                         <widget class="QWidget" name="widget_26" native="true">
+                         <widget class="QWidget" name="i_o_group_widget" native="true">
                           <property name="styleSheet">
                            <string notr="true"/>
                           </property>
-                          <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="0,2">
+                          <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="1,2">
                            <property name="spacing">
                             <number>10</number>
                            </property>
@@ -21564,7 +21564,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
                            </column>
                            <column>
                             <property name="text">
-                             <string>T-Oven.</string>
+                             <string>T-Furnace.</string>
                             </property>
                             <property name="textAlignment">
                              <set>AlignCenter</set>
@@ -21691,7 +21691,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
                            </column>
                            <column>
                             <property name="text">
-                             <string>T-Oven.</string>
+                             <string>T-Furnace.</string>
                             </property>
                            </column>
                            <column>

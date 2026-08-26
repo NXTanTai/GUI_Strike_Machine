@@ -35,7 +35,7 @@ class Ui_MainWindow(object):
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setWindowModality(Qt.NonModal)
         MainWindow.setEnabled(True)
-        MainWindow.resize(1024, 724)
+        MainWindow.resize(1024, 725)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -8557,7 +8557,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.db_file_path_edit.sizePolicy().hasHeightForWidth())
         self.db_file_path_edit.setSizePolicy(sizePolicy)
         self.db_file_path_edit.setFont(font21)
-        self.db_file_path_edit.setPlaceholderText(u"Enter Path Folder")
+        self.db_file_path_edit.setPlaceholderText(u" Enter Path Folder")
 
         self.gridLayout_6.addWidget(self.db_file_path_edit, 0, 1, 1, 1)
 
@@ -8566,7 +8566,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
         self.plc_ip_address_edit.setSizePolicy(sizePolicy)
         self.plc_ip_address_edit.setFont(font21)
-        self.plc_ip_address_edit.setPlaceholderText(u"Enter IP Address: 172.16.100.***")
+        self.plc_ip_address_edit.setPlaceholderText(u" Enter IP Address: 172.16.100.***")
 
         self.gridLayout_6.addWidget(self.plc_ip_address_edit, 1, 1, 1, 1)
 
@@ -8610,14 +8610,14 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_28.addWidget(self.widget_3)
 
-        self.widget_26 = QWidget(self.device_frame_2)
-        self.widget_26.setObjectName(u"widget_26")
-        self.widget_26.setStyleSheet(u"")
-        self.horizontalLayout_24 = QHBoxLayout(self.widget_26)
+        self.i_o_group_widget = QWidget(self.device_frame_2)
+        self.i_o_group_widget.setObjectName(u"i_o_group_widget")
+        self.i_o_group_widget.setStyleSheet(u"")
+        self.horizontalLayout_24 = QHBoxLayout(self.i_o_group_widget)
         self.horizontalLayout_24.setSpacing(10)
         self.horizontalLayout_24.setObjectName(u"horizontalLayout_24")
         self.horizontalLayout_24.setContentsMargins(10, 0, 10, 10)
-        self.i_o_group_1 = QGroupBox(self.widget_26)
+        self.i_o_group_1 = QGroupBox(self.i_o_group_widget)
         self.i_o_group_1.setObjectName(u"i_o_group_1")
         self.i_o_group_1.setFont(font20)
         self.i_o_group_1.setStyleSheet(u"")
@@ -9276,7 +9276,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_24.addWidget(self.i_o_group_1)
 
-        self.i_o_group_3 = QGroupBox(self.widget_26)
+        self.i_o_group_3 = QGroupBox(self.i_o_group_widget)
         self.i_o_group_3.setObjectName(u"i_o_group_3")
         self.i_o_group_3.setFont(font20)
         self.i_o_group_3.setStyleSheet(u"")
@@ -9603,9 +9603,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_24.addWidget(self.i_o_group_3)
 
+        self.horizontalLayout_24.setStretch(0, 1)
         self.horizontalLayout_24.setStretch(1, 2)
 
-        self.verticalLayout_28.addWidget(self.widget_26)
+        self.verticalLayout_28.addWidget(self.i_o_group_widget)
 
         self.widget_29 = QWidget(self.device_frame_2)
         self.widget_29.setObjectName(u"widget_29")
@@ -10321,9 +10322,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(0)
+        self.stackedWidget_2.setCurrentIndex(3)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
         self.stacked_pressure_sv_a_11.setCurrentIndex(1)
         self.stacked_pressure_sv_c_11.setCurrentIndex(1)
         self.stacked_pressure_sv_b_11.setCurrentIndex(1)
@@ -10665,7 +10666,7 @@ class Ui_MainWindow(object):
         self.bt_t2_offset_value.setSuffix("")
         self.label_346.setText(QCoreApplication.translate("MainWindow", u"\u00b0C", None))
         self.label_347.setText(QCoreApplication.translate("MainWindow", u"\u00b0F", None))
-        self.label_139.setText(QCoreApplication.translate("MainWindow", u"Temperature Oven", None))
+        self.label_139.setText(QCoreApplication.translate("MainWindow", u"Furnace", None))
         self.label_183.setText(QCoreApplication.translate("MainWindow", u"Temperature C", None))
         self.label_173.setText(QCoreApplication.translate("MainWindow", u"Temperature B", None))
         self.ct_sv.setPrefix("")
@@ -10847,7 +10848,7 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem3 = self.list_history.horizontalHeaderItem(3)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Pressure.", None))
         ___qtablewidgetitem4 = self.list_history.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"T-Oven.", None))
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"T-Furnace.", None))
         ___qtablewidgetitem5 = self.list_history.horizontalHeaderItem(5)
         ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Front.", None))
         ___qtablewidgetitem6 = self.list_history.horizontalHeaderItem(6)
@@ -10865,7 +10866,7 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem12 = self.list_history_2.horizontalHeaderItem(3)
         ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"Pressure.", None))
         ___qtablewidgetitem13 = self.list_history_2.horizontalHeaderItem(4)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"T-Oven.", None))
+        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"T-Furnace.", None))
         ___qtablewidgetitem14 = self.list_history_2.horizontalHeaderItem(5)
         ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"Front.", None))
         ___qtablewidgetitem15 = self.list_history_2.horizontalHeaderItem(6)

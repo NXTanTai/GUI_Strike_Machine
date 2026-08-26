@@ -1,11 +1,4 @@
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\hose_icon.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
-
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
-# pyinstaller --onefile --noconsole --name="cmd" --icon=icons\cmd.png --add-data "icons;icons" --distpath "Apps" console_window.py
-
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --hidden-import=web_server --hidden-import=uvicorn --hidden-import=uvicorn.logging --hidden-import=uvicorn.loops --hidden-import=uvicorn.loops.auto --hidden-import=uvicorn.protocols --hidden-import=uvicorn.protocols.http --hidden-import=uvicorn.protocols.http.auto --hidden-import=uvicorn.protocols.websockets --hidden-import=uvicorn.protocols.websockets.auto --hidden-import=uvicorn.lifespan --hidden-import=uvicorn.lifespan.on --hidden-import=fastapi --hidden-import=anyio --hidden-import=anyio.backends.asyncio --distpath "Apps" main.py
-
-# pyinstaller --onefile --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main.py
+# pyinstaller --onedir --noconsole --name="Strike Machine App" --icon=icons\strike_machine.png --add-binary "lib\snap7.dll;." --add-data "gifs;gifs" --add-data "tech_link_theme_vn.qm;." --add-data "tech_link_theme_cn.qm;." --distpath "Apps" main_edited.py
 
 import multiprocessing
 import subprocess
@@ -15,20 +8,28 @@ import logging
 import os
 import sys
 from pathlib import Path
-
 from crash_watchdog import setup_crash_watchdog
 
-LOADING_ENV   = 'STRIKE_MACHINE_LOADING'
-LOADING_PAUSE = 'STRIKE_MACHINE_LOADING_PAUSE'
+LOADING_ENV         = "STRIKE_MACHINE_LOADING"
+LOADING_PAUSE       = "STRIKE_MACHINE_LOADING_PAUSE"
+SINGLE_INSTANCE_KEY = "StrikeMachine_SingleInstance"
+LOCAL_SERVER_NAME   = "StrikeMachine_LocalServer"
+
+def get_exe_dir() -> Path:
+    """Thư mục chứa file .exe (hoặc .py khi dev)."""
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).parent
+    return Path(__file__).parent
 
 def _spawn_loading():
-    sig   = tempfile.NamedTemporaryFile(delete=False, suffix='.lock')
-    pause = tempfile.NamedTemporaryFile(delete=False, suffix='.pause')
+    """Spawn process loading GIF riêng."""
+    sig = tempfile.NamedTemporaryFile(delete=False, suffix=".lock")
+    pause = tempfile.NamedTemporaryFile(delete=False, suffix=".pause")
     sig.close()
     pause.close()
 
     env = os.environ.copy()
-    env[LOADING_ENV]   = sig.name
+    env[LOADING_ENV] = sig.name
     env[LOADING_PAUSE] = pause.name
 
     proc = subprocess.Popen(
@@ -37,6 +38,7 @@ def _spawn_loading():
         close_fds=True,
     )
     return proc, sig.name, pause.name
+
 
 def _close_loading(proc, signal_file, pause_file=None):
     if proc is None:
@@ -51,33 +53,80 @@ def _close_loading(proc, signal_file, pause_file=None):
     except subprocess.TimeoutExpired:
         proc.terminate()
 
-def get_exe_dir():
-    """Lấy thư mục chứa file .exe (hoặc .py khi dev)"""
-    if getattr(sys, 'frozen', False):
-        return Path(sys.executable).parent
-    else:
-        return Path(__file__).parent
+
+def ensure_single_instance(app) -> bool:
+    """
+    True  → được phép chạy (instance đầu tiên)
+    False → đã có instance khác đang chạy
+    """
+    from PySide6.QtCore import QSharedMemory, QSystemSemaphore
+    from PySide6.QtNetwork import QLocalServer, QLocalSocket
+
+    semaphore = QSystemSemaphore("StrikeMachine_Sem", 1)
+    semaphore.acquire()
+
+    shared = QSharedMemory(SINGLE_INSTANCE_KEY)
+
+    if shared.attach():
+        semaphore.release()
+        socket = QLocalSocket()
+        socket.connectToServer(LOCAL_SERVER_NAME)
+        if socket.waitForConnected(800):
+            socket.write(b"raise")
+            socket.flush()
+            socket.waitForBytesWritten(500)
+            socket.disconnectFromServer()
+        return False
+
+    if not shared.create(1):
+        shared.attach()
+        shared.detach()
+        if not shared.create(1):
+            semaphore.release()
+            return False
+
+    semaphore.release()
+
+    QLocalServer.removeServer(LOCAL_SERVER_NAME)
+    server = QLocalServer(app)
+    server.listen(LOCAL_SERVER_NAME)
+
+    def on_new_connection():
+        sock = server.nextPendingConnection()
+        if sock is None:
+            return
+        sock.waitForReadyRead(300)
+        for w in app.topLevelWidgets():
+            if w.isWindow() and not w.isHidden():
+                w.showNormal()
+                w.raise_()
+                w.activateWindow()
+                break
+        sock.disconnectFromServer()
+
+    server.newConnection.connect(on_new_connection)
+
+    app._single_instance_shared = shared
+    app._single_instance_server = server
+    return True
 
 WEB_INIT = (get_exe_dir() / "web_on.txt").is_file()
 
 if os.environ.get(LOADING_ENV):
     signal_file = os.environ[LOADING_ENV]
-    pause_file  = os.environ.get(LOADING_PAUSE, '')
+    pause_file = os.environ.get(LOADING_PAUSE, "")
 
-    _loading_watchdog = setup_crash_watchdog(
-        get_exe_dir(),
-        role="loading",
-    )
+    _loading_watchdog = setup_crash_watchdog(get_exe_dir(), role="loading")
 
     from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
-    from PySide6.QtCore    import Qt, QFileSystemWatcher
-    from PySide6.QtGui     import QMovie
+    from PySide6.QtCore import Qt, QFileSystemWatcher
+    from PySide6.QtGui import QMovie
 
     def resource_path(relative_path):
         try:
-            base_path = sys._MEIPASS          # type: ignore
+            base_path = sys._MEIPASS  # type: ignore
         except Exception:
-            base_path = os.path.abspath('.')
+            base_path = os.path.abspath(".")
         return os.path.join(base_path, relative_path)
 
     class SmoothGifLabel(QLabel):
@@ -105,35 +154,37 @@ if os.environ.get(LOADING_ENV):
     app = QApplication(sys.argv)
 
     win = QWidget()
-    win.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)  # type: ignore
-    win.setAttribute(Qt.WA_TranslucentBackground)                                    # type: ignore
+    win.setWindowFlags(
+        Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool  # type: ignore
+    )
+    win.setAttribute(Qt.WA_TranslucentBackground)  # type: ignore
     win.resize(120, 120)
 
     layout = QVBoxLayout(win)
     layout.setContentsMargins(0, 0, 0, 0)
-    layout.setAlignment(Qt.AlignCenter)                                              # type: ignore
+    layout.setAlignment(Qt.AlignCenter)  # type: ignore
 
     label = SmoothGifLabel()
-    label.setAlignment(Qt.AlignCenter)                                               # type: ignore
-    label.setStyleSheet('background: transparent;')
+    label.setAlignment(Qt.AlignCenter)  # type: ignore
+    label.setStyleSheet("background: transparent;")
     label.setFixedSize(win.size())
     layout.addWidget(label)
 
-    gif_path = os.path.join(resource_path('gifs'), 'Loading.gif')
+    gif_path = os.path.join(resource_path("gifs"), "Loading.gif")
     movie = QMovie(gif_path)
-    movie.setCacheMode(QMovie.CacheAll)                                              # type: ignore
+    movie.setCacheMode(QMovie.CacheAll)  # type: ignore
     label.setMovie(movie)
     movie.start()
 
     screen = app.primaryScreen().availableGeometry()
     win.move(
-        screen.x() + (screen.width()  - win.width())  // 2,
+        screen.x() + (screen.width() - win.width()) // 2,
         screen.y() + (screen.height() - win.height()) // 2,
     )
     win.show()
 
     signal_watcher = QFileSystemWatcher([signal_file])
-    signal_watcher.fileChanged.connect(lambda: (movie.stop(), app.quit()))          # type: ignore
+    signal_watcher.fileChanged.connect(lambda: (movie.stop(), app.quit()))  # type: ignore
 
     if pause_file and os.path.exists(pause_file):
         pause_watcher = QFileSystemWatcher([pause_file])
@@ -147,115 +198,101 @@ if os.environ.get(LOADING_ENV):
         pause_watcher.fileChanged.connect(_on_pause_changed)
 
     _loading_exit_code = app.exec()
-    _loading_watchdog.mark_clean_exit(f"loading window event loop returned exit_code={_loading_exit_code}")
+    _loading_watchdog.mark_clean_exit(
+        f"loading window event loop returned exit_code={_loading_exit_code}"
+    )
     sys.exit(_loading_exit_code)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     multiprocessing.freeze_support()
 
-    _watchdog = setup_crash_watchdog(
-        get_exe_dir(),
-        role="main",
+    _watchdog = setup_crash_watchdog(get_exe_dir(), role="main")
+
+    from PySide6.QtWidgets import QApplication, QMessageBox, QStyle
+    from PySide6.QtCore import QLocale, QTimer
+
+    app = QApplication(sys.argv)
+    QLocale.setDefault(QLocale(QLocale.Language.C))
+    app.aboutToQuit.connect(
+        lambda: _watchdog.mark_clean_exit("QApplication.aboutToQuit fired")
     )
 
-    if WEB_INIT:
-        from web_server import run_web_server
+    if not ensure_single_instance(app):
+        sys.exit(0)
 
-        web_queue = multiprocessing.Queue(maxsize=10)
-        web_process = multiprocessing.Process(
-            target=run_web_server,
-            args=(web_queue,),
-            daemon=True
-        )
-        web_process.start()
+    _loader_proc = None
+    _signal_file = None
+    _pause_file = None
 
-    _loader_proc, _signal_file, _pause_file = _spawn_loading()
-
-    def _pause_loading():
-        try:
-            os.remove(_pause_file)
-        except FileNotFoundError:
-            pass
-
-    def _resume_loading():
-        try:
-            open(_pause_file, 'w').close()
-        except Exception:
-            pass
-
-    app = None
     try:
-        from PySide6.QtWidgets import QApplication, QMessageBox, QStyle
-        from PySide6.QtCore    import QLocale, QSharedMemory, QSystemSemaphore, QTimer
-        from source            import StrikeMachine
-        # from source_backup            import StrikeMachine
+        if WEB_INIT:
+            from web_server import run_web_server
+
+            web_queue = multiprocessing.Queue(maxsize=10)
+            web_process = multiprocessing.Process(
+                target=run_web_server,
+                args=(web_queue,),
+                daemon=True,
+            )
+            web_process.start()
+
+        _loader_proc, _signal_file, _pause_file = _spawn_loading()
+
+        def _pause_loading():
+            try:
+                os.remove(_pause_file)
+            except FileNotFoundError:
+                pass
+
+        def _resume_loading():
+            try:
+                open(_pause_file, "w").close()
+            except Exception:
+                pass
+
+        from source_edited import StrikeMachine
 
         def check_full_language_info():
             locale = QLocale.system()
-            
-            info = {
+            return {
                 "System Locale": locale.name(),
                 "BCP47": locale.bcp47Name(),
                 "Language": locale.languageToString(locale.language()),
                 "Script": locale.scriptToString(locale.script()),
                 "Country": locale.territoryToString(locale.territory()),
                 "Decimal Point": locale.decimalPoint(),
-                "Measurement System": "Metric" if locale.measurementSystem() == QLocale.MeasurementSystem.MetricSystem else "Imperial",
+                "Measurement System": (
+                    "Metric"
+                    if locale.measurementSystem()
+                    == QLocale.MeasurementSystem.MetricSystem
+                    else "Imperial"
+                ),
             }
-            return info
 
-        app = QApplication(sys.argv)
-        QLocale.setDefault(QLocale(QLocale.Language.C))
-        app.aboutToQuit.connect(
-            lambda: _watchdog.mark_clean_exit("QApplication.aboutToQuit fired")
-        )
-
-        semaphore = QSystemSemaphore('StrikeMachine_Instance', 1)
-        semaphore.acquire()
+        # Scale theo màn hình
         BASE_W, BASE_H = 1024, 724
         _screen_geo = app.primaryScreen().availableGeometry()
-
-        # availableGeometry() đã trừ taskbar, nhưng CHƯA trừ title bar của cửa sổ
-        # (title bar chỉ xuất hiện sau khi show()). Nếu không trừ trước, content
-        # sẽ được scale vừa khít available height, rồi title bar cộng thêm vào
-        # sẽ đẩy đáy cửa sổ lọt xuống dưới, đè lên taskbar.
-        _title_bar_h = QApplication.style().pixelMetric(QStyle.PM_TitleBarHeight) #type: ignore
-        if _title_bar_h <= 0:
-            _title_bar_h = 32  # fallback nếu platform/WM không trả về giá trị hợp lệ
-
-        _usable_h = _screen_geo.height() - _title_bar_h
-
-        scale_factor = min(
-            _screen_geo.width() / BASE_W,
-            _usable_h           / BASE_H,
+        _title_bar_h = QApplication.style().pixelMetric(
+            QStyle.PM_TitleBarHeight  # type: ignore
         )
-        scale_factor = max(scale_factor, 0.5)
+        if _title_bar_h <= 0:
+            _title_bar_h = 32
+        _usable_h = _screen_geo.height() - _title_bar_h
+        scale_factor = max(
+            min(_screen_geo.width() / BASE_W, _usable_h / BASE_H),
+            0.5,
+        )
 
-        shared_memory = QSharedMemory('StrikeMachine_SharedMem')
-        is_running = shared_memory.attach()
-        if not is_running:
-            shared_memory.create(1)
-        semaphore.release()
-
-        if is_running:
-            _close_loading(_loader_proc, _signal_file, _pause_file)
-            sys.exit(1)
-
+        kwargs = dict(
+            on_hide_loading=_pause_loading,
+            on_show_loading=_resume_loading,
+            info_system=check_full_language_info,
+            scale_factor=scale_factor,
+        )
         if WEB_INIT:
-            window = StrikeMachine(
-                on_hide_loading=_pause_loading,
-                on_show_loading=_resume_loading,
-                info_system=check_full_language_info,  # type: ignore
-                plc_queue=web_queue,  # type: ignore
-                scale_factor=scale_factor
-            )
-        else:
-            window = StrikeMachine(
-                on_hide_loading=_pause_loading,
-                on_show_loading=_resume_loading,
-                info_system=check_full_language_info,  # type: ignore
-                scale_factor=scale_factor
-            )
+            kwargs["plc_queue"] = web_queue  # type: ignore
+
+        window = StrikeMachine(**kwargs)
 
         def _center_on_screen(win):
             screen_geo = QApplication.primaryScreen().availableGeometry()
@@ -265,29 +302,24 @@ if __name__ == '__main__':
 
         window.show()
         QTimer.singleShot(0, lambda: _center_on_screen(window))
-
         QTimer.singleShot(100, lambda: (window.raise_(), window.activateWindow()))
 
     except Exception:
         _close_loading(_loader_proc, _signal_file, _pause_file)
-
         error_detail = traceback.format_exc()
         _watchdog.log_custom(
-            f"STARTUP_EXCEPTION (crash trước khi vào event loop chính):\n{error_detail}",
+            f"STARTUP_EXCEPTION:\n{error_detail}",
             level=logging.CRITICAL,
         )
-        if app is not None:
-            QMessageBox.critical(None, 'Startup errors',  # type: ignore
-                                 f'The app cannot be launched:\n\n{error_detail}')
-        else:
-            with open('crash.log', 'w') as f:
-                f.write(f'Startup errors:\n{error_detail}\n')
+        QMessageBox.critical(
+            None,
+            "Startup errors",
+            f"The app cannot be launched:\n\n{error_detail}",
+        )
         sys.exit(1)
 
-    finally:
-        _close_loading(_loader_proc, _signal_file, _pause_file)
+    _close_loading(_loader_proc, _signal_file, _pause_file)
 
-    if app is not None:
-        _exit_code = app.exec()
-        _watchdog.log_custom(f"app.exec() returned exit_code={_exit_code}")
-        sys.exit(_exit_code)
+    _exit_code = app.exec()
+    _watchdog.log_custom(f"app.exec() returned exit_code={_exit_code}")
+    sys.exit(_exit_code)

@@ -22,9 +22,9 @@ TEMP_COLORS     = ["#E53935", "#4C1083", "#FB8C00", "#F72668"]    # tối đa 4 
 PRESSURE_COLORS = ["#8E24AA", "#1E88E5", "#00ACC1"]                 # tối đa 3 series
 
 FONT_FAMILY  = "Segoe UI"
-FONT_SIZE_LG = 14
-FONT_SIZE_MD = 14
-FONT_SIZE_SM = 13
+FONT_SIZE_LG = 12
+FONT_SIZE_MD = 12
+FONT_SIZE_SM = 11
 
 _Y_THRESH = 0.02   # 2% — chỉ update Y khi max thay đổi > 2%
 _X_THRESH = 0.5    # 0.5 s — chỉ update X khi window dịch > 0.5 s

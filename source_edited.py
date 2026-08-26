@@ -49,6 +49,7 @@ from password_dialog import *
 from Data_Simulator import DataSimulator
 from PLC_READ_MODULE import PLCRead
 from PLC_WRITE_MODULE import PLCWrite
+from SERIAL_READ_MODULE import HYFWSerialRead
 from export_excel_worker import ExportWorker
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
@@ -278,6 +279,7 @@ class StrikeMachine(QMainWindow):
         self._paint_sv_obj("#43A047")
         self._setup_btn_signals()
         self._setup_plc_threads(SIMULATE)
+        self._setup_serial_threads()
         self._translator = QTranslator()
         self._init_screen()
 
@@ -785,6 +787,7 @@ class StrikeMachine(QMainWindow):
         self.actual_data = {}
         self.input_data = {}
         self.error_data = {}
+        self.serial_data = {}
         self._data_lock = threading.Lock()
         
         self._last_i_o_group_3: list = [None] * 16
@@ -1256,12 +1259,12 @@ class StrikeMachine(QMainWindow):
         ]
 
     def _create_charts(self):
-        font = QFont("Segoe UI", 17)
+        font = QFont("Segoe UI", 15)
         font.setWeight(QFont.Weight.Bold)
 
-        # Chart Nhiệt độ (Oven)
+        # Chart Nhiệt độ (Furnace)
         self.chart_temp = CustomChartWidget(
-            title="Oven",
+            title="Furnace",
             num_temp=2,
             num_pressure=0,
             temp_label="Temperature (°C)",
@@ -1437,9 +1440,9 @@ class StrikeMachine(QMainWindow):
         self.ui.vacuum_btn_b.toggled.connect(lambda checked: self.pumping_btn("B", checked, self.ui.vacuum_btn_b))
         self.ui.vacuum_btn_c.toggled.connect(lambda checked: self.pumping_btn("C", checked, self.ui.vacuum_btn_c))
 
-        self.ui.refuel_btn_a.toggled.connect(lambda checked: self.fill_oil_btn("A", checked, self.ui.refuel_btn_a))
-        self.ui.refuel_btn_b.toggled.connect(lambda checked: self.fill_oil_btn("B", checked, self.ui.refuel_btn_b))
-        self.ui.refuel_btn_c.toggled.connect(lambda checked: self.fill_oil_btn("C", checked, self.ui.refuel_btn_c))
+        # self.ui.refuel_btn_a.toggled.connect(lambda checked: self.fill_oil_btn("A", checked, self.ui.refuel_btn_a))
+        # self.ui.refuel_btn_b.toggled.connect(lambda checked: self.fill_oil_btn("B", checked, self.ui.refuel_btn_b))
+        # self.ui.refuel_btn_c.toggled.connect(lambda checked: self.fill_oil_btn("C", checked, self.ui.refuel_btn_c))
 
         self.ui.set_cycle_a_btn.toggled.connect(lambda checked: self.cycle_loop_btn("A", checked, self.ui.set_cycle_a_btn))
         self.ui.set_cycle_b_btn.toggled.connect(lambda checked: self.cycle_loop_btn("B", checked, self.ui.set_cycle_b_btn))
@@ -1648,8 +1651,8 @@ class StrikeMachine(QMainWindow):
                         "Group." TEXT,
                         "Pressure SV." TEXT,
                         "Pressure." TEXT,
-                        "Oven SV" TEXT,
-                        "T-Oven." TEXT,
+                        "Furnace SV." TEXT,
+                        "T-Furnace." TEXT,
                         "Temperature SV." TEXT,
                         "Front." TEXT,
                         "Middle." TEXT,
@@ -1657,7 +1660,7 @@ class StrikeMachine(QMainWindow):
                         "Date." TEXT
                     )
                 ''')
-            for col_name in ["Pressure SV.", "Oven SV.", "Temperature SV."]:
+            for col_name in ["Pressure SV.", "Furnace SV.", "Temperature SV."]:
                 try:
                     self.conn.execute(f'ALTER TABLE history ADD COLUMN "{col_name}" TEXT DEFAULT ""')
                     self.logger.info(f"Migrated: added column '{col_name}'")
@@ -1681,7 +1684,7 @@ class StrikeMachine(QMainWindow):
             str(row["Name."]         or ""),
             str(row["Group."]        or ""),
             str(row["Pressure."]     or ""),
-            str(row["T-Oven."]       or ""),
+            str(row["T-Furnace."]    or ""),
             str(row["Front."]        or ""),
             str(row["Middle."]       or ""),
             str(row["End."]          or ""),
@@ -1770,8 +1773,8 @@ class StrikeMachine(QMainWindow):
                     g["group"],                      # [2]  Group.
                     f"{pressure_sv_val:.2f} bar",    # [3]  Pressure SV.
                     f"{g['pressure']:.2f} bar",      # [4]  Pressure.
-                    fmt(self.for_display_temp(oven_sv_val)),                # [5]  Oven SV.
-                    fmt(self.for_display_temp(g["temp"])),                  # [6]  T-Oven.
+                    fmt(self.for_display_temp(oven_sv_val)),                # [5]  Furnace SV.
+                    fmt(self.for_display_temp(g["temp"])),                  # [6]  T-Furnace.
                     fmt(self.for_display_temp(temp_sv_val)),                # [7]  Temperature SV.
                     fmt(self.for_display_temp(g["front"])),                 # [8]  Front.
                     fmt(self.for_display_temp(g["mid"])),                   # [9]  Middle.
@@ -1784,7 +1787,7 @@ class StrikeMachine(QMainWindow):
                     db_row[1],   # Name.
                     db_row[2],   # Group.
                     db_row[4],   # Pressure.
-                    db_row[6],   # T-Oven.
+                    db_row[6],   # T-Furnace.
                     db_row[8],   # Front.
                     db_row[9],   # Middle.
                     db_row[10],  # End.
@@ -1826,8 +1829,8 @@ class StrikeMachine(QMainWindow):
                     "Group.",
                     "Pressure SV.", 
                     "Pressure.",
-                    "Oven SV.", 
-                    "T-Oven.", 
+                    "Furnace SV.", 
+                    "T-Furnace.", 
                     "Temperature SV.",
                     "Front.", 
                     "Middle.", 
@@ -3633,6 +3636,31 @@ class StrikeMachine(QMainWindow):
         #     if self.ui.error_display.text() != "":
         #         self.ui.error_display.setText("")
 
+    def _setup_serial_threads(self):
+        self.serial_data_thread = QThread()
+        self.serial_data_worker = HYFWSerialRead(
+            name_module="HYFW_1",
+            port_keyword="CH340",
+            device_id=1,
+            poll_ms=1000,
+            retry_ms=5000,
+            scan_ms=3000,
+            connect_timeout=5.0,
+        )
+        self.serial_data_worker.moveToThread(self.serial_data_thread)
+
+        self.serial_data_thread.started.connect(self.serial_data_worker.run)
+        self.serial_data_worker.data_ser.connect(self._data_serial)
+        self.serial_data_worker.error.connect(lambda e: print("Error:", e))
+        self.serial_data_worker.connected.connect(lambda ok: print("Connected:", ok))
+        self.serial_data_worker.finished.connect(self.serial_data_thread.quit)
+
+        self.serial_data_thread.start()
+
+    def _data_serial(self, data: dict):
+        with self._data_lock:
+            self.serial_data.update(data)
+
     def heating_btn(self, channel: str, checked: bool, btn=None):
         if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_btn.isChecked():
             if btn is not None:
@@ -4752,7 +4780,7 @@ class StrikeMachine(QMainWindow):
                 self.ui.plc_ip_address_edit.setPlaceholderText("Vui lòng nhập địa chỉ IP: 172.16.100.***")
                 self.ui.db_file_path_edit.setPlaceholderText("Nhập đường dẫn thư mục")
                 
-                charts[0].btn_setting.setText("Lò")
+                charts[0].btn_setting.setText("Lò sấy")
                 charts[0].plot.setLabel("left", "Nhiệt độ (°C)") if self._current_unit == 0 else charts[0].plot.setLabel("left", "Nhiệt độ (°F)")
                 
                 charts[1].btn_setting.setText("Nhóm A")
@@ -4773,7 +4801,7 @@ class StrikeMachine(QMainWindow):
                 self.ui.plc_ip_address_edit.setPlaceholderText("Enter IP Address: 172.16.100.***")
                 self.ui.db_file_path_edit.setPlaceholderText("Enter Path Folder")
                 
-                charts[0].btn_setting.setText("Oven")
+                charts[0].btn_setting.setText("Furnace")
                 charts[0].plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else charts[0].plot.setLabel("left", "Temperature (°F)")
                 
                 charts[1].btn_setting.setText("Group A")
@@ -5173,7 +5201,8 @@ class StrikeMachine(QMainWindow):
             getattr(self, 'plc_read_data_worker', None),
             getattr(self, 'plc_read_input_worker', None),
             getattr(self, 'plc_read_error_worker', None),
-            getattr(self, 'plc_writer_worker', None)
+            getattr(self, 'plc_writer_worker', None),
+            getattr(self, 'serial_data_worker', None),
         ]
         for worker in workers:
             if worker:
@@ -5187,7 +5216,8 @@ class StrikeMachine(QMainWindow):
             getattr(self, 'plc_read_data_thread', None),
             getattr(self, 'plc_read_input_thread', None),
             getattr(self, 'plc_read_error_thread', None),
-            getattr(self, 'plc_writer_thread', None)
+            getattr(self, 'plc_writer_thread', None),
+            getattr(self, 'serial_data_thread', None),
         ]
         for thread in threads:
             if thread and thread.isRunning():
