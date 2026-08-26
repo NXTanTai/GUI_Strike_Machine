@@ -9603,6 +9603,136 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_24.addWidget(self.i_o_group_3)
 
+        self.i_o_group_4 = QGroupBox(self.i_o_group_widget)
+        self.i_o_group_4.setObjectName(u"i_o_group_4")
+        self.i_o_group_4.setFont(font20)
+        self.i_o_group_4.setStyleSheet(u"")
+        self.gridLayout_8 = QGridLayout(self.i_o_group_4)
+        self.gridLayout_8.setSpacing(10)
+        self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.gridLayout_8.setContentsMargins(0, 10, 10, 10)
+        self.serial_data_2 = QDoubleSpinBox(self.i_o_group_4)
+        self.serial_data_2.setObjectName(u"serial_data_2")
+        sizePolicy.setHeightForWidth(self.serial_data_2.sizePolicy().hasHeightForWidth())
+        self.serial_data_2.setSizePolicy(sizePolicy)
+        self.serial_data_2.setFont(font6)
+        self.serial_data_2.setAlignment(Qt.AlignCenter)
+        self.serial_data_2.setReadOnly(True)
+        self.serial_data_2.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.serial_data_2.setDecimals(1)
+        self.serial_data_2.setMinimum(-9999.899999999999636)
+        self.serial_data_2.setMaximum(9999.899999999999636)
+
+        self.gridLayout_8.addWidget(self.serial_data_2, 1, 1, 1, 1)
+
+        self.serial_label_6 = QLabel(self.i_o_group_4)
+        self.serial_label_6.setObjectName(u"serial_label_6")
+        self.serial_label_6.setFont(font21)
+
+        self.gridLayout_8.addWidget(self.serial_label_6, 6, 0, 1, 1)
+
+        self.serial_data_3 = QDoubleSpinBox(self.i_o_group_4)
+        self.serial_data_3.setObjectName(u"serial_data_3")
+        sizePolicy.setHeightForWidth(self.serial_data_3.sizePolicy().hasHeightForWidth())
+        self.serial_data_3.setSizePolicy(sizePolicy)
+        self.serial_data_3.setFont(font6)
+        self.serial_data_3.setAlignment(Qt.AlignCenter)
+        self.serial_data_3.setReadOnly(True)
+        self.serial_data_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.serial_data_3.setDecimals(1)
+        self.serial_data_3.setMinimum(-9999.899999999999636)
+        self.serial_data_3.setMaximum(9999.899999999999636)
+
+        self.gridLayout_8.addWidget(self.serial_data_3, 2, 1, 1, 1)
+
+        self.serial_data_4 = QDoubleSpinBox(self.i_o_group_4)
+        self.serial_data_4.setObjectName(u"serial_data_4")
+        sizePolicy.setHeightForWidth(self.serial_data_4.sizePolicy().hasHeightForWidth())
+        self.serial_data_4.setSizePolicy(sizePolicy)
+        self.serial_data_4.setFont(font6)
+        self.serial_data_4.setAlignment(Qt.AlignCenter)
+        self.serial_data_4.setReadOnly(True)
+        self.serial_data_4.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.serial_data_4.setDecimals(1)
+        self.serial_data_4.setMinimum(-9999.899999999999636)
+        self.serial_data_4.setMaximum(9999.899999999999636)
+
+        self.gridLayout_8.addWidget(self.serial_data_4, 3, 1, 1, 1)
+
+        self.serial_data_5 = QDoubleSpinBox(self.i_o_group_4)
+        self.serial_data_5.setObjectName(u"serial_data_5")
+        sizePolicy.setHeightForWidth(self.serial_data_5.sizePolicy().hasHeightForWidth())
+        self.serial_data_5.setSizePolicy(sizePolicy)
+        self.serial_data_5.setFont(font6)
+        self.serial_data_5.setAlignment(Qt.AlignCenter)
+        self.serial_data_5.setReadOnly(True)
+        self.serial_data_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.serial_data_5.setDecimals(1)
+        self.serial_data_5.setMinimum(-9999.899999999999636)
+        self.serial_data_5.setMaximum(9999.899999999999636)
+
+        self.gridLayout_8.addWidget(self.serial_data_5, 4, 1, 1, 1)
+
+        self.serial_data_6 = QDoubleSpinBox(self.i_o_group_4)
+        self.serial_data_6.setObjectName(u"serial_data_6")
+        sizePolicy.setHeightForWidth(self.serial_data_6.sizePolicy().hasHeightForWidth())
+        self.serial_data_6.setSizePolicy(sizePolicy)
+        self.serial_data_6.setFont(font6)
+        self.serial_data_6.setAlignment(Qt.AlignCenter)
+        self.serial_data_6.setReadOnly(True)
+        self.serial_data_6.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.serial_data_6.setDecimals(1)
+        self.serial_data_6.setMaximum(999.899999999999977)
+
+        self.gridLayout_8.addWidget(self.serial_data_6, 6, 1, 1, 1)
+
+        self.serial_label_3 = QLabel(self.i_o_group_4)
+        self.serial_label_3.setObjectName(u"serial_label_3")
+        self.serial_label_3.setFont(font21)
+
+        self.gridLayout_8.addWidget(self.serial_label_3, 2, 0, 1, 1)
+
+        self.serial_label_2 = QLabel(self.i_o_group_4)
+        self.serial_label_2.setObjectName(u"serial_label_2")
+        self.serial_label_2.setFont(font21)
+
+        self.gridLayout_8.addWidget(self.serial_label_2, 1, 0, 1, 1)
+
+        self.serial_label_4 = QLabel(self.i_o_group_4)
+        self.serial_label_4.setObjectName(u"serial_label_4")
+        self.serial_label_4.setFont(font21)
+
+        self.gridLayout_8.addWidget(self.serial_label_4, 3, 0, 1, 1)
+
+        self.serial_label_5 = QLabel(self.i_o_group_4)
+        self.serial_label_5.setObjectName(u"serial_label_5")
+        self.serial_label_5.setFont(font21)
+
+        self.gridLayout_8.addWidget(self.serial_label_5, 4, 0, 1, 1)
+
+        self.serial_data_1 = QDoubleSpinBox(self.i_o_group_4)
+        self.serial_data_1.setObjectName(u"serial_data_1")
+        sizePolicy.setHeightForWidth(self.serial_data_1.sizePolicy().hasHeightForWidth())
+        self.serial_data_1.setSizePolicy(sizePolicy)
+        self.serial_data_1.setFont(font6)
+        self.serial_data_1.setAlignment(Qt.AlignCenter)
+        self.serial_data_1.setReadOnly(True)
+        self.serial_data_1.setButtonSymbols(QAbstractSpinBox.NoButtons)
+        self.serial_data_1.setDecimals(1)
+        self.serial_data_1.setMinimum(-9999.899999999999636)
+        self.serial_data_1.setMaximum(9999.899999999999636)
+
+        self.gridLayout_8.addWidget(self.serial_data_1, 0, 1, 1, 1)
+
+        self.serial_label_1 = QLabel(self.i_o_group_4)
+        self.serial_label_1.setObjectName(u"serial_label_1")
+        self.serial_label_1.setFont(font21)
+
+        self.gridLayout_8.addWidget(self.serial_label_1, 0, 0, 1, 1)
+
+
+        self.horizontalLayout_24.addWidget(self.i_o_group_4)
+
         self.horizontalLayout_24.setStretch(0, 1)
         self.horizontalLayout_24.setStretch(1, 2)
 
@@ -10322,7 +10452,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(3)
+        self.stackedWidget_2.setCurrentIndex(2)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(1)
         self.stacked_pressure_sv_a_11.setCurrentIndex(1)
@@ -10822,6 +10952,13 @@ class Ui_MainWindow(object):
         self.ai_name_9.setText(QCoreApplication.translate("MainWindow", u"T3-2:", None))
         self.ai_name_10.setText(QCoreApplication.translate("MainWindow", u"T3-3:", None))
         self.ai_name_11.setText(QCoreApplication.translate("MainWindow", u"P1:", None))
+        self.i_o_group_4.setTitle(QCoreApplication.translate("MainWindow", u"Heater T0 Status", None))
+        self.serial_label_6.setText(QCoreApplication.translate("MainWindow", u"Ic:", None))
+        self.serial_label_3.setText(QCoreApplication.translate("MainWindow", u"Uc:", None))
+        self.serial_label_2.setText(QCoreApplication.translate("MainWindow", u"Ub:", None))
+        self.serial_label_4.setText(QCoreApplication.translate("MainWindow", u"Ia:", None))
+        self.serial_label_5.setText(QCoreApplication.translate("MainWindow", u"Ib:", None))
+        self.serial_label_1.setText(QCoreApplication.translate("MainWindow", u"Ua:", None))
         self.back_connection_page_btn.setText(QCoreApplication.translate("MainWindow", u"Connection Page", None))
         self.back_home_page_btn.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
         self.search_icon.setText("")

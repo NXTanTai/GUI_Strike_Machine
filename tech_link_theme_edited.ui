@@ -910,7 +910,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>3</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="temp_press_page">
               <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -18106,7 +18106,7 @@ QPushButton:checked {
                           <property name="styleSheet">
                            <string notr="true"/>
                           </property>
-                          <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="1,2">
+                          <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="1,2,0">
                            <property name="spacing">
                             <number>10</number>
                            </property>
@@ -20613,6 +20613,332 @@ QPushButton:checked {
                                 </property>
                                 <property name="maximum">
                                  <double>999.899999999999977</double>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </widget>
+                           </item>
+                           <item>
+                            <widget class="QGroupBox" name="i_o_group_4">
+                             <property name="font">
+                              <font>
+                               <family>Segoe UI</family>
+                               <pointsize>12</pointsize>
+                               <weight>75</weight>
+                               <bold>true</bold>
+                              </font>
+                             </property>
+                             <property name="styleSheet">
+                              <string notr="true"/>
+                             </property>
+                             <property name="title">
+                              <string>Heater T0 Status</string>
+                             </property>
+                             <layout class="QGridLayout" name="gridLayout_8" rowstretch="0,0,0,0,0,0,0" columnstretch="0,0">
+                              <property name="leftMargin">
+                               <number>0</number>
+                              </property>
+                              <property name="topMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="rightMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="bottomMargin">
+                               <number>10</number>
+                              </property>
+                              <property name="spacing">
+                               <number>10</number>
+                              </property>
+                              <item row="1" column="1">
+                               <widget class="QDoubleSpinBox" name="serial_data_2">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>13</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="alignment">
+                                 <set>Qt::AlignCenter</set>
+                                </property>
+                                <property name="readOnly">
+                                 <bool>true</bool>
+                                </property>
+                                <property name="buttonSymbols">
+                                 <enum>QAbstractSpinBox::NoButtons</enum>
+                                </property>
+                                <property name="decimals">
+                                 <number>1</number>
+                                </property>
+                                <property name="minimum">
+                                 <double>-9999.899999999999636</double>
+                                </property>
+                                <property name="maximum">
+                                 <double>9999.899999999999636</double>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="6" column="0">
+                               <widget class="QLabel" name="serial_label_6">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Ic:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="2" column="1">
+                               <widget class="QDoubleSpinBox" name="serial_data_3">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>13</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="alignment">
+                                 <set>Qt::AlignCenter</set>
+                                </property>
+                                <property name="readOnly">
+                                 <bool>true</bool>
+                                </property>
+                                <property name="buttonSymbols">
+                                 <enum>QAbstractSpinBox::NoButtons</enum>
+                                </property>
+                                <property name="decimals">
+                                 <number>1</number>
+                                </property>
+                                <property name="minimum">
+                                 <double>-9999.899999999999636</double>
+                                </property>
+                                <property name="maximum">
+                                 <double>9999.899999999999636</double>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="3" column="1">
+                               <widget class="QDoubleSpinBox" name="serial_data_4">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>13</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="alignment">
+                                 <set>Qt::AlignCenter</set>
+                                </property>
+                                <property name="readOnly">
+                                 <bool>true</bool>
+                                </property>
+                                <property name="buttonSymbols">
+                                 <enum>QAbstractSpinBox::NoButtons</enum>
+                                </property>
+                                <property name="decimals">
+                                 <number>1</number>
+                                </property>
+                                <property name="minimum">
+                                 <double>-9999.899999999999636</double>
+                                </property>
+                                <property name="maximum">
+                                 <double>9999.899999999999636</double>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="4" column="1">
+                               <widget class="QDoubleSpinBox" name="serial_data_5">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>13</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="alignment">
+                                 <set>Qt::AlignCenter</set>
+                                </property>
+                                <property name="readOnly">
+                                 <bool>true</bool>
+                                </property>
+                                <property name="buttonSymbols">
+                                 <enum>QAbstractSpinBox::NoButtons</enum>
+                                </property>
+                                <property name="decimals">
+                                 <number>1</number>
+                                </property>
+                                <property name="minimum">
+                                 <double>-9999.899999999999636</double>
+                                </property>
+                                <property name="maximum">
+                                 <double>9999.899999999999636</double>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="6" column="1">
+                               <widget class="QDoubleSpinBox" name="serial_data_6">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>13</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="alignment">
+                                 <set>Qt::AlignCenter</set>
+                                </property>
+                                <property name="readOnly">
+                                 <bool>true</bool>
+                                </property>
+                                <property name="buttonSymbols">
+                                 <enum>QAbstractSpinBox::NoButtons</enum>
+                                </property>
+                                <property name="decimals">
+                                 <number>1</number>
+                                </property>
+                                <property name="maximum">
+                                 <double>999.899999999999977</double>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="2" column="0">
+                               <widget class="QLabel" name="serial_label_3">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Uc:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="1" column="0">
+                               <widget class="QLabel" name="serial_label_2">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Ub:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="3" column="0">
+                               <widget class="QLabel" name="serial_label_4">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Ia:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="4" column="0">
+                               <widget class="QLabel" name="serial_label_5">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Ib:</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="0" column="1">
+                               <widget class="QDoubleSpinBox" name="serial_data_1">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>13</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="alignment">
+                                 <set>Qt::AlignCenter</set>
+                                </property>
+                                <property name="readOnly">
+                                 <bool>true</bool>
+                                </property>
+                                <property name="buttonSymbols">
+                                 <enum>QAbstractSpinBox::NoButtons</enum>
+                                </property>
+                                <property name="decimals">
+                                 <number>1</number>
+                                </property>
+                                <property name="minimum">
+                                 <double>-9999.899999999999636</double>
+                                </property>
+                                <property name="maximum">
+                                 <double>9999.899999999999636</double>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="0" column="0">
+                               <widget class="QLabel" name="serial_label_1">
+                                <property name="font">
+                                 <font>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string>Ua:</string>
                                 </property>
                                </widget>
                               </item>
