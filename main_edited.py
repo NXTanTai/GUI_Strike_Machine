@@ -239,12 +239,16 @@ if __name__ == "__main__":
         _loader_proc, _signal_file, _pause_file = _spawn_loading()
 
         def _pause_loading():
+            if _pause_file is None:
+                return
             try:
                 os.remove(_pause_file)
             except FileNotFoundError:
                 pass
 
         def _resume_loading():
+            if _pause_file is None:
+                return
             try:
                 open(_pause_file, "w").close()
             except Exception:
@@ -275,6 +279,7 @@ if __name__ == "__main__":
         _title_bar_h = QApplication.style().pixelMetric(
             QStyle.PM_TitleBarHeight  # type: ignore
         )
+        print(f"Screen: {_screen_geo.width()}x{_screen_geo.height()}, title_bar_h={_title_bar_h}")
         if _title_bar_h <= 0:
             _title_bar_h = 32
         _usable_h = _screen_geo.height() - _title_bar_h
@@ -292,7 +297,7 @@ if __name__ == "__main__":
         if WEB_INIT:
             kwargs["plc_queue"] = web_queue  # type: ignore
 
-        window = StrikeMachine(**kwargs)
+        window = StrikeMachine(**kwargs)  # type: ignore
 
         def _center_on_screen(win):
             screen_geo = QApplication.primaryScreen().availableGeometry()

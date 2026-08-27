@@ -60,7 +60,7 @@ REALTIME_REGISTERS = {
     "phase_A_current_A":         dict(address=4105, count=1, scale=100, signed=False),
     "phase_B_current_A":         dict(address=4106, count=1, scale=100, signed=False),
     "phase_C_current_A":         dict(address=4107, count=1, scale=100, signed=False),
-    "total_active_power_kW":     dict(address=4113, count=1, scale=1000, signed=True),
+    "total_active_power_kW":     dict(address=4113, count=1, scale=100, signed=True),
     "total_reactive_power_kvar": dict(address=4117, count=1, scale=100, signed=True),
     "total_apparent_power_kVA":  dict(address=4121, count=1, scale=100, signed=False),
     "power_factor":              dict(address=4125, count=1, scale=100, signed=True),
@@ -107,7 +107,6 @@ def find_serial_port(keyword: str = "CH340") -> Optional[str]:
         if keyword_low in desc.lower() or keyword_low in manu.lower() or keyword_low in hwid.lower():
             return p.device
     return None
-
 
 class HYFWSerialRead(QObject):
     """
@@ -401,18 +400,18 @@ class HYFWSerialRead(QObject):
             return
 
         try:
-            t0 = time.perf_counter()
+            # t0 = time.perf_counter()
             result = self._read_all()
-            elapsed_ms = (time.perf_counter() - t0) * 1000
+            # elapsed_ms = (time.perf_counter() - t0) * 1000
 
-            if self.logger and elapsed_ms > (self._poll_ms * 1.3):
-                self.logger.warning(
-                    f"[SERIAL READ {self._name_module}]: Slow response %.1fms",
-                    elapsed_ms,
-                )
+            # if self.logger and elapsed_ms > (self._poll_ms * 1.3):
+            #     self.logger.warning(
+            #         f"[SERIAL READ {self._name_module}]: Slow response %.1fms",
+            #         elapsed_ms,
+            #     )
 
             self.data_ser.emit(result)
-            self.elapsed_time.emit(elapsed_ms)
+            # self.elapsed_time.emit(elapsed_ms)
 
         except ModbusException as exc:
             if self.logger:
@@ -449,6 +448,8 @@ class HYFWSerialRead(QObject):
         data: dict[str, Any] = {}
 
         for name, cfg in REALTIME_REGISTERS.items():
+            if not self._running:
+                return data
             try:
                 regs = self._read_input_registers(cfg["address"], cfg["count"])
                 raw = regs[0]
@@ -457,49 +458,25 @@ class HYFWSerialRead(QObject):
                 data[name] = raw / cfg["scale"]
             except Exception as exc:
                 data[name] = None
-                if self.logger:
-                    self.logger.error(
-                        f"[SERIAL READ {self._name_module}]: Parse error [%s]: %s",
-                        name, exc,
-                    )
+                # if self.logger:
+                #     self.logger.error(
+                #         f"[SERIAL READ {self._name_module}]: Parse error [%s]: %s",
+                #         name, exc,
+                #     )
 
-        for name, cfg in ENERGY_REGISTERS.items():
-            try:
-                regs = self._read_input_registers(cfg["address"], cfg["count"])
-                raw = decode_u32(regs[0], regs[1], self._word_order_big_endian)
-                data[name] = raw / cfg["scale"]
-            except Exception as exc:
-                data[name] = None
-                if self.logger:
-                    self.logger.error(
-                        f"[SERIAL READ {self._name_module}]: Parse error [%s]: %s",
-                        name, exc,
-                    )
+        # for name, cfg in ENERGY_REGISTERS.items():
+        #     if not self._running:
+        #         return data
+        #     try:
+        #         regs = self._read_input_registers(cfg["address"], cfg["count"])
+        #         raw = decode_u32(regs[0], regs[1], self._word_order_big_endian)
+        #         data[name] = raw / cfg["scale"]
+        #     except Exception as exc:
+        #         data[name] = None
+        #         if self.logger:
+        #             self.logger.error(
+        #                 f"[SERIAL READ {self._name_module}]: Parse error [%s]: %s",
+        #                 name, exc,
+        #             )
 
         return data
-
-if __name__ == "__main__":
-    from PySide6.QtCore import QCoreApplication
-
-    app = QCoreApplication(sys.argv)
-
-    thread = QThread()
-    reader = HYFWSerialRead(
-        name_module="HYFW_1",
-        port_keyword="CH340",
-        device_id=1,
-        poll_ms=1000,
-        retry_ms=5000,
-        scan_ms=3000,
-        connect_timeout=5.0,
-    )
-    reader.moveToThread(thread)
-
-    thread.started.connect(reader.run)
-    reader.data_ser.connect(lambda d: print(d))
-    reader.error.connect(lambda e: print("Error:", e))
-    reader.connected.connect(lambda ok: print("Connected:", ok))
-    reader.finished.connect(thread.quit)
-
-    thread.start()
-    sys.exit(app.exec())

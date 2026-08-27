@@ -9605,8 +9605,6 @@ class Ui_MainWindow(object):
 
         self.i_o_group_4 = QGroupBox(self.i_o_group_widget)
         self.i_o_group_4.setObjectName(u"i_o_group_4")
-        sizePolicy.setHeightForWidth(self.i_o_group_4.sizePolicy().hasHeightForWidth())
-        self.i_o_group_4.setSizePolicy(sizePolicy)
         self.i_o_group_4.setFont(font20)
         self.i_o_group_4.setStyleSheet(u"")
         self.gridLayout_8 = QGridLayout(self.i_o_group_4)
@@ -9772,10 +9770,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout_8.addWidget(self.serial_data_8, 8, 1, 1, 1)
 
-        self.gridLayout_8.setColumnStretch(1, 1)
 
         self.horizontalLayout_24.addWidget(self.i_o_group_4)
 
+        self.horizontalLayout_24.setStretch(0, 1)
         self.horizontalLayout_24.setStretch(1, 2)
         self.horizontalLayout_24.setStretch(2, 1)
 

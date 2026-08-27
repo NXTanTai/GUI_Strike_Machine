@@ -1,10 +1,10 @@
-# pyside6-uic tech_link_theme.ui -o tech_link_theme.py
+# pyside6-uic tech_link_theme_edited.ui -o tech_link_theme_edited_ui.py
 # pyside6-rcc Icon.qrc -o Icon_rc.py
 # pyside6-rcc icons.qrc -o icons_rc.py
 
-# pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_en.ts
-# pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_vn.ts
-# pyside6-lupdate tech_link_theme.ui -ts tech_link_theme_cn.ts
+# pyside6-lupdate tech_link_theme_edited.ui -ts tech_link_theme_en.ts
+# pyside6-lupdate tech_link_theme_edited.ui -ts tech_link_theme_vn.ts
+# pyside6-lupdate tech_link_theme_edited.ui -ts tech_link_theme_cn.ts
 
 import sys
 import os
@@ -175,6 +175,23 @@ TEMP_SV_REVERSE_MIRROR = {
     "bt_sv": "pressure_sv_b_1",
     "ct_sv": "pressure_sv_c_1",
 }
+
+CLEAR_GROUP_CONFIG = {
+    "A": {"guard_widgets": ("refuel_btn_a","vacuum_btn_a","heat_btn_a"),
+          "pressure_sv_obj": "pressure_a_sv_obj", "temp_sv_index": 1,
+          "list_import": "list_for_import_a", "plc_prefix": "P1"},
+    "B": {"guard_widgets": ("refuel_btn_b","vacuum_btn_b","heat_btn_b"),
+          "pressure_sv_obj": "pressure_b_sv_obj", "temp_sv_index": 2,
+          "list_import": "list_for_import_b", "plc_prefix": "P2"},
+    "C": {"guard_widgets": ("refuel_btn_c","vacuum_btn_c","heat_btn_c"),
+          "pressure_sv_obj": "pressure_c_sv_obj", "temp_sv_index": 3,
+          "list_import": "list_for_import_c", "plc_prefix": "P3"},
+}
+
+CLEAR_GROUP_PLC_TAGS = (
+    "CountTimes", "Oil_Start_Time", "Oil_End_Time", "Air_FillingTime",
+    "Air_HoldingTime", "Air_ReleaseTime", "PressureSetting", "TemperatureSetting",
+)
 
 class SafePipeLogHandler(logging.Handler):
     def __init__(self, process, stdin_lock=None):
@@ -347,6 +364,7 @@ class StrikeMachine(QMainWindow):
         self._i_o_group_1_style()
         self._i_o_group_2_style()
         self._i_o_group_3_style()
+        self._i_o_group_4_style()
         self._back_page_widget_styles()
         
     def _i_o_group_1_style(self):
@@ -441,6 +459,43 @@ class StrikeMachine(QMainWindow):
 
     def _i_o_group_3_style(self):
         self.ui.i_o_group_3.setStyleSheet("""
+            QGroupBox {
+                border: 2px solid #E5E5E5;
+                border-radius: 6px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #374151;
+            }
+
+            QLabel {
+                border: none;
+                color: #E6AC2E;
+            }
+
+            QDoubleSpinBox {
+                border: 3px solid #E5E5E5; 
+                border-radius: 10px;
+                color: #10B981;
+            }
+            QLineEdit {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QLineEdit:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+            """)
+
+    def _i_o_group_4_style(self):
+        self.ui.i_o_group_4.setStyleSheet("""
             QGroupBox {
                 border: 2px solid #E5E5E5;
                 border-radius: 6px;
@@ -684,7 +739,7 @@ class StrikeMachine(QMainWindow):
     def _gui_update_connection_group(self, path_get):
         self.ui.plc_ip_address_edit.setText(self.db_dict["ip_plc"]) #type: ignore
         self.ui.db_file_path_edit.setText(str(path_get))
-        self._cmd_protect_ms = ((float(self.db_dict["input_read"])/1000) + 0.1)
+        self._cmd_protect_ms = ((float(self.db_dict["input_read"])/1000) + 0.1) #type: ignore
         # self.ui.db_number_input.setValue(self.db_dict["db_name"]) #type: ignore
         # self.ui.db_data_size_input.setValue(self.db_dict["DB_TOTAL_BYTES"]) #type: ignore
         self.ui.write_time_input.setValue(self.db_dict["write_time"]) #type: ignore
@@ -791,6 +846,7 @@ class StrikeMachine(QMainWindow):
         self._data_lock = threading.Lock()
         
         self._last_i_o_group_3: list = [None] * 16
+        self._last_i_o_group_4: list = [None] * 8
         self._last_group_a:     list = [None] * 9
         self._last_group_b:     list = [None] * 9
         self._last_group_c:     list = [None] * 9
@@ -892,8 +948,10 @@ class StrikeMachine(QMainWindow):
         self.data_alarm_timer.setInterval(self.db_dict["error_read"] if self.db_dict else 1500)
         self.data_alarm_timer.timeout.connect(lambda: self._data_alarm(self.error_data))
 
-        # self.timer_alarm = QTimer(self)
-        # self.all_timer.append(self.timer_alarm)
+        self.data_serial_timer = QTimer(self)
+        self.all_timer.append(self.data_serial_timer)
+        self.data_serial_timer.setInterval(1000)
+        self.data_serial_timer.timeout.connect(lambda: self._data_serial(self.serial_data))
 
         # self.timer_stacked_pressure_page = QTimer(self)
         # self.all_timer.append(self.timer_stacked_pressure_page)
@@ -1186,6 +1244,16 @@ class StrikeMachine(QMainWindow):
             self.ui.fp2_value,
             self.ui.fp3_value
         )
+        self.i_o_group_4_obj = (
+            self.ui.serial_data_1,
+            self.ui.serial_data_2,
+            self.ui.serial_data_3,
+            self.ui.serial_data_4,
+            self.ui.serial_data_5,
+            self.ui.serial_data_6,
+            self.ui.serial_data_7,
+            self.ui.serial_data_8,
+        )
 
     def _paint_pv_obj(self, color):
         for obj in self.pressure_a_pv_obj + self.pressure_b_pv_obj + self.pressure_c_pv_obj + self.temp_pv_obj:
@@ -1411,6 +1479,7 @@ class StrikeMachine(QMainWindow):
         self.ui.chart_page_btn.clicked.connect(self.home_page_btn)
         self.ui.device_page_btn.clicked.connect(self.device_page_btn)
         self.ui.history_page_btn.clicked.connect(self.history_page_btn)
+        self.ui.alarm_page_btn.clicked.connect(self.alarm_page_btn)
 
         self.ui.eng_language.clicked.connect(self.set_language_en)
         self.ui.vn_language.clicked.connect(self.set_language_vn)
@@ -1466,64 +1535,11 @@ class StrikeMachine(QMainWindow):
         self.ui.export_all_tables_to_excel_btn.clicked.connect(self.export_all_tables_to_excel_btn)
         self.ui.list_history_2.verticalScrollBar().valueChanged.connect(self._on_search_scroll)
 
-        spinbox_map = {
-            "pressure_sv_a_1": self.on_pressure_sv_a_1_changed,
-            "pressure_sv_a_5": self.on_pressure_sv_a_5_changed,
-            "pressure_sv_a_6": self.on_pressure_sv_a_6_changed,
-            "pressure_sv_a_7": self.on_pressure_sv_a_7_changed,
-            "pressure_sv_a_8": self.on_pressure_sv_a_8_changed,
-            "pressure_sv_a_9": self.on_pressure_sv_a_9_changed,
-            "pressure_sv_a_10": self.on_pressure_sv_a_10_changed,
-            "pressure_sv_a_11": self.on_cycle_a_displ_2_changed,
-
-            "pressure_sv_b_1": self.on_pressure_sv_b_1_changed,
-            "pressure_sv_b_5": self.on_pressure_sv_b_5_changed,
-            "pressure_sv_b_6": self.on_pressure_sv_b_6_changed,
-            "pressure_sv_b_7": self.on_pressure_sv_b_7_changed,
-            "pressure_sv_b_8": self.on_pressure_sv_b_8_changed,
-            "pressure_sv_b_9": self.on_pressure_sv_b_9_changed,
-            "pressure_sv_b_10": self.on_pressure_sv_b_10_changed,
-            "pressure_sv_b_11": self.on_cycle_b_displ_2_changed,
-
-            "pressure_sv_c_1": self.on_pressure_sv_c_1_changed,
-            "pressure_sv_c_5": self.on_pressure_sv_c_5_changed,
-            "pressure_sv_c_6": self.on_pressure_sv_c_6_changed,
-            "pressure_sv_c_7": self.on_pressure_sv_c_7_changed,
-            "pressure_sv_c_8": self.on_pressure_sv_c_8_changed,
-            "pressure_sv_c_9": self.on_pressure_sv_c_9_changed,
-            "pressure_sv_c_10": self.on_pressure_sv_c_10_changed,
-            "pressure_sv_c_11": self.on_cycle_c_displ_2_changed,
-
-            "t0_sv": self.on_t0_sv_changed,
-            "at_sv": self.on_at_sv_changed,
-            "bt_sv": self.on_bt_sv_changed,
-            "ct_sv": self.on_ct_sv_changed,
-
-            "t0_h_alm_value": self.on_t0_h_alm_value_changed,
-            "at_h_alm_value": self.on_at_h_alm_value_changed,
-            "bt_h_alm_value": self.on_bt_h_alm_value_changed,
-            "ct_h_alm_value": self.on_ct_h_alm_value_changed,
-
-            "t0_l_alm_value": self.on_t0_l_alm_value_changed,
-            "at_l_alm_value": self.on_at_l_alm_value_changed,
-            "bt_l_alm_value": self.on_bt_l_alm_value_changed,
-            "ct_l_alm_value": self.on_ct_l_alm_value_changed,
-
-            "t0_offset_value": self.on_t0_offset_value_changed,
-            "at_t1_offset_value": self.on_at_t1_offset_value_changed,
-            "at_t2_offset_value": self.on_at_t2_offset_value_changed,
-            "at_t3_offset_value": self.on_at_t3_offset_value_changed,
-            "bt_t1_offset_value": self.on_bt_t1_offset_value_changed,
-            "bt_t2_offset_value": self.on_bt_t2_offset_value_changed,
-            "bt_t3_offset_value": self.on_bt_t3_offset_value_changed,
-            "ct_t1_offset_value": self.on_ct_t1_offset_value_changed,
-            "ct_t2_offset_value": self.on_ct_t2_offset_value_changed,
-            "ct_t3_offset_value": self.on_ct_t3_offset_value_changed,
-
-            "table_write_cycle": self.on_table_write_cycle_value_changed,
-
-        }
-
+        # NOTE (refactor): Trước đây ở đây có 1 dict `spinbox_map` trỏ tới 47 hàm
+        # on_*_changed riêng lẻ (~90 dòng lặp theo pattern group A/B/C). Toàn bộ
+        # logic đó đã được thay bằng SPINBOX_PLC_MAP + _make_plc_handler(), xem
+        # _setup_spinbox_handlers() bên dưới — kết quả đã được đối chiếu 1:1 với
+        # 47 handler cũ (cùng PLC tag, cùng transform, cùng widget mirror).
         install_clear_on_focus(self.ui.db_file_path_edit)
         install_clear_on_focus(self.ui.plc_ip_address_edit)
         # install_clear_on_focus(self.ui.db_number_input)
@@ -1537,11 +1553,7 @@ class StrikeMachine(QMainWindow):
             # (self.ui.db_data_size_input,  None, None),
         ])
 
-        for name, handler in spinbox_map.items():
-            spinbox = getattr(self.ui, name)
-            install_clear_on_focus(spinbox)
-            spinbox.setKeyboardTracking(False)
-            spinbox.valueChanged.connect(handler)
+        self._setup_spinbox_handlers()
 
         # self.ui.error_display._speed = 50
 
@@ -1589,10 +1601,6 @@ class StrikeMachine(QMainWindow):
             )
     
     def _setup_spinbox_handlers(self):
-        """
-        Gọi hàm này 1 lần trong _setup_btn_signals() để đăng ký
-        toàn bộ valueChanged handlers — thay thế ~40 hàm on_*_changed cũ.
-        """
         for widget_name, (plc_key, transform_key) in SPINBOX_PLC_MAP.items():
             spinbox = getattr(self.ui, widget_name)
             install_clear_on_focus(spinbox)
@@ -1601,7 +1609,6 @@ class StrikeMachine(QMainWindow):
                 self._make_plc_handler(widget_name, plc_key, transform_key)
             )
     
-        # ── Handlers đặc biệt: pressure_sv_X_1 (Temperature Setting + mirror) ─
         for widget_name, (plc_key, mirror_widget) in TEMP_SV_MIRROR.items():
             spinbox = getattr(self.ui, widget_name)
             install_clear_on_focus(spinbox)
@@ -1610,7 +1617,6 @@ class StrikeMachine(QMainWindow):
                 self._make_temp_sv_handler(widget_name, plc_key, mirror_widget)
             )
     
-        # ── Handlers mirror ngược: at_sv / bt_sv / ct_sv ─────────────────────
         for widget_name, target_widget in TEMP_SV_REVERSE_MIRROR.items():
             spinbox = getattr(self.ui, widget_name)
             install_clear_on_focus(spinbox)
@@ -1619,7 +1625,6 @@ class StrikeMachine(QMainWindow):
                 self._make_mirror_sv_handler(widget_name, target_widget)
             )
     
-        # ── table_write_cycle (logic đặc biệt, không ghi PLC) ────────────────
         self.ui.table_write_cycle.setKeyboardTracking(False)
         self.ui.table_write_cycle.valueChanged.connect(
             self._on_table_write_cycle_changed
@@ -2329,95 +2334,6 @@ class StrikeMachine(QMainWindow):
                 return QTime(0, 0, 0), 1        # Qua ngày mới
             return QTime(next_hour, 0, 0), 0
         
-    # ── Group A ──────────────────────────────────────────
-    def on_pressure_sv_a_1_changed(self, value: float): 
-        if self.plc_writer_connection:
-            self.plc_writer_worker.write_value.emit("P1_TemperatureSetting", self.cal_fah_to_cel(value)) #type: ignore
-        else: 
-            pass
-        self.ui.at_sv.blockSignals(True)
-        self.ui.at_sv.setValue(value)
-        self.ui.at_sv.blockSignals(False)
-
-    def on_pressure_sv_a_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_a_6_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Air_FillingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_a_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Air_HoldingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_a_8_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Air_ReleaseTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_a_9_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Oil_Start_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_a_10_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Oil_End_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-
-    # ── Group B ──────────────────────────────────────────
-    def on_pressure_sv_b_1_changed(self, value: float): 
-        if self.plc_writer_connection:
-            self.plc_writer_worker.write_value.emit("P2_TemperatureSetting", self.cal_fah_to_cel(value)) #type: ignore
-        else: 
-            pass
-        self.ui.bt_sv.blockSignals(True)
-        self.ui.bt_sv.setValue(value)
-        self.ui.bt_sv.blockSignals(False)
-
-    def on_pressure_sv_b_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_b_6_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Air_FillingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_b_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Air_HoldingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_b_8_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Air_ReleaseTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_b_9_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Oil_Start_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_b_10_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Oil_End_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-
-    # ── Group C ──────────────────────────────────────────
-    def on_pressure_sv_c_1_changed(self, value: float): 
-        if self.plc_writer_connection:
-            self.plc_writer_worker.write_value.emit("P3_TemperatureSetting", self.cal_fah_to_cel(value)) #type: ignore
-        else: 
-            pass
-        self.ui.ct_sv.blockSignals(True)
-        self.ui.ct_sv.setValue(value)
-        self.ui.ct_sv.blockSignals(False)
-
-    def on_pressure_sv_c_5_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_PressureSetting", value) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_c_6_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Air_FillingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_c_7_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Air_HoldingTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_c_8_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Air_ReleaseTime", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_c_9_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Oil_Start_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-    def on_pressure_sv_c_10_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Oil_End_Time", self.cal_sec_to_msec(value)) if self.plc_writer_connection else None #type: ignore
-
-    # ── Cycle ──────────────────────────────────────────
-    def on_cycle_a_displ_2_changed(self, value: int): 
-        self.plc_writer_worker.write_value.emit("P1_CountTimes", value) if self.plc_writer_connection else None #type: ignore
-        # self.reset_cycle_btn("A")
-    def on_cycle_b_displ_2_changed(self, value: int): 
-        self.plc_writer_worker.write_value.emit("P2_CountTimes", value) if self.plc_writer_connection else None #type: ignore
-        # self.reset_cycle_btn("B")
-    def on_cycle_c_displ_2_changed(self, value: int): 
-        self.plc_writer_worker.write_value.emit("P3_CountTimes", value) if self.plc_writer_connection else None #type: ignore
-        # self.reset_cycle_btn("C")
-
-    # ── Temperature Modify ──────────────────────────────────────────
-    def on_t0_sv_changed(self, value: float): self.plc_writer_worker.write_value.emit("T0_TemperatureSetting", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_at_sv_changed(self, value: float): self.ui.pressure_sv_a_1.setValue(value)
-    def on_bt_sv_changed(self, value: float): self.ui.pressure_sv_b_1.setValue(value)
-    def on_ct_sv_changed(self, value: float): self.ui.pressure_sv_c_1.setValue(value)
-
-    def on_t0_h_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("T0_TempLimitHIGH", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_at_h_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_TempLimitHIGH", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_bt_h_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_TempLimitHIGH", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_ct_h_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_TempLimitHIGH", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-
-    def on_t0_l_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("T0_TempLimitLOW", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_at_l_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_TempLimitLOW", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_bt_l_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_TempLimitLOW", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_ct_l_alm_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_TempLimitLOW", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-
-    def on_t0_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("T0_TempOffset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_at_t1_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Temp1Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_at_t2_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Temp2Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_at_t3_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P1_Temp3Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_bt_t1_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Temp1Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_bt_t2_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Temp2Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_bt_t3_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P2_Temp3Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_ct_t1_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Temp1Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_ct_t2_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Temp2Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_ct_t3_offset_value_changed(self, value: float): self.plc_writer_worker.write_value.emit("P3_Temp3Offset", self.cal_fah_to_cel(value)) if self.plc_writer_connection else None #type: ignore
-    def on_table_write_cycle_value_changed(self, value: float): self.ui.table_write_cycle.setValue(float(self.ui.read_time_input.value())/1000) if (value*1000) < self.ui.read_time_input.value() else None #type: ignore
 
     def _on_logo_clicked(self):
         webbrowser.open("https://www.techlinksilicones.com/")
@@ -2484,8 +2400,10 @@ class StrikeMachine(QMainWindow):
         self._set_time_search_data_start_edit()
         self._set_time_search_data_end_edit()
 
-    # def (self):
-    
+    def alarm_page_btn(self):
+        self.user = False
+        self.ui.stackedWidget_2.setCurrentWidget(self.ui.alarm_page)
+
     def next_previous_pressure_page(self):
         index = self.ui.stackedWidget.currentIndex()
         if index == 0:
@@ -2607,7 +2525,7 @@ class StrikeMachine(QMainWindow):
             db_size: Optional[int] = None, 
             offsets: int = 198,
             poll_ms: int = 100,
-            logger_parent: str = None
+            logger_parent: str = None  # type: ignore
         ):
         try:
             if db_number is None:
@@ -2878,6 +2796,30 @@ class StrikeMachine(QMainWindow):
         self.thread_dict["plc_writer_thread"] = self.plc_writer_thread
         return True
     
+    def _setup_serial_threads(self):
+        self.serial_data_thread = QThread()
+        self.serial_data_worker = HYFWSerialRead(
+            name_module="HYFW_1",
+            port_keyword="CH340",
+            device_id=1,
+            poll_ms=1000,
+            retry_ms=5000,
+            scan_ms=1000,
+            connect_timeout=5.0,
+            logger_parent=self.stk_mch_folder
+        )
+        self.serial_data_worker.moveToThread(self.serial_data_thread)
+
+        self.serial_data_thread.started.connect(self.serial_data_worker.run)
+        self.serial_data_worker.data_ser.connect(self._data_port_com)
+        self.serial_data_worker.finished.connect(self.serial_data_thread.quit)
+
+        self.serial_data_thread.start()
+
+    def _data_port_com(self, data: dict):
+        with self._data_lock:
+            self.serial_data.update(data)
+
     def _data_temp(self, data: dict):
         # def _t(label, fn):
             # t = time.perf_counter()
@@ -3254,11 +3196,27 @@ class StrikeMachine(QMainWindow):
     def _data_alarm(self, data: dict):
         try:
             self._alarm_data_filter([
-                str(data.get('Alarm_Info', ""))
+                str(data.get('Alarm_Info', ''))
             ])
-            # )
         except Exception as e:
             self.logger.error("[Main]-[_data_alarm]:PLC Data Processing Error: %s", e)
+
+    def _data_serial(self, data: dict):
+        try:
+            def _to_float(value, default=0.0):
+                return default if value is None else float(value)
+            self._serial_data_filter([
+                _to_float(data.get('phase_A_voltage_V'), 0.0),
+                _to_float(data.get('phase_B_voltage_V'), 0.0),
+                _to_float(data.get('phase_C_voltage_V'), 0.0),
+                _to_float(data.get('phase_A_current_A'), 0.0),
+                _to_float(data.get('phase_B_current_A'), 0.0),
+                _to_float(data.get('phase_C_current_A'), 0.0),
+                _to_float(data.get('power_factor'), 0.0),
+                _to_float(data.get('frequency_Hz'), 0.0),
+            ])
+        except Exception as e:
+            self.logger.error("[Main]-[_data_serial]:Serial Data Processing Error: %s", e)
 
     def _set_init_data(self):
         self.init_signal = True
@@ -3386,6 +3344,7 @@ class StrikeMachine(QMainWindow):
                 self.data_pressure_timer.start()
                 self.data_group_timer.start()
                 self.data_alarm_timer.start()
+                self.data_serial_timer.start()
             else:
                 self.ui.sys_state_stacked_wid_40.setCurrentIndex(1)
                 if not self._shutting_down:
@@ -3477,6 +3436,13 @@ class StrikeMachine(QMainWindow):
             if v != self._last_i_o_group_3[i]:
                 obj.setValue(value)
                 self._last_i_o_group_3[i] = v
+
+    def _serial_data_filter(self, values):
+        for i, (obj, value) in enumerate(zip(self.i_o_group_4_obj, values)):
+            v = round(value, 2)
+            if v != self._last_i_o_group_4[i]:
+                obj.setValue(value)
+                self._last_i_o_group_4[i] = v
 
     def _group_a_data_filter(self, list_group_a_recv):
         try:
@@ -3629,37 +3595,8 @@ class StrikeMachine(QMainWindow):
             self._last_ct = v
 
     def _alarm_data_filter(self, alarm_recv):
-        if alarm_recv != "":
-            # self.ui.error_display.setText(alarm_recv) if self.ui.error_display.text() != alarm_recv else None
-            self.logger.error("[Main]-[_alarm_data_filter]:PLC Alarm: %s", alarm_recv)
-        # else:
-        #     if self.ui.error_display.text() != "":
-        #         self.ui.error_display.setText("")
-
-    def _setup_serial_threads(self):
-        self.serial_data_thread = QThread()
-        self.serial_data_worker = HYFWSerialRead(
-            name_module="HYFW_1",
-            port_keyword="CH340",
-            device_id=1,
-            poll_ms=1000,
-            retry_ms=5000,
-            scan_ms=3000,
-            connect_timeout=5.0,
-        )
-        self.serial_data_worker.moveToThread(self.serial_data_thread)
-
-        self.serial_data_thread.started.connect(self.serial_data_worker.run)
-        self.serial_data_worker.data_ser.connect(self._data_serial)
-        self.serial_data_worker.error.connect(lambda e: print("Error:", e))
-        self.serial_data_worker.connected.connect(lambda ok: print("Connected:", ok))
-        self.serial_data_worker.finished.connect(self.serial_data_thread.quit)
-
-        self.serial_data_thread.start()
-
-    def _data_serial(self, data: dict):
-        with self._data_lock:
-            self.serial_data.update(data)
+        if alarm_recv[0] != '':
+            self.logger.error("[Main]-[_alarm_data_filter]:PLC Alarm: %s", alarm_recv[0])
 
     def heating_btn(self, channel: str, checked: bool, btn=None):
         if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_btn.isChecked():
@@ -3682,11 +3619,11 @@ class StrikeMachine(QMainWindow):
         self._last_cmd_time[tag] = time.time()
 
         if checked:
-            self.ui.new_data_btn.setEnabled(True)
-            self.ui.clear_data_btn.setEnabled(True)
-        else:
             self.ui.new_data_btn.setEnabled(False)
             self.ui.clear_data_btn.setEnabled(False)
+        else:
+            self.ui.new_data_btn.setEnabled(True)
+            self.ui.clear_data_btn.setEnabled(True)
 
         if channel == "A":
             if not self.init_signal:
@@ -3756,11 +3693,11 @@ class StrikeMachine(QMainWindow):
 
         try:
             if checked:
-                self.ui.new_data_btn.setEnabled(True)
-                self.ui.clear_data_btn.setEnabled(True)
-            else:
                 self.ui.new_data_btn.setEnabled(False)
                 self.ui.clear_data_btn.setEnabled(False)
+            else:
+                self.ui.new_data_btn.setEnabled(True)
+                self.ui.clear_data_btn.setEnabled(True)
 
             if not self.init_signal:
                 if self._vacuum_a_flag and channel == "A":
@@ -3844,7 +3781,6 @@ class StrikeMachine(QMainWindow):
         if not tag:
             return
 
-        # Ghi nhận thời điểm vừa gửi lệnh
         self._last_cmd_time[tag] = time.time()
 
         try:
@@ -4014,137 +3950,6 @@ class StrikeMachine(QMainWindow):
         self.ui.heat_btn_c.blockSignals(False)
         self.ui.heat_btn_t0.blockSignals(False)
 
-    def clear_group_a_btn(self):
-        buttons = [
-            self.ui.refuel_btn_a, self.ui.vacuum_btn_a, self.ui.heat_btn_a
-        ]
-        if any(btn.isChecked() for btn in buttons):
-            return
-        try:
-            # Block signals for all channels during cleanup
-            for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c:
-                obj.blockSignals(True)
-            
-            for i in range(len(self.pressure_a_sv_obj)):
-                self.pressure_a_sv_obj[i].blockSignals(True)
-                self.pressure_a_sv_obj[i].setValue(0)
-                self.pressure_a_sv_obj[i].blockSignals(False)
-            for i in range(0):
-                self.temp_sv_obj[i].blockSignals(True)
-                self.temp_sv_obj[i].setValue(0)
-                self.temp_sv_obj[i].blockSignals(False)
-            items_a = [
-                self.plc_writer_worker.get_item("P1_CountTimes", self.list_for_import_a[0].value()),        # type: ignore
-                self.plc_writer_worker.get_item("P1_Oil_Start_Time", self.list_for_import_a[1].value()),    # type: ignore
-                self.plc_writer_worker.get_item("P1_Oil_End_Time", self.list_for_import_a[2].value()),      # type: ignore
-                self.plc_writer_worker.get_item("P1_Air_FillingTime", self.list_for_import_a[3].value()),   # type: ignore
-                self.plc_writer_worker.get_item("P1_Air_HoldingTime", self.list_for_import_a[4].value()),   # type: ignore
-                self.plc_writer_worker.get_item("P1_Air_ReleaseTime", self.list_for_import_a[5].value()),   # type: ignore
-                self.plc_writer_worker.get_item("P1_PressureSetting", self.list_for_import_a[6].value()),   # type: ignore
-                self.plc_writer_worker.get_item("P1_TemperatureSetting", self.list_for_import_a[7].value()) # type: ignore
-            ]
-            self.plc_writer_worker.write_multi.emit(items_a, "A")   # type: ignore
-            
-            # Unblock signals
-            for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c:
-                obj.blockSignals(False)
-            
-            if self.plc_writer_connection:
-                self.disable_btn("A", False)
-        except Exception as e:
-            self.logger.error(f"Failed to clear A data: {e}")
-            # Ensure signals are unblocked even on error
-            for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c:
-                obj.blockSignals(False)
-
-    def clear_group_b_btn(self):
-        buttons = [
-            self.ui.refuel_btn_b, self.ui.vacuum_btn_b, self.ui.heat_btn_b
-        ]
-        if any(btn.isChecked() for btn in buttons):
-            return
-
-        try:
-            # Block signals for all channels during cleanup
-            for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c:
-                obj.blockSignals(True)
-            
-            for i in range(len(self.pressure_b_sv_obj)):
-                self.pressure_b_sv_obj[i].blockSignals(True)
-                self.pressure_b_sv_obj[i].setValue(0)
-                self.pressure_b_sv_obj[i].blockSignals(False)
-            for i in range(1):
-                self.temp_sv_obj[i].blockSignals(True)
-                self.temp_sv_obj[i].setValue(0)
-                self.temp_sv_obj[i].blockSignals(False)
-            items_b = [
-                    self.plc_writer_worker.get_item("P2_CountTimes", self.list_for_import_b[0].value()),    # type: ignore
-                    self.plc_writer_worker.get_item("P2_Oil_Start_Time", self.list_for_import_b[1].value()),    # type: ignore
-                    self.plc_writer_worker.get_item("P2_Oil_End_Time", self.list_for_import_b[2].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P2_Air_FillingTime", self.list_for_import_b[3].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P2_Air_HoldingTime", self.list_for_import_b[4].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P2_Air_ReleaseTime", self.list_for_import_b[5].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P2_PressureSetting", self.list_for_import_b[6].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P2_TemperatureSetting", self.list_for_import_b[7].value()) # type: ignore
-                ]
-            self.plc_writer_worker.write_multi.emit(items_b, "B")   # type: ignore
-            
-            # Unblock signals
-            for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c:
-                obj.blockSignals(False)
-            
-            if self.plc_writer_connection:
-                self.disable_btn("B", False)
-        except Exception as e:
-            self.logger.error(f"Failed to clear B data: {e}")
-            # Ensure signals are unblocked even on error
-            for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c:
-                obj.blockSignals(False)
-
-    def clear_group_c_btn(self):
-        buttons = [
-            self.ui.refuel_btn_c, self.ui.vacuum_btn_c, self.ui.heat_btn_c
-        ]
-        if any(btn.isChecked() for btn in buttons):
-            return
-
-        try:
-            # Block signals for all channels during cleanup
-            for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c:
-                obj.blockSignals(True)
-            
-            for i in range(len(self.pressure_c_sv_obj)):
-                self.pressure_c_sv_obj[i].blockSignals(True)
-                self.pressure_c_sv_obj[i].setValue(0)
-                self.pressure_c_sv_obj[i].blockSignals(False)
-            for i in range(2):
-                self.temp_sv_obj[i].blockSignals(True)
-                self.temp_sv_obj[i].setValue(0)
-                self.temp_sv_obj[i].blockSignals(False)
-            items_c = [
-                    self.plc_writer_worker.get_item("P3_CountTimes", self.list_for_import_c[0].value()),    # type: ignore
-                    self.plc_writer_worker.get_item("P3_Oil_Start_Time", self.list_for_import_c[1].value()),    # type: ignore
-                    self.plc_writer_worker.get_item("P3_Oil_End_Time", self.list_for_import_c[2].value()),  # type: ignore
-                    self.plc_writer_worker.get_item("P3_Air_FillingTime", self.list_for_import_c[3].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P3_Air_HoldingTime", self.list_for_import_c[4].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P3_Air_ReleaseTime", self.list_for_import_c[5].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P3_PressureSetting", self.list_for_import_c[6].value()),   # type: ignore
-                    self.plc_writer_worker.get_item("P3_TemperatureSetting", self.list_for_import_c[7].value()) # type: ignore
-                ]
-            self.plc_writer_worker.write_multi.emit(items_c, "C")   # type: ignore
-            
-            # Unblock signals
-            for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c:
-                obj.blockSignals(False)
-            
-            if self.plc_writer_connection:
-                self.disable_btn("C", False)
-        except Exception as e:
-            self.logger.error(f"Failed to clear C data: {e}")
-            # Ensure signals are unblocked even on error
-            for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c:
-                obj.blockSignals(False)
-
     def clear_data_btn(self):
         buttons = [
             self.ui.refuel_btn_a, self.ui.vacuum_btn_a, self.ui.heat_btn_a,
@@ -4277,7 +4082,50 @@ class StrikeMachine(QMainWindow):
                 elif self._current_lang == "vn":
                     title = "Lỗi"
                     content = f"Không thể xoá dữ liệu: {e}"
-                ltmessage.error(self, title, content, self._current_lang)
+                ltmessage.error(self, title, content, self._current_lang) # type: ignore
+
+    def _clear_group(self, channel: str):
+        cfg = CLEAR_GROUP_CONFIG[channel]
+        guard_widgets = [getattr(self.ui, name) for name in cfg["guard_widgets"]]
+        if any(btn.isChecked() for btn in guard_widgets):
+            return
+
+        all_import_widgets = self.list_for_import_a + self.list_for_import_b + self.list_for_import_c
+        try:
+            for obj in all_import_widgets:
+                obj.blockSignals(True)
+
+            for widget in getattr(self, cfg["pressure_sv_obj"]):
+                widget.blockSignals(True)
+                widget.setValue(0)
+                widget.blockSignals(False)
+
+            temp_widget = self.temp_sv_obj[cfg["temp_sv_index"]]
+            temp_widget.blockSignals(True)
+            temp_widget.setValue(0)
+            temp_widget.blockSignals(False)
+
+            list_import = getattr(self, cfg["list_import"])
+            prefix = cfg["plc_prefix"]
+            items = [
+                self.plc_writer_worker.get_item(f"{prefix}_{tag}", list_import[i].value())
+                for i, tag in enumerate(CLEAR_GROUP_PLC_TAGS)
+            ]
+            self.plc_writer_worker.write_multi.emit(items, channel)
+
+            for obj in all_import_widgets:
+                obj.blockSignals(False)
+
+            if self.plc_writer_connection:
+                self.disable_btn(channel, False)
+        except Exception as e:
+            self.logger.error(f"Failed to clear {channel} data: {e}")
+            for obj in all_import_widgets:
+                obj.blockSignals(False)
+
+    def clear_group_a_btn(self): self._clear_group("A")
+    def clear_group_b_btn(self): self._clear_group("B")
+    def clear_group_c_btn(self): self._clear_group("C")
 
     def reset_cycle_btn(self, channel):
         try:
@@ -4717,17 +4565,11 @@ class StrikeMachine(QMainWindow):
             self.ui.at_sv.blockSignals(False)
             self.ui.bt_sv.blockSignals(False)
             self.ui.ct_sv.blockSignals(False)
-            if self.plc_writer_connection:
-                if not self.ui.set_cycle_a_btn.isChecked() and (self.list_for_import_a[0].value() > 0):
-                    self.ui.set_cycle_a_btn.click()
-                if not self.ui.set_cycle_b_btn.isChecked() and (self.list_for_import_b[0].value() > 0):
-                    self.ui.set_cycle_b_btn.click()
-                if not self.ui.set_cycle_c_btn.isChecked() and (self.list_for_import_c[0].value() > 0):
-                    self.ui.set_cycle_c_btn.click()
-                self.disable_btn("A", False)
-                self.disable_btn("B", False)
-                self.disable_btn("C", False)
-                self.disable_btn("T0", False)
+
+            self.disable_btn("A", False)
+            self.disable_btn("B", False)
+            self.disable_btn("C", False)
+            self.disable_btn("T0", False)
         except Exception as e:
             self.logger.error(f"[Main]-[new_data_btn]: Error occurred - {str(e)}")
 
@@ -4962,16 +4804,19 @@ class StrikeMachine(QMainWindow):
         \nBật hoặc tắt các điều khiển UI trong quá trình hoạt động của máy.
         """
         if channel == "A":
+            self.ui.set_cycle_a_btn.setEnabled(status)
             for i in range(1, 5):
                 self.pressure_a_sv_obj[i].setEnabled(status)
             return
 
         elif channel == "B":
+            self.ui.set_cycle_b_btn.setEnabled(status)
             for i in range(1, 5):
                 self.pressure_b_sv_obj[i].setEnabled(status)
             return
 
         elif channel == "C":
+            self.ui.set_cycle_c_btn.setEnabled(status)
             for i in range(1, 5):
                 self.pressure_c_sv_obj[i].setEnabled(status)
             return
