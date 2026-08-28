@@ -3840,13 +3840,13 @@ class StrikeMachine(QMainWindow):
             if not self.plc_writer_connection and not self.init_signal:
                 if self._current_lang == "en":
                     title = "Error"
-                    content = "PLC Writer not connected!"
+                    content = "PLC not connected!"
                 elif self._current_lang == "cn":
                     title = "错误"
-                    content = "PLC Writer 未连接!"
+                    content = "PLC 未连接!"
                 elif self._current_lang == "vn":
                     title = "Lỗi"
-                    content = "PLC Writer mất kết nối!"
+                    content = "PLC mất kết nối!"
                 ltmessage.error(self, title, content, self._current_lang)  # type: ignore
                 if btn is not None:
                     btn.blockSignals(True)   # Chặn signal để tránh gọi đệ quy
@@ -3903,12 +3903,12 @@ class StrikeMachine(QMainWindow):
         self.ui.refuel_btn_b.blockSignals(True)
         self.ui.refuel_btn_c.blockSignals(True)
 
-        self.ui.refuel_btn_a.setChecked(False)        
-        self.disable_oil_group("A", True)          
-        self.ui.refuel_btn_b.setChecked(False)   
-        self.disable_oil_group("B", True)  
-        self.ui.refuel_btn_c.setChecked(False) 
-        self.disable_oil_group("C", True)
+        self.ui.refuel_btn_a.setChecked(False)
+        self.disable_oil_group("A", True)   
+        self.ui.refuel_btn_b.setChecked(False)
+        self.disable_oil_group("B", True)   
+        self.ui.refuel_btn_c.setChecked(False)
+        self.disable_oil_group("C", True)   
 
         self.ui.refuel_btn_a.blockSignals(True)
         self.ui.refuel_btn_b.blockSignals(True)

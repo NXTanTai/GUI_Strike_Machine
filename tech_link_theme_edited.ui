@@ -1767,13 +1767,16 @@ QPushButton:checked {
                               <property name="font">
                                <font>
                                 <family>Segoe UI</family>
-                                <pointsize>19</pointsize>
+                                <pointsize>13</pointsize>
                                 <weight>75</weight>
                                 <bold>true</bold>
                                </font>
                               </property>
                               <property name="alignment">
                                <set>Qt::AlignCenter</set>
+                              </property>
+                              <property name="placeholderText">
+                               <string>Name</string>
                               </property>
                              </widget>
                             </item>
@@ -10482,7 +10485,7 @@ QSpinBox
                               <property name="currentIndex">
                                <number>0</number>
                               </property>
-                              <widget class="QWidget" name="page">
+                              <widget class="QWidget" name="start_page">
                                <layout class="QVBoxLayout" name="verticalLayout_36">
                                 <property name="spacing">
                                  <number>5</number>
@@ -10552,6 +10555,79 @@ QPushButton:checked:pressed {
                                   </property>
                                   <property name="text">
                                    <string> Start</string>
+                                  </property>
+                                  <property name="icon">
+                                   <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                    <normaloff>:/Icons/play.png</normaloff>:/Icons/play.png</iconset>
+                                  </property>
+                                  <property name="iconSize">
+                                   <size>
+                                    <width>24</width>
+                                    <height>24</height>
+                                   </size>
+                                  </property>
+                                  <property name="checkable">
+                                   <bool>true</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                              <widget class="QWidget" name="stop_page">
+                               <layout class="QVBoxLayout" name="verticalLayout_17">
+                                <property name="leftMargin">
+                                 <number>3</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>4</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>3</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>5</number>
+                                </property>
+                                <item>
+                                 <widget class="QPushButton" name="stop_start_btn">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>16777215</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <family>Segoe UI</family>
+                                    <pointsize>21</pointsize>
+                                    <weight>75</weight>
+                                    <bold>true</bold>
+                                   </font>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    background-color: #EF4444;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+}
+QPushButton:hover {
+    background-color: rgb(175, 49, 49);
+}
+QPushButton:pressed {
+	color: white;
+    background-color: #085A91;
+}
+</string>
+                                  </property>
+                                  <property name="text">
+                                   <string> Stop</string>
                                   </property>
                                   <property name="icon">
                                    <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
@@ -22280,7 +22356,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="left_side_btn_group"/>
   <buttongroup name="language_group_btn"/>
+  <buttongroup name="left_side_btn_group"/>
  </buttongroups>
 </ui>

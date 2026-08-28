@@ -317,8 +317,7 @@ class HYFWSerialRead(QObject):
             if now - self._last_scan_log_time >= 5:
                 if self.logger:
                     self.logger.warning(
-                        f"[SERIAL READ {self._name_module}]: Khong tim thay cong COM chua '%s', "
-                        f"se quet lai moi %d ms", self._port_keyword, self._scan_ms
+                        f"[SERIAL READ {self._name_module}]: Khong tim thay cong '%s'", self._port_keyword
                     )
                 self._last_scan_log_time = now
             self.connected.emit(False)
