@@ -628,7 +628,7 @@ QPushButton:checked {
 	color: #0AB1F9;
 }</string>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="5,5">
+           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="6,5">
             <property name="spacing">
              <number>10</number>
             </property>
@@ -10575,17 +10575,20 @@ QPushButton:checked:pressed {
                               </widget>
                               <widget class="QWidget" name="stop_page">
                                <layout class="QVBoxLayout" name="verticalLayout_17">
+                                <property name="spacing">
+                                 <number>5</number>
+                                </property>
                                 <property name="leftMargin">
-                                 <number>3</number>
+                                 <number>0</number>
                                 </property>
                                 <property name="topMargin">
-                                 <number>4</number>
-                                </property>
-                                <property name="rightMargin">
                                  <number>3</number>
                                 </property>
+                                <property name="rightMargin">
+                                 <number>4</number>
+                                </property>
                                 <property name="bottomMargin">
-                                 <number>5</number>
+                                 <number>3</number>
                                 </property>
                                 <item>
                                  <widget class="QPushButton" name="stop_start_btn">
@@ -10631,7 +10634,7 @@ QPushButton:pressed {
                                   </property>
                                   <property name="icon">
                                    <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                                    <normaloff>:/Icons/play.png</normaloff>:/Icons/play.png</iconset>
+                                    <normaloff>:/Icons/stop.png</normaloff>:/Icons/stop.png</iconset>
                                   </property>
                                   <property name="iconSize">
                                    <size>

@@ -3282,6 +3282,7 @@ class StrikeMachine(QMainWindow):
             return
         sync_map = [
             (self.ui.start_stop_btn,            "START",             "_start_flag"),
+            (self.ui.start_stop_btn,            "STOP",              "_stop_flag"),
             (self.ui.heat_btn_t0,          "T0_Start_Heat",     "_t0_heat_flag"),
             (self.ui.heat_btn_a,      "P1_Start_Heat",     "_heating_a_flag"),
             (self.ui.vacuum_btn_a,    "P1_Start_Pressure", "_vacuum_a_flag"),
@@ -3853,15 +3854,7 @@ class StrikeMachine(QMainWindow):
                     btn.setChecked(False)
                     btn.blockSignals(False)
                 return
-            tag_map = {
-                "Start":  "START",
-            }
-            tag = tag_map.get(channel)
-            if not tag:
-                return
-
-            self._last_cmd_time[tag] = time.time()
-
+            
             if checked:
                 self.ui.sys_state_stacked_wid_39.setCurrentIndex(1)
                 if self._current_lang == "en":
@@ -3875,6 +3868,15 @@ class StrikeMachine(QMainWindow):
                 else:
                     self.plc_writer_worker.write_bool.emit("START", True)   # type: ignore
                 self.data_table.start()
+                tag_map = {
+                    "Start":  "START",
+                }
+                tag = tag_map.get(channel)
+                if not tag:
+                    return
+
+                self._last_cmd_time[tag] = time.time()
+
                 self.logger.info("[Main]-[start_stop_btn]: System On")
             else:
                 self.ui.sys_state_stacked_wid_39.setCurrentIndex(0)
@@ -3884,8 +3886,8 @@ class StrikeMachine(QMainWindow):
                     self.ui.start_stop_btn.setText("开始")
                 elif self._current_lang == "vn":
                     self.ui.start_stop_btn.setText("Bật")
-                if self._start_flag:
-                    self._start_flag = False
+                if self._stop_flag:
+                    self._stop_flag = False
                 else:
                     self.plc_writer_worker.write_bool.emit("STOP", True)    # type: ignore
                     QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("START", False))  # type: ignore
@@ -3894,6 +3896,15 @@ class StrikeMachine(QMainWindow):
                 QTimer.singleShot(250, self._set_off_vacuum_btn)
                 QTimer.singleShot(250, self._set_off_heating_btn)
                 self.data_table.stop()
+                tag_map = {
+                    "Stop":  "STOP",
+                }
+                tag = tag_map.get(channel)
+                if not tag:
+                    return
+
+                self._last_cmd_time[tag] = time.time()
+
                 self.logger.info("[Main]-[start_stop_btn]: System Off")
         except Exception as e:
             self.logger.error(f"[Main]-[start_stop_btn]: Error occurred - {str(e)}")

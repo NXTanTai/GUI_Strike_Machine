@@ -483,7 +483,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_3.addWidget(self.open_side_menu_btn)
 
-        self.verticalLayout_3.setStretch(0, 5)
+        self.verticalLayout_3.setStretch(0, 6)
         self.verticalLayout_3.setStretch(1, 5)
 
         self.horizontalLayout_2.addWidget(self.left_side_menu_widget)
@@ -5080,8 +5080,9 @@ class Ui_MainWindow(object):
         self.stop_page = QWidget()
         self.stop_page.setObjectName(u"stop_page")
         self.verticalLayout_17 = QVBoxLayout(self.stop_page)
+        self.verticalLayout_17.setSpacing(5)
         self.verticalLayout_17.setObjectName(u"verticalLayout_17")
-        self.verticalLayout_17.setContentsMargins(3, 4, 3, 5)
+        self.verticalLayout_17.setContentsMargins(0, 3, 4, 3)
         self.stop_start_btn = QPushButton(self.stop_page)
         self.stop_start_btn.setObjectName(u"stop_start_btn")
         sizePolicy.setHeightForWidth(self.stop_start_btn.sizePolicy().hasHeightForWidth())
@@ -5103,7 +5104,9 @@ class Ui_MainWindow(object):
 "    background-color: #085A91;\n"
 "}\n"
 "")
-        self.stop_start_btn.setIcon(icon20)
+        icon21 = QIcon()
+        icon21.addFile(u":/Icons/stop.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.stop_start_btn.setIcon(icon21)
         self.stop_start_btn.setIconSize(QSize(24, 24))
         self.stop_start_btn.setCheckable(True)
 
@@ -8039,9 +8042,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon21 = QIcon()
-        icon21.addFile(u":/Icons/to-do-list.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.write_table_label.setIcon(icon21)
+        icon22 = QIcon()
+        icon22.addFile(u":/Icons/to-do-list.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.write_table_label.setIcon(icon22)
         self.write_table_label.setIconSize(QSize(24, 24))
         self.write_table_label.setCheckable(True)
 
@@ -8135,9 +8138,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        icon22 = QIcon()
-        icon22.addFile(u":/Icons/broom.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.reset_cycle_c_btn.setIcon(icon22)
+        icon23 = QIcon()
+        icon23.addFile(u":/Icons/broom.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.reset_cycle_c_btn.setIcon(icon23)
         self.reset_cycle_c_btn.setIconSize(QSize(24, 24))
 
         self.horizontalLayout_48.addWidget(self.reset_cycle_c_btn)
@@ -8199,7 +8202,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        self.reset_cycle_b_btn.setIcon(icon22)
+        self.reset_cycle_b_btn.setIcon(icon23)
         self.reset_cycle_b_btn.setIconSize(QSize(24, 24))
 
         self.horizontalLayout_46.addWidget(self.reset_cycle_b_btn)
@@ -8283,9 +8286,9 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: orange; \n"
 "padding-right: 3px;")
-        icon23 = QIcon()
-        icon23.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton_24.setIcon(icon23)
+        icon24 = QIcon()
+        icon24.addFile(u":/Icons/record-button (2).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_24.setIcon(icon24)
         self.pushButton_24.setIconSize(QSize(24, 24))
 
         self.horizontalLayout_7.addWidget(self.pushButton_24)
@@ -8384,7 +8387,7 @@ class Ui_MainWindow(object):
 "border-radius: 10px;\n"
 "color: orange; \n"
 "padding-right: 3px;")
-        self.pushButton_22.setIcon(icon23)
+        self.pushButton_22.setIcon(icon24)
         self.pushButton_22.setIconSize(QSize(24, 24))
 
         self.horizontalLayout_8.addWidget(self.pushButton_22)
@@ -8463,7 +8466,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: #E0F2FE;\n"
 "}")
-        self.reset_cycle_a_btn.setIcon(icon22)
+        self.reset_cycle_a_btn.setIcon(icon23)
         self.reset_cycle_a_btn.setIconSize(QSize(24, 24))
 
         self.horizontalLayout_44.addWidget(self.reset_cycle_a_btn)
@@ -8554,9 +8557,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon24 = QIcon()
-        icon24.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.ip_plc_address.setIcon(icon24)
+        icon25 = QIcon()
+        icon25.addFile(u":/Icons/ip-address.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.ip_plc_address.setIcon(icon25)
         self.ip_plc_address.setIconSize(QSize(24, 24))
         self.ip_plc_address.setCheckable(True)
 
@@ -8573,9 +8576,9 @@ class Ui_MainWindow(object):
 "    border: none;\n"
 "    text-align: left;\n"
 "}")
-        icon25 = QIcon()
-        icon25.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.db_file_path.setIcon(icon25)
+        icon26 = QIcon()
+        icon26.addFile(u":/Icons/search (1).png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.db_file_path.setIcon(icon26)
         self.db_file_path.setIconSize(QSize(24, 24))
         self.db_file_path.setCheckable(True)
 
@@ -8625,9 +8628,9 @@ class Ui_MainWindow(object):
 "	border-right: 5px solid #0AB1F9;\n"
 "	color: #0AB1F9;\n"
 "}")
-        icon26 = QIcon()
-        icon26.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.cmd_btn.setIcon(icon26)
+        icon27 = QIcon()
+        icon27.addFile(u":/Icons/square-terminal-pressed.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.cmd_btn.setIcon(icon27)
         self.cmd_btn.setIconSize(QSize(60, 60))
 
         self.gridLayout_6.addWidget(self.cmd_btn, 0, 2, 2, 1)
@@ -8926,7 +8929,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_44.sizePolicy().hasHeightForWidth())
         self.pushButton_44.setSizePolicy(sizePolicy)
         self.pushButton_44.setFont(font23)
-        self.pushButton_44.setIcon(icon23)
+        self.pushButton_44.setIcon(icon24)
         self.pushButton_44.setIconSize(QSize(24, 24))
 
         self.horizontalLayout_47.addWidget(self.pushButton_44)
@@ -9900,9 +9903,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.search_icon.sizePolicy().hasHeightForWidth())
         self.search_icon.setSizePolicy(sizePolicy)
         self.search_icon.setStyleSheet(u"padding: 5px;")
-        icon27 = QIcon()
-        icon27.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.search_icon.setIcon(icon27)
+        icon28 = QIcon()
+        icon28.addFile(u":/Icons/search_2.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.search_icon.setIcon(icon28)
         self.search_icon.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_3.addWidget(self.search_icon)
@@ -10250,9 +10253,9 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.clear_history_search.sizePolicy().hasHeightForWidth())
         self.clear_history_search.setSizePolicy(sizePolicy)
         self.clear_history_search.setMinimumSize(QSize(45, 0))
-        icon28 = QIcon()
-        icon28.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.clear_history_search.setIcon(icon28)
+        icon29 = QIcon()
+        icon29.addFile(u":/Icons/circle-xmark.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.clear_history_search.setIcon(icon29)
         self.clear_history_search.setIconSize(QSize(30, 30))
 
         self.horizontalLayout_3.addWidget(self.clear_history_search)
@@ -10282,9 +10285,9 @@ class Ui_MainWindow(object):
 "    background-color: #94A3B8;\n"
 "    color: #CBD5E1;\n"
 "}")
-        icon29 = QIcon()
-        icon29.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.export_all_tables_to_excel_btn.setIcon(icon29)
+        icon30 = QIcon()
+        icon30.addFile(u":/Icons/xlsx-file-format.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.export_all_tables_to_excel_btn.setIcon(icon30)
         self.export_all_tables_to_excel_btn.setIconSize(QSize(24, 24))
 
         self.list_query_btn.addWidget(self.export_all_tables_to_excel_btn)

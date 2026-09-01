@@ -4204,3 +4204,29 @@ Current thread's C stack trace (most recent call first):
 2026-08-28 08:28:36,906 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
 2026-08-28 08:28:36,909 - [main] - INFO - app.exec() returned exit_code=0
 2026-08-28 08:28:37,076 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=24000 at 2026-09-01 11:21:48.241918 =====
+2026-09-01 11:21:48,243 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-09-01 11:21:48,244 - [main] - INFO - Watchdog initialized. PID=24000 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=152 at 2026-09-01 11:21:48.741559 =====
+2026-09-01 11:21:48,741 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-09-01 11:21:48,742 - [loading] - INFO - Watchdog initialized. PID=152 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+2026-09-01 11:22:15,827 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-09-01 11:22:15,840 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Thread 0x00002854 [Thread-7 (_fetch)] (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\source_edited.py", line 2139 in _fetch
+  File "C:\Users\automation02\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1024 in run
+  File "C:\Users\automation02\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1082 in _bootstrap_inner
+  File "C:\Users\automation02\AppData\Local\Python\pythoncore-3.14-64\Lib\threading.py", line 1044 in _bootstrap
+
+Current thread 0x00004ae4 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 328 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-09-01 11:22:30,290 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-09-01 11:22:30,291 - [main] - INFO - app.exec() returned exit_code=0
+2026-09-01 11:22:30,392 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
