@@ -50,21 +50,22 @@ from typing import Any, Optional
 import serial.tools.list_ports as list_ports
 from pymodbus.client import ModbusSerialClient
 from pymodbus.exceptions import ModbusException
+from LogFileHandler import MonthlyRotatingFileHandler
 
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
 REALTIME_REGISTERS = {
-    "phase_A_voltage_V":         dict(address=4096, count=1, scale=100, signed=False),
-    "phase_B_voltage_V":         dict(address=4097, count=1, scale=100, signed=False),
-    "phase_C_voltage_V":         dict(address=4098, count=1, scale=100, signed=False),
-    "phase_A_current_A":         dict(address=4105, count=1, scale=100, signed=False),
-    "phase_B_current_A":         dict(address=4106, count=1, scale=100, signed=False),
-    "phase_C_current_A":         dict(address=4107, count=1, scale=100, signed=False),
-    "total_active_power_kW":     dict(address=4113, count=1, scale=100, signed=True),
-    "total_reactive_power_kvar": dict(address=4117, count=1, scale=100, signed=True),
-    "total_apparent_power_kVA":  dict(address=4121, count=1, scale=100, signed=False),
-    "power_factor":              dict(address=4125, count=1, scale=100, signed=True),
-    "frequency_Hz":              dict(address=4126, count=1, scale=100, signed=False),
+    "V_A_HEATER_0":         dict(address=4096, count=1, scale=100, signed=False),
+    "V_B_HEATER_0":         dict(address=4097, count=1, scale=100, signed=False),
+    "V_C_HEATER_0":         dict(address=4098, count=1, scale=100, signed=False),
+    "I_A_HEATER_0":         dict(address=4105, count=1, scale=100, signed=False),
+    "I_B_HEATER_0":         dict(address=4106, count=1, scale=100, signed=False),
+    "I_C_HEATER_0":         dict(address=4107, count=1, scale=100, signed=False),
+    "total_active_power_kW_HEATER_0":     dict(address=4113, count=1, scale=100, signed=True),
+    "total_reactive_power_kvar_HEATER_0": dict(address=4117, count=1, scale=100, signed=True),
+    "total_apparent_power_kVA_HEATER_0":  dict(address=4121, count=1, scale=100, signed=False),
+    "power_factor_HEATER_0":              dict(address=4125, count=1, scale=100, signed=True),
+    "frequency_Hz_HEATER_0":              dict(address=4126, count=1, scale=100, signed=False),
 }
 
 ENERGY_REGISTERS = {
@@ -123,6 +124,7 @@ class HYFWSerialRead(QObject):
     data_ser   = Signal(dict)
     error        = Signal(str)
     connected    = Signal(bool)
+    port_name     = Signal(str)
     disconnected = Signal()
     finished     = Signal()
     elapsed_time = Signal(float)
@@ -187,11 +189,10 @@ class HYFWSerialRead(QObject):
 
         log_dir = self.folder / "Serial Log"
         os.makedirs(log_dir, exist_ok=True)
-        log_date = datetime.now().strftime("%d_%m_%Y")
-        log_filename = os.path.join(log_dir, f'SERIAL_READ_{self._name_module}_{log_date}.log')
 
-        file_handler = logging.handlers.RotatingFileHandler(
-            log_filename,
+        file_handler = MonthlyRotatingFileHandler(
+            base_log_dir=log_dir,
+            prefix=f"SERIAL_READ_{self._name_module}",
             maxBytes=5 * 1024 * 1024,
             backupCount=5,
             encoding='utf-8'
@@ -306,23 +307,23 @@ class HYFWSerialRead(QObject):
         if not self._running:
             return False
 
-        # 1) Xác định cổng cần dùng
         if self._fixed_port:
             port = self._fixed_port
         else:
             port = find_serial_port(self._port_keyword)
 
         if not port:
-            now = time.time()
-            if now - self._last_scan_log_time >= 5:
-                if self.logger:
-                    self.logger.warning(
-                        f"[SERIAL READ {self._name_module}]: Khong tim thay cong '%s'", self._port_keyword
-                    )
-                self._last_scan_log_time = now
+            # now = time.time()
+            # if now - self._last_scan_log_time >= 5:
+            #     if self.logger:
+            #         self.logger.warning(
+            #             f"[SERIAL READ {self._name_module}]: Khong tim thay cong '%s'", self._port_keyword
+            #         )
+            #     self._last_scan_log_time = now
             self.connected.emit(False)
             self._client = None
             self._active_port = None
+            self.port_name.emit("None")
             return False  
         
         result = {"client": None, "error": None}
@@ -337,10 +338,12 @@ class HYFWSerialRead(QObject):
                     stopbits=self._stopbits,
                     bytesize=self._bytesize,
                     timeout=self._timeout,
+                    retries=1,
                 )
                 ok = c.connect()
                 if ok:
                     result["client"] = c  # type: ignore
+
                 else:
                     result["error"] = f"Khong the mo cong {port}"  # type: ignore
             except Exception as exc:
@@ -361,25 +364,26 @@ class HYFWSerialRead(QObject):
             return True
 
         if not done.is_set():
-            # Quá thời gian connect_timeout mà chưa xong -> coi như thất bại
             msg = f"Timeout ({self._connect_timeout}s) khi ket noi cong {port}"
         elif result["client"]:
             self._client = result["client"]
             self._active_port = port
+            self.port_name.emit(port)   
             self.connected.emit(True)
             return True
         else:
             msg = f"Connection failed: {result['error']}"
 
-        now = time.time()
-        if now - self._last_error_log_time >= 5:
-            if self.logger:
-                self.logger.error(f"[SERIAL READ {self._name_module}]: %s", msg)
-            self._last_error_log_time = now
+        # now = time.time()
+        # if now - self._last_error_log_time >= 5:
+        #     if self.logger:
+        #         self.logger.error(f"[SERIAL READ {self._name_module}]: %s", msg)
+        #     self._last_error_log_time = now
         self.error.emit(msg)
         self.connected.emit(False)
         self._client = None
         self._active_port = None
+        self.port_name.emit("None")
         return True 
 
     def _disconnect_serial(self):
@@ -390,6 +394,7 @@ class HYFWSerialRead(QObject):
                 pass
             self._client = None
         self._active_port = None
+        self.port_name.emit("None")
         self.connected.emit(False)
 
     @Slot()
@@ -413,13 +418,13 @@ class HYFWSerialRead(QObject):
             # self.elapsed_time.emit(elapsed_ms)
 
         except ModbusException as exc:
-            if self.logger:
-                self.logger.warning(f"[SERIAL READ {self._name_module}]: Read error: %s", exc)
-            self.error.emit(f"Read error: {exc}")
+            # if self.logger:
+            #     self.logger.warning(f"[SERIAL READ {self._name_module}]: Read error: %s", exc)
+            self.error.emit(str(exc))
             self._reconnect()
         except Exception as exc:
-            if self.logger:
-                self.logger.error(f"[SERIAL READ {self._name_module}]: Unexpected error: %s", exc)
+            # if self.logger:
+            #     self.logger.error(f"[SERIAL READ {self._name_module}]: Unexpected error: %s", exc)
             self.error.emit(str(exc))
             self._reconnect()
 
@@ -445,6 +450,8 @@ class HYFWSerialRead(QObject):
 
     def _read_all(self) -> dict:
         data: dict[str, Any] = {}
+        fail_count = 0
+        total = len(REALTIME_REGISTERS)
 
         for name, cfg in REALTIME_REGISTERS.items():
             if not self._running:
@@ -457,25 +464,15 @@ class HYFWSerialRead(QObject):
                 data[name] = raw / cfg["scale"]
             except Exception as exc:
                 data[name] = None
-                # if self.logger:
-                #     self.logger.error(
-                #         f"[SERIAL READ {self._name_module}]: Parse error [%s]: %s",
-                #         name, exc,
-                #     )
+                fail_count += 1
+                if self.logger:
+                    self.logger.warning(
+                        f"[SERIAL READ {self._name_module}]: Read failed [%s]: %s", name, exc
+                    )
 
-        # for name, cfg in ENERGY_REGISTERS.items():
-        #     if not self._running:
-        #         return data
-        #     try:
-        #         regs = self._read_input_registers(cfg["address"], cfg["count"])
-        #         raw = decode_u32(regs[0], regs[1], self._word_order_big_endian)
-        #         data[name] = raw / cfg["scale"]
-        #     except Exception as exc:
-        #         data[name] = None
-        #         if self.logger:
-        #             self.logger.error(
-        #                 f"[SERIAL READ {self._name_module}]: Parse error [%s]: %s",
-        #                 name, exc,
-        #             )
+        if fail_count == total:
+            raise ModbusException(
+                f"Serial lost"
+            )
 
         return data

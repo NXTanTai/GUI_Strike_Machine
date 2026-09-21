@@ -910,7 +910,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>0</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="temp_press_page">
               <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -10567,7 +10567,7 @@ QPushButton:checked:pressed {
                                    </size>
                                   </property>
                                   <property name="checkable">
-                                   <bool>true</bool>
+                                   <bool>false</bool>
                                   </property>
                                  </widget>
                                 </item>
@@ -10643,7 +10643,7 @@ QPushButton:pressed {
                                    </size>
                                   </property>
                                   <property name="checkable">
-                                   <bool>true</bool>
+                                   <bool>false</bool>
                                   </property>
                                  </widget>
                                 </item>
@@ -16251,46 +16251,148 @@ QPushButton:checked {
                              <number>0</number>
                             </property>
                             <item>
-                             <widget class="QPushButton" name="heat_btn_t0">
-                              <property name="sizePolicy">
-                               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                <horstretch>0</horstretch>
-                                <verstretch>0</verstretch>
-                               </sizepolicy>
+                             <widget class="QStackedWidget" name="heat_t0_stacked">
+                              <property name="currentIndex">
+                               <number>1</number>
                               </property>
-                              <property name="maximumSize">
-                               <size>
-                                <width>16777215</width>
-                                <height>150</height>
-                               </size>
-                              </property>
-                              <property name="font">
-                               <font>
-                                <family>Segoe UI</family>
-                                <pointsize>13</pointsize>
-                                <weight>75</weight>
-                                <bold>true</bold>
-                               </font>
-                              </property>
-                              <property name="styleSheet">
-                               <string notr="true"/>
-                              </property>
-                              <property name="text">
-                               <string> Heating T0</string>
-                              </property>
-                              <property name="icon">
-                               <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                                <normaloff>:/Icons/heat.png</normaloff>:/Icons/heat.png</iconset>
-                              </property>
-                              <property name="iconSize">
-                               <size>
-                                <width>24</width>
-                                <height>24</height>
-                               </size>
-                              </property>
-                              <property name="checkable">
-                               <bool>true</bool>
-                              </property>
+                              <widget class="QWidget" name="heat_t0_on_page">
+                               <layout class="QVBoxLayout" name="verticalLayout_37">
+                                <property name="spacing">
+                                 <number>5</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>3</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>4</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>3</number>
+                                </property>
+                                <item>
+                                 <widget class="QPushButton" name="heat_on_btn_t0">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>150</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <family>Segoe UI</family>
+                                    <pointsize>13</pointsize>
+                                    <weight>75</weight>
+                                    <bold>true</bold>
+                                   </font>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true"/>
+                                  </property>
+                                  <property name="text">
+                                   <string> Heating T0</string>
+                                  </property>
+                                  <property name="icon">
+                                   <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                    <normaloff>:/Icons/heat.png</normaloff>:/Icons/heat.png</iconset>
+                                  </property>
+                                  <property name="iconSize">
+                                   <size>
+                                    <width>24</width>
+                                    <height>24</height>
+                                   </size>
+                                  </property>
+                                  <property name="checkable">
+                                   <bool>false</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
+                              <widget class="QWidget" name="heat_t0_off_page">
+                               <layout class="QVBoxLayout" name="verticalLayout_23">
+                                <property name="spacing">
+                                 <number>5</number>
+                                </property>
+                                <property name="leftMargin">
+                                 <number>0</number>
+                                </property>
+                                <property name="topMargin">
+                                 <number>3</number>
+                                </property>
+                                <property name="rightMargin">
+                                 <number>4</number>
+                                </property>
+                                <property name="bottomMargin">
+                                 <number>3</number>
+                                </property>
+                                <item>
+                                 <widget class="QPushButton" name="heat_off_btn_t0">
+                                  <property name="sizePolicy">
+                                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                   </sizepolicy>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>150</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <family>Segoe UI</family>
+                                    <pointsize>13</pointsize>
+                                    <weight>75</weight>
+                                    <bold>true</bold>
+                                   </font>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QPushButton {
+    background-color: #EF4444;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+QPushButton:hover {
+    background-color: rgb(175, 49, 49);
+}
+QPushButton:pressed {
+	color: white;
+    background-color: #085A91;
+}
+</string>
+                                  </property>
+                                  <property name="text">
+                                   <string> Stopping T0</string>
+                                  </property>
+                                  <property name="icon">
+                                   <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                    <normaloff>:/Icons/heat.png</normaloff>:/Icons/heat.png</iconset>
+                                  </property>
+                                  <property name="iconSize">
+                                   <size>
+                                    <width>24</width>
+                                    <height>24</height>
+                                   </size>
+                                  </property>
+                                  <property name="checkable">
+                                   <bool>false</bool>
+                                  </property>
+                                 </widget>
+                                </item>
+                               </layout>
+                              </widget>
                              </widget>
                             </item>
                            </layout>
@@ -16545,7 +16647,7 @@ QFrame:hover {
                        </property>
                        <layout class="QVBoxLayout" name="verticalLayout_24" stretch="4,7">
                         <property name="spacing">
-                         <number>10</number>
+                         <number>5</number>
                         </property>
                         <property name="leftMargin">
                          <number>0</number>
@@ -16613,16 +16715,16 @@ image:url(:/Icons/Image_20260416155332_127_10.png)</string>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_9" stretch="0">
                            <property name="spacing">
-                            <number>10</number>
+                            <number>5</number>
                            </property>
                            <property name="leftMargin">
-                            <number>10</number>
+                            <number>5</number>
                            </property>
                            <property name="topMargin">
-                            <number>10</number>
+                            <number>5</number>
                            </property>
                            <property name="rightMargin">
-                            <number>10</number>
+                            <number>5</number>
                            </property>
                            <property name="bottomMargin">
                             <number>5</number>
@@ -17978,7 +18080,7 @@ QFrame:hover {
                              <property name="title">
                               <string>Communication</string>
                              </property>
-                             <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,2,0">
+                             <layout class="QGridLayout" name="gridLayout_6" columnstretch="0,1,0,0,0">
                               <property name="leftMargin">
                                <number>10</number>
                               </property>
@@ -17994,90 +18096,6 @@ QFrame:hover {
                               <property name="spacing">
                                <number>10</number>
                               </property>
-                              <item row="1" column="0">
-                               <widget class="QPushButton" name="ip_plc_address">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
-                                </property>
-                                <property name="font">
-                                 <font>
-                                  <family>MS Shell Dlg 2</family>
-                                  <pointsize>12</pointsize>
-                                  <weight>75</weight>
-                                  <bold>true</bold>
-                                 </font>
-                                </property>
-                                <property name="styleSheet">
-                                 <string notr="true">QPushButton {
-    color: black;
-    background-color: transparent;
-    border: none;
-    text-align: left;
-}</string>
-                                </property>
-                                <property name="text">
-                                 <string> IP:</string>
-                                </property>
-                                <property name="icon">
-                                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                                  <normaloff>:/Icons/ip-address.png</normaloff>:/Icons/ip-address.png</iconset>
-                                </property>
-                                <property name="iconSize">
-                                 <size>
-                                  <width>24</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                                <property name="checkable">
-                                 <bool>true</bool>
-                                </property>
-                               </widget>
-                              </item>
-                              <item row="0" column="0">
-                               <widget class="QPushButton" name="db_file_path">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
-                                </property>
-                                <property name="font">
-                                 <font>
-                                  <family>MS Shell Dlg 2</family>
-                                  <pointsize>12</pointsize>
-                                  <weight>75</weight>
-                                  <bold>true</bold>
-                                 </font>
-                                </property>
-                                <property name="styleSheet">
-                                 <string notr="true">QPushButton {
-    color: black;
-    background-color: transparent;
-    border: none;
-    text-align: left;
-}</string>
-                                </property>
-                                <property name="text">
-                                 <string> DB Path:</string>
-                                </property>
-                                <property name="icon">
-                                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
-                                  <normaloff>:/Icons/search (1).png</normaloff>:/Icons/search (1).png</iconset>
-                                </property>
-                                <property name="iconSize">
-                                 <size>
-                                  <width>24</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                                <property name="checkable">
-                                 <bool>true</bool>
-                                </property>
-                               </widget>
-                              </item>
                               <item row="0" column="1">
                                <widget class="QLineEdit" name="db_file_path_edit">
                                 <property name="sizePolicy">
@@ -18101,30 +18119,7 @@ QFrame:hover {
                                 </property>
                                </widget>
                               </item>
-                              <item row="1" column="1">
-                               <widget class="QLineEdit" name="plc_ip_address_edit">
-                                <property name="sizePolicy">
-                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                                  <horstretch>0</horstretch>
-                                  <verstretch>0</verstretch>
-                                 </sizepolicy>
-                                </property>
-                                <property name="font">
-                                 <font>
-                                  <pointsize>12</pointsize>
-                                  <weight>75</weight>
-                                  <bold>true</bold>
-                                 </font>
-                                </property>
-                                <property name="text">
-                                 <string/>
-                                </property>
-                                <property name="placeholderText">
-                                 <string notr="true"> Enter IP Address: 172.16.100.***</string>
-                                </property>
-                               </widget>
-                              </item>
-                              <item row="0" column="2" rowspan="2">
+                              <item row="0" column="4" rowspan="2">
                                <widget class="QPushButton" name="cmd_btn">
                                 <property name="sizePolicy">
                                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -18171,6 +18166,193 @@ QPushButton:checked {
                                   <width>60</width>
                                   <height>60</height>
                                  </size>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="1" column="1">
+                               <widget class="QLineEdit" name="plc_ip_address_edit">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="placeholderText">
+                                 <string notr="true"> Enter IP: 172.16.100.***</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="0" column="0">
+                               <widget class="QPushButton" name="db_file_path">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <family>MS Shell Dlg 2</family>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    color: black;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string> DB Path:</string>
+                                </property>
+                                <property name="icon">
+                                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <normaloff>:/Icons/search (1).png</normaloff>:/Icons/search (1).png</iconset>
+                                </property>
+                                <property name="iconSize">
+                                 <size>
+                                  <width>24</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                                <property name="checkable">
+                                 <bool>true</bool>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="1" column="0">
+                               <widget class="QPushButton" name="ip_plc_address">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <family>MS Shell Dlg 2</family>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    color: black;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string> IP:</string>
+                                </property>
+                                <property name="icon">
+                                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <normaloff>:/Icons/ip-address.png</normaloff>:/Icons/ip-address.png</iconset>
+                                </property>
+                                <property name="iconSize">
+                                 <size>
+                                  <width>24</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                                <property name="checkable">
+                                 <bool>true</bool>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="0" column="2" rowspan="2">
+                               <widget class="QPushButton" name="port_label">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <family>MS Shell Dlg 2</family>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    color: black;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string> Port:</string>
+                                </property>
+                                <property name="icon">
+                                 <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">
+                                  <normaloff>:/Icons/search (1).png</normaloff>:/Icons/search (1).png</iconset>
+                                </property>
+                                <property name="iconSize">
+                                 <size>
+                                  <width>24</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                                <property name="checkable">
+                                 <bool>true</bool>
+                                </property>
+                               </widget>
+                              </item>
+                              <item row="0" column="3" rowspan="2">
+                               <widget class="QPushButton" name="port_display">
+                                <property name="sizePolicy">
+                                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                                  <horstretch>0</horstretch>
+                                  <verstretch>0</verstretch>
+                                 </sizepolicy>
+                                </property>
+                                <property name="font">
+                                 <font>
+                                  <family>MS Shell Dlg 2</family>
+                                  <pointsize>12</pointsize>
+                                  <weight>75</weight>
+                                  <bold>true</bold>
+                                 </font>
+                                </property>
+                                <property name="styleSheet">
+                                 <string notr="true">QPushButton {
+    color: black;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}</string>
+                                </property>
+                                <property name="text">
+                                 <string/>
+                                </property>
+                                <property name="iconSize">
+                                 <size>
+                                  <width>24</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                                <property name="checkable">
+                                 <bool>true</bool>
                                 </property>
                                </widget>
                               </item>
@@ -20761,7 +20943,7 @@ QPushButton:checked {
                                  <enum>QAbstractSpinBox::NoButtons</enum>
                                 </property>
                                 <property name="decimals">
-                                 <number>1</number>
+                                 <number>3</number>
                                 </property>
                                 <property name="minimum">
                                  <double>-9999.899999999999636</double>
@@ -20810,7 +20992,7 @@ QPushButton:checked {
                                  <enum>QAbstractSpinBox::NoButtons</enum>
                                 </property>
                                 <property name="decimals">
-                                 <number>1</number>
+                                 <number>3</number>
                                 </property>
                                 <property name="minimum">
                                  <double>-9999.899999999999636</double>
@@ -20845,7 +21027,7 @@ QPushButton:checked {
                                  <enum>QAbstractSpinBox::NoButtons</enum>
                                 </property>
                                 <property name="decimals">
-                                 <number>1</number>
+                                 <number>3</number>
                                 </property>
                                 <property name="minimum">
                                  <double>-9999.899999999999636</double>
@@ -20894,7 +21076,7 @@ QPushButton:checked {
                                  <enum>QAbstractSpinBox::NoButtons</enum>
                                 </property>
                                 <property name="decimals">
-                                 <number>1</number>
+                                 <number>3</number>
                                 </property>
                                 <property name="minimum">
                                  <double>-9999.899999999999636</double>
@@ -20929,7 +21111,7 @@ QPushButton:checked {
                                  <enum>QAbstractSpinBox::NoButtons</enum>
                                 </property>
                                 <property name="decimals">
-                                 <number>1</number>
+                                 <number>3</number>
                                 </property>
                                 <property name="minimum">
                                  <double>-9999.899999999999636</double>
@@ -20978,7 +21160,7 @@ QPushButton:checked {
                                  <enum>QAbstractSpinBox::NoButtons</enum>
                                 </property>
                                 <property name="decimals">
-                                 <number>1</number>
+                                 <number>3</number>
                                 </property>
                                 <property name="maximum">
                                  <double>999.899999999999977</double>
@@ -21038,7 +21220,7 @@ QPushButton:checked {
                                  <enum>QAbstractSpinBox::NoButtons</enum>
                                 </property>
                                 <property name="decimals">
-                                 <number>1</number>
+                                 <number>3</number>
                                 </property>
                                 <property name="minimum">
                                  <double>-9999.899999999999636</double>
@@ -21115,7 +21297,7 @@ QPushButton:checked {
                                  <enum>QAbstractSpinBox::NoButtons</enum>
                                 </property>
                                 <property name="decimals">
-                                 <number>1</number>
+                                 <number>3</number>
                                 </property>
                                 <property name="minimum">
                                  <double>-9999.899999999999636</double>
@@ -21952,7 +22134,7 @@ QPushButton:disabled {
                      <item>
                       <widget class="QStackedWidget" name="stacked_list_history_page">
                        <property name="currentIndex">
-                        <number>1</number>
+                        <number>0</number>
                        </property>
                        <widget class="QWidget" name="page_5">
                         <layout class="QVBoxLayout" name="verticalLayout_15">
@@ -22266,13 +22448,13 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
     gridline-color: #BFC8D3; color: #334155;
     selection-background-color: #dbeafe; selection-color: #1e40af; outline: none;
 }
-QTableWidget::item { padding: 8px 14px; border-bottom: 1px solid #f1f5f9; }
+QTableWidget::item { padding: 4px 6px; border-bottom: 1px solid #f1f5f9; }
 QTableWidget::item:selected { background-color: #dbeafe; color: #1e40af; }
 QTableWidget::item:hover { background-color: rgb(222, 225, 226); }
 QHeaderView::section {
     background-color: #f8fafc; color: #1e40af; font-family: &quot;Segoe UI&quot;;
     font-size: 16px; font-weight: 700; letter-spacing: 1.5px;
-    padding: 10px 14px; border: none; border-bottom: 2px solid #3b82f6;
+    padding: 4px 6px; border: none; border-bottom: 2px solid #3b82f6;
     border-right: 1px solid #e2e8f0;
 }
 QHeaderView::section:last { border-right: none; }
@@ -22294,6 +22476,9 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
                  <property name="editTriggers">
                   <set>QAbstractItemView::NoEditTriggers</set>
                  </property>
+                 <attribute name="horizontalHeaderMinimumSectionSize">
+                  <number>50</number>
+                 </attribute>
                  <attribute name="horizontalHeaderStretchLastSection">
                   <bool>true</bool>
                  </attribute>

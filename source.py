@@ -330,7 +330,7 @@ class StrikeMachine(QMainWindow):
             widget.setFont(f)
 
     def _init_screen(self):
-
+        self._set_style()
         self.ui.home_page_btn.click()
         self.ui.clear_history_search.hide()
         self._set_time_search_data_start_edit()
@@ -340,6 +340,156 @@ class StrikeMachine(QMainWindow):
             Qt.ConnectionType.QueuedConnection
         )
         self.ui.stacked_list_history_page.setCurrentIndex(0)
+
+    def _set_style(self):
+        self._i_o_group_1_style()
+        self._i_o_group_2_style()
+        self._i_o_group_3_style()
+        self._back_page_widget_styles()
+        
+    def _i_o_group_1_style(self):
+        self.ui.i_o_group_1.setStyleSheet("""
+            QWidget{
+                border: 2px solid #E5E5E5; 
+                border-radius: 20px;
+            }
+            QGroupBox {
+                border: 2px solid #E5E5E5;
+                border-radius: 6px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #374151;
+            }
+
+            QLabel {
+                color: #D12323;
+                border: none;
+            }
+
+            QSpinBox {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QSpinBox:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+
+            QLineEdit {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QLineEdit:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+        """)
+
+    def _i_o_group_2_style(self):
+        self.ui.i_o_group_2.setStyleSheet("""
+            QGroupBox {
+                border: 2px solid #E5E5E5;
+                border-radius: 6px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #374151;
+            }
+
+            QLabel {
+                color: #D12323;
+                border: none;
+            }
+
+            QSpinBox {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QSpinBox:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+
+            QLineEdit {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QLineEdit:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+            """)
+
+    def _i_o_group_3_style(self):
+        self.ui.i_o_group_3.setStyleSheet("""
+            QGroupBox {
+                border: 2px solid #E5E5E5;
+                border-radius: 6px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #374151;
+            }
+
+            QLabel {
+                border: none;
+                color: #E6AC2E;
+            }
+
+            QDoubleSpinBox {
+                border: 3px solid #E5E5E5; 
+                border-radius: 10px;
+                color: #10B981;
+            }
+            QLineEdit {
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                padding: 8px 12px;
+                background-color: #F9FAFB;
+            }
+            QLineEdit:focus {
+                border: 2px solid #0B7EC8;
+                background-color: white;
+            }
+            """)
+
+    def _back_page_widget_styles(self):
+        self.ui.back_page_widget.setStyleSheet("""
+            QPushButton {
+                background-color: white;
+                color: #0B7EC8;
+                border: 2px solid #0B7EC8;
+                padding: 4px 4px;
+                border-radius: 8px;
+            }
+            QPushButton:hover {
+                background-color: #F0F9FF;
+            }
+            QPushButton:pressed {
+                background-color: #E0F2FE;
+            }
+        """)
 
     def _test_marquee_label(self):
         test_text = "Strike Machine System - Running Normally - No Error Detected"
@@ -600,6 +750,7 @@ class StrikeMachine(QMainWindow):
         self._pending_rows = []
         self._all_rows_cache = []
         self._table_display = 102
+        self._search_table_display = 1000
         self._displayed_offset = 0
         self.history_db_path = None
         self.conn = None
@@ -609,7 +760,6 @@ class StrikeMachine(QMainWindow):
         self._db_offset = 0
         self._search_keyword = ""
         self._search_offset = 0
-        self._search_cache = []
         self._search_total = 0
         self._search_db_offset = 0
         self._loading_search_chunk = False
@@ -632,7 +782,6 @@ class StrikeMachine(QMainWindow):
         self.worker_dict = {}
         self.thread_dict = {}
         self.all_data = {}
-        self.ai_data = {}
         self.actual_data = {}
         self.input_data = {}
         self.error_data = {}
@@ -706,7 +855,7 @@ class StrikeMachine(QMainWindow):
 
         self.data_plc_timer = QTimer(self)
         self.all_timer.append(self.data_plc_timer)
-        self.data_plc_timer.setInterval(200)
+        self.data_plc_timer.setInterval(self.db_dict["input_read"] if self.db_dict else 500)
         self.data_plc_timer.timeout.connect(lambda: self._data_ready(self.input_data))
         self.data_plc_timer.start()
 
@@ -716,12 +865,6 @@ class StrikeMachine(QMainWindow):
         self.data_table.timeout.connect(lambda: self._data_table(self.actual_data))
         # self.data_table.start()
 
-        self.data_training_ai_timer = QTimer(self)
-        self.all_timer.append(self.data_training_ai_timer)
-        self.data_training_ai_timer.setInterval(1000)
-        self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.actual_data, self.input_data, self.error_data))
-        self.data_training_ai_timer.start()
-
         # if self._plc_queue is not None:
         #     self.data_web_socket = QTimer(self)
         #     self.all_timer.append(self.data_web_socket)
@@ -729,48 +872,35 @@ class StrikeMachine(QMainWindow):
         #     self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.all_data))
         #     self.data_web_socket.start()
 
-        self.data_temp_timer = QTimer(self)
-        self.all_timer.append(self.data_temp_timer)
-        self.data_temp_timer.setInterval(500)
-        self.data_temp_timer.timeout.connect(lambda: self._data_temp(self.actual_data))
-        
         self.data_pressure_timer = QTimer(self)
         self.all_timer.append(self.data_pressure_timer)
         self.data_pressure_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
         self.data_pressure_timer.timeout.connect(lambda: self._data_pressure(self.actual_data))
 
-        self.data_cycle_timer = QTimer(self)
-        self.all_timer.append(self.data_cycle_timer)
-        self.data_cycle_timer.setInterval(500)
-        self.data_cycle_timer.timeout.connect(lambda: self._data_cycle(self.actual_data))
-
-        self.data_temp_group_timer = QTimer(self)
-        self.all_timer.append(self.data_temp_group_timer)
-        self.data_temp_group_timer.setInterval(500)
-        self.data_temp_group_timer.timeout.connect(lambda: self._data_temp_group(self.actual_data))
+        self.data_group_timer = QTimer(self)
+        self.all_timer.append(self.data_group_timer)
+        self.data_group_timer.setInterval(500)
+        self.data_group_timer.timeout.connect(lambda: self._data_temp(self.actual_data))
+        self.data_group_timer.timeout.connect(lambda: self._data_cycle(self.actual_data))
+        self.data_group_timer.timeout.connect(lambda: self._data_temp_group(self.actual_data))
         
         self.data_alarm_timer = QTimer(self)
         self.all_timer.append(self.data_alarm_timer)
-        self.data_alarm_timer.setInterval(1500)
+        self.data_alarm_timer.setInterval(self.db_dict["error_read"] if self.db_dict else 1500)
         self.data_alarm_timer.timeout.connect(lambda: self._data_alarm(self.error_data))
 
-        self.timer_alarm = QTimer(self)
-        self.all_timer.append(self.timer_alarm)
+        # self.timer_alarm = QTimer(self)
+        # self.all_timer.append(self.timer_alarm)
 
-        self.timer_stacked_pressure_page = QTimer(self)
-        self.all_timer.append(self.timer_stacked_pressure_page)
+        # self.timer_stacked_pressure_page = QTimer(self)
+        # self.all_timer.append(self.timer_stacked_pressure_page)
         
         self.chart_timer = QTimer(self)
         self.all_timer.append(self.chart_timer)
         self.chart_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
         self.chart_timer.timeout.connect(self._update_all_charts)
+        self.chart_timer.timeout.connect(self._render_all_charts)
         self.chart_timer.start()
-
-        self._chart_render_timer = QTimer(self)
-        self.all_timer.append(self._chart_render_timer)
-        self._chart_render_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
-        self._chart_render_timer.timeout.connect(self._render_all_charts)
-        self._chart_render_timer.start()
         
         self._history_flush_timer = QTimer(self)
         self.all_timer.append(self._history_flush_timer)
@@ -789,6 +919,12 @@ class StrikeMachine(QMainWindow):
         self.datetime_timer.timeout.connect(self.update_clock)
         self.datetime_timer.start(1000)
         self.update_clock()
+        
+        self.data_training_ai_timer = QTimer(self)
+        self.all_timer.append(self.data_training_ai_timer)
+        self.data_training_ai_timer.setInterval(1000)
+        self.data_training_ai_timer.timeout.connect(lambda: self._data_AI(self.actual_data, self.input_data, self.error_data))
+        self.data_training_ai_timer.start()
 
     def _update_all_charts(self):
         self.update_chart_temp()
@@ -1120,12 +1256,12 @@ class StrikeMachine(QMainWindow):
         ]
 
     def _create_charts(self):
-        font = QFont("Segoe UI", 17)
+        font = QFont("Segoe UI", 15)
         font.setWeight(QFont.Weight.Bold)
 
-        # Chart Nhiệt độ (Oven)
+        # Chart Nhiệt độ (Furnace)
         self.chart_temp = CustomChartWidget(
-            title="Oven",
+            title="Furnace",
             num_temp=2,
             num_pressure=0,
             temp_label="Temperature (°C)",
@@ -1301,9 +1437,9 @@ class StrikeMachine(QMainWindow):
         self.ui.vacuum_btn_b.toggled.connect(lambda checked: self.pumping_btn("B", checked, self.ui.vacuum_btn_b))
         self.ui.vacuum_btn_c.toggled.connect(lambda checked: self.pumping_btn("C", checked, self.ui.vacuum_btn_c))
 
-        self.ui.refuel_btn_a.toggled.connect(lambda checked: self.fill_oil_btn("A", checked, self.ui.refuel_btn_a))
-        self.ui.refuel_btn_b.toggled.connect(lambda checked: self.fill_oil_btn("B", checked, self.ui.refuel_btn_b))
-        self.ui.refuel_btn_c.toggled.connect(lambda checked: self.fill_oil_btn("C", checked, self.ui.refuel_btn_c))
+        # self.ui.refuel_btn_a.toggled.connect(lambda checked: self.fill_oil_btn("A", checked, self.ui.refuel_btn_a))
+        # self.ui.refuel_btn_b.toggled.connect(lambda checked: self.fill_oil_btn("B", checked, self.ui.refuel_btn_b))
+        # self.ui.refuel_btn_c.toggled.connect(lambda checked: self.fill_oil_btn("C", checked, self.ui.refuel_btn_c))
 
         self.ui.set_cycle_a_btn.toggled.connect(lambda checked: self.cycle_loop_btn("A", checked, self.ui.set_cycle_a_btn))
         self.ui.set_cycle_b_btn.toggled.connect(lambda checked: self.cycle_loop_btn("B", checked, self.ui.set_cycle_b_btn))
@@ -1512,8 +1648,8 @@ class StrikeMachine(QMainWindow):
                         "Group." TEXT,
                         "Pressure SV." TEXT,
                         "Pressure." TEXT,
-                        "Oven SV" TEXT,
-                        "T-Oven." TEXT,
+                        "Furnace SV." TEXT,
+                        "T-Furnace." TEXT,
                         "Temperature SV." TEXT,
                         "Front." TEXT,
                         "Middle." TEXT,
@@ -1521,7 +1657,7 @@ class StrikeMachine(QMainWindow):
                         "Date." TEXT
                     )
                 ''')
-            for col_name in ["Pressure SV.", "Oven SV.", "Temperature SV."]:
+            for col_name in ["Pressure SV.", "Furnace SV.", "Temperature SV."]:
                 try:
                     self.conn.execute(f'ALTER TABLE history ADD COLUMN "{col_name}" TEXT DEFAULT ""')
                     self.logger.info(f"Migrated: added column '{col_name}'")
@@ -1545,7 +1681,7 @@ class StrikeMachine(QMainWindow):
             str(row["Name."]         or ""),
             str(row["Group."]        or ""),
             str(row["Pressure."]     or ""),
-            str(row["T-Oven."]       or ""),
+            str(row["T-Furnace."]    or ""),
             str(row["Front."]        or ""),
             str(row["Middle."]       or ""),
             str(row["End."]          or ""),
@@ -1590,6 +1726,7 @@ class StrikeMachine(QMainWindow):
             self.ui.list_history.scrollToBottom()
             self.logger.info(f"Total {total_db:,} records, showing last {self._table_display}")
             self._resize_table_columns(self.ui.list_history)
+            self._all_rows_cache.clear()
 
         except Exception as e:
             self.logger.error(f"Error loading history: {e}")
@@ -1633,8 +1770,8 @@ class StrikeMachine(QMainWindow):
                     g["group"],                      # [2]  Group.
                     f"{pressure_sv_val:.2f} bar",    # [3]  Pressure SV.
                     f"{g['pressure']:.2f} bar",      # [4]  Pressure.
-                    fmt(self.for_display_temp(oven_sv_val)),                # [5]  Oven SV.
-                    fmt(self.for_display_temp(g["temp"])),                  # [6]  T-Oven.
+                    fmt(self.for_display_temp(oven_sv_val)),                # [5]  Furnace SV.
+                    fmt(self.for_display_temp(g["temp"])),                  # [6]  T-Furnace.
                     fmt(self.for_display_temp(temp_sv_val)),                # [7]  Temperature SV.
                     fmt(self.for_display_temp(g["front"])),                 # [8]  Front.
                     fmt(self.for_display_temp(g["mid"])),                   # [9]  Middle.
@@ -1647,7 +1784,7 @@ class StrikeMachine(QMainWindow):
                     db_row[1],   # Name.
                     db_row[2],   # Group.
                     db_row[4],   # Pressure.
-                    db_row[6],   # T-Oven.
+                    db_row[6],   # T-Furnace.
                     db_row[8],   # Front.
                     db_row[9],   # Middle.
                     db_row[10],  # End.
@@ -1689,8 +1826,8 @@ class StrikeMachine(QMainWindow):
                     "Group.",
                     "Pressure SV.", 
                     "Pressure.",
-                    "Oven SV.", 
-                    "T-Oven.", 
+                    "Furnace SV.", 
+                    "T-Furnace.", 
                     "Temperature SV.",
                     "Front.", 
                     "Middle.", 
@@ -1721,6 +1858,13 @@ class StrikeMachine(QMainWindow):
 
         table.setUpdatesEnabled(True)
         self._apply_span(self.ui.list_history)
+
+        self._all_rows_cache.extend(ui_rows)
+        overflow = len(self._all_rows_cache) - self._table_display
+        if overflow > 0:
+            del self._all_rows_cache[:overflow]
+            if hasattr(self, "_db_offset"):
+                self._db_offset += overflow
 
         if was_at_bottom:
             table.scrollToBottom()
@@ -1979,6 +2123,7 @@ class StrikeMachine(QMainWindow):
         is_reset = reset
 
         def _fetch():
+            conn = None
             try:
                 conn = sqlite3.connect(str(self.history_db_path), check_same_thread=False)
                 conn.row_factory = sqlite3.Row
@@ -2003,6 +2148,9 @@ class StrikeMachine(QMainWindow):
             except Exception as e:
                 self.logger.error(f"_search_fetch_chunk fetch error: {e}")
                 self._search_result_ready.emit((0, 0, []))
+            finally:
+                if conn:
+                    conn.close()
 
         threading.Thread(target=_fetch, daemon=True).start()
 
@@ -2036,7 +2184,7 @@ class StrikeMachine(QMainWindow):
         batch_counter    = existing_batches
 
         table.setUpdatesEnabled(False)
-
+        
         for i, row_data in enumerate(new_chunk):
             current_no = str(row_data[0]) if row_data[0] else ""
             if current_no != prev_no:
@@ -2049,6 +2197,12 @@ class StrikeMachine(QMainWindow):
                     self._make_colored_item(str(value), batch_counter))
 
         table.setUpdatesEnabled(True)
+
+        overflow = table.rowCount() - self._search_table_display
+        if overflow > 0:
+            for _ in range(overflow):
+                table.removeRow(table.rowCount() - 1)
+
         self._apply_span(table)
 
         table.scrollTo(
@@ -2668,21 +2822,15 @@ class StrikeMachine(QMainWindow):
 
     def _data_actual(self, data: dict):
         with self._data_lock:
-            # print("Actual: ", len(data))
             self.actual_data.update(data)
-            # self.all_data.update(data)
 
     def _data_input(self, data: dict):
         with self._data_lock:
-            # print("Input: ", len(data))
             self.input_data.update(data)
-            # self.all_data.update(data)
 
     def _data_error(self, data: dict):
         with self._data_lock:
-            # print("Error: ", len(data))
             self.error_data.update(data)
-            # self.all_data.update(data)
 
     def _setup_write_plc_thread(
             self, 
@@ -3064,7 +3212,6 @@ class StrikeMachine(QMainWindow):
         # # _t("_data_table", lambda: self._process_groups(data))
         self._process_groups(data)
 
-
     def _process_groups(self, data: dict):
         groups = []
 
@@ -3230,23 +3377,21 @@ class StrikeMachine(QMainWindow):
             return
 
         self.plc_read_connection = connected
-        if connected:
-            self.ui.sys_state_stacked_wid_40.setCurrentIndex(0)
-            self.data_temp_timer.start()
-            self.data_pressure_timer.start()
-            self.data_cycle_timer.start()
-            self.data_temp_group_timer.start()
-        else:
-            self.ui.sys_state_stacked_wid_40.setCurrentIndex(1)
-            if not self._shutting_down:
-                if self.data_temp_timer.isActive():
-                    self.data_temp_timer.stop()
-                if self.data_pressure_timer.isActive():
-                    self.data_pressure_timer.stop()
-                if self.data_cycle_timer.isActive():
-                    self.data_cycle_timer.stop()
-                if self.data_temp_group_timer.isActive():
-                    self.data_temp_group_timer.stop()
+        try:
+            if connected:
+                self.ui.sys_state_stacked_wid_40.setCurrentIndex(0)
+                self.data_pressure_timer.start()
+                self.data_group_timer.start()
+                self.data_alarm_timer.start()
+            else:
+                self.ui.sys_state_stacked_wid_40.setCurrentIndex(1)
+                if not self._shutting_down:
+                    if self.data_group_timer.isActive():
+                        self.data_group_timer.stop()
+                    if self.data_alarm_timer.isActive():
+                        self.data_alarm_timer.stop()
+        except Exception as e:
+            self.logger.error(f"Error occurred while reading PLC status: {e}")
 
     def _write_status_plc(self, connected: bool):
         if connected == self.plc_writer_connection:
@@ -4607,7 +4752,7 @@ class StrikeMachine(QMainWindow):
                 self.ui.plc_ip_address_edit.setPlaceholderText("Vui lòng nhập địa chỉ IP: 172.16.100.***")
                 self.ui.db_file_path_edit.setPlaceholderText("Nhập đường dẫn thư mục")
                 
-                charts[0].btn_setting.setText("Lò")
+                charts[0].btn_setting.setText("Lò sấy")
                 charts[0].plot.setLabel("left", "Nhiệt độ (°C)") if self._current_unit == 0 else charts[0].plot.setLabel("left", "Nhiệt độ (°F)")
                 
                 charts[1].btn_setting.setText("Nhóm A")
@@ -4628,7 +4773,7 @@ class StrikeMachine(QMainWindow):
                 self.ui.plc_ip_address_edit.setPlaceholderText("Enter IP Address: 172.16.100.***")
                 self.ui.db_file_path_edit.setPlaceholderText("Enter Path Folder")
                 
-                charts[0].btn_setting.setText("Oven")
+                charts[0].btn_setting.setText("Furnace")
                 charts[0].plot.setLabel("left", "Temperature (°C)") if self._current_unit == 0 else charts[0].plot.setLabel("left", "Temperature (°F)")
                 
                 charts[1].btn_setting.setText("Group A")

@@ -9,6 +9,7 @@ import logging
 import logging.handlers
 from datetime import datetime
 from typing import Any, Optional
+from LogFileHandler import MonthlyRotatingFileHandler
 import snap7
 from snap7.error import * # type: ignore
 from snap7.type import * # type: ignore
@@ -99,14 +100,12 @@ class PLCWrite(QObject):
         for handler in self.logger.handlers[:]:
             self.logger.removeHandler(handler)
 
-        # Tạo thư mục log nếu chưa có
         log_dir = self.folder / "PLC Log"
         os.makedirs(log_dir, exist_ok=True)
-        log_date = datetime.now().strftime("%d_%m_%Y")
-        log_filename = os.path.join(log_dir, f'PLC_WRITE_{log_date}.log')
 
-        file_handler = logging.handlers.RotatingFileHandler(
-            log_filename,
+        file_handler = MonthlyRotatingFileHandler(
+            base_log_dir=log_dir,
+            prefix="PLC_WRITE",
             maxBytes=5 * 1024 * 1024,
             backupCount=5,
             encoding='utf-8'
@@ -268,10 +267,10 @@ class PLCWrite(QObject):
             self.connected.emit(True)
         else:
             now = time.time()
-            if now - self._last_error_log_time >= 5:
-                if self.logger:
-                    self.logger.error("[PLC WRITE]: Connection failed: %s", result["error"])
-                self._last_error_log_time = now
+            # if now - self._last_error_log_time >= 5:
+            #     if self.logger:
+            #         self.logger.error("[PLC WRITE]: Connection failed: %s", result["error"])
+            #     self._last_error_log_time = now
             self.error.emit(str(result["error"]))
             self.connected.emit(False)
             self._client = None

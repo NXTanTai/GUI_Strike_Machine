@@ -7,12 +7,14 @@ import logging
 import logging.handlers
 import threading
 import snap7
+from datetime import datetime
 from typing import Any, Optional
 from snap7.error import * # type: ignore
 from snap7.type import * # type: ignore
 from snap7.type import Parameter
 from snap7.util import get_bool, get_real, get_dint, get_int, get_string
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
+from LogFileHandler import MonthlyRotatingFileHandler
 
 class PLCRead(QObject):
     """
@@ -72,20 +74,18 @@ class PLCRead(QObject):
         if not self.folder:
             self.logger = None
             return
-        
+
         logger_name = f"{__name__}.{self._name_module}"
         self.logger = logging.getLogger(logger_name)
         for handler in self.logger.handlers[:]:
             self.logger.removeHandler(handler)
 
-        # Tạo thư mục log nếu chưa có
-        log_dir = self.folder / "PLC Log"
+        log_dir = self.folder / "PLC Log" / f"{self._name_module}_LOG"
         os.makedirs(log_dir, exist_ok=True)
-        log_date = datetime.now().strftime("%d_%m_%Y")
-        log_filename = os.path.join(log_dir, f'PLC_READ_{self._name_module}_{log_date}.log')
 
-        file_handler = logging.handlers.RotatingFileHandler(
-            log_filename,
+        file_handler = MonthlyRotatingFileHandler(
+            base_log_dir=log_dir,
+            prefix=f"PLC_READ_{self._name_module}",
             maxBytes=5 * 1024 * 1024,
             backupCount=5,
             encoding='utf-8'
@@ -204,6 +204,8 @@ class PLCRead(QObject):
                 result["client"] = c                # type: ignore
             except Exception as exc:
                 result["error"] = exc               # type: ignore
+                self.error.emit(str(result["error"]))
+                self.connected.emit(False)
             finally:
                 done.set()
 
@@ -227,10 +229,10 @@ class PLCRead(QObject):
         else:
             msg = f"Connection failed: {result['error']}"
             now = time.time()
-            if now - self._last_error_log_time >= 5:
-                if self.logger:
-                    self.logger.error(f"[PLC READ {self._name_module}]: %s", msg)
-                self._last_error_log_time = now
+            # if now - self._last_error_log_time >= 5:
+            #     if self.logger:
+            #         self.logger.error(f"[PLC READ {self._name_module}]: %s", msg)
+            #     self._last_error_log_time = now
             self.error.emit(msg)
             self.connected.emit(False)
             self._client = None
@@ -264,7 +266,7 @@ class PLCRead(QObject):
                         f"[PLC READ {self._name_module}]: {respond} %.1fms (size=%d)",
                         elapsed_ms, len(raw),
                     )
-            result    = self._parse(raw, base_offset=self._offsets)
+            result = self._parse(raw, base_offset=self._offsets)
             self.data_ready.emit(result)
             self.elapsed_time.emit(elapsed_ms)
 
@@ -318,10 +320,10 @@ class PLCRead(QObject):
                     result[name] = None
             except Exception as exc:
                 result[name] = None
-                if self.logger:
-                    self.logger.error(
-                        f"[PLC READ {self._name_module}]: Parse error [%s] offset=%d: %s",
-                        name, offset, exc,
-                    )
+                # if self.logger:
+                #     self.logger.error(
+                #         f"[PLC READ {self._name_module}]: Parse error [%s] offset=%d: %s",
+                #         name, offset, exc,
+                #     )
 
         return result
