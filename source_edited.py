@@ -876,7 +876,7 @@ class StrikeMachine(QMainWindow):
 
         self._last_cmd_time = {}          # key = tag name, value = time.time()
         self._ai_expected_keys = [
-            "datetime", "No.", "Connection.", "Bit_Alarm",
+            "datetime", "No.", "PLC Connection", "Serial Connection", "Bit_Alarm", 
 
             "V_A_HEATER_0", "V_B_HEATER_0", "V_C_HEATER_0",
             "I_A_HEATER_0", "I_B_HEATER_0", "I_C_HEATER_0",
@@ -1798,7 +1798,7 @@ class StrikeMachine(QMainWindow):
             )
             self.ui.list_history.scrollToBottom()
             self.logger.info(f"Total {total_db:,} records, showing last {self._table_display}")
-            self._resize_table_columns(self.ui.list_history)
+            # self._resize_table_columns(self.ui.list_history)
             self._all_rows_cache.clear()
 
         except Exception as e:
@@ -2933,7 +2933,8 @@ class StrikeMachine(QMainWindow):
             record = dict.fromkeys(self._ai_expected_keys)
             record["datetime"] = time.strftime("%Y-%m-%d %H:%M:%S")
             record["No."] = str(self._ai_data_batch_counter)
-            record["Connection."] = str(self.plc_read_connection)
+            record["PLC Connection"] = str(self.plc_read_connection)
+            record["Serial Connection"] = str(self.serial_read_connection)
 
             with self._data_lock:  
                 for d in (data_actual, data_input, data_error, data_serial):

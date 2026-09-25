@@ -910,7 +910,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>2</number>
+              <number>3</number>
              </property>
              <widget class="QWidget" name="temp_press_page">
               <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -16253,7 +16253,7 @@ QPushButton:checked {
                             <item>
                              <widget class="QStackedWidget" name="heat_t0_stacked">
                               <property name="currentIndex">
-                               <number>1</number>
+                               <number>0</number>
                               </property>
                               <widget class="QWidget" name="heat_t0_on_page">
                                <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -22544,7 +22544,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0px; }
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="language_group_btn"/>
   <buttongroup name="left_side_btn_group"/>
+  <buttongroup name="language_group_btn"/>
  </buttongroups>
 </ui>

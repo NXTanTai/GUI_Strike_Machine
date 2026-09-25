@@ -39,7 +39,6 @@ def _spawn_loading():
     )
     return proc, sig.name, pause.name
 
-
 def _close_loading(proc, signal_file, pause_file=None):
     if proc is None:
         return
