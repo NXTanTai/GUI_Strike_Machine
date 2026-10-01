@@ -6774,3 +6774,30 @@ Current thread's C stack trace (most recent call first):
 2026-09-24 08:33:39,724 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
 2026-09-24 08:33:39,726 - [main] - INFO - app.exec() returned exit_code=0
 2026-09-24 08:33:39,796 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=14612 at 2026-10-01 16:17:18.167198 =====
+2026-10-01 16:17:18,168 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-01 16:17:18,169 - [main] - INFO - Watchdog initialized. PID=14612 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=15992 at 2026-10-01 16:17:18.522499 =====
+2026-10-01 16:17:18,522 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-01 16:17:18,523 - [loading] - INFO - Watchdog initialized. PID=15992 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00003a50 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 195 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-01 16:17:43,283 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-10-01 16:17:43,298 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x0000433c (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 323 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-01 16:18:40,412 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-10-01 16:18:40,412 - [main] - INFO - app.exec() returned exit_code=0
+2026-10-01 16:18:40,587 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.

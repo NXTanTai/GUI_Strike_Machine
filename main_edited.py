@@ -54,10 +54,6 @@ def _close_loading(proc, signal_file, pause_file=None):
 
 
 def ensure_single_instance(app) -> bool:
-    """
-    True  → được phép chạy (instance đầu tiên)
-    False → đã có instance khác đang chạy
-    """
     from PySide6.QtCore import QSharedMemory, QSystemSemaphore
     from PySide6.QtNetwork import QLocalServer, QLocalSocket
 
