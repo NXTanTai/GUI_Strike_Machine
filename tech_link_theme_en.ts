@@ -4,782 +4,850 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="tech_link_theme.ui" line="44"/>
-        <source>Tech-Link - Production System</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="217"/>
+        <location filename="tech_link_theme_edited.ui" line="233"/>
         <source>TECH-LINK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="441"/>
-        <source>dd/MM/yyyy h:mm:ss AP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="579"/>
+        <location filename="tech_link_theme_edited.ui" line="672"/>
         <source> Group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="620"/>
+        <location filename="tech_link_theme_edited.ui" line="713"/>
         <source> Chart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="658"/>
+        <location filename="tech_link_theme_edited.ui" line="751"/>
         <source> Setting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="696"/>
+        <location filename="tech_link_theme_edited.ui" line="789"/>
         <source> History</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1155"/>
+        <location filename="tech_link_theme_edited.ui" line="833"/>
+        <source> Alarm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="1115"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1207"/>
+        <location filename="tech_link_theme_edited.ui" line="1167"/>
         <source>Running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1246"/>
+        <location filename="tech_link_theme_edited.ui" line="1205"/>
         <source>°C </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1251"/>
-        <location filename="tech_link_theme.ui" line="3442"/>
-        <location filename="tech_link_theme.ui" line="5135"/>
-        <location filename="tech_link_theme.ui" line="5324"/>
-        <location filename="tech_link_theme.ui" line="5513"/>
-        <location filename="tech_link_theme.ui" line="5702"/>
-        <location filename="tech_link_theme.ui" line="7976"/>
-        <location filename="tech_link_theme.ui" line="8167"/>
-        <location filename="tech_link_theme.ui" line="9089"/>
-        <location filename="tech_link_theme.ui" line="9278"/>
-        <location filename="tech_link_theme.ui" line="9467"/>
-        <location filename="tech_link_theme.ui" line="9656"/>
-        <location filename="tech_link_theme.ui" line="9845"/>
-        <location filename="tech_link_theme.ui" line="10628"/>
-        <location filename="tech_link_theme.ui" line="10820"/>
-        <location filename="tech_link_theme.ui" line="11012"/>
-        <location filename="tech_link_theme.ui" line="11204"/>
-        <location filename="tech_link_theme.ui" line="11535"/>
-        <location filename="tech_link_theme.ui" line="11727"/>
-        <location filename="tech_link_theme.ui" line="11989"/>
-        <location filename="tech_link_theme.ui" line="12181"/>
-        <location filename="tech_link_theme.ui" line="12373"/>
-        <location filename="tech_link_theme.ui" line="12565"/>
-        <location filename="tech_link_theme.ui" line="12757"/>
-        <location filename="tech_link_theme.ui" line="12949"/>
-        <location filename="tech_link_theme.ui" line="13252"/>
-        <location filename="tech_link_theme.ui" line="13444"/>
-        <location filename="tech_link_theme.ui" line="13636"/>
-        <location filename="tech_link_theme.ui" line="13828"/>
-        <location filename="tech_link_theme.ui" line="14020"/>
-        <location filename="tech_link_theme.ui" line="14212"/>
-        <location filename="tech_link_theme.ui" line="14404"/>
-        <location filename="tech_link_theme.ui" line="14624"/>
-        <location filename="tech_link_theme.ui" line="14816"/>
-        <location filename="tech_link_theme.ui" line="15008"/>
-        <location filename="tech_link_theme.ui" line="15200"/>
-        <location filename="tech_link_theme.ui" line="15392"/>
-        <location filename="tech_link_theme.ui" line="15584"/>
-        <location filename="tech_link_theme.ui" line="15776"/>
+        <location filename="tech_link_theme_edited.ui" line="1210"/>
+        <location filename="tech_link_theme_edited.ui" line="5012"/>
+        <location filename="tech_link_theme_edited.ui" line="5753"/>
+        <location filename="tech_link_theme_edited.ui" line="5942"/>
+        <location filename="tech_link_theme_edited.ui" line="8420"/>
+        <location filename="tech_link_theme_edited.ui" line="8609"/>
+        <location filename="tech_link_theme_edited.ui" line="8845"/>
+        <location filename="tech_link_theme_edited.ui" line="9034"/>
+        <location filename="tech_link_theme_edited.ui" line="9659"/>
+        <location filename="tech_link_theme_edited.ui" line="9855"/>
+        <location filename="tech_link_theme_edited.ui" line="10091"/>
+        <location filename="tech_link_theme_edited.ui" line="10280"/>
+        <location filename="tech_link_theme_edited.ui" line="10469"/>
+        <location filename="tech_link_theme_edited.ui" line="10963"/>
+        <location filename="tech_link_theme_edited.ui" line="11158"/>
+        <location filename="tech_link_theme_edited.ui" line="11350"/>
+        <location filename="tech_link_theme_edited.ui" line="11542"/>
+        <location filename="tech_link_theme_edited.ui" line="11876"/>
+        <location filename="tech_link_theme_edited.ui" line="12068"/>
+        <location filename="tech_link_theme_edited.ui" line="12330"/>
+        <location filename="tech_link_theme_edited.ui" line="12525"/>
+        <location filename="tech_link_theme_edited.ui" line="12717"/>
+        <location filename="tech_link_theme_edited.ui" line="12912"/>
+        <location filename="tech_link_theme_edited.ui" line="13107"/>
+        <location filename="tech_link_theme_edited.ui" line="13302"/>
+        <location filename="tech_link_theme_edited.ui" line="13605"/>
+        <location filename="tech_link_theme_edited.ui" line="13797"/>
+        <location filename="tech_link_theme_edited.ui" line="13989"/>
+        <location filename="tech_link_theme_edited.ui" line="14181"/>
+        <location filename="tech_link_theme_edited.ui" line="14373"/>
+        <location filename="tech_link_theme_edited.ui" line="14565"/>
+        <location filename="tech_link_theme_edited.ui" line="14760"/>
+        <location filename="tech_link_theme_edited.ui" line="14983"/>
+        <location filename="tech_link_theme_edited.ui" line="15175"/>
+        <location filename="tech_link_theme_edited.ui" line="15367"/>
+        <location filename="tech_link_theme_edited.ui" line="15559"/>
+        <location filename="tech_link_theme_edited.ui" line="15751"/>
+        <location filename="tech_link_theme_edited.ui" line="15946"/>
+        <location filename="tech_link_theme_edited.ui" line="16141"/>
         <source>°F</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1318"/>
+        <location filename="tech_link_theme_edited.ui" line="1276"/>
         <source> Clear Data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1349"/>
+        <location filename="tech_link_theme_edited.ui" line="1307"/>
         <source> Import Data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1579"/>
-        <location filename="tech_link_theme.ui" line="4505"/>
-        <location filename="tech_link_theme.ui" line="4823"/>
-        <location filename="tech_link_theme.ui" line="4947"/>
-        <location filename="tech_link_theme.ui" line="6291"/>
-        <location filename="tech_link_theme.ui" line="6978"/>
-        <location filename="tech_link_theme.ui" line="7107"/>
-        <location filename="tech_link_theme.ui" line="7416"/>
-        <location filename="tech_link_theme.ui" line="8297"/>
+        <location filename="tech_link_theme_edited.ui" line="1665"/>
+        <location filename="tech_link_theme_edited.ui" line="3167"/>
+        <location filename="tech_link_theme_edited.ui" line="3449"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable Running by Cycle&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="1779"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="3972"/>
+        <location filename="tech_link_theme_edited.ui" line="4281"/>
+        <location filename="tech_link_theme_edited.ui" line="4452"/>
+        <location filename="tech_link_theme_edited.ui" line="7478"/>
+        <location filename="tech_link_theme_edited.ui" line="7607"/>
+        <location filename="tech_link_theme_edited.ui" line="7783"/>
+        <location filename="tech_link_theme_edited.ui" line="7954"/>
+        <location filename="tech_link_theme_edited.ui" line="8078"/>
+        <location filename="tech_link_theme_edited.ui" line="8202"/>
         <source>Bar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1641"/>
+        <location filename="tech_link_theme_edited.ui" line="2188"/>
         <source>Group C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1699"/>
-        <location filename="tech_link_theme.ui" line="1857"/>
-        <location filename="tech_link_theme.ui" line="2015"/>
+        <location filename="tech_link_theme_edited.ui" line="1892"/>
+        <location filename="tech_link_theme_edited.ui" line="2064"/>
+        <location filename="tech_link_theme_edited.ui" line="2246"/>
         <source>PV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1731"/>
-        <location filename="tech_link_theme.ui" line="1889"/>
-        <location filename="tech_link_theme.ui" line="2047"/>
+        <location filename="tech_link_theme_edited.ui" line="1924"/>
+        <location filename="tech_link_theme_edited.ui" line="2096"/>
+        <location filename="tech_link_theme_edited.ui" line="2278"/>
         <source>SV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1796"/>
+        <location filename="tech_link_theme_edited.ui" line="1831"/>
         <source>Group A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="1957"/>
+        <location filename="tech_link_theme_edited.ui" line="2006"/>
         <source>Group B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2135"/>
+        <location filename="tech_link_theme_edited.ui" line="10557"/>
         <source> Start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2210"/>
+        <location filename="tech_link_theme_edited.ui" line="10633"/>
         <source> Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2387"/>
+        <location filename="tech_link_theme_edited.ui" line="6021"/>
         <source> Oil Fill A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2436"/>
+        <location filename="tech_link_theme_edited.ui" line="5558"/>
         <source> Oil Fill B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2485"/>
+        <location filename="tech_link_theme_edited.ui" line="6191"/>
         <source> Oil Fill C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2612"/>
+        <location filename="tech_link_theme_edited.ui" line="6276"/>
         <source> Pressure A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2661"/>
+        <location filename="tech_link_theme_edited.ui" line="6106"/>
         <source> Pressure B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2710"/>
+        <location filename="tech_link_theme_edited.ui" line="9160"/>
         <source> Pressure C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2837"/>
+        <location filename="tech_link_theme_edited.ui" line="9330"/>
         <source> Heating A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2886"/>
+        <location filename="tech_link_theme_edited.ui" line="9462"/>
         <source> Heating B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="2935"/>
+        <location filename="tech_link_theme_edited.ui" line="9245"/>
         <source> Heating C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="3257"/>
-        <location filename="tech_link_theme.ui" line="3631"/>
-        <location filename="tech_link_theme.ui" line="3816"/>
-        <location filename="tech_link_theme.ui" line="4001"/>
-        <location filename="tech_link_theme.ui" line="4186"/>
-        <location filename="tech_link_theme.ui" line="5891"/>
-        <location filename="tech_link_theme.ui" line="6123"/>
-        <location filename="tech_link_theme.ui" line="6479"/>
-        <location filename="tech_link_theme.ui" line="6664"/>
-        <location filename="tech_link_theme.ui" line="7295"/>
-        <location filename="tech_link_theme.ui" line="7604"/>
-        <location filename="tech_link_theme.ui" line="7789"/>
-        <location filename="tech_link_theme.ui" line="8485"/>
-        <location filename="tech_link_theme.ui" line="8670"/>
-        <location filename="tech_link_theme.ui" line="8855"/>
+        <location filename="tech_link_theme_edited.ui" line="2551"/>
+        <location filename="tech_link_theme_edited.ui" line="2736"/>
+        <location filename="tech_link_theme_edited.ui" line="2921"/>
+        <location filename="tech_link_theme_edited.ui" line="3666"/>
+        <location filename="tech_link_theme_edited.ui" line="3851"/>
+        <location filename="tech_link_theme_edited.ui" line="4160"/>
+        <location filename="tech_link_theme_edited.ui" line="4640"/>
+        <location filename="tech_link_theme_edited.ui" line="4825"/>
+        <location filename="tech_link_theme_edited.ui" line="5201"/>
+        <location filename="tech_link_theme_edited.ui" line="5433"/>
+        <location filename="tech_link_theme_edited.ui" line="6518"/>
+        <location filename="tech_link_theme_edited.ui" line="6703"/>
+        <location filename="tech_link_theme_edited.ui" line="6888"/>
+        <location filename="tech_link_theme_edited.ui" line="7120"/>
+        <location filename="tech_link_theme_edited.ui" line="7305"/>
         <source>s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="3402"/>
-        <location filename="tech_link_theme.ui" line="5095"/>
-        <location filename="tech_link_theme.ui" line="5284"/>
-        <location filename="tech_link_theme.ui" line="5473"/>
-        <location filename="tech_link_theme.ui" line="5662"/>
-        <location filename="tech_link_theme.ui" line="7936"/>
-        <location filename="tech_link_theme.ui" line="8127"/>
-        <location filename="tech_link_theme.ui" line="9049"/>
-        <location filename="tech_link_theme.ui" line="9238"/>
-        <location filename="tech_link_theme.ui" line="9427"/>
-        <location filename="tech_link_theme.ui" line="9616"/>
-        <location filename="tech_link_theme.ui" line="9805"/>
-        <location filename="tech_link_theme.ui" line="10588"/>
-        <location filename="tech_link_theme.ui" line="10780"/>
-        <location filename="tech_link_theme.ui" line="10972"/>
-        <location filename="tech_link_theme.ui" line="11164"/>
-        <location filename="tech_link_theme.ui" line="11495"/>
-        <location filename="tech_link_theme.ui" line="11687"/>
-        <location filename="tech_link_theme.ui" line="11949"/>
-        <location filename="tech_link_theme.ui" line="12141"/>
-        <location filename="tech_link_theme.ui" line="12333"/>
-        <location filename="tech_link_theme.ui" line="12525"/>
-        <location filename="tech_link_theme.ui" line="12717"/>
-        <location filename="tech_link_theme.ui" line="12909"/>
-        <location filename="tech_link_theme.ui" line="13212"/>
-        <location filename="tech_link_theme.ui" line="13404"/>
-        <location filename="tech_link_theme.ui" line="13596"/>
-        <location filename="tech_link_theme.ui" line="13788"/>
-        <location filename="tech_link_theme.ui" line="13980"/>
-        <location filename="tech_link_theme.ui" line="14172"/>
-        <location filename="tech_link_theme.ui" line="14364"/>
-        <location filename="tech_link_theme.ui" line="14584"/>
-        <location filename="tech_link_theme.ui" line="14776"/>
-        <location filename="tech_link_theme.ui" line="14968"/>
-        <location filename="tech_link_theme.ui" line="15160"/>
-        <location filename="tech_link_theme.ui" line="15352"/>
-        <location filename="tech_link_theme.ui" line="15544"/>
-        <location filename="tech_link_theme.ui" line="15736"/>
+        <location filename="tech_link_theme_edited.ui" line="4972"/>
+        <location filename="tech_link_theme_edited.ui" line="5713"/>
+        <location filename="tech_link_theme_edited.ui" line="5902"/>
+        <location filename="tech_link_theme_edited.ui" line="8380"/>
+        <location filename="tech_link_theme_edited.ui" line="8569"/>
+        <location filename="tech_link_theme_edited.ui" line="8805"/>
+        <location filename="tech_link_theme_edited.ui" line="8994"/>
+        <location filename="tech_link_theme_edited.ui" line="9619"/>
+        <location filename="tech_link_theme_edited.ui" line="9815"/>
+        <location filename="tech_link_theme_edited.ui" line="10051"/>
+        <location filename="tech_link_theme_edited.ui" line="10240"/>
+        <location filename="tech_link_theme_edited.ui" line="10429"/>
+        <location filename="tech_link_theme_edited.ui" line="10923"/>
+        <location filename="tech_link_theme_edited.ui" line="11118"/>
+        <location filename="tech_link_theme_edited.ui" line="11310"/>
+        <location filename="tech_link_theme_edited.ui" line="11502"/>
+        <location filename="tech_link_theme_edited.ui" line="11836"/>
+        <location filename="tech_link_theme_edited.ui" line="12028"/>
+        <location filename="tech_link_theme_edited.ui" line="12290"/>
+        <location filename="tech_link_theme_edited.ui" line="12485"/>
+        <location filename="tech_link_theme_edited.ui" line="12677"/>
+        <location filename="tech_link_theme_edited.ui" line="12872"/>
+        <location filename="tech_link_theme_edited.ui" line="13067"/>
+        <location filename="tech_link_theme_edited.ui" line="13262"/>
+        <location filename="tech_link_theme_edited.ui" line="13565"/>
+        <location filename="tech_link_theme_edited.ui" line="13757"/>
+        <location filename="tech_link_theme_edited.ui" line="13949"/>
+        <location filename="tech_link_theme_edited.ui" line="14141"/>
+        <location filename="tech_link_theme_edited.ui" line="14333"/>
+        <location filename="tech_link_theme_edited.ui" line="14525"/>
+        <location filename="tech_link_theme_edited.ui" line="14720"/>
+        <location filename="tech_link_theme_edited.ui" line="14943"/>
+        <location filename="tech_link_theme_edited.ui" line="15135"/>
+        <location filename="tech_link_theme_edited.ui" line="15327"/>
+        <location filename="tech_link_theme_edited.ui" line="15519"/>
+        <location filename="tech_link_theme_edited.ui" line="15711"/>
+        <location filename="tech_link_theme_edited.ui" line="15906"/>
+        <location filename="tech_link_theme_edited.ui" line="16101"/>
         <source>°C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="5941"/>
+        <location filename="tech_link_theme_edited.ui" line="9390"/>
         <source>Oil End time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="6173"/>
+        <location filename="tech_link_theme_edited.ui" line="1752"/>
         <source>Cycle Setting:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="8905"/>
+        <location filename="tech_link_theme_edited.ui" line="2369"/>
         <source>Oil Start time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="9898"/>
+        <location filename="tech_link_theme_edited.ui" line="9088"/>
         <source>End Temperature:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="9944"/>
+        <location filename="tech_link_theme_edited.ui" line="8663"/>
         <source>Mid Temperature:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="9990"/>
+        <location filename="tech_link_theme_edited.ui" line="9909"/>
         <source>Front Temperature:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10036"/>
+        <location filename="tech_link_theme_edited.ui" line="4334"/>
         <source>Temp Setting:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10082"/>
+        <location filename="tech_link_theme_edited.ui" line="7836"/>
         <source>Pipe Pressure:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10128"/>
+        <location filename="tech_link_theme_edited.ui" line="7660"/>
         <source>ITV Pressure:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10174"/>
+        <location filename="tech_link_theme_edited.ui" line="7355"/>
         <source>Pressure Setting:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10220"/>
+        <location filename="tech_link_theme_edited.ui" line="6336"/>
         <source>Air Bleeding time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10266"/>
+        <location filename="tech_link_theme_edited.ui" line="44"/>
+        <source>Tech-Link -Hot Air Pressure System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="534"/>
+        <source>dd/MM/yyyy hh:mm:ss</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="5251"/>
         <source>Air Holding time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="10312"/>
+        <location filename="tech_link_theme_edited.ui" line="6938"/>
         <source>Air Filling time:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11238"/>
+        <location filename="tech_link_theme_edited.ui" line="11576"/>
         <source>Temperature A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11266"/>
+        <location filename="tech_link_theme_edited.ui" line="11604"/>
         <source>PV:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11294"/>
+        <location filename="tech_link_theme_edited.ui" line="11632"/>
         <source>SV:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11322"/>
+        <location filename="tech_link_theme_edited.ui" line="11660"/>
         <source>H.Alm Value:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="11350"/>
+        <location filename="tech_link_theme_edited.ui" line="11688"/>
         <source>L.Alm Value:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="12983"/>
-        <source>Temperature Oven</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="13010"/>
+        <location filename="tech_link_theme_edited.ui" line="13363"/>
         <source>Temperature C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="13037"/>
+        <location filename="tech_link_theme_edited.ui" line="13390"/>
         <source>Temperature B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="14439"/>
+        <location filename="tech_link_theme_edited.ui" line="14795"/>
         <source>Offset Mid:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="15811"/>
+        <location filename="tech_link_theme_edited.ui" line="16176"/>
         <source>Offset Front:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="15839"/>
+        <location filename="tech_link_theme_edited.ui" line="16204"/>
         <source>Offset End:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="15914"/>
+        <location filename="tech_link_theme_edited.ui" line="16301"/>
         <source> Heating T0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16137"/>
+        <location filename="tech_link_theme_edited.ui" line="16802"/>
         <source>Connection Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16231"/>
-        <location filename="tech_link_theme.ui" line="16462"/>
+        <location filename="tech_link_theme_edited.ui" line="17409"/>
+        <location filename="tech_link_theme_edited.ui" line="17644"/>
         <source>Online</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16283"/>
-        <location filename="tech_link_theme.ui" line="16520"/>
+        <location filename="tech_link_theme_edited.ui" line="17461"/>
+        <location filename="tech_link_theme_edited.ui" line="17702"/>
         <source>Offline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16335"/>
-        <location filename="tech_link_theme.ui" line="16572"/>
+        <location filename="tech_link_theme_edited.ui" line="17513"/>
+        <location filename="tech_link_theme_edited.ui" line="17754"/>
         <source>Try Connecting...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16378"/>
-        <location filename="tech_link_theme.ui" line="16615"/>
-        <source> ms ~ 1000 ms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="16656"/>
+        <location filename="tech_link_theme_edited.ui" line="18268"/>
         <source> IP:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16698"/>
-        <source> DB:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="16740"/>
+        <location filename="tech_link_theme_edited.ui" line="16848"/>
         <source> PLC Read:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16778"/>
+        <location filename="tech_link_theme_edited.ui" line="16886"/>
         <source> PLC Write:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16816"/>
+        <location filename="tech_link_theme_edited.ui" line="18226"/>
         <source> DB Path:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16858"/>
-        <source> Size Data:</source>
+        <location filename="tech_link_theme_edited.ui" line="13336"/>
+        <source>Furnace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="16903"/>
-        <source>Connect</source>
+        <location filename="tech_link_theme_edited.ui" line="16377"/>
+        <source> Stopping T0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="17010"/>
-        <source> ~ 2056</source>
+        <location filename="tech_link_theme_edited.ui" line="16696"/>
+        <source>Hê sờ lô</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="17156"/>
+        <location filename="tech_link_theme_edited.ui" line="16928"/>
+        <source> s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="16966"/>
+        <source> History Cycle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="17008"/>
+        <source> Total Test Time C:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="17046"/>
+        <source> Total Test Time B:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="17560"/>
+        <location filename="tech_link_theme_edited.ui" line="17801"/>
+        <source> ms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="17976"/>
+        <source> Total Test Time A:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="18081"/>
+        <source>Communication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="18310"/>
+        <source> Port:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="18406"/>
         <source>DI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="17774"/>
+        <location filename="tech_link_theme_edited.ui" line="18987"/>
         <source>T0 Heat:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18024"/>
+        <location filename="tech_link_theme_edited.ui" line="19267"/>
         <source>P1 Heat:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18038"/>
+        <location filename="tech_link_theme_edited.ui" line="19281"/>
         <source>P1 Press:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18170"/>
+        <location filename="tech_link_theme_edited.ui" line="19405"/>
         <source>P1 Oil:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18184"/>
+        <location filename="tech_link_theme_edited.ui" line="19419"/>
         <source>P1 Count:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18198"/>
+        <location filename="tech_link_theme_edited.ui" line="19433"/>
         <source>P2 Heat:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18212"/>
+        <location filename="tech_link_theme_edited.ui" line="19447"/>
         <source>P2 Press:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18226"/>
+        <location filename="tech_link_theme_edited.ui" line="19461"/>
         <source>P2 Oil:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18240"/>
+        <location filename="tech_link_theme_edited.ui" line="19475"/>
         <source>P3 Press:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18372"/>
+        <location filename="tech_link_theme_edited.ui" line="19599"/>
         <source>P3 Oil:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18386"/>
+        <location filename="tech_link_theme_edited.ui" line="19613"/>
         <source>P2 Count:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18400"/>
+        <location filename="tech_link_theme_edited.ui" line="19627"/>
         <source>P3 Heat:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18650"/>
+        <location filename="tech_link_theme_edited.ui" line="19861"/>
         <source>P3 Count:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="18945"/>
+        <location filename="tech_link_theme_edited.ui" line="20102"/>
         <source>AI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19013"/>
+        <location filename="tech_link_theme_edited.ui" line="20165"/>
         <source>T0:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19067"/>
+        <location filename="tech_link_theme_edited.ui" line="20214"/>
         <source>ITV-2:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19081"/>
+        <location filename="tech_link_theme_edited.ui" line="20228"/>
         <source>ITV-1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19095"/>
+        <location filename="tech_link_theme_edited.ui" line="20242"/>
         <source>P2:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19109"/>
+        <location filename="tech_link_theme_edited.ui" line="20256"/>
         <source>P3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19123"/>
+        <location filename="tech_link_theme_edited.ui" line="20270"/>
         <source>ITV-3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19137"/>
+        <location filename="tech_link_theme_edited.ui" line="20284"/>
         <source>T1-3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19151"/>
+        <location filename="tech_link_theme_edited.ui" line="20298"/>
         <source>T1-2:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19165"/>
+        <location filename="tech_link_theme_edited.ui" line="20312"/>
         <source>T2-1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19179"/>
+        <location filename="tech_link_theme_edited.ui" line="20326"/>
         <source>T1-1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19193"/>
+        <location filename="tech_link_theme_edited.ui" line="20340"/>
         <source>T2-2:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19207"/>
+        <location filename="tech_link_theme_edited.ui" line="20354"/>
         <source>T2-3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19221"/>
+        <location filename="tech_link_theme_edited.ui" line="20368"/>
         <source>T3-1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19235"/>
+        <location filename="tech_link_theme_edited.ui" line="20382"/>
         <source>T3-2:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19249"/>
+        <location filename="tech_link_theme_edited.ui" line="20396"/>
         <source>T3-3:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19263"/>
+        <location filename="tech_link_theme_edited.ui" line="20410"/>
         <source>P1:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19864"/>
-        <source>Total Test Time</source>
+        <location filename="tech_link_theme_edited.ui" line="20909"/>
+        <source>Heater T0 Status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="19970"/>
-        <source>B: </source>
+        <location filename="tech_link_theme_edited.ui" line="20972"/>
+        <source>PF:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20128"/>
-        <source>A: </source>
+        <location filename="tech_link_theme_edited.ui" line="21001"/>
+        <location filename="tech_link_theme_edited.ui" line="21039"/>
+        <location filename="tech_link_theme_edited.ui" line="21244"/>
+        <source> V</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20283"/>
-        <source>C: </source>
+        <location filename="tech_link_theme_edited.ui" line="21062"/>
+        <source>Ic:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20441"/>
+        <location filename="tech_link_theme_edited.ui" line="21091"/>
+        <location filename="tech_link_theme_edited.ui" line="21129"/>
+        <location filename="tech_link_theme_edited.ui" line="21181"/>
+        <source> A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21152"/>
+        <source>Ub:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21201"/>
+        <source>Uc:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21215"/>
+        <source>Ia:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21267"/>
+        <source>Ib:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21281"/>
+        <source>Ua:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21295"/>
+        <source>Freq:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21324"/>
+        <source> Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21604"/>
+        <source>[Name]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21674"/>
+        <source>Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21699"/>
+        <source>All</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21704"/>
+        <source>A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21709"/>
+        <source>B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21714"/>
+        <source>C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21761"/>
+        <source>Start:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21886"/>
+        <location filename="tech_link_theme_edited.ui" line="22050"/>
+        <source>HH:mm - dd/MM/yyyy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21925"/>
+        <source>End:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="22285"/>
+        <location filename="tech_link_theme_edited.ui" line="22412"/>
+        <source>T-Furnace.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="22530"/>
+        <source>Type.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="22535"/>
+        <source>Time.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="22540"/>
+        <source>Content</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="21413"/>
         <source>Connection Page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20479"/>
+        <location filename="tech_link_theme_edited.ui" line="21451"/>
         <source>Home Page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20626"/>
-        <source>Searching</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20687"/>
-        <source>1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20692"/>
-        <source>2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20697"/>
-        <source>3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20702"/>
-        <source>4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20707"/>
-        <source>5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20712"/>
-        <source>6</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20717"/>
-        <source>7</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20722"/>
-        <source>8</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20727"/>
-        <source>9</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20732"/>
-        <source>10</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20737"/>
-        <source>11</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20742"/>
-        <source>12</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20747"/>
-        <source>13</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20752"/>
-        <source>14</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20757"/>
-        <source>15</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20762"/>
-        <source>16</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20767"/>
-        <source>17</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20772"/>
-        <source>18</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20777"/>
+        <location filename="tech_link_theme_edited.ui" line="22262"/>
+        <location filename="tech_link_theme_edited.ui" line="22392"/>
+        <location filename="tech_link_theme_edited.ui" line="22520"/>
         <source>No.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20782"/>
+        <location filename="tech_link_theme_edited.ui" line="22267"/>
+        <location filename="tech_link_theme_edited.ui" line="22397"/>
+        <location filename="tech_link_theme_edited.ui" line="22525"/>
         <source>Name.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20787"/>
+        <location filename="tech_link_theme_edited.ui" line="22272"/>
+        <location filename="tech_link_theme_edited.ui" line="22402"/>
+        <source>Group.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="tech_link_theme_edited.ui" line="22277"/>
+        <location filename="tech_link_theme_edited.ui" line="22407"/>
         <source>Pressure.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20792"/>
-        <source>Temp.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="tech_link_theme.ui" line="20797"/>
+        <location filename="tech_link_theme_edited.ui" line="22293"/>
+        <location filename="tech_link_theme_edited.ui" line="22417"/>
         <source>Front.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20802"/>
+        <location filename="tech_link_theme_edited.ui" line="22301"/>
+        <location filename="tech_link_theme_edited.ui" line="22422"/>
         <source>Middle.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20807"/>
+        <location filename="tech_link_theme_edited.ui" line="22309"/>
+        <location filename="tech_link_theme_edited.ui" line="22427"/>
         <source>End.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20812"/>
+        <location filename="tech_link_theme_edited.ui" line="22317"/>
+        <location filename="tech_link_theme_edited.ui" line="22432"/>
         <source>Date.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="tech_link_theme.ui" line="20865"/>
+        <location filename="tech_link_theme_edited.ui" line="22142"/>
         <source> Export to Excel</source>
         <translation type="unfinished"></translation>
     </message>

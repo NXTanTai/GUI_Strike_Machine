@@ -14,13 +14,14 @@ import snap7
 from snap7.error import * # type: ignore
 from snap7.type import * # type: ignore
 from snap7.type import Parameter
-from snap7.util import set_bool, set_real, set_dint, set_int, set_string
+from snap7.util import set_bool, set_real, set_dint, set_int, set_string, get_bool
 
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
 HEARTBEAT_INTERVAL = 5.0   # giây — probe khi queue rỗng
 HEARTBEAT_DB_SIZE  = 4     # byte — đọc tối thiểu để giữ kết nối sống
 MAX_RETRY_COUNT    = 3     # số lần retry tối đa cho 1 item trước khi bỏ
+MAX_ITEMS_PER_TICK = 20    # số lệnh tối đa xử lý trong 1 chu kỳ write_ms
 
 
 class PLCWrite(QObject):
@@ -35,10 +36,13 @@ class PLCWrite(QObject):
     write_value        = Signal(str, object)
     write_multi        = Signal(object, str)
     write_full_db      = Signal(object)
+    write_pulse        = Signal(str, int)           # name, hold_ms — ghi True, giữ hold_ms rồi ghi False
 
-    write_bool_done    = Signal()
+    write_bool_done    = Signal(str, bool, float)   # name, value, time.time() lúc ghi xong
+    write_bool_failed  = Signal(str, bool)          # name, value — ghi thất bại / bị bỏ
     write_value_done   = Signal()
     write_multi_done   = Signal(str, bool)
+    write_multi_failed = Signal(str, str)           # group, lý do — bị bỏ sau MAX_RETRY_COUNT
     write_full_db_done = Signal()
 
     error              = Signal(str)
@@ -82,6 +86,10 @@ class PLCWrite(QObject):
 
         self._current_item:         tuple | None = None
         self._current_item_retries: int          = 0
+
+        # Ghi BOOL đúng 1 bit (WordLen.Bit): None = chưa kiểm tra, True = PLC hỗ trợ,
+        # False = PLC không hỗ trợ -> dùng read-modify-write cả byte
+        self._bit_write_supported: bool | None = None
 
         self._last_heartbeat:      float = 0.0
         self._last_error_log_time: float = 0.0
@@ -153,6 +161,7 @@ class PLCWrite(QObject):
         self._retry_timer.timeout.connect(self._try_connect)
 
         self.write_bool.connect(self._enqueue_bool,    Qt.QueuedConnection)  # type: ignore
+        self.write_pulse.connect(self._enqueue_pulse,  Qt.QueuedConnection)  # type: ignore
         self.write_value.connect(self._enqueue_value,  Qt.QueuedConnection)  # type: ignore
         self.write_multi.connect(self._enqueue_multi,  Qt.QueuedConnection)  # type: ignore
         self.write_full_db.connect(self._enqueue_full_db, Qt.QueuedConnection)  # type: ignore
@@ -214,6 +223,12 @@ class PLCWrite(QObject):
                         self.logger.warning(
                             "[PLC WRITE]: Dropped item after %d failed retries: %s",
                             MAX_RETRY_COUNT, self._current_item,
+                        )
+                    if self._current_item[0] == "bool":
+                        self.write_bool_failed.emit(self._current_item[1], bool(self._current_item[2]))
+                    elif self._current_item[0] == "multi_vars":
+                        self.write_multi_failed.emit(
+                            self._current_item[2], f"Dropped after {MAX_RETRY_COUNT} failed retries"
                         )
                     self._current_item         = None
                     self._current_item_retries = 0
@@ -289,20 +304,31 @@ class PLCWrite(QObject):
         if not self._running:
             return
 
-        with self._queue_lock:
-            item = self._queue.pop(0) if self._queue else None
+        bools_this_tick: set[str] = set()
+        processed = 0
+        while processed < MAX_ITEMS_PER_TICK and self._running:
+            with self._queue_lock:
+                if not self._queue:
+                    break
+                nxt = self._queue[0]
+                # Cùng 1 tag BOOL chỉ ghi 1 lần mỗi tick -> lệnh xung (True -> False)
+                # giữ mức True ít nhất 1 chu kỳ write_ms để PLC kịp quét thấy
+                if nxt[0] in ("bool", "pulse") and nxt[1] in bools_this_tick:
+                    break
+                item = self._queue.pop(0)
 
-        if item is not None:
+            if item[0] in ("bool", "pulse"):
+                bools_this_tick.add(item[1])
             self._current_item = item
             self._dispatch(item)
-        else:
+            processed += 1
+            if self._current_item is not None:
+                break  # ghi lỗi -> đang reconnect, item sẽ được retry
+
+        if processed == 0:
             self._heartbeat()
 
     def _heartbeat(self):
-        """
-        Gửi db_read nhỏ để giữ kết nối sống khi queue rỗng.
-        Nếu PLC không phản hồi → reconnect ngay.
-        """
         now = time.time()
         if now - self._last_heartbeat < HEARTBEAT_INTERVAL:
             return
@@ -318,8 +344,29 @@ class PLCWrite(QObject):
             self._reconnect()
 
     @Slot(str, bool)
+    @Slot(str, int)
+    def _enqueue_pulse(self, name: str, hold_ms: int):
+        with self._queue_lock:
+            self._queue.append(("pulse", name, hold_ms))
+        if self.logger:
+            self.logger.info("[PLC WRITE]: Enqueued PULSE %s (%d ms)", name, hold_ms)
+
+    def _write_pulse(self, name: str, hold_ms: int):
+        """
+        Xung BOOL: ghi True, sau đó hold_ms mới đưa lệnh False vào queue.
+        \n Thời gian giữ tính từ lúc True đã ghi xuống PLC thành công (không phải lúc bấm nút)
+        -> PLC chắc chắn quét thấy mức True dù queue/mạng chậm.
+        """
+        self._write_bool(name, True)
+        QTimer.singleShot(hold_ms, lambda: self._enqueue_bool(name, False))
+
     def _enqueue_bool(self, name: str, value: bool):
-        self._enqueue_dedup(("bool", name, value), key=f"bool:{name}")
+        # KHÔNG dedup BOOL: các lệnh xung (STOP True -> False) phải được ghi đủ và đúng thứ tự,
+        # dedup sẽ thay True bằng False khi True chưa kịp ghi -> PLC không thấy cạnh lên
+        with self._queue_lock:
+            self._queue.append(("bool", name, value))
+        if self.logger:
+            self.logger.info("[PLC WRITE]: Enqueued %s = %s", name, value)
 
     @Slot(str, object)
     def _enqueue_value(self, name: str, value: object):
@@ -345,7 +392,7 @@ class PLCWrite(QObject):
         """
         Nếu trong queue đã có item cùng key (cùng loại + cùng tag),
         thay bằng giá trị mới nhất thay vì thêm vào cuối.
-        Tránh gửi hàng loạt giá trị trung gian khi user thay đổi nhanh.
+        Tránh gửi hàng loạt giá trị trung gian 
         """
         with self._queue_lock:
             for i, existing in enumerate(self._queue):
@@ -369,6 +416,8 @@ class PLCWrite(QObject):
         try:
             if cmd_type == "bool":
                 self._write_bool(item[1], item[2])
+            elif cmd_type == "pulse":
+                self._write_pulse(item[1], item[2])
             elif cmd_type == "value":
                 self._write_value(item[1], item[2])
             elif cmd_type == "multi_vars":
@@ -388,29 +437,85 @@ class PLCWrite(QObject):
     def _write_bool(self, name: str, value: bool):
         """Ghi BOOL riêng biệt (read-modify-write để giữ các bit khác)."""
         if not self._ensure_connected():
-            return
+            # raise để _dispatch đưa item vào cơ chế retry thay vì bỏ mất lệnh
+            raise ConnectionError("PLC not connected")
 
         tag = self._layout_dict.get(name)
         if not tag:
+            self.write_bool_failed.emit(name, bool(value))
             return
 
         _, offset, bit = tag
-        try:
+        bit = bit or 0
+
+        if self._bit_write_supported is not False and self._write_single_bit(offset, bit, bool(value)):
+            mode = "BIT"
+        else:
+            # Fallback: read-modify-write cả byte (có thể đè bit khác nếu PLC ghi cùng lúc)
             raw    = self._client.db_read(self._db_number, offset, 1)  # type: ignore
-            result = set_bool(raw, 0, bit or 0, bool(value))
+            result = set_bool(raw, 0, bit, bool(value))
             self._client.db_write(self._db_number, offset, result)     # type: ignore
-            if self.logger:
-                self.logger.info("[PLC WRITE]: BOOL OK - %s = %s", name, value)
+            mode = "BYTE"
+
+        self.write_bool_done.emit(name, bool(value), time.time())
+        if self.logger:
+            self.logger.info("[PLC WRITE]: BOOL OK (%s) - %s = %s", mode, name, value)
+
+    def _write_single_bit(self, offset: int, bit: int, value: bool) -> bool:
+        """
+        Ghi đúng 1 bit DBx.offset.bit, không đụng tới 7 bit còn lại trong byte.
+        \n Lần đầu tiên: đọc byte trước & sau khi ghi để xác nhận PLC ghi đúng 1 bit
+        (có implementation hiểu WordLen.Bit như ghi cả byte -> xoá các bit khác).
+        Nếu sai thì khôi phục byte và chuyển hẳn sang read-modify-write.
+        \n Trả về False nếu PLC không hỗ trợ (caller sẽ dùng fallback).
+        """
+        verify = self._bit_write_supported is None
+        before = self._client.db_read(self._db_number, offset, 1) if verify else None  # type: ignore
+
+        try:
+            self._client.write_area(  # type: ignore
+                Area.DB, self._db_number, offset * 8 + bit,
+                bytearray([1 if value else 0]), WordLen.Bit,
+            )
         except Exception as exc:
-            raise exc
+            if not self._client or not self._client.get_connected():
+                raise  # mất kết nối -> để _dispatch retry
+            if verify:
+                self._bit_write_supported = False
+                if self.logger:
+                    self.logger.warning("[PLC WRITE]: PLC không hỗ trợ ghi Bit (%s) — dùng read-modify-write", exc)
+                return False
+            raise
+
+        if not verify:
+            return True
+
+        expected = bytearray(before)  # type: ignore
+        set_bool(expected, 0, bit, value)
+        after = self._client.db_read(self._db_number, offset, 1)  # type: ignore
+        ok = after[0] == expected[0]
+        self._bit_write_supported = ok
+        if not ok:
+            # Khôi phục các bit khác bị ghi sai
+            self._client.db_write(self._db_number, offset, expected)  # type: ignore
+        if self.logger:
+            self.logger.info(
+                "[PLC WRITE]: Kiểm tra ghi Bit DB%d.DBX%d.%d: %s (before=%s expected=%s after=%s)",
+                self._db_number, offset, bit, "OK" if ok else "FAIL — dùng read-modify-write",
+                format(before[0], "08b"), format(expected[0], "08b"), format(after[0], "08b"),  # type: ignore
+            )
+        # FAIL: byte đã được khôi phục đúng giá trị mong muốn -> coi như đã ghi xong
+        return True
 
     def _write_value(self, name: str, value: Any):
         """Ghi REAL, INT, DINT, STRING."""
         if not self._ensure_connected():
-            return
+            raise ConnectionError("PLC not connected")
 
         tag = self._layout_dict.get(name)
         if not tag:
+            if self.logger:
+                self.logger.warning("[PLC WRITE]: Tag not found: %s", name)
             return
 
         dtype, offset, bit = tag
@@ -434,11 +539,17 @@ class PLCWrite(QObject):
             raise exc
 
     def _write_multi_vars(self, items: list, group: str = ""):
-        """Ghi nhiều item REAL / INT / DINT trong 1 request."""
+        """
+        Ghi nhiều item REAL / INT / DINT.
+        \n python-snap7 3.x: write_multi_vars thực chất gửi từng item 1 request
+        -> gộp các item nằm liền nhau trong DB thành 1 lần db_write để giảm số request.
+        """
         if not self._ensure_connected():
-            return
+            raise ConnectionError("PLC not connected")
         try:
-            result = self._client.write_multi_vars(items)  # type: ignore
+            result = 0
+            for start, data in self._merge_contiguous(items):
+                self._client.db_write(self._db_number, start, data)  # type: ignore
             if result == 0:
                 self.write_multi_done.emit(group, True)
                 if self.logger:
@@ -452,6 +563,23 @@ class PLCWrite(QObject):
                 raise RuntimeError(err)
         except Exception as exc:
             raise exc
+
+    def _merge_contiguous(self, items: list) -> list[tuple[int, bytearray]]:
+        """
+        Gộp các item (dict từ get_item) có vùng byte nối tiếp nhau thành các khối liền.
+        \n Chỉ gộp khi item sau bắt đầu đúng tại byte kết thúc của item trước
+        (không lấp khoảng trống -> không ghi đè byte nào ngoài các item đã cho).
+        """
+        blocks: list[tuple[int, bytearray]] = []
+        for it in sorted(items, key=lambda x: x["start"]):
+            if it.get("db_number", self._db_number) != self._db_number:
+                raise ValueError(f"Item DB{it.get('db_number')} khác DB{self._db_number}")
+            start, data = it["start"], bytes(it["data"])
+            if blocks and blocks[-1][0] + len(blocks[-1][1]) == start:
+                blocks[-1][1].extend(data)
+            else:
+                blocks.append((start, bytearray(data)))
+        return blocks
 
     def get_item(self, tag_name: str, value: Any) -> dict:
         tag = self._layout_dict.get(tag_name)
@@ -483,7 +611,7 @@ class PLCWrite(QObject):
     def _write_full_db(self, data: dict):
         """Ghi toàn bộ DB trong 1 lần (read-modify-write)."""
         if not self._ensure_connected():
-            return
+            raise ConnectionError("PLC not connected")
         try:
             raw = bytearray(
                 self._client.db_read(self._db_number, 0, self._db_size)  # type: ignore

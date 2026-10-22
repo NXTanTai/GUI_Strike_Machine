@@ -26,6 +26,7 @@ class PLCRead(QObject):
     """
     init_data    = Signal()
     data_ready   = Signal(dict)
+    data_ready_ts = Signal(dict, float)   # data, time.time() lúc bắt đầu đọc
     error        = Signal(str)
     connected    = Signal(bool)
     disconnected = Signal()
@@ -254,6 +255,7 @@ class PLCRead(QObject):
             return
 
         try:
+            t_read = time.time()
             t0 = time.perf_counter()
             raw       = self._client.db_read(self._db_number, self._offsets, self._db_size)
             elapsed_ms = (time.perf_counter() - t0) * 1000
@@ -268,6 +270,7 @@ class PLCRead(QObject):
                     )
             result = self._parse(raw, base_offset=self._offsets)
             self.data_ready.emit(result)
+            self.data_ready_ts.emit(result, t_read)
             self.elapsed_time.emit(elapsed_ms)
 
         except S7Error as exc:
@@ -291,14 +294,15 @@ class PLCRead(QObject):
         if self._retry_timer:
             self._retry_timer.start()
 
-    def _parse(self, raw: bytearray, base_offset: int = 0) -> dict:
-        if not self._db_layout:
+    def _parse(self, raw: bytearray, base_offset: int = 0, layout: Optional[list] = None) -> dict:
+        layout = self._db_layout if layout is None else layout
+        if not layout:
             return {}
 
         result:  dict[str, Any] = {}
         raw_len = len(raw)
 
-        for name, dtype, offset, bit in self._db_layout:
+        for name, dtype, offset, bit in layout:
             rel_offset = offset - base_offset
 
             if rel_offset < 0 or rel_offset >= raw_len:
@@ -327,3 +331,158 @@ class PLCRead(QObject):
                 #     )
 
         return result
+
+
+class PLCReadBlock(PLCRead):
+    """
+    Đọc nhiều vùng DB nằm liền nhau (INPUT / ACTUAL / ERROR) bằng 1 kết nối.
+    \n regions: [(name, offset, size, read_ms), ...]
+    \n - Sau khi kết nối, các vùng liền nhau được gom thành nhóm sao cho mỗi nhóm vừa
+    1 request theo PDU đã thoả thuận (PDU - 18 byte). VD PDU 240 -> tối đa 222 byte/request:
+    INPUT (198) | ACTUAL + ERROR (138 + 52 = 190). PDU 960 -> 1 nhóm duy nhất.
+    \n - Mỗi nhóm đọc theo read_ms nhỏ nhất của các vùng trong nhóm; vùng "đi ké" trong nhóm
+    được đọc thêm mà không tốn request.
+    \n - Mỗi vùng được emit khi dữ liệu thay đổi, hoặc quá read_ms (heartbeat), hoặc lần đọc
+    đầu tiên sau khi kết nối.
+    """
+    region_ready = Signal(str, dict, float)   # region name, data, time.time() lúc bắt đầu đọc
+
+    _READ_OVERHEAD = 18   # S7 header 12 + param 2 + data item header 4
+
+    def __init__(
+        self,
+        regions:          list[tuple[str, int, int, int]],
+        name_module:      str                                       = "PLC",
+        ip:               str                                       = "172.16.100.100",
+        rack:             int                                       = 0,
+        slot:             int                                       = 1,
+        db_number:        int                                       = 1,
+        db_layout:        Optional[list[tuple[str, str, int, Any]]] = None,
+        string_max_chars: int                                       = 254,
+        retry_ms:         int                                       = 3000,
+        logger_parent                                               = None,
+        parent:           Optional[QObject]                         = None,
+    ):
+        regions = sorted(regions, key=lambda r: r[1])
+        super().__init__(
+            name_module=name_module, ip=ip, rack=rack, slot=slot,
+            db_number=db_number, db_layout=db_layout,
+            db_size=0, offsets=regions[0][1],
+            poll_ms=min(r[3] for r in regions), retry_ms=retry_ms,
+            logger_parent=logger_parent, parent=parent,
+        )
+
+        # Mỗi vùng: dict(name, start, end, cfg_end, read_s, layout)
+        self._regions: list[dict] = []
+        for i, (name, off, size, read_ms) in enumerate(regions):
+            cfg_end = off + size
+            end = cfg_end
+            # cộng offset 2 byte cho string
+            for _, dtype, t_off, _ in (db_layout or []):
+                if str(dtype).upper() == "STRING" and off <= t_off < cfg_end:
+                    end = max(end, t_off + 2 + string_max_chars)
+            if i + 1 < len(regions):
+                end = min(end, regions[i + 1][1])   # không lấn sang vùng kế tiếp
+            self._regions.append({
+                "name": name, "start": off, "end": end, "cfg_end": cfg_end,
+                "read_s": read_ms / 1000,
+                "layout": [t for t in (db_layout or []) if off <= t[2] < end],
+            })
+
+        self._groups:    list[dict]       = []
+        self._last_raw:  dict[str, bytes] = {}
+        self._last_emit: dict[str, float] = {}
+        self.init_data.connect(self._on_connected)
+
+    @Slot()
+    def _on_connected(self):
+        """Lập nhóm theo PDU và emit lại toàn bộ vùng ở lần đọc đầu"""
+        self._last_raw.clear()
+        self._last_emit.clear()
+        pdu = self._client.get_pdu_length() if self._client else 240  # type: ignore
+        self._plan_groups(max(32, pdu - self._READ_OVERHEAD))
+        if self.logger:
+            plan = " | ".join(
+                f"[{g['start']}..{g['end']}) {'+'.join(r['name'] for r in g['regions'])} {int(g['read_s'] * 1000)}ms"
+                for g in self._groups
+            )
+            self.logger.info(f"[PLC READ {self._name_module}]: PDU=%d -> %s", pdu, plan)
+
+    def _plan_groups(self, max_payload: int):
+        """Gom các vùng liền nhau (theo thứ tự offset) vào nhóm và <= max_payload byte"""
+        self._groups = []
+        for r in self._regions:
+            g = self._groups[-1] if self._groups else None
+            if g and g["end"] == r["start"] and r["end"] - g["start"] <= max_payload:
+                g["end"] = r["end"]
+                g["regions"].append(r)
+                g["read_s"] = min(g["read_s"], r["read_s"])
+            else:
+                self._groups.append({"start": r["start"], "end": r["end"], "regions": [r],
+                                     "read_s": r["read_s"], "last_read": 0.0})
+
+    @Slot()
+    def _poll(self):
+        if not self._running or not self._client or not self._client.get_connected():
+            self._reconnect()
+            return
+
+        try:
+            now = time.monotonic()
+            max_ms = 0.0  
+            for g in self._groups:
+                # -0.02s: bù sai số QTimer 
+                if now - g["last_read"] < g["read_s"] - 0.02:
+                    continue
+                g["last_read"] = now
+                max_ms = max(max_ms, self._read_group(g, now))
+            if max_ms:
+                self.elapsed_time.emit(max_ms)
+
+        except S7Error as exc:
+            if self.logger:
+                self.logger.warning(f"[PLC READ {self._name_module}]: Read error: %s", exc)
+            self.error.emit(f"Read error: {exc}")
+            self._reconnect()
+        except Exception as exc:
+            if self.logger:
+                self.logger.error(f"[PLC READ {self._name_module}]: Unexpected error: %s", exc)
+            self.error.emit(str(exc))
+            self._reconnect()
+
+    def _read_group(self, g: dict, now: float) -> float:
+        t_read = time.time()
+        t0     = time.perf_counter()
+        try:
+            raw = self._client.db_read(self._db_number, g["start"], g["end"] - g["start"])  # type: ignore
+        except S7ProtocolError as exc:
+            last = g["regions"][-1]
+            protocol_error = not isinstance(exc, (S7PacketLostError, S7StalePacketError))
+            if not (protocol_error and self._client and self._client.get_connected()
+                    and last["end"] > last["cfg_end"]):
+                raise
+            if self.logger:
+                self.logger.warning(
+                    f"[PLC READ {self._name_module}]: Read [%d..%d) failed (%s) — fallback to %d",
+                    g["start"], g["end"], exc, last["cfg_end"],
+                )
+            last["end"] = g["end"] = last["cfg_end"]
+            last["layout"] = [t for t in last["layout"] if t[2] < last["cfg_end"]]
+            raw = self._client.db_read(self._db_number, g["start"], g["end"] - g["start"])  # type: ignore
+        elapsed_ms = (time.perf_counter() - t0) * 1000
+
+        if self.logger and elapsed_ms > (g["read_s"] * 1000 * 1.3):
+            self.logger.warning(
+                f"[PLC READ {self._name_module}]: Slow response %.1fms (size=%d)", elapsed_ms, len(raw),
+            )
+
+        for r in g["regions"]:
+            chunk   = bytes(raw[r["start"] - g["start"]:r["end"] - g["start"]])
+            changed = self._last_raw.get(r["name"]) != chunk
+            due     = now - self._last_emit.get(r["name"], 0.0) >= r["read_s"] - 0.02
+            if not (changed or due):
+                continue
+            self._last_raw[r["name"]]  = chunk
+            self._last_emit[r["name"]] = now
+            self.region_ready.emit(r["name"], self._parse(raw, base_offset=g["start"], layout=r["layout"]), t_read)
+        return elapsed_ms

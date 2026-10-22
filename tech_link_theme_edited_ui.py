@@ -8318,12 +8318,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_339.addWidget(self.pushButton_21)
 
         self.sys_state_stacked_wid_40.addWidget(self.error_light_32)
-        self.page_4 = QWidget()
-        self.page_4.setObjectName(u"page_4")
-        self.horizontalLayout_7 = QHBoxLayout(self.page_4)
+        self.warning_light_3 = QWidget()
+        self.warning_light_3.setObjectName(u"warning_light_3")
+        self.horizontalLayout_7 = QHBoxLayout(self.warning_light_3)
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_24 = QPushButton(self.page_4)
+        self.pushButton_24 = QPushButton(self.warning_light_3)
         self.pushButton_24.setObjectName(u"pushButton_24")
         sizePolicy.setHeightForWidth(self.pushButton_24.sizePolicy().hasHeightForWidth())
         self.pushButton_24.setSizePolicy(sizePolicy)
@@ -8339,7 +8339,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_7.addWidget(self.pushButton_24)
 
-        self.sys_state_stacked_wid_40.addWidget(self.page_4)
+        self.sys_state_stacked_wid_40.addWidget(self.warning_light_3)
 
         self.horizontalLayout_31.addWidget(self.sys_state_stacked_wid_40)
 
@@ -8419,12 +8419,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_474.addWidget(self.pushButton_23)
 
         self.sys_state_stacked_wid_42.addWidget(self.error_light_34)
-        self.page_3 = QWidget()
-        self.page_3.setObjectName(u"page_3")
-        self.horizontalLayout_8 = QHBoxLayout(self.page_3)
+        self.warning_light_2 = QWidget()
+        self.warning_light_2.setObjectName(u"warning_light_2")
+        self.horizontalLayout_8 = QHBoxLayout(self.warning_light_2)
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
         self.horizontalLayout_8.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_22 = QPushButton(self.page_3)
+        self.pushButton_22 = QPushButton(self.warning_light_2)
         self.pushButton_22.setObjectName(u"pushButton_22")
         sizePolicy.setHeightForWidth(self.pushButton_22.sizePolicy().hasHeightForWidth())
         self.pushButton_22.setSizePolicy(sizePolicy)
@@ -8438,7 +8438,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_8.addWidget(self.pushButton_22)
 
-        self.sys_state_stacked_wid_42.addWidget(self.page_3)
+        self.sys_state_stacked_wid_42.addWidget(self.warning_light_2)
 
         self.horizontalLayout_41.addWidget(self.sys_state_stacked_wid_42)
 
@@ -8597,7 +8597,8 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.db_file_path_edit.sizePolicy().hasHeightForWidth())
         self.db_file_path_edit.setSizePolicy(sizePolicy)
         self.db_file_path_edit.setFont(font20)
-        self.db_file_path_edit.setPlaceholderText(u" Enter Path Folder")
+        self.db_file_path_edit.setReadOnly(True)
+        self.db_file_path_edit.setPlaceholderText(u" Path Folder")
 
         self.gridLayout_6.addWidget(self.db_file_path_edit, 0, 1, 1, 1)
 
@@ -8639,7 +8640,8 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.plc_ip_address_edit.sizePolicy().hasHeightForWidth())
         self.plc_ip_address_edit.setSizePolicy(sizePolicy)
         self.plc_ip_address_edit.setFont(font20)
-        self.plc_ip_address_edit.setPlaceholderText(u" Enter IP: 172.16.100.***")
+        self.plc_ip_address_edit.setReadOnly(True)
+        self.plc_ip_address_edit.setPlaceholderText(u" IP: 172.16.100.***")
 
         self.gridLayout_6.addWidget(self.plc_ip_address_edit, 1, 1, 1, 1)
 
@@ -9732,7 +9734,7 @@ class Ui_MainWindow(object):
         self.serial_data_7.setAlignment(Qt.AlignCenter)
         self.serial_data_7.setReadOnly(True)
         self.serial_data_7.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.serial_data_7.setDecimals(3)
+        self.serial_data_7.setDecimals(2)
         self.serial_data_7.setMinimum(-9999.899999999999636)
         self.serial_data_7.setMaximum(9999.899999999999636)
 
@@ -9752,7 +9754,7 @@ class Ui_MainWindow(object):
         self.serial_data_3.setAlignment(Qt.AlignCenter)
         self.serial_data_3.setReadOnly(True)
         self.serial_data_3.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.serial_data_3.setDecimals(3)
+        self.serial_data_3.setDecimals(2)
         self.serial_data_3.setMinimum(-9999.899999999999636)
         self.serial_data_3.setMaximum(9999.899999999999636)
 
@@ -9766,7 +9768,7 @@ class Ui_MainWindow(object):
         self.serial_data_2.setAlignment(Qt.AlignCenter)
         self.serial_data_2.setReadOnly(True)
         self.serial_data_2.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.serial_data_2.setDecimals(3)
+        self.serial_data_2.setDecimals(2)
         self.serial_data_2.setMinimum(-9999.899999999999636)
         self.serial_data_2.setMaximum(9999.899999999999636)
 
@@ -9786,7 +9788,7 @@ class Ui_MainWindow(object):
         self.serial_data_4.setAlignment(Qt.AlignCenter)
         self.serial_data_4.setReadOnly(True)
         self.serial_data_4.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.serial_data_4.setDecimals(3)
+        self.serial_data_4.setDecimals(2)
         self.serial_data_4.setMinimum(-9999.899999999999636)
         self.serial_data_4.setMaximum(9999.899999999999636)
 
@@ -9800,7 +9802,7 @@ class Ui_MainWindow(object):
         self.serial_data_5.setAlignment(Qt.AlignCenter)
         self.serial_data_5.setReadOnly(True)
         self.serial_data_5.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.serial_data_5.setDecimals(3)
+        self.serial_data_5.setDecimals(2)
         self.serial_data_5.setMinimum(-9999.899999999999636)
         self.serial_data_5.setMaximum(9999.899999999999636)
 
@@ -9820,7 +9822,7 @@ class Ui_MainWindow(object):
         self.serial_data_6.setAlignment(Qt.AlignCenter)
         self.serial_data_6.setReadOnly(True)
         self.serial_data_6.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.serial_data_6.setDecimals(3)
+        self.serial_data_6.setDecimals(2)
         self.serial_data_6.setMaximum(999.899999999999977)
 
         self.gridLayout_8.addWidget(self.serial_data_6, 6, 1, 1, 1)
@@ -9845,7 +9847,7 @@ class Ui_MainWindow(object):
         self.serial_data_1.setAlignment(Qt.AlignCenter)
         self.serial_data_1.setReadOnly(True)
         self.serial_data_1.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.serial_data_1.setDecimals(3)
+        self.serial_data_1.setDecimals(2)
         self.serial_data_1.setMinimum(-9999.899999999999636)
         self.serial_data_1.setMaximum(9999.899999999999636)
 
@@ -9877,7 +9879,7 @@ class Ui_MainWindow(object):
         self.serial_data_8.setAlignment(Qt.AlignCenter)
         self.serial_data_8.setReadOnly(True)
         self.serial_data_8.setButtonSymbols(QAbstractSpinBox.NoButtons)
-        self.serial_data_8.setDecimals(3)
+        self.serial_data_8.setDecimals(2)
         self.serial_data_8.setMinimum(-9999.899999999999636)
         self.serial_data_8.setMaximum(9999.899999999999636)
 
@@ -10542,8 +10544,8 @@ class Ui_MainWindow(object):
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
         self.verticalLayout_16.setContentsMargins(0, 0, 0, 0)
         self.list_alarm = QTableWidget(self.alarm_page)
-        if (self.list_alarm.columnCount() < 4):
-            self.list_alarm.setColumnCount(4)
+        if (self.list_alarm.columnCount() < 5):
+            self.list_alarm.setColumnCount(5)
         __qtablewidgetitem18 = QTableWidgetItem()
         self.list_alarm.setHorizontalHeaderItem(0, __qtablewidgetitem18)
         __qtablewidgetitem19 = QTableWidgetItem()
@@ -10552,6 +10554,8 @@ class Ui_MainWindow(object):
         self.list_alarm.setHorizontalHeaderItem(2, __qtablewidgetitem20)
         __qtablewidgetitem21 = QTableWidgetItem()
         self.list_alarm.setHorizontalHeaderItem(3, __qtablewidgetitem21)
+        __qtablewidgetitem22 = QTableWidgetItem()
+        self.list_alarm.setHorizontalHeaderItem(4, __qtablewidgetitem22)
         self.list_alarm.setObjectName(u"list_alarm")
         self.list_alarm.setFont(font22)
         self.list_alarm.setStyleSheet(u"QTableWidget {\n"
@@ -10607,7 +10611,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(3)
+        self.stackedWidget_2.setCurrentIndex(0)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_pressure_sv_a_11.setCurrentIndex(1)
@@ -10653,7 +10657,7 @@ class Ui_MainWindow(object):
         self.stacked_cel_fah_temp_a_5.setCurrentIndex(0)
         self.stacked_cel_fah_temp_a_6.setCurrentIndex(0)
         self.heat_t0_stacked.setCurrentIndex(0)
-        self.stackedWidget_3.setCurrentIndex(1)
+        self.stackedWidget_3.setCurrentIndex(0)
         self.sys_state_stacked_wid_40.setCurrentIndex(2)
         self.sys_state_stacked_wid_42.setCurrentIndex(2)
         self.i_o_group_1_switch_3.setCurrentIndex(0)
@@ -10669,14 +10673,14 @@ class Ui_MainWindow(object):
         self.i_o_group_1_switch_10.setCurrentIndex(0)
         self.i_o_group_1_switch_12.setCurrentIndex(0)
         self.i_o_group_1_switch_13.setCurrentIndex(0)
-        self.stacked_list_history_page.setCurrentIndex(0)
+        self.stacked_list_history_page.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Tech-Link - Strike Machine System", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Tech-Link - Hot Air Pressure System", None))
         self.logo_btn.setText("")
         self.company_name.setText(QCoreApplication.translate("MainWindow", u"TECH-LINK", None))
         self.warning_notification.setText("")
@@ -11115,13 +11119,20 @@ class Ui_MainWindow(object):
         self.ai_name_11.setText(QCoreApplication.translate("MainWindow", u"P1:", None))
         self.i_o_group_4.setTitle(QCoreApplication.translate("MainWindow", u"Heater T0 Status", None))
         self.serial_label_7.setText(QCoreApplication.translate("MainWindow", u"PF:", None))
+        self.serial_data_3.setSuffix(QCoreApplication.translate("MainWindow", u" V", None))
+        self.serial_data_2.setSuffix(QCoreApplication.translate("MainWindow", u" V", None))
         self.serial_label_6.setText(QCoreApplication.translate("MainWindow", u"Ic:", None))
+        self.serial_data_4.setSuffix(QCoreApplication.translate("MainWindow", u" A", None))
+        self.serial_data_5.setSuffix(QCoreApplication.translate("MainWindow", u" A", None))
         self.serial_label_2.setText(QCoreApplication.translate("MainWindow", u"Ub:", None))
+        self.serial_data_6.setSuffix(QCoreApplication.translate("MainWindow", u" A", None))
         self.serial_label_3.setText(QCoreApplication.translate("MainWindow", u"Uc:", None))
         self.serial_label_4.setText(QCoreApplication.translate("MainWindow", u"Ia:", None))
+        self.serial_data_1.setSuffix(QCoreApplication.translate("MainWindow", u" V", None))
         self.serial_label_5.setText(QCoreApplication.translate("MainWindow", u"Ib:", None))
         self.serial_label_1.setText(QCoreApplication.translate("MainWindow", u"Ua:", None))
-        self.serial_label_8.setText(QCoreApplication.translate("MainWindow", u"RP:", None))
+        self.serial_label_8.setText(QCoreApplication.translate("MainWindow", u"Freq:", None))
+        self.serial_data_8.setSuffix(QCoreApplication.translate("MainWindow", u" Hz", None))
         self.back_connection_page_btn.setText(QCoreApplication.translate("MainWindow", u"Connection Page", None))
         self.back_home_page_btn.setText(QCoreApplication.translate("MainWindow", u"Home Page", None))
         self.search_icon.setText("")
@@ -11180,8 +11191,10 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem19 = self.list_alarm.horizontalHeaderItem(1)
         ___qtablewidgetitem19.setText(QCoreApplication.translate("MainWindow", u"Name.", None))
         ___qtablewidgetitem20 = self.list_alarm.horizontalHeaderItem(2)
-        ___qtablewidgetitem20.setText(QCoreApplication.translate("MainWindow", u"Time.", None))
+        ___qtablewidgetitem20.setText(QCoreApplication.translate("MainWindow", u"Type.", None))
         ___qtablewidgetitem21 = self.list_alarm.horizontalHeaderItem(3)
-        ___qtablewidgetitem21.setText(QCoreApplication.translate("MainWindow", u"Content", None))
+        ___qtablewidgetitem21.setText(QCoreApplication.translate("MainWindow", u"Time.", None))
+        ___qtablewidgetitem22 = self.list_alarm.horizontalHeaderItem(4)
+        ___qtablewidgetitem22.setText(QCoreApplication.translate("MainWindow", u"Content", None))
     # retranslateUi
 

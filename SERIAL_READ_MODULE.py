@@ -15,18 +15,30 @@ from LogFileHandler import MonthlyRotatingFileHandler
 
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
+CT_RATIO_DEFAULT = 1.5
+
 REALTIME_REGISTERS = {
-    "V_A_HEATER_0":         dict(address=4096, count=1, scale=100, signed=False),
-    "V_B_HEATER_0":         dict(address=4097, count=1, scale=100, signed=False),
-    "V_C_HEATER_0":         dict(address=4098, count=1, scale=100, signed=False),
-    "I_A_HEATER_0":         dict(address=4105, count=1, scale=100, signed=False),
-    "I_B_HEATER_0":         dict(address=4106, count=1, scale=100, signed=False),
-    "I_C_HEATER_0":         dict(address=4107, count=1, scale=100, signed=False),
-    "total_active_power_kW_HEATER_0":     dict(address=4113, count=1, scale=100, signed=True),
-    "total_reactive_power_kvar_HEATER_0": dict(address=4117, count=1, scale=100, signed=True),
-    "total_apparent_power_kVA_HEATER_0":  dict(address=4121, count=1, scale=100, signed=False),
-    "power_factor_HEATER_0":              dict(address=4125, count=1, scale=100, signed=True),
-    "frequency_Hz_HEATER_0":              dict(address=4126, count=1, scale=100, signed=False),
+    # Điện áp / PF / tần số: không liên quan CT
+    "V_A_HEATER_0":         dict(address=4096, count=1, scale=100, signed=False, apply_ct=False),
+    "V_B_HEATER_0":         dict(address=4097, count=1, scale=100, signed=False, apply_ct=False),
+    "V_C_HEATER_0":         dict(address=4098, count=1, scale=100, signed=False, apply_ct=False),
+
+    # Dòng điện: đọc ở thứ cấp -> nhân CT_RATIO ra sơ cấp
+    "I_A_HEATER_0":         dict(address=4105, count=1, scale=100, signed=False, apply_ct=True),
+    "I_B_HEATER_0":         dict(address=4106, count=1, scale=100, signed=False, apply_ct=True),
+    "I_C_HEATER_0":         dict(address=4107, count=1, scale=100, signed=False, apply_ct=True),
+
+    "LINE_A_B_HEATER_0":         dict(address=4096, count=1, scale=100, signed=False, apply_ct=False),
+    "LINE_B_C_HEATER_0":         dict(address=4097, count=1, scale=100, signed=False, apply_ct=False),
+    "LINE_C_A_HEATER_0":         dict(address=4098, count=1, scale=100, signed=False, apply_ct=False),
+    
+    # Công suất: tỉ lệ thuận với dòng nên cũng nhân CT_RATIO
+    "total_active_power_kW_HEATER_0":     dict(address=4113, count=1, scale=100, signed=True,  apply_ct=True),
+    "total_reactive_power_kvar_HEATER_0": dict(address=4117, count=1, scale=100, signed=True,  apply_ct=True),
+    "total_apparent_power_kVA_HEATER_0":  dict(address=4121, count=1, scale=100, signed=False, apply_ct=True),
+
+    "power_factor_HEATER_0":              dict(address=4125, count=1, scale=100, signed=True,  apply_ct=False),
+    "frequency_Hz_HEATER_0":              dict(address=4126, count=1, scale=100, signed=False, apply_ct=False),
 }
 
 ENERGY_REGISTERS = {
@@ -96,7 +108,7 @@ class HYFWSerialRead(QObject):
         self,
         name_module: str            = "No 1.",
         port:        Optional[str]  = None,        # None -> tự động dò theo port_keyword
-        port_keyword: str           = "CH340",      # từ khóa nhận diện cổng, VD "USB-SERIAL CH340"
+        port_keyword: str           = "CH340",      # từ khóa nhận diện: "USB-SERIAL CH340"
         baudrate:    int            = 9600,
         parity:      str            = "N",
         stopbits:    int            = 1,
@@ -105,9 +117,11 @@ class HYFWSerialRead(QObject):
         timeout:     float          = 2,
         word_order_big_endian: bool = True,
         poll_ms:     int            = 1000,
-        retry_ms:    int            = 5000,          # thời gian chờ trước khi thử kết nối lại khi ĐÃ thấy cổng nhưng connect fail
-        scan_ms:     int            = 3000,           # thời gian giữa các lần quét khi KHÔNG thấy cổng nào phù hợp
+        retry_ms:    int            = 5000,          # thời gian chờ trước khi thử kết nối lại 
+        scan_ms:     int            = 3000,           # thời gian giữa các lần quét 
         connect_timeout: float      = 5.0,             # timeout tối đa cho 1 lần thử kết nối cổng
+        ct_ratio:    float          = CT_RATIO_DEFAULT,
+        apply_ct:    bool           = True,
         logger_parent               = None,
         parent: Optional[QObject]   = None,
     ):
@@ -134,6 +148,8 @@ class HYFWSerialRead(QObject):
         self._poll_timer:  Optional[QTimer] = None
         self._retry_timer: Optional[QTimer] = None
         self._running     = False
+        self._ct_ratio = ct_ratio
+        self._apply_ct = apply_ct
 
         self._last_error_log_time: float = 0.0
         self._last_scan_log_time:  float = 0.0
@@ -211,6 +227,14 @@ class HYFWSerialRead(QObject):
         if self._poll_timer:
             self._poll_timer.setInterval(interval)  # type: ignore
 
+    @Slot(float)
+    def set_ct_ratio(self, ratio: float):
+        self._ct_ratio = ratio
+
+    @Slot(bool)
+    def set_apply_ct(self, enabled: bool):
+        self._apply_ct = enabled
+
     @Slot()
     def _do_stop(self):
         if self._poll_timer:
@@ -246,6 +270,7 @@ class HYFWSerialRead(QObject):
             self.init_data.emit()
             if self._poll_timer and not self._poll_timer.isActive():
                 self._poll_timer.start()
+            # self._get_ct_ratio()
             if self.logger:
                 self.logger.info(
                     f"[SERIAL READ {self._name_module}]: Connected to {self._active_port}, "
@@ -358,6 +383,15 @@ class HYFWSerialRead(QObject):
         self.port_name.emit("None")
         self.connected.emit(False)
 
+    def _get_ct_ratio(self):
+        try:
+            regs = self._read_input_registers(8199, 1)
+            raw = regs[0]
+            if raw <= 0:
+                raise ValueError(f"Invalid CT ratio: {raw}")
+        except Exception as exc:
+            self.error.emit(f"Failed to read CT ratio: {exc}")
+
     @Slot()
     def _poll(self):
         if not self._running or not self._client or not self._client.connected:
@@ -409,6 +443,14 @@ class HYFWSerialRead(QObject):
             raise ModbusException(f"Loi doc thanh ghi @{address}: {result}")
         return result.registers
 
+    def _write_single_register(self, address: int, value: int):
+        """Function code 06 - Write Single Register."""
+        result = self._client.write_register(
+            address=address, value=value, device_id=self._device_id
+        )
+        if result.isError():
+            raise ModbusException(f"Loi ghi thanh ghi @{address}: {result}")
+
     def _read_all(self) -> dict:
         data: dict[str, Any] = {}
         fail_count = 0
@@ -422,7 +464,12 @@ class HYFWSerialRead(QObject):
                 raw = regs[0]
                 if cfg["signed"]:
                     raw = decode_i16(raw)
-                data[name] = raw / cfg["scale"]
+
+                value = raw / cfg["scale"]
+                if self._apply_ct and cfg.get("apply_ct", False):
+                    value *= self._ct_ratio
+
+                data[name] = value
             except Exception as exc:
                 data[name] = None
                 fail_count += 1

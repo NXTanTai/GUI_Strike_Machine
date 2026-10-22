@@ -36,7 +36,7 @@ from PySide6.QtWidgets import (
     QHeaderView, QAbstractSpinBox, QStyledItemDelegate,
     QMainWindow, QApplication, QLineEdit,
     QFileDialog, QTableWidget, QTableWidgetItem,
-    QAbstractButton
+    QAbstractButton, QLabel
 )
 from typing import List, Optional, Tuple, Any
 from pathlib import Path
@@ -48,7 +48,7 @@ from message_box import LightThemeMessageBox as ltmessage
 from console_window import ConsoleWindow
 from password_dialog import *
 from Data_Simulator import DataSimulator
-from PLC_READ_MODULE import PLCRead
+from PLC_READ_MODULE import PLCRead, PLCReadBlock
 from PLC_WRITE_MODULE import PLCWrite
 from SERIAL_READ_MODULE import HYFWSerialRead
 from export_excel_worker import ExportWorker
@@ -93,6 +93,7 @@ SIMULATE = (get_exe_dir() / "simulate.txt").is_file()
 PLC_SIM = (get_exe_dir() / "plcsim.txt").is_file()
 
 EXCEL_PASSWORD = 'tl@12345'
+PLC_STRING_MAX_CHARS = 50   # độ dài tối đa của tag STRING trong DB (Alarm_Info = String[50])
 
 EXPECTED_ROW_NAMES = [
     "Cycle Setting",
@@ -252,8 +253,60 @@ class BackgroundDelegate(QStyledItemDelegate):
             option.palette.setColor(QPalette.ColorRole.Base, bg)
         super().paint(painter, option, index)
 
+ALARM_ERROR   = "Error"
+ALARM_WARNING = "Warning"
+ALARM_TYPE_COLORS = {
+    ALARM_ERROR:   "#DC2626",
+    ALARM_WARNING: "#D97706",
+}
+
+class NotificationBadge(QLabel):
+    """
+    Badge đỏ hiển thị số lượng (kiểu chuông thông báo) ở góc trên bên phải icon của button.
+    """
+    def __init__(self, button: QAbstractButton, icon_left: int = 20):
+        super().__init__(button)
+        self._button    = button
+        self._icon_left = icon_left  # padding-left của button (vị trí x của icon)
+        self.setAlignment(Qt.AlignCenter)  # type: ignore
+        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.setStyleSheet(
+            "QLabel {"
+            "  background-color: rgb(239, 68, 68);"
+            "  color: white;"
+            "  border-radius: 9px;"
+            "  font-size: 10pt;"
+            "  font-weight: bold;"
+            "  padding: 0px 5px;"
+            "}"
+        )
+        self.setFixedHeight(18)
+        self.hide()
+        button.installEventFilter(self)
+
+    def set_count(self, count: int):
+        if count <= 0:
+            self.hide()
+            return
+        self.setText("99+" if count > 99 else str(count))
+        self.setFixedWidth(max(18, self.sizeHint().width()))
+        self._reposition()
+        self.show()
+        self.raise_()
+
+    def _reposition(self):
+        icon = self._button.iconSize()
+        icon_top = (self._button.height() - icon.height()) // 2
+        x = self._icon_left + icon.width() - self.width() // 2
+        y = max(0, icon_top - self.height() // 2)
+        self.move(x, y)
+
+    def eventFilter(self, obj, event):
+        if obj is self._button and event.type() == QEvent.Type.Resize:
+            self._reposition()
+        return super().eventFilter(obj, event)
+
 class StrikeMachine(QMainWindow):
-    _request_scroll_reset   = Signal()
     _search_result_ready    = Signal(object)
     hide_loading            = Signal()
     show_loading            = Signal()
@@ -312,11 +365,10 @@ class StrikeMachine(QMainWindow):
             new_h = max(1, round(size.height() * factor))
             btn.setIconSize(QSize(new_w, new_h))
 
-
     def _scale_button_boxes(self, factor: float = 0.8) -> None:
         """
         Scale minimumSize/maximumSize của các nút có icon theo factor
-        để khung nút co theo cùng tỉ lệ với icon — tránh dư khoảng trắng quanh icon
+        để khung nút co theo cùng tỉ lệ với icon
         """
         QWIDGETSIZE_MAX = 16777215
 
@@ -332,7 +384,6 @@ class StrikeMachine(QMainWindow):
             max_size = btn.maximumSize()
             btn.setMinimumSize(QSize(_scaled(min_size.width()), _scaled(min_size.height())))
             btn.setMaximumSize(QSize(_scaled(max_size.width()), _scaled(max_size.height())))
-
 
     def _scale_fonts(self, factor: float = 0.8) -> None:
         """
@@ -483,6 +534,7 @@ class StrikeMachine(QMainWindow):
                 border: 3px solid #E5E5E5; 
                 border-radius: 10px;
                 color: #10B981;
+                background-color: white;
             }
             QLineEdit {
                 border: 1px solid #D1D5DB;
@@ -520,6 +572,7 @@ class StrikeMachine(QMainWindow):
                 border: 3px solid #E5E5E5; 
                 border-radius: 10px;
                 color: #10B981;
+                background-color: white;
             }
             QLineEdit {
                 border: 1px solid #D1D5DB;
@@ -685,7 +738,7 @@ class StrikeMachine(QMainWindow):
         last_item = db_layout[-1] if db_layout else None
         if last_item and last_item[1] == "STRING":
             string_start = last_item[2]
-            db_total_bytes = string_start + 256
+            db_total_bytes = string_start + 2 + PLC_STRING_MAX_CHARS
         else:
             db_total_bytes = max_byte + 4
         
@@ -743,7 +796,6 @@ class StrikeMachine(QMainWindow):
     def _gui_update_connection_group(self, path_get):
         self.ui.plc_ip_address_edit.setText(self.db_dict["ip_plc"]) #type: ignore
         self.ui.db_file_path_edit.setText(str(path_get))
-        self._cmd_protect_ms = ((float(self.db_dict["input_read"])/1000)) #type: ignore
         # self.ui.db_number_input.setValue(self.db_dict["db_name"]) #type: ignore
         # self.ui.db_data_size_input.setValue(self.db_dict["DB_TOTAL_BYTES"]) #type: ignore
         self.ui.write_time_input.setValue(self.db_dict["write_time"]) #type: ignore
@@ -780,7 +832,7 @@ class StrikeMachine(QMainWindow):
         if event.type() == QEvent.Type.MouseButtonDblClick:
             double_click_actions = {
                 self.ui.logo_btn        :self._on_logo_clicked,
-                self.ui.plc_io_btn      :self.i_o_page_btn,
+                # self.ui.plc_io_btn      :self.i_o_page_btn,
                 self.ui.cmd_btn         :self.cmd_btn,
 
                 self.ui.reset_cycle_a_btn: lambda: self.reset_cycle_btn("A"),
@@ -817,6 +869,8 @@ class StrikeMachine(QMainWindow):
         self._history_batch_counter = 0
         self._ai_data_batch_counter = 0
         self._db_offset = 0
+        self._history_at_latest = True
+        self._charts_paused = False
         self._search_keyword = ""
         self._search_offset = 0
         self._search_total = 0
@@ -874,7 +928,9 @@ class StrikeMachine(QMainWindow):
         self._last_cur_cycle_b:         list = [None] * 4
         self._last_cur_cycle_c:         list = [None] * 4
 
-        self._last_cmd_time = {}          # key = tag name, value = time.time()
+        # Lệnh bấm nút đang chờ PLC xác nhận
+        # key = tag name, value = {"value": bool, "t_sent": time.time(), "t_done": time ghi xong | None}
+        self._pending_cmd = {}
         self._ai_expected_keys = [
             "datetime", "No.", "PLC Connection", "Serial Connection", "Bit_Alarm", 
 
@@ -918,12 +974,11 @@ class StrikeMachine(QMainWindow):
 
             "Alarm_Info",
         ]
-        self._cmd_protect_ms = 0.6
 
         self.init_signal = False
 
         self._alarm_active_rows = {}
-        self._alarm_row_counter = 0
+        self._alarm_badge = NotificationBadge(self.ui.alarm_page_btn)
         self._alarm_row_limit = 200
 
         self.plc_read_worker = None
@@ -964,23 +1019,12 @@ class StrikeMachine(QMainWindow):
     def _init_timer(self):
         self.all_timer = []
 
-        self._start_stop_btn_timer = QTimer(self)
-        self._start_stop_btn_timer.setInterval(750)
-        self.all_timer.append(self._start_stop_btn_timer)
-        self._start_stop_btn_timer.timeout.connect(lambda: self._is_start_checked(self._mapping_input_data()))
-        self._start_stop_btn_timer.start()
+        # Đồng bộ nút Start/Stop & Heat T0 theo PLC: chạy trong _data_input (xem _is_start_checked)
 
-        self._heating_t0_btn_timer = QTimer(self)
-        self._heating_t0_btn_timer.setInterval(750)
-        self.all_timer.append(self._heating_t0_btn_timer)
-        self._heating_t0_btn_timer.timeout.connect(lambda: self._is_heat_t0_checked(self._mapping_input_data()))
-        self._heating_t0_btn_timer.start()
-
-        self.data_plc_timer = QTimer(self)
-        self.all_timer.append(self.data_plc_timer)
-        self.data_plc_timer.setInterval(self.db_dict["input_read"] if self.db_dict else 500)
-        self.data_plc_timer.timeout.connect(lambda: self._data_ready(self._mapping_input_data()))
-        self.data_plc_timer.start()
+        # Data PLC (INPUT / ACTUAL / ERROR) được xử lý ngay khi luồng PLC Read emit data
+        # -> xem _data_input / _data_actual / _data_error. Không dùng timer đọc lại cache nữa.
+        self._last_group_update = 0.0
+        self._last_bit_alarm = False
 
         self.data_table = QTimer(self)
         self.all_timer.append(self.data_table)
@@ -994,23 +1038,6 @@ class StrikeMachine(QMainWindow):
         #     self.data_web_socket.setInterval(250)
         #     self.data_web_socket.timeout.connect(lambda: self._data_web_socket(self.all_data))
         #     self.data_web_socket.start()
-
-        self.data_pressure_timer = QTimer(self)
-        self.all_timer.append(self.data_pressure_timer)
-        self.data_pressure_timer.setInterval(self.db_dict["data_read"] if self.db_dict else 200)
-        self.data_pressure_timer.timeout.connect(lambda: self._data_pressure(self._mapping_actual_data()))
-
-        self.data_group_timer = QTimer(self)
-        self.all_timer.append(self.data_group_timer)
-        self.data_group_timer.setInterval(500)
-        self.data_group_timer.timeout.connect(lambda: self._data_temp(self._mapping_actual_data()))
-        self.data_group_timer.timeout.connect(lambda: self._data_cycle(self._mapping_actual_data()))
-        self.data_group_timer.timeout.connect(lambda: self._data_temp_group(self._mapping_actual_data()))
-        
-        self.data_alarm_timer = QTimer(self)
-        self.all_timer.append(self.data_alarm_timer)
-        self.data_alarm_timer.setInterval(self.db_dict["error_read"] if self.db_dict else 1500)
-        self.data_alarm_timer.timeout.connect(lambda: self._data_alarm(self._mapping_error_data()))
 
         self.data_serial_timer = QTimer(self)
         self.all_timer.append(self.data_serial_timer)
@@ -1033,11 +1060,6 @@ class StrikeMachine(QMainWindow):
         self._history_flush_timer.timeout.connect(self._flush_history)
         self._history_flush_timer.start()
 
-        self._scroll_reset_timer = QTimer(self)
-        self.all_timer.append(self._scroll_reset_timer)
-        self._scroll_reset_timer.setSingleShot(True)
-        self._scroll_reset_timer.timeout.connect(self._reset_to_latest_table_display)
-        self._request_scroll_reset.connect(self._do_reset_scroll_timer, Qt.ConnectionType.QueuedConnection)
 
         self.datetime_timer = QTimer(self)
         self.all_timer.append(self.datetime_timer)
@@ -1053,15 +1075,15 @@ class StrikeMachine(QMainWindow):
 
     def _update_all_charts(self):
         self.update_chart_temp()
-        self.update_chart_pressure_a()
-        self.update_chart_pressure_b()
-        self.update_chart_pressure_c()
+        self.update_chart_pressure()
 
     def _render_all_charts(self) -> None:
         """
         Render tuần tự 4 chart trong 1 lần gọi.
         Adaptive FPS: tự giảm xuống 5Hz nếu render > 80ms. (Loại bỏ)
         """
+        if self._charts_paused:
+            return
         # t0 = time.perf_counter()
 
         self.chart_temp._render_frame()
@@ -1556,7 +1578,9 @@ class StrikeMachine(QMainWindow):
 
         self.ui.temp_unit_selection_combox.currentIndexChanged.connect(lambda: QTimer.singleShot(50, self._set_cur_unit))
 
-        self.ui.plc_io_btn.installEventFilter(self)
+        # self.ui.plc_io_btn.installEventFilter(self)
+        
+        self.ui.plc_io_btn.clicked.connect(self.i_o_page_btn)
         self.ui.cmd_btn.installEventFilter(self)
 
         self.ui.new_data_btn.clicked.connect(self.new_data_btn)
@@ -1599,24 +1623,25 @@ class StrikeMachine(QMainWindow):
         self.ui.clear_history_search.clicked.connect(self._on_clear_clicked)
         self.ui.export_all_tables_to_excel_btn.clicked.connect(self.export_all_tables_to_excel_btn)
         self.ui.list_history_2.verticalScrollBar().valueChanged.connect(self._on_search_scroll)
+        self.ui.stackedWidget_2.currentChanged.connect(self._on_main_page_changed)
 
         # NOTE (refactor): Trước đây ở đây có 1 dict `spinbox_map` trỏ tới 47 hàm
         # on_*_changed riêng lẻ (~90 dòng lặp theo pattern group A/B/C). Toàn bộ
         # logic đó đã được thay bằng SPINBOX_PLC_MAP + _make_plc_handler(), xem
         # _setup_spinbox_handlers() bên dưới — kết quả đã được đối chiếu 1:1 với
         # 47 handler cũ (cùng PLC tag, cùng transform, cùng widget mirror).
-        install_clear_on_focus(self.ui.db_file_path_edit)
-        install_clear_on_focus(self.ui.plc_ip_address_edit)
+        # install_clear_on_focus(self.ui.db_file_path_edit)
+        # install_clear_on_focus(self.ui.plc_ip_address_edit)
         # install_clear_on_focus(self.ui.db_number_input)
         # install_clear_on_focus(self.ui.db_data_size_input)
         # install_clear_on_focus(self.ui.error_display)
 
-        protect_widgets_on_stacked(self.ui.stackedWidget_2, [
-            (self.ui.db_file_path_edit,   None, None),
-            (self.ui.plc_ip_address_edit, None, None),
-            # (self.ui.db_number_input,     None, None),
-            # (self.ui.db_data_size_input,  None, None),
-        ])
+        # protect_widgets_on_stacked(self.ui.stackedWidget_2, [
+        #     (self.ui.db_file_path_edit,   None, None),
+        #     (self.ui.plc_ip_address_edit, None, None),
+        #     # (self.ui.db_number_input,     None, None),
+        #     # (self.ui.db_data_size_input,  None, None),
+        # ])
 
         self._setup_spinbox_handlers()
 
@@ -1788,6 +1813,7 @@ class StrikeMachine(QMainWindow):
 
             self._db_offset = total_db - len(rows)
             self._displayed_start = 0
+            self._history_at_latest = True
 
             self._render_chunk(0, len(self._all_rows_cache))
 
@@ -1913,12 +1939,19 @@ class StrikeMachine(QMainWindow):
         except Exception as e:
             self.logger.error(f"[_flush_history][DB] {e}")
 
+        # Đang xem dữ liệu cũ (cửa sổ đã trượt lên) -> không chèn vào table,
+        # dữ liệu mới sẽ hiện khi kéo xuống cuối hoặc khi reset về dòng mới nhất
+        if not getattr(self, '_history_at_latest', True):
+            return
+
         table         = self.ui.list_history
         scrollbar     = table.verticalScrollBar()
         was_at_bottom = scrollbar.value() >= scrollbar.maximum() - 5
 
         table.setUpdatesEnabled(False)
+        table.clearSpans()
 
+        removed = 0
         for ui_row in ui_rows:
             row_pos = table.rowCount()
             table.insertRow(row_pos)
@@ -1928,16 +1961,12 @@ class StrikeMachine(QMainWindow):
 
             if table.rowCount() > self._table_display:
                 table.removeRow(0)
+                removed += 1
+
+        self._db_offset += removed
 
         table.setUpdatesEnabled(True)
         self._apply_span(self.ui.list_history)
-
-        self._all_rows_cache.extend(ui_rows)
-        overflow = len(self._all_rows_cache) - self._table_display
-        if overflow > 0:
-            del self._all_rows_cache[:overflow]
-            if hasattr(self, "_db_offset"):
-                self._db_offset += overflow
 
         if was_at_bottom:
             table.scrollToBottom()
@@ -1967,26 +1996,53 @@ class StrikeMachine(QMainWindow):
         if not chunk:
             return
 
-        table            = self.ui.list_history
-        existing_batches = self._count_batches(table)
-        prev_no          = None
-        batch_counter    = existing_batches
-
+        table = self.ui.list_history
         table.setUpdatesEnabled(False)
+        self._insert_history_rows(table, table.rowCount(), chunk)
+        table.setUpdatesEnabled(True)
 
-        for row_data in chunk:
+    def _history_color_key(self, no: str, fallback: int) -> int:
+        """Màu theo số No. của batch để màu không bị lệch khi cửa sổ trượt lên/xuống"""
+        try:
+            return int(no)
+        except (TypeError, ValueError):
+            return fallback
+
+    def _insert_history_rows(self, table, start_row: int, rows: list):
+        """Chèn các dòng đã format vào table bắt đầu từ start_row"""
+        prev_no       = None
+        batch_counter = 0
+        for i, row_data in enumerate(rows):
             current_no = str(row_data[0]) if row_data[0] else ""
             if current_no != prev_no:
                 batch_counter += 1
                 prev_no = current_no
+            color_key = self._history_color_key(current_no, batch_counter)
 
-            row_pos = table.rowCount()
+            row_pos = start_row + i
             table.insertRow(row_pos)
             for col, value in enumerate(row_data):
                 table.setItem(row_pos, col,
-                    self._make_colored_item(str(value), batch_counter))
+                    self._make_colored_item(str(value), color_key))
 
-        table.setUpdatesEnabled(True)
+    def _fetch_history_rows(self, offset: int, count: int) -> list:
+        """Lấy count dòng (đã format cho UI) từ vị trí offset theo thứ tự id ASC"""
+        if count <= 0 or not self.conn:
+            return []
+        cursor = self.conn.cursor()
+        cursor.execute(
+            'SELECT * FROM history ORDER BY id ASC LIMIT ? OFFSET ?',
+            (count, offset)
+        )
+        result = []
+        for idx, row in enumerate(cursor.fetchall()):
+            stt = row[1] if row[1] else str(offset + idx + 1)
+            result.append(self._db_row_to_ui(row, stt))
+        return result
+
+    def _history_scroll_step(self) -> int:
+        """Số dòng trượt mỗi lần kéo (nửa cửa sổ, làm tròn theo batch 3 dòng)"""
+        return max(3, (self._table_display // 2) // 3 * 3)
 
     def _make_colored_item(self, value: str, batch_counter: int) -> QTableWidgetItem:
         item = QTableWidgetItem(value)
@@ -1998,23 +2054,30 @@ class StrikeMachine(QMainWindow):
 
     def _on_history_scroll(self, value: int):
         sb = self.ui.list_history.verticalScrollBar()
-        if value <= sb.minimum() + 50:
-            if self._db_offset > 0 and not getattr(self, '_loading_history_chunk', False):
+        loading = getattr(self, '_loading_history_chunk', False)
+        if value <= sb.minimum():
+            if self._db_offset > 0 and not loading:
                 self._loading_history_chunk = True
                 QTimer.singleShot(1000, self._prepend_history_chunk)
-        else:
-            # Chỉ reset timer khi user scroll lên (không ở bottom)
-            self._request_scroll_reset.emit()
+        elif value >= sb.maximum() and not getattr(self, '_history_at_latest', True):
+            if not loading:
+                self._loading_history_chunk = True
+                QTimer.singleShot(1000, self._append_history_chunk)
 
     def _prepend_history_chunk(self):
+        """
+        Kéo lên trên cùng: thêm các dòng cũ hơn vào đầu table và bỏ bớt
+        dòng ở cuối để table luôn giữ đúng {self._table_display} dòng.
+        """
+        table = self.ui.list_history
+        sb    = table.verticalScrollBar()
         try:
-            if self._db_offset <= 0:
+            if self._db_offset <= 0 or sb.value() > sb.minimum():
                 return
 
-            table = self.ui.list_history
-            sb    = table.verticalScrollBar()
-
-            if sb.value() > sb.minimum() + 50:
+            fetch_start = max(0, self._db_offset - self._history_scroll_step())
+            new_chunk   = self._fetch_history_rows(fetch_start, self._db_offset - fetch_start)
+            if not new_chunk:
                 return
 
             try:
@@ -2022,47 +2085,20 @@ class StrikeMachine(QMainWindow):
             except:
                 pass
 
-            fetch_start = max(0, self._db_offset - self._table_display)
-            fetch_count = self._db_offset - fetch_start
-
-            cursor = self.conn.cursor()  # type: ignore
-            cursor.execute(
-                'SELECT * FROM history ORDER BY id ASC LIMIT ? OFFSET ?',
-                (fetch_count, fetch_start)
-            )
-            rows = cursor.fetchall()
-
-            new_chunk = []
-            for idx, row in enumerate(rows):
-                stt = row[1] if row[1] else str(fetch_start + idx + 1)
-                formatted = self._db_row_to_ui(row, stt)
-                new_chunk.append(formatted)
-
-            if not new_chunk:
-                return
-
-            self._db_offset      = fetch_start
-            self._all_rows_cache = new_chunk + self._all_rows_cache
-
-            existing_batches = self._count_batches(table)
-            prev_no          = None
-            batch_counter    = existing_batches
-
             table.setUpdatesEnabled(False)
+            table.clearSpans()
 
-            for i, row_data in enumerate(new_chunk):
-                current_no = str(row_data[0]) if row_data[0] else ""
-                if current_no != prev_no:
-                    batch_counter += 1
-                    prev_no = current_no
+            self._insert_history_rows(table, 0, new_chunk)
+            self._db_offset = fetch_start
 
-                table.insertRow(i)
-                for col, value in enumerate(row_data):
-                    table.setItem(i, col,
-                        self._make_colored_item(str(value), batch_counter))
+            overflow = table.rowCount() - self._table_display
+            if overflow > 0:
+                for _ in range(overflow):
+                    table.removeRow(table.rowCount() - 1)
+                self._history_at_latest = False
 
-            table.setUpdatesEnabled(True)
             self._apply_span(table)
+            table.setUpdatesEnabled(True)
 
             table.scrollTo(
                 table.model().index(len(new_chunk), 0),
@@ -2071,24 +2107,76 @@ class StrikeMachine(QMainWindow):
 
             sb.valueChanged.connect(self._on_history_scroll)
 
+        except Exception as e:
+            self.logger.error(f"[_prepend_history_chunk] {e}")
+        finally:
+            self._loading_history_chunk = False
+
+    def _append_history_chunk(self):
+        """
+        Kéo xuống cuối khi đang xem dữ liệu cũ: thêm các dòng mới hơn vào cuối
+        table và bỏ bớt dòng ở đầu để table luôn giữ đúng {self._table_display} dòng.
+        """
+        table = self.ui.list_history
+        sb    = table.verticalScrollBar()
+        try:
+            if getattr(self, '_history_at_latest', True) or sb.value() < sb.maximum():
+                return
+
+            step      = self._history_scroll_step()
+            end       = self._db_offset + table.rowCount()
+            new_chunk = self._fetch_history_rows(end, step)
+            if len(new_chunk) < step:
+                self._history_at_latest = True
+            if not new_chunk:
+                return
+
+            try:
+                sb.valueChanged.disconnect(self._on_history_scroll)
+            except:
+                pass
+
+            table.setUpdatesEnabled(False)
+            table.clearSpans()
+
+            self._insert_history_rows(table, table.rowCount(), new_chunk)
+
+            overflow = table.rowCount() - self._table_display
+            if overflow > 0:
+                for _ in range(overflow):
+                    table.removeRow(0)
+                self._db_offset += overflow
+
+            self._apply_span(table)
+            table.setUpdatesEnabled(True)
+
+            table.scrollTo(
+                table.model().index(table.rowCount() - len(new_chunk) - 1, 0),
+                QTableWidget.ScrollHint.PositionAtBottom
+            )
+
+            sb.valueChanged.connect(self._on_history_scroll)
+
+        except Exception as e:
+            self.logger.error(f"[_append_history_chunk] {e}")
         finally:
             self._loading_history_chunk = False
             
-    def _reset_scroll_timer(self):
-        """Mỗi lần scroll đều reset timer — sau 10s không scroll thì về {self._table_display} dòng cuối"""
-        if not hasattr(self, '_scroll_reset_timer'):
-            self._scroll_reset_timer = QTimer(self)
-            self._scroll_reset_timer.setSingleShot(True)
-            self._scroll_reset_timer.timeout.connect(self._reset_to_latest_table_display)
-
-        self._scroll_reset_timer.stop()
-        self._scroll_reset_timer.start(5000)  # 5s
+    def _on_main_page_changed(self, index: int):
+        """Rời khỏi history_page thì đưa list_history về {self._table_display} dòng mới nhất"""
+        if self.ui.stackedWidget_2.widget(index) is not self.ui.history_page:
+            self._reset_to_latest_table_display()
+        elif self._history_at_latest:
+            # Table bị ẩn lúc reset nên scrollbar có thể chưa đúng, cuộn lại khi hiện
+            QTimer.singleShot(0, self.ui.list_history.scrollToBottom)
 
     def _reset_to_latest_table_display(self):
         table = self.ui.list_history
         sb = table.verticalScrollBar()
 
-        if sb.value() >= sb.maximum() - 5:
+        if not self.conn:
+            return
+        if sb.value() >= sb.maximum() - 5 and getattr(self, '_history_at_latest', True):
             return
 
         try:
@@ -2114,8 +2202,10 @@ class StrikeMachine(QMainWindow):
 
         self._db_offset = total_db - len(rows)
         self._displayed_start = 0
+        self._history_at_latest = True
 
         table.setUpdatesEnabled(False)
+        table.clearSpans()
         table.setRowCount(0)
         self._render_chunk(0, len(self._all_rows_cache))
         table.setUpdatesEnabled(True)
@@ -2125,9 +2215,6 @@ class StrikeMachine(QMainWindow):
 
         sb.valueChanged.connect(self._on_history_scroll)
 
-    def _do_reset_scroll_timer(self):
-        self._scroll_reset_timer.stop()
-        self._scroll_reset_timer.start(10000)
 
     def _on_search_changed(self, *args):
         """Hỗ trợ cả textbox và dateTimeChanged"""
@@ -2428,11 +2515,12 @@ class StrikeMachine(QMainWindow):
 
         QTimer.singleShot(250, _restore)
         
-    def _pause_charts(self): 
-        self._chart_render_timer.stop()
+    def _pause_charts(self):
+        """Chỉ dừng render, data vẫn được append để chart không bị hụt đoạn"""
+        self._charts_paused = True
 
     def _resume_charts(self):
-        self._chart_render_timer.start()
+        self._charts_paused = False
 
     def home_page_btn(self):
         if self.user == True:
@@ -2521,58 +2609,15 @@ class StrikeMachine(QMainWindow):
 
         time.sleep(0.1)
 
-        if not self._setup_read_data_plc_thread(
-                name_module="ACTUAL",
+        if not self._setup_read_plc_thread(
                 ip=self.db_dict["ip_plc"],
                 db_number=self.db_dict["db_name"],
                 db_layout=self.db_dict["DB_LAYOUT"],
-                db_size=self.db_dict["data_size"],
-                offsets=self.db_dict["offsets_data"],
-                poll_ms=self.db_dict["data_read"],
-                logger_parent=self.stk_mch_folder
-            ):
-            if self._current_lang == "en":
-                title = "Error"
-                content = "Failed to connect to PLC! Try again later."
-            elif self._current_lang == "cn":
-                title = "错误"
-                content = "无法连接 PLC！请稍后再试."
-            elif self._current_lang == "vn":
-                title = "Lỗi"
-                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-            ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-        time.sleep(0.1)
-        if not self._setup_read_input_plc_thread(
-                name_module="INPUT",
-                ip=self.db_dict["ip_plc"],
-                db_number=self.db_dict["db_name"],
-                db_layout=self.db_dict["DB_LAYOUT"],
-                db_size=self.db_dict["input_size"],
-                offsets=self.db_dict["offsets_input"],
-                poll_ms=self.db_dict["input_read"],
-                logger_parent=self.stk_mch_folder
-            ):
-            if self._current_lang == "en":
-                title = "Error"
-                content = "Failed to connect to PLC! Try again later."
-            elif self._current_lang == "cn":
-                title = "错误"
-                content = "无法连接 PLC！请稍后再试."
-            elif self._current_lang == "vn":
-                title = "Lỗi"
-                content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
-            ltmessage.error(self, title, content, self._current_lang) # type: ignore
-
-        time.sleep(0.1)
-        if not self._setup_read_error_plc_thread(
-                name_module="ERROR",
-                ip=self.db_dict["ip_plc"],
-                db_number=self.db_dict["db_name"],
-                db_layout=self.db_dict["DB_LAYOUT"],
-                db_size=self.db_dict["error_size"],
-                offsets=self.db_dict["offsets_error"],
-                poll_ms=self.db_dict["error_read"],
+                regions=[
+                    ("INPUT",  self.db_dict["offsets_input"], self.db_dict["input_size"], self.db_dict["input_read"]),
+                    ("ACTUAL", self.db_dict["offsets_data"],  self.db_dict["data_size"],  self.db_dict["data_read"]),
+                    ("ERROR",  self.db_dict["offsets_error"], self.db_dict["error_size"], self.db_dict["error_read"]),
+                ],
                 logger_parent=self.stk_mch_folder
             ):
             if self._current_lang == "en":
@@ -2600,183 +2645,119 @@ class StrikeMachine(QMainWindow):
             except Exception as e:
                 self.logger.warning(f"Cannot update read_time_input: {e}")
 
-    def _setup_read_data_plc_thread(
-            self, 
-            name_module: str    = "READ 1",
-            ip: str = "172.16.100.100", 
-            db_number: Optional[int] = None, 
-            db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
-            db_size: Optional[int] = None, 
-            offsets: int = 198,
-            poll_ms: int = 100,
+    def _setup_read_plc_thread(
+            self,
+            regions: list[tuple[str, int, int, int]],
+            ip: str = "172.16.100.100",
+            db_number: Optional[int] = None,
+            db_layout: Optional[list[tuple[str, str, int, Any]]] = None,
             logger_parent = None,
         ):
+        """
+        1 luồng / 1 kết nối đọc cả khối INPUT -> ACTUAL -> ERROR (các vùng nằm liền nhau trong DB).
+        
+ regions: [(name, offset, size, emit_ms), ...] — data mỗi vùng về qua _on_region_ready
+        """
         try:
             if db_number is None:
                 raise ValueError("DB number is not defined. Cannot start PLC read thread.")
             elif db_layout is None:
                 raise ValueError("DB layout is not defined. Cannot start PLC read thread.")
-            elif db_size is None:
-                raise ValueError("DB size is not defined. Cannot start PLC read thread.")
-            
-            self.plc_read_data_thread = QThread()
-            self.plc_read_data_worker = PLCRead(
-                name_module=name_module,
+
+            self.plc_read_thread = QThread()
+            self.plc_read_worker = PLCReadBlock(
+                regions=regions,
+                name_module="BLOCK",
                 ip=ip,
                 db_number=db_number,
                 db_layout=db_layout,
-                db_size=db_size,
-                offsets=offsets,
-                poll_ms=poll_ms,
+                string_max_chars=PLC_STRING_MAX_CHARS,
                 logger_parent=logger_parent
             )
-            self.plc_read_data_worker.moveToThread(self.plc_read_data_thread)
+            self.plc_read_worker.moveToThread(self.plc_read_thread)
 
-            self.plc_read_data_thread.started.connect(self.plc_read_data_worker.run)
-            self.plc_read_data_worker.data_ready.connect(self._data_actual)
-            self.plc_read_data_worker.connected.connect(self._read_status_plc)
-            self.plc_read_data_worker.elapsed_time.connect(self._performance_communication)
-            self.plc_read_data_worker.error.connect(self._on_plc_read_error)
-            self.plc_read_data_worker.disconnected.connect(self._on_plc_read_disconnected)
-            self.plc_read_data_worker.finished.connect(self.plc_read_data_thread.quit)
-            self.plc_read_data_worker.finished.connect(self.plc_read_data_worker.deleteLater)
-            self.plc_read_data_thread.finished.connect(self.plc_read_data_thread.deleteLater)
+            self.plc_read_thread.started.connect(self.plc_read_worker.run)
+            self.plc_read_worker.region_ready.connect(self._on_region_ready)
+            self.plc_read_worker.init_data.connect(self._set_init_data)
+            self.plc_read_worker.connected.connect(self._read_status_plc)
+            self.plc_read_worker.elapsed_time.connect(self._performance_communication)
+            self.plc_read_worker.error.connect(self._on_plc_read_error)
+            self.plc_read_worker.disconnected.connect(self._on_plc_read_disconnected)
+            self.plc_read_worker.finished.connect(self.plc_read_thread.quit)
+            self.plc_read_worker.finished.connect(self.plc_read_worker.deleteLater)
+            self.plc_read_thread.finished.connect(self.plc_read_thread.deleteLater)
 
-            self.plc_read_data_thread.start()
-            if not self.plc_read_data_thread.isRunning():
-                raise Exception("plc_read_data_thread failed to start")
+            self.plc_read_thread.start()
+            if not self.plc_read_thread.isRunning():
+                raise Exception("plc_read_thread failed to start")
         except Exception as e:
-            self.logger.info("PLC Reader gone wrong:", e)
+            self.logger.info("PLC Reader gone wrong: %s", e)
             return False
-        
-        self.worker_dict["plc_read_data_worker"] = self.plc_read_data_worker
+
+        self.worker_dict["plc_read_worker"] = self.plc_read_worker
         return True
 
-    def _setup_read_input_plc_thread(
-            self, 
-            name_module: str    = "READ 2",
-            ip: str = "172.16.100.100", 
-            db_number: Optional[int] = None, 
-            db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
-            db_size: Optional[int] = None, 
-            offsets: int = 0,
-            poll_ms: int = 500,
-            logger_parent = None,
-        ):
-        try:
-            if db_number is None:
-                raise ValueError("DB number is not defined. Cannot start PLC read thread.")
-            elif db_layout is None:
-                raise ValueError("DB layout is not defined. Cannot start PLC read thread.")
-            elif db_size is None:
-                raise ValueError("DB size is not defined. Cannot start PLC read thread.")
-            
-            self.plc_read_input_thread = QThread()
-            self.plc_read_input_worker = PLCRead(
-                name_module=name_module,
-                ip=ip,
-                db_number=db_number,
-                db_layout=db_layout,
-                db_size=db_size,
-                offsets=offsets,
-                poll_ms=poll_ms,
-                logger_parent=logger_parent
-            )
-            self.plc_read_input_worker.moveToThread(self.plc_read_input_thread)
-
-            self.plc_read_input_thread.started.connect(self.plc_read_input_worker.run)
-            self.plc_read_input_worker.data_ready.connect(self._data_input)
-            self.plc_read_input_worker.init_data.connect(self._set_init_data)
-            
-            self.plc_read_input_worker.error.connect(self._on_plc_read_error)
-            self.plc_read_input_worker.disconnected.connect(self._on_plc_read_disconnected)
-            self.plc_read_input_worker.finished.connect(self.plc_read_input_thread.quit)
-            self.plc_read_input_worker.finished.connect(self.plc_read_input_worker.deleteLater)
-            self.plc_read_input_thread.finished.connect(self.plc_read_input_thread.deleteLater)
-
-            self.plc_read_input_thread.start()
-            if not self.plc_read_input_thread.isRunning():
-                raise Exception("plc_read_input_thread failed to start")
-        except Exception as e:
-            self.logger.info("PLC Reader gone wrong:", e)
-            return False
-        
-        self.worker_dict["plc_read_input_worker"] = self.plc_read_input_worker
-        return True
-
-    def _setup_read_error_plc_thread(
-            self, 
-            name_module: str = "READ 3",
-            ip: str = "172.16.100.100", 
-            db_number: Optional[int] = None, 
-            db_layout: Optional[list[tuple[str, str, int, Any]]] = None, 
-            db_size: Optional[int] = None, 
-            offsets: int = 336,
-            poll_ms: int = 500,
-            logger_parent = None,
-        ):
-        try:
-            if db_number is None:
-                raise ValueError("DB number is not defined. Cannot start PLC read thread.")
-            elif db_layout is None:
-                raise ValueError("DB layout is not defined. Cannot start PLC read thread.")
-            elif db_size is None:
-                raise ValueError("DB size is not defined. Cannot start PLC read thread.")
-            
-            self.plc_read_error_thread = QThread()
-            self.plc_read_error_worker = PLCRead(
-                name_module=name_module,
-                ip=ip,
-                db_number=db_number,
-                db_layout=db_layout,
-                db_size=db_size,
-                offsets=offsets,
-                poll_ms=poll_ms,
-                logger_parent=logger_parent
-            )
-            self.plc_read_error_worker.moveToThread(self.plc_read_error_thread)
-
-            self.plc_read_error_thread.started.connect(self.plc_read_error_worker.run)
-            self.plc_read_error_worker.data_ready.connect(self._data_error)
-            
-            self.plc_read_error_worker.finished.connect(self.plc_read_error_thread.quit)
-            self.plc_read_error_worker.finished.connect(self.plc_read_error_worker.deleteLater)
-            self.plc_read_error_thread.finished.connect(self.plc_read_error_thread.deleteLater)
-
-            self.plc_read_error_thread.start()
-            if not self.plc_read_error_thread.isRunning():
-                raise Exception("plc_read_error_thread failed to start")
-        except Exception as e:
-            self.logger.info("PLC Reader gone wrong:", e)
-            return False
-        
-        self.worker_dict["plc_read_error_worker"] = self.plc_read_error_worker
-        return True
+    def _on_region_ready(self, region: str, data: dict, read_ts: float):
+        if region == "INPUT":
+            self._data_input(data, read_ts)
+        elif region == "ACTUAL":
+            self._data_actual(data)
+        elif region == "ERROR":
+            self._data_error(data)
 
     def _on_plc_read_error(self, message: str):
         self.logger.warning("PLC Read error: %s", message)
-        self._raise_alarm("PLC Read", message)
+        self._raise_alarm("PLC Read", ALARM_ERROR, message)
 
     def _on_plc_read_disconnected(self):
         self.logger.warning("PLC Read disconnected")
-        self._raise_alarm("PLC Read", "Mất kết nối PLC (Read)")
+        self._raise_alarm("PLC Read", ALARM_ERROR, "Mất kết nối PLC (Read)")
 
     def _data_get(self, data: dict):
         with self._data_lock:
             # print("Get: ", len(data))
             self.all_data.update(data)
 
+    _GROUP_UPDATE_S = 0.5  # nhịp tối đa cập nhật nhiệt độ / cycle / I-O (trước đây data_group_timer 500ms)
+
+    # Các handler _data_* bên dưới chạy trên luồng UI (signal từ luồng PLC Read là QueuedConnection).
+    # Luôn gọi xử lý NGOÀI _data_lock: threading.Lock không re-entrant và một số handler
+    # (_data_alarm, setChecked -> handler nút) lại lấy lock / gọi _mapping_*().
+
     def _data_actual(self, data: dict):
         with self._data_lock:
             self.actual_data.update(data)
+            snapshot = dict(self.actual_data)
 
-    def _data_input(self, data: dict):
+        self._data_pressure(snapshot)
+
+        # Bit_Alarm nằm trong vùng ACTUAL (Alarm_Info ở vùng ERROR) -> đánh giá lại alarm khi bit đổi
+        bit_alarm = bool(snapshot.get('Bit_Alarm', False))
+        if bit_alarm != self._last_bit_alarm:
+            self._last_bit_alarm = bit_alarm
+            self._data_alarm()
+
+        now = time.monotonic()
+        if now - self._last_group_update >= self._GROUP_UPDATE_S:
+            self._last_group_update = now
+            self._data_temp(snapshot)
+            self._data_cycle(snapshot)
+            self._data_temp_group(snapshot)
+
+    def _data_input(self, data: dict, read_ts: float):
         with self._data_lock:
             self.input_data.update(data)
+            snapshot = dict(self.input_data)
+        self._detect_btn_obj(snapshot, read_ts)
+        self._data_ready(snapshot)
+        if not self.init_signal:
+            self._is_start_checked(snapshot, read_ts)
+            self._is_heat_t0_checked(snapshot, read_ts)
 
     def _data_error(self, data: dict):
         with self._data_lock:
             self.error_data.update(data)
+        self._data_alarm()
 
     def _mapping_actual_data(self):
         with self._data_lock:
@@ -2824,6 +2805,10 @@ class StrikeMachine(QMainWindow):
             self.plc_writer_thread.started.connect(self.plc_writer_worker.run)
             self.plc_writer_worker.connected.connect(self._write_status_plc)
             self.plc_writer_worker.write_multi_done.connect(self.disable_btn)
+            self.plc_writer_worker.write_multi_done.connect(self._on_write_multi_done)
+            self.plc_writer_worker.write_multi_failed.connect(self._on_write_multi_failed)
+            self.plc_writer_worker.write_bool_done.connect(self._on_write_bool_done)
+            self.plc_writer_worker.write_bool_failed.connect(self._on_write_bool_failed)
             self.plc_writer_worker.error.connect(self._on_plc_write_error)
             self.plc_writer_worker.disconnected.connect(self._on_plc_write_disconnected)
             self.plc_writer_worker.finished.connect(self.plc_writer_thread.quit)
@@ -2840,11 +2825,11 @@ class StrikeMachine(QMainWindow):
     
     def _on_plc_write_error(self, message: str):
         # self.logger.warning("PLC Write error: %s", message)
-        self._raise_alarm("PLC Write", message)
+        self._raise_alarm("PLC Write", ALARM_ERROR, message)
 
     def _on_plc_write_disconnected(self):
         # self.logger.warning("PLC Write disconnected")
-        self._raise_alarm("PLC Write", "PLC disconnected")
+        self._raise_alarm("PLC Write", ALARM_ERROR, "PLC disconnected")
 
     def _setup_serial_threads(self):
         self.serial_data_thread = QThread()
@@ -2852,8 +2837,8 @@ class StrikeMachine(QMainWindow):
             name_module="HEATER_0",
             port_keyword="CH340",
             device_id=1,
-            poll_ms=1000,
-            retry_ms=5000,
+            poll_ms=200,
+            retry_ms=3000,
             scan_ms=1000,
             connect_timeout=5.0,
             logger_parent=self.stk_mch_folder
@@ -2875,21 +2860,19 @@ class StrikeMachine(QMainWindow):
         with self._data_lock:
             self.serial_data.update(data)
 
-    def _serial_connection_check(self, is_serial: bool):
-        if self.serial_read_connection != is_serial:
-            self.serial_read_connection = is_serial
-
     def _on_serial_error(self, message: str):
         self.logger.warning("Serial error: %s", message)
-        self._raise_alarm("Serial", message)
+        self._raise_alarm("Serial", ALARM_WARNING, message)
 
     def _on_serial_connected(self, ok: bool):
+        if self.serial_read_connection != ok:
+            self.serial_read_connection = ok
         if ok:
-            self._raise_alarm("Serial", "")
+            self._clear_alarm("Serial")
 
     def _on_serial_disconnected(self):
         self.logger.warning("Serial disconnected")
-        self._raise_alarm("Serial", "Mất kết nối cổng serial")
+        self._raise_alarm("Serial", ALARM_ERROR, "Port COM lost connection")
 
     def _serial_port_check(self, is_name: str):
         if self.ui.port_display.text() != is_name:
@@ -2920,7 +2903,7 @@ class StrikeMachine(QMainWindow):
                 float(data.get('P3_Current_Temp3', 0.0)),
             ])
         except Exception as e:
-            self._raise_alarm("Data Error", f"PLC Data Processing Error: {e}")
+            self._raise_alarm("Data Error", ALARM_WARNING, f"PLC Data Processing Error: {e}")
 
     def _data_AI(self, data_actual: dict, data_input: dict, data_error: dict, data_serial: dict):
         # print("AI Data:", data_actual, data_input, data_error, data_serial)
@@ -2931,7 +2914,7 @@ class StrikeMachine(QMainWindow):
             self._ai_data_batch_counter += 1
 
             record = dict.fromkeys(self._ai_expected_keys)
-            record["datetime"] = time.strftime("%Y-%m-%d %H:%M:%S")
+            record["datetime"] = time.strftime("%H:%M:%S")
             record["No."] = str(self._ai_data_batch_counter)
             record["PLC Connection"] = str(self.plc_read_connection)
             record["Serial Connection"] = str(self.serial_read_connection)
@@ -3005,7 +2988,7 @@ class StrikeMachine(QMainWindow):
                 float(data.get('P3_Current_PressureITV', 0.00)),
             ])
         except Exception as e:
-            self._raise_alarm("Data Error", f"PLC Data Processing Error: {e}")
+            self._raise_alarm("Data Error", ALARM_WARNING, f"PLC Data Processing Error: {e}")
 
     def _data_cycle(self, data: dict):
         # def _t(label, fn):
@@ -3042,7 +3025,7 @@ class StrikeMachine(QMainWindow):
             ])
             # )
         except Exception as e:
-            self._raise_alarm("Data Error", f"PLC Data Processing Error: {e}")
+            self._raise_alarm("Data Error", ALARM_WARNING, f"PLC Data Processing Error: {e}")
 
     def _data_web_socket(self, data: dict):
         try:
@@ -3100,7 +3083,6 @@ class StrikeMachine(QMainWindow):
                     float(data.get('P3_Air_HoldingTime', 0)/1000),
                     float(data.get('P3_Air_ReleaseTime', 0)/1000),
                     float(data.get('P3_PressureSetting', 0.00)),
-                    float(data.get('P3_TemperatureSetting', 0.0)),
                     self.for_display_temp(float(data.get('P3_TemperatureSetting', 0.0))),
                     self.for_display_temp(float(data.get('P3_TempLimitHIGH', 0.0))),
                     self.for_display_temp(float(data.get('P3_TempLimitLOW', 0.0))),
@@ -3114,31 +3096,9 @@ class StrikeMachine(QMainWindow):
                     self.for_display_temp(float(data.get('T0_TempLimitLOW', 0.0))),
                     self.for_display_temp(float(data.get('T0_TempOffset', 0.0)))
                 ])
-                # print("Init Value Done")
-                
-                # self._init_button_obj([
-                #     bool(data.get('START', False)),
-                #     bool(data.get('STOP', False)),
-                #     bool(data.get('T0_Start_Heat', False)),
-                #     bool(data.get('T0_Stop_Heat', False)),
-                #     bool(data.get('P1_Start_Heat', False)),
-                #     bool(data.get('P1_Start_Pressure', False)),
-                #     bool(data.get('P1_Start_Oil', False)),
-                #     bool(data.get('P1_BitCountTimes', False)),
-                #     bool(data.get('P2_Start_Heat', False)),
-                #     bool(data.get('P2_Start_Pressure', False)),
-                #     bool(data.get('P2_Start_Oil', False)),
-                #     bool(data.get('P2_BitCountTimes', False)),
-                #     bool(data.get('P3_Start_Heat', False)),
-                #     bool(data.get('P3_Start_Pressure', False)),
-                #     bool(data.get('P3_Start_Oil', False)),
-                #     bool(data.get('P3_BitCountTimes', False)),
-                # ])
-                # print("Init Button Done")
                 self.init_signal = False
                 return
             
-            self._detect_btn_obj(data)
             # _t("input_data", lambda: 
             self._input_data_filter([
                 bool(self.ui.heat_t0_stacked.currentIndex()),
@@ -3271,13 +3231,19 @@ class StrikeMachine(QMainWindow):
         if groups:
             self.add_row_to_list_history(self.ui.code_display.text(), groups)
 
-    def _data_alarm(self, data: dict):
+    def _data_alarm(self):
+        """Bit_Alarm (vùng ACTUAL) + Alarm_Info (vùng ERROR)"""
         try:
             with self._data_lock:
-                bit_alarm = bool(data.get('Bit_Alarm', False))
-                alarm_text = str(data.get('Alarm_Info', ''))
-            content = alarm_text if (bit_alarm or alarm_text) else ""
-            self._raise_alarm("PLC", content)
+                bit_alarm = bool(self.actual_data.get('Bit_Alarm', False))
+                alarm_text = str(self.error_data.get('Alarm_Info', '') or '').strip()
+            if alarm_text:
+                content = alarm_text
+            elif bit_alarm:
+                content = "PLC Alarm"
+            else:
+                content = ""
+            self._raise_alarm("PLC", ALARM_ERROR, content)
         except Exception as e:
             self.logger.error("[Main]-[_data_alarm]:PLC Data Processing Error: %s", e)
 
@@ -3301,7 +3267,11 @@ class StrikeMachine(QMainWindow):
     def _set_init_data(self):
         self.init_signal = True
         
-    def _detect_btn_obj(self, data):
+    def _detect_btn_obj(self, data: dict, read_ts: float):
+        """
+        Đồng bộ trạng thái nút theo PLC, gọi mỗi khi luồng PLC Read (input) có data mới.
+        \n read_ts: time.time() lúc luồng đọc bắt đầu db_read gói data này
+        """
         if self.init_signal:
             return
         sync_map = [
@@ -3323,30 +3293,90 @@ class StrikeMachine(QMainWindow):
         def on(tag):
             return bool(data.get(tag, False))
         for btn, tag, flag_name in sync_map:
-            if self._should_ignore_status(tag):
+            if self._should_ignore_status(tag, read_ts):
                 continue
             plc_value = on(tag)
             if btn.isChecked() != plc_value:
                 setattr(self, flag_name, True)
                 btn.setChecked(plc_value)
+                # toggled gọi handler đồng bộ; nếu handler return sớm thì flag
+                # vẫn còn True và sẽ nuốt mất lệnh write của lần bấm kế tiếp
+                setattr(self, flag_name, False)
+                # Đồng bộ theo PLC không gửi lệnh write -> không có gì để chờ xác nhận
+                self._pending_cmd.pop(tag, None)
 
-    def _is_start_checked(self, data: dict):
+    _PULSE_HOLD_MS = 200  # thời gian giữ mức True của lệnh xung STOP / T0_Stop_Heat
+
+    def _is_start_checked(self, data: dict, read_ts: float):
+        """Đồng bộ nút Start/Stop theo bit START của PLC (bỏ qua khi lệnh bấm chưa được PLC xác nhận)"""
+        if self._should_ignore_status("START", read_ts):
+            return
         if self.ui.start_stop_stacked.currentIndex() == 1 and not data.get("START", False):
             self.ui.stop_start_btn.click()
         elif self.ui.start_stop_stacked.currentIndex() == 0 and data.get("START", False):
             self.ui.start_stop_btn.click()
 
-    def _is_heat_t0_checked(self, data: dict):
+    def _is_heat_t0_checked(self, data: dict, read_ts: float):
+        """Đồng bộ nút Heat T0 theo bit T0_Start_Heat của PLC"""
+        if self._should_ignore_status("T0_Start_Heat", read_ts):
+            return
         if self.ui.heat_t0_stacked.currentIndex() == 1 and not data.get("T0_Start_Heat", False):
             self.ui.heat_off_btn_t0.click()
         elif self.ui.heat_t0_stacked.currentIndex() == 0 and data.get("T0_Start_Heat", False):
             self.ui.heat_on_btn_t0.click()
 
-    def _should_ignore_status(self, tag: str) -> bool:
-        t = self._last_cmd_time.get(tag)
-        if t is None:
+    _CMD_ACK_TIMEOUT = 10.0  # giây — dự phòng khi không nhận được write_bool_done/failed
+
+    def _mark_cmd(self, tag: str, value: bool):
+        """Ghi nhận lệnh bấm nút vừa gửi xuống PLC, chờ PLC Write xác nhận"""
+        if self.init_signal:
+            return
+        self._pending_cmd[tag] = {"value": bool(value), "t_sent": time.time(), "t_done": None}
+
+    def _on_write_bool_done(self, name: str, value: bool, t_done: float):
+        cmd = self._pending_cmd.get(name)
+        # Bỏ qua xác nhận của lệnh cũ nếu user đã bấm lại giá trị khác
+        if cmd is not None and cmd["value"] == value:
+            cmd["t_done"] = t_done
+
+    def _on_write_multi_done(self, group: str, ok: bool):
+        if ok:
+            self._clear_alarm(f"PLC Save {group}")
+
+    def _on_write_multi_failed(self, group: str, reason: str):
+        """Lưu thông số group thất bại: mở lại các nút đã bị khoá lúc lưu và báo alarm"""
+        self.logger.warning("[Main]-[write_multi]: Group %s save failed: %s", group, reason)
+        self.disable_btn(group, True)
+        self._raise_alarm(f"PLC Save {group}", ALARM_WARNING, f"Ghi thông số Group {group} xuống PLC thất bại")
+
+    def _on_write_bool_failed(self, name: str, value: bool):
+        cmd = self._pending_cmd.get(name)
+        if cmd is not None and cmd["value"] == value:
+            # Ghi thất bại -> lần đọc kế tiếp đồng bộ nút theo PLC ngay
+            del self._pending_cmd[name]
+
+    def _should_ignore_status(self, tag: str, read_ts: float) -> bool:
+        """
+        Bỏ qua trạng thái PLC của tag khi lệnh bấm nút chưa được xác nhận:
+        \n - Chưa ghi xong (chưa nhận write_bool_done) -> bỏ qua
+        \n - Đã ghi xong nhưng gói data được đọc TRƯỚC lúc ghi xong -> data cũ, bỏ qua
+        \n - Gói data đọc SAU lúc ghi xong -> data đã phản ánh lệnh, đồng bộ bình thường
+        """
+        cmd = self._pending_cmd.get(tag)
+        if cmd is None:
             return False
-        return (time.time() - t) < self._cmd_protect_ms
+
+        if cmd["t_done"] is None:
+            if time.time() - cmd["t_sent"] < self._CMD_ACK_TIMEOUT:
+                return True
+            del self._pending_cmd[tag]
+            return False
+
+        if read_ts <= cmd["t_done"]:
+            return True
+
+        del self._pending_cmd[tag]
+        return False
 
     def _init_pressure_group_sv_obj(self, list_init_a, list_init_b, list_init_c, list_init_t0):
         for i in range(len(self.list_for_import_a)):
@@ -3368,38 +3398,32 @@ class StrikeMachine(QMainWindow):
             self.list_for_import_t0[i].blockSignals(False)
 
     def _read_status_plc(self, connected: bool):
+        # Luôn cập nhật đèn trạng thái: lần kết nối đầu tiên thất bại thì connected (False)
+        # trùng giá trị mặc định của cờ -> nếu return sớm thì đèn kẹt ở page mặc định (2)
+        # Page: 0 = running (xanh), 1 = error (đỏ), 2 = warning (vàng, mặc định lúc chưa kết nối)
+        page = 0 if connected else 1
+        if self.ui.sys_state_stacked_wid_40.currentIndex() != page:
+            self.ui.sys_state_stacked_wid_40.setCurrentIndex(page)
+
         if connected == self.plc_read_connection:
             return
 
         self.plc_read_connection = connected
         if connected:
-            self._raise_alarm("PLC Read", "")
-        try:
-            if connected:
-                self.ui.sys_state_stacked_wid_40.setCurrentIndex(0) if self.ui.sys_state_stacked_wid_40.currentIndex() != 0 else None
-                self.data_pressure_timer.start()
-                self.data_group_timer.start()
-                self.data_alarm_timer.start()
-                self.data_serial_timer.start()
-            else:
-                self.ui.sys_state_stacked_wid_40.setCurrentIndex(3) if self.ui.sys_state_stacked_wid_40.currentIndex() != 3 else None
-                if not self._shutting_down:
-                    if self.data_group_timer.isActive():
-                        self.data_group_timer.stop()
-                    if self.data_alarm_timer.isActive():
-                        self.data_alarm_timer.stop()
-        except Exception as e:
-            self.logger.error(f"Error occurred while reading PLC status: {e}")
+            self._clear_alarm("PLC Read")
+            self.data_serial_timer.start()
 
     def _write_status_plc(self, connected: bool):
+        # Xem _read_status_plc: luôn cập nhật đèn trạng thái
+        page = 0 if connected else 1
+        if self.ui.sys_state_stacked_wid_42.currentIndex() != page:
+            self.ui.sys_state_stacked_wid_42.setCurrentIndex(page)
+
         if connected == self.plc_writer_connection:
             return
         self.plc_writer_connection = connected
         if connected:
-            self._raise_alarm("PLC Write", "")
-            self.ui.sys_state_stacked_wid_42.setCurrentIndex(0) if self.ui.sys_state_stacked_wid_42.currentIndex() != 0 else None
-        else:
-            self.ui.sys_state_stacked_wid_42.setCurrentIndex(3) if self.ui.sys_state_stacked_wid_42.currentIndex() != 3 else None
+            self._clear_alarm("PLC Write")
 
     def _data_group_filter(self, list_group_a_recv, list_group_b_recv, list_group_c_recv):
         groups_recv = [list_group_a_recv, list_group_b_recv, list_group_c_recv]
@@ -3630,41 +3654,71 @@ class StrikeMachine(QMainWindow):
             self.ui.ct_pv.setValue(v)
             self._last_ct = v
 
-    def _raise_alarm(self, source: str, content: str):
+    def _raise_alarm(self, source: str, alarm_type: str, content: str):
         if not content:
-            item = self._alarm_active_rows.pop(source, None)
-            if item is not None:
-                row = item.row()
-                if row >= 0:
-                    self.ui.list_alarm.removeRow(row)
-                # self.logger.info("[ALARM][%s]: Resolved", source)
-                self._flush_alarm_to_file(source, "(resolved)", event="CLEAR")
+            self._clear_alarm(source)
             return
 
         if source in self._alarm_active_rows:
             return
 
         # self.logger.error("[ALARM][%s]: %s", source, content)
-        self._alarm_active_rows[source] = self._add_alarm_row(source, content)
+        self._alarm_active_rows[source] = self._add_alarm_row(source, alarm_type, content)
+        self._update_alarm_badge()
 
-    def _add_alarm_row(self, source: str, content: str):
+    def _clear_alarm(self, source: str):
+        item = self._alarm_active_rows.pop(source, None)
+        if item is None:
+            return
+        alarm_type = ""
+        row = item.row()
+        if row >= 0:
+            type_item = self.ui.list_alarm.item(row, 2)
+            alarm_type = type_item.text() if type_item else ""
+            self.ui.list_alarm.removeRow(row)
+            self._renumber_alarm_rows()
+        # self.logger.info("[ALARM][%s]: Resolved", source)
+        self._flush_alarm_to_file(source, alarm_type, "(resolved)", event="CLEAR")
+        self._update_alarm_badge()
+
+    def _renumber_alarm_rows(self):
         table = self.ui.list_alarm
-        self._alarm_row_counter += 1
+        for row in range(table.rowCount()):
+            item = table.item(row, 0)
+            if item is None:
+                item = QTableWidgetItem()
+                table.setItem(row, 0, item)
+            item.setText(str(row + 1))
+
+    def _update_alarm_badge(self):
+        self._alarm_badge.set_count(len(self._alarm_active_rows))
+
+    def _add_alarm_row(self, source: str, alarm_type: str, content: str):
+        table = self.ui.list_alarm
 
         table.insertRow(0)
-        no_item = QTableWidgetItem(str(self._alarm_row_counter))
-        table.setItem(0, 0, no_item)
-        table.setItem(0, 1, QTableWidgetItem(source))
-        table.setItem(0, 2, QTableWidgetItem(time.strftime("%H:%M:%S %d/%m/%Y")))
-        table.setItem(0, 3, QTableWidgetItem(content))
+        no_item = QTableWidgetItem()
+        type_item = QTableWidgetItem(alarm_type)
+        type_item.setForeground(QColor(ALARM_TYPE_COLORS.get(alarm_type, "#000000")))
+        type_font = type_item.font()
+        type_font.setBold(True)
+        type_item.setFont(type_font)
+
+        table.setItem(0, 0, no_item)                                        # No.
+        table.setItem(0, 1, QTableWidgetItem(source))                       # Name.
+        table.setItem(0, 2, type_item)                                      # Type.
+        table.setItem(0, 3, QTableWidgetItem(time.strftime("%H:%M:%S")))   # Time.
+        table.setItem(0, 4, QTableWidgetItem(content))                      # Content
 
         while table.rowCount() > self._alarm_row_limit:
             table.removeRow(table.rowCount() - 1)
 
-        self._flush_alarm_to_file(source, content, event="RAISE")
+        self._renumber_alarm_rows()
+
+        self._flush_alarm_to_file(source, alarm_type, content, event="RAISE")
         return no_item
 
-    def _flush_alarm_to_file(self, source: str, content: str, event: str = "RAISE"):
+    def _flush_alarm_to_file(self, source: str, alarm_type: str, content: str, event: str = "RAISE"):
         try:
             date_str = time.strftime("%Y%m%d")
             file_path = self.alarm_data_folder / f"alarm_{date_str}.csv"
@@ -3673,8 +3727,8 @@ class StrikeMachine(QMainWindow):
             with open(file_path, mode='a', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
                 if not file_exists:
-                    writer.writerow(["datetime", "Source", "Event", "Content"])
-                writer.writerow([time.strftime("%Y-%m-%d %H:%M:%S"), source, event, content])
+                    writer.writerow(["datetime", "Source", "Type", "Event", "Content"])
+                writer.writerow([time.strftime("%Y-%m-%d %H:%M:%S"), source, alarm_type, event, content])
 
         except Exception as e:
             if self.logger:
@@ -3697,7 +3751,7 @@ class StrikeMachine(QMainWindow):
         if not tag:
             return
 
-        self._last_cmd_time[tag] = time.time()
+        self._mark_cmd(tag, checked)
 
         if checked:
             self.ui.new_data_btn.setEnabled(False)
@@ -3737,21 +3791,20 @@ class StrikeMachine(QMainWindow):
         if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_stacked.currentIndex() == 1:
             return
 
-        self._heating_t0_btn_timer.stop()
         if channel == "T0_On":
+            self._mark_cmd("T0_Start_Heat", True)
             self.plc_writer_worker.write_bool.emit("T0_Start_Heat", True)
             self.disable_heat_group(channel, False)
             self.logger.info("[Main]-[heating_btn]: T0 Heating On!")
             self.ui.heat_t0_stacked.setCurrentIndex(1)
 
         elif channel == "T0_Off":
-            self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", True)
-            QTimer.singleShot(50, lambda: self.plc_writer_worker.write_bool.emit("T0_Start_Heat", False))
-            QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("T0_Stop_Heat", False))
+            self._mark_cmd("T0_Start_Heat", False)
+            self.plc_writer_worker.write_pulse.emit("T0_Stop_Heat", self._PULSE_HOLD_MS)
+            self.plc_writer_worker.write_bool.emit("T0_Start_Heat", False)
             self.disable_heat_group(channel, True)
             self.logger.info("[Main]-[heating_btn]: T0 Heating Off!")
             self.ui.heat_t0_stacked.setCurrentIndex(0)
-        self._heating_t0_btn_timer.start()
 
     def pumping_btn(self, channel: str, checked: bool, btn=None):
         if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_stacked.currentIndex() == 1:
@@ -3770,7 +3823,7 @@ class StrikeMachine(QMainWindow):
         if not tag:
             return
 
-        self._last_cmd_time[tag] = time.time()
+        self._mark_cmd(tag, checked)
 
         try:
             if checked:
@@ -3816,7 +3869,7 @@ class StrikeMachine(QMainWindow):
         if not tag:
             return
 
-        self._last_cmd_time[tag] = time.time()
+        self._mark_cmd(tag, checked)
 
         try:
             if not self.init_signal:
@@ -3862,7 +3915,7 @@ class StrikeMachine(QMainWindow):
         if not tag:
             return
 
-        self._last_cmd_time[tag] = time.time()
+        self._mark_cmd(tag, checked)
 
         try:
             if not self.init_signal:
@@ -3931,25 +3984,24 @@ class StrikeMachine(QMainWindow):
                 ltmessage.error(self, title, content, self._current_lang)  # type: ignore
                 return
             
-            self._start_stop_btn_timer.stop()
-            if channel == "Start":    
+            if channel == "Start":
                 self.ui.sys_state_stacked_wid_39.setCurrentIndex(1)
+                self._mark_cmd("START", True)
                 self.plc_writer_worker.write_bool.emit("START", True)   # type: ignore
                 self.data_table.start()
                 self.ui.start_stop_stacked.setCurrentIndex(1)
                 self.logger.info("[Main]-[start_stop_btn]: System On")
             elif channel == "Stop":
                 self.ui.sys_state_stacked_wid_39.setCurrentIndex(0)
-                self.plc_writer_worker.write_bool.emit("STOP", True)    # type: ignore
-                QTimer.singleShot(50, lambda: self.plc_writer_worker.write_bool.emit("START", False))  # type: ignore
-                QTimer.singleShot(100, lambda: self.plc_writer_worker.write_bool.emit("STOP", False))   # type: ignore
+                self._mark_cmd("START", False)
+                self.plc_writer_worker.write_pulse.emit("STOP", self._PULSE_HOLD_MS)  # type: ignore
+                self.plc_writer_worker.write_bool.emit("START", False)               # type: ignore
                 QTimer.singleShot(150, self._set_off_oil_btn)
                 QTimer.singleShot(150, self._set_off_vacuum_btn)
                 QTimer.singleShot(150, self._set_off_heating_btn)
                 self.data_table.stop()
                 self.ui.start_stop_stacked.setCurrentIndex(0)
                 self.logger.info("[Main]-[start_stop_btn]: System Off")
-            self._start_stop_btn_timer.start()
         except Exception as e:
             self.logger.error(f"[Main]-[start_stop_btn]: Error occurred - {str(e)}")
 
@@ -4803,32 +4855,19 @@ class StrikeMachine(QMainWindow):
             self.ui.t0_pv.value()
         ])
 
-    def update_chart_pressure_a(self):
-        group_a_values = [self.ui.pressure_sv_a_1.value(),
-                        self.ui.pressure_pv_a_2.value(),
-                        self.ui.pressure_pv_a_3.value(),
-                        self.ui.pressure_pv_a_4.value()]
-        group_a_press_values = [self.ui.pressure_sv_a_5.value(),
-                                self.ui.pressure_pv_a_5.value()]
-        self.chart_pressure_a.append_data(group_a_values, group_a_press_values)
-
-    def update_chart_pressure_b(self):
-        group_b_values = [self.ui.pressure_sv_b_1.value(),
-                        self.ui.pressure_pv_b_2.value(),
-                        self.ui.pressure_pv_b_3.value(),
-                        self.ui.pressure_pv_b_4.value()]
-        group_b_press_values = [self.ui.pressure_sv_b_5.value(),
-                                self.ui.pressure_pv_b_5.value()]
-        self.chart_pressure_b.append_data(group_b_values, group_b_press_values)
-
-    def update_chart_pressure_c(self):
-        group_c_values = [self.ui.pressure_sv_c_1.value(),
-                        self.ui.pressure_pv_c_2.value(),
-                        self.ui.pressure_pv_c_3.value(),
-                        self.ui.pressure_pv_c_4.value()]
-        group_c_press_values = [self.ui.pressure_sv_c_5.value(),
-                                self.ui.pressure_pv_c_5.value()]
-        self.chart_pressure_c.append_data(group_c_values, group_c_press_values)
+    def update_chart_pressure(self):
+        ui = self.ui
+        for grp, chart in (("a", self.chart_pressure_a),
+                           ("b", self.chart_pressure_b),
+                           ("c", self.chart_pressure_c)):
+            chart.append_data(
+                [getattr(ui, f"pressure_sv_{grp}_1").value(),
+                 getattr(ui, f"pressure_pv_{grp}_2").value(),
+                 getattr(ui, f"pressure_pv_{grp}_3").value(),
+                 getattr(ui, f"pressure_pv_{grp}_4").value()],
+                [getattr(ui, f"pressure_sv_{grp}_5").value(),
+                 getattr(ui, f"pressure_pv_{grp}_5").value()],
+            )
 
     def update_clock(self):
         self.ui.date_displ.setDateTime(QDateTime.currentDateTime())
@@ -4911,7 +4950,7 @@ class StrikeMachine(QMainWindow):
                 self.temp_offset_obj[i].setEnabled(status)
             return
 
-        elif channel == "T0_On" or channel == "T0_Off":
+        elif channel in ("T0", "T0_On", "T0_Off"):
             for i in [0]:
                 self.temp_sv_obj[i].setEnabled(status)
                 self.temp_h_alm_obj[i].setEnabled(status)
@@ -4939,12 +4978,12 @@ class StrikeMachine(QMainWindow):
             self.ui.heat_btn_c.setEnabled(status)
             return
         
-        elif channel == "T0_On" or channel == "T0_Off":
+        elif channel in ("T0", "T0_On", "T0_Off"):
             self.ui.heat_on_btn_t0.setEnabled(status)
             self.ui.heat_off_btn_t0.setEnabled(status)
 
     def export_all_tables_to_excel_btn(self):
-        current_date = datetime.now().strftime("%d-%m-%Y")  # dùng - thay vì /
+        current_date = datetime.now().strftime("%d-%m-%Y")
         if self._current_lang == "cn":
             name = self.ui.search_data.text().strip() or "历史记录"
             group = "组"
@@ -4956,7 +4995,7 @@ class StrikeMachine(QMainWindow):
             group = "Group"
         default_filename_done = f"{name} - {group} {self.ui.select_group_name.currentText()} {current_date}"
         list_history_folder = Path(self.stk_mch_folder) / "Excel"
-        list_history_folder.mkdir(parents=True, exist_ok=True)  # tạo folder nếu chưa có
+        list_history_folder.mkdir(parents=True, exist_ok=True)  
         filename_done = list_history_folder / f"{default_filename_done}.xlsx"
         if self.ui.stacked_list_history_page.currentIndex() == 0:
             if self._current_lang == "en":

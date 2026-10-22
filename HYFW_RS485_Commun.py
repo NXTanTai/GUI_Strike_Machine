@@ -30,7 +30,7 @@ from pymodbus.exceptions import ModbusException
 # ----------------------------------------------------------------------------
 # CẤU HÌNH KẾT NỐI - chỉnh lại theo máy của bạn
 # ----------------------------------------------------------------------------
-SERIAL_PORT = "COM7"       # Windows: "COM3", "COM4"...  Linux: "/dev/ttyUSB0"
+SERIAL_PORT = "COM8"       # Windows: "COM3", "COM4"...  Linux: "/dev/ttyUSB0"
 BAUDRATE = 9600
 PARITY = "N"                # N / E / O  (mặc định thiết bị: 8N1 -> N)
 STOPBITS = 1
@@ -74,14 +74,14 @@ REALTIME_REGISTERS = {
     "phase_C_voltage_V":     dict(address=4098, scale=100, signed=False),
 
     # Dòng điện: bảng 100mA trả về mA (thứ cấp) -> nhân CT_RATIO để ra A (sơ cấp)
-    "phase_A_current_A":     dict(address=4105, scale=100, signed=False, apply_ct=True),
-    "phase_B_current_A":     dict(address=4106, scale=100, signed=False, apply_ct=True),
-    "phase_C_current_A":     dict(address=4107, scale=100, signed=False, apply_ct=True),
+    "phase_A_current_A":     dict(address=4105, scale=100, signed=False, apply_ct=False),
+    "phase_B_current_A":     dict(address=4106, scale=100, signed=False, apply_ct=False),
+    "phase_C_current_A":     dict(address=4107, scale=100, signed=False, apply_ct=False),
 
     # Công suất: bảng 100mA đơn vị W/var/VA, scale=100 (KHÁC bảng 1.25mA dùng kW, scale=1000)
-    "total_active_power_W":   dict(address=4113, scale=100, signed=True, apply_ct=True),
-    "total_reactive_power_var": dict(address=4117, scale=100, signed=True, apply_ct=True),
-    "total_apparent_power_VA":  dict(address=4121, scale=100, signed=False, apply_ct=True),
+    "total_active_power_W":   dict(address=4113, scale=100, signed=True, apply_ct=False),
+    "total_reactive_power_var": dict(address=4117, scale=100, signed=True, apply_ct=False),
+    "total_apparent_power_VA":  dict(address=4121, scale=100, signed=False, apply_ct=False),
 
     "power_factor":           dict(address=4125, scale=100, signed=True),
     "frequency_Hz":           dict(address=4126, scale=100, signed=False),
@@ -93,7 +93,6 @@ ENERGY_REGISTERS = {
     "forward_active_energy_kWh": dict(address=16386, scale=10),
     "reverse_active_energy_kWh": dict(address=16388, scale=10),
 }
-
 
 @dataclass
 class HYFWMeter:

@@ -52,7 +52,6 @@ def _close_loading(proc, signal_file, pause_file=None):
     except subprocess.TimeoutExpired:
         proc.terminate()
 
-
 def ensure_single_instance(app) -> bool:
     from PySide6.QtCore import QSharedMemory, QSystemSemaphore
     from PySide6.QtNetwork import QLocalServer, QLocalSocket
@@ -277,7 +276,7 @@ if __name__ == "__main__":
         print(f"Screen: {_screen_geo.width()}x{_screen_geo.height()}, title_bar_h={_title_bar_h}")
         if _title_bar_h <= 0:
             _title_bar_h = 32
-        _usable_h = _screen_geo.height() - _title_bar_h
+        _usable_h = (_screen_geo.height() - _title_bar_h)
         scale_factor = max(
             min(_screen_geo.width() / BASE_W, _usable_h / BASE_H),
             0.5,
