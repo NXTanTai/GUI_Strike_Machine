@@ -669,7 +669,7 @@ QPushButton:checked {
                  <string notr="true"/>
                 </property>
                 <property name="text">
-                 <string> Group</string>
+                 <string> Monitor</string>
                 </property>
                 <property name="icon">
                  <iconset resource="../../../../Pictures/QT_Icon/Icon.qrc">

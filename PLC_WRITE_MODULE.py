@@ -18,11 +18,10 @@ from snap7.util import set_bool, set_real, set_dint, set_int, set_string, get_bo
 
 from PySide6.QtCore import QObject, QTimer, Signal, Slot, QThread, Qt
 
-HEARTBEAT_INTERVAL = 5.0   # giây — probe khi queue rỗng
-HEARTBEAT_DB_SIZE  = 4     # byte — đọc tối thiểu để giữ kết nối sống
-MAX_RETRY_COUNT    = 3     # số lần retry tối đa cho 1 item trước khi bỏ
-MAX_ITEMS_PER_TICK = 20    # số lệnh tối đa xử lý trong 1 chu kỳ write_ms
-
+HEARTBEAT_INTERVAL = 5.0   # probe khi queue rỗng
+HEARTBEAT_DB_SIZE  = 4     # byte tối thiểu để giữ kết nối 
+MAX_RETRY_COUNT    = 3     # số lần retry tối đa cho 1 item còn không xoá lệnh
+MAX_ITEMS_PER_TICK = 20    # số lệnh tối đa xử lý trong 1 chu kỳ write_ms, nhiều quá thì bị pending
 
 class PLCWrite(QObject):
     """
@@ -38,7 +37,7 @@ class PLCWrite(QObject):
     write_full_db      = Signal(object)
     write_pulse        = Signal(str, int)           # name, hold_ms — ghi True, giữ hold_ms rồi ghi False
 
-    write_bool_done    = Signal(str, bool, float)   # name, value, time.time() lúc ghi xong
+    write_bool_done    = Signal(str, bool, float)   # name, value, time.perf_counter() lúc ghi xong
     write_bool_failed  = Signal(str, bool)          # name, value — ghi thất bại / bị bỏ
     write_value_done   = Signal()
     write_multi_done   = Signal(str, bool)
@@ -129,7 +128,7 @@ class PLCWrite(QObject):
             self.logger.addHandler(stream_handler)
 
         self.logger.setLevel(logging.INFO)
-        self.logger.propagate = True
+        self.logger.propagate = False  # tránh in trùng qua root logger
 
     def _build_layout_dict(self) -> dict:
         """
@@ -457,7 +456,7 @@ class PLCWrite(QObject):
             self._client.db_write(self._db_number, offset, result)     # type: ignore
             mode = "BYTE"
 
-        self.write_bool_done.emit(name, bool(value), time.time())
+        self.write_bool_done.emit(name, bool(value), time.perf_counter())
         if self.logger:
             self.logger.info("[PLC WRITE]: BOOL OK (%s) - %s = %s", mode, name, value)
 

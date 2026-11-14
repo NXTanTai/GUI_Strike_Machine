@@ -26,7 +26,7 @@ class PLCRead(QObject):
     """
     init_data    = Signal()
     data_ready   = Signal(dict)
-    data_ready_ts = Signal(dict, float)   # data, time.time() lúc bắt đầu đọc
+    data_ready_ts = Signal(dict, float)   # data, time.perf_counter() lúc bắt đầu đọc
     error        = Signal(str)
     connected    = Signal(bool)
     disconnected = Signal()
@@ -102,7 +102,7 @@ class PLCRead(QObject):
             self.logger.addHandler(stream_handler)
 
         self.logger.setLevel(logging.INFO)
-        self.logger.propagate = True
+        self.logger.propagate = False  # tránh in trùng qua root logger
 
     @Slot()
     def run(self):
@@ -255,7 +255,7 @@ class PLCRead(QObject):
             return
 
         try:
-            t_read = time.time()
+            t_read = time.perf_counter()
             t0 = time.perf_counter()
             raw       = self._client.db_read(self._db_number, self._offsets, self._db_size)
             elapsed_ms = (time.perf_counter() - t0) * 1000
@@ -345,7 +345,7 @@ class PLCReadBlock(PLCRead):
     \n - Mỗi vùng được emit khi dữ liệu thay đổi, hoặc quá read_ms (heartbeat), hoặc lần đọc
     đầu tiên sau khi kết nối.
     """
-    region_ready = Signal(str, dict, float)   # region name, data, time.time() lúc bắt đầu đọc
+    region_ready = Signal(str, dict, float)   # region name, data, time.perf_counter() lúc bắt đầu đọc
 
     _READ_OVERHEAD = 18   # S7 header 12 + param 2 + data item header 4
 
@@ -451,7 +451,7 @@ class PLCReadBlock(PLCRead):
             self._reconnect()
 
     def _read_group(self, g: dict, now: float) -> float:
-        t_read = time.time()
+        t_read = time.perf_counter()
         t0     = time.perf_counter()
         try:
             raw = self._client.db_read(self._db_number, g["start"], g["end"] - g["start"])  # type: ignore

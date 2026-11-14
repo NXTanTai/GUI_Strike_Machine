@@ -257,7 +257,7 @@ ALARM_ERROR   = "Error"
 ALARM_WARNING = "Warning"
 ALARM_TYPE_COLORS = {
     ALARM_ERROR:   "#DC2626",
-    ALARM_WARNING: "#D97706",
+    ALARM_WARNING: "#D9C706",
 }
 
 class NotificationBadge(QLabel):
@@ -826,7 +826,7 @@ class StrikeMachine(QMainWindow):
             self.logger.addHandler(stream_handler)
 
         self.logger.setLevel(logging.INFO)
-        self.logger.propagate = True
+        self.logger.propagate = False  # tránh in trùng qua root logger
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Type.MouseButtonDblClick:
@@ -929,7 +929,7 @@ class StrikeMachine(QMainWindow):
         self._last_cur_cycle_c:         list = [None] * 4
 
         # Lệnh bấm nút đang chờ PLC xác nhận
-        # key = tag name, value = {"value": bool, "t_sent": time.time(), "t_done": time ghi xong | None}
+        # key = tag name, value = {"value": bool, "t_sent": time.perf_counter(), "t_done": time ghi xong | None}
         self._pending_cmd = {}
         self._ai_expected_keys = [
             "datetime", "No.", "PLC Connection", "Serial Connection", "Bit_Alarm", 
@@ -938,6 +938,7 @@ class StrikeMachine(QMainWindow):
             "I_A_HEATER_0", "I_B_HEATER_0", "I_C_HEATER_0",
             "total_active_power_kW_HEATER_0", "total_reactive_power_kvar_HEATER_0",
             "total_apparent_power_kVA_HEATER_0", "power_factor_HEATER_0", "frequency_Hz_HEATER_0",
+            "T0_Current_Temp",
 
             "P1_Current_Air_FillingTime", "P1_Current_Air_HoldingTime", "P1_Current_Air_ReleaseTime",
             "P1_Current_Oil_End_Time", "P1_Current_Oil_Start_Time", "P1_Current_PressureHose",
@@ -951,7 +952,6 @@ class StrikeMachine(QMainWindow):
             "P3_Current_Oil_End_Time", "P3_Current_Oil_Start_Time", "P3_Current_PressureHose",
             "P3_Current_PressureITV", "P3_Current_Temp1", "P3_Current_Temp2", "P3_Current_Temp3",
             "P3_Number_Test_Times",
-            "T0_Current_Temp",
             
             "P1_Air_FillingTime", "P1_Air_HoldingTime", "P1_Air_ReleaseTime", "P1_BitCountTimes",
             "P1_CountTimes", "P1_Oil_End_Time", "P1_Oil_Start_Time", "P1_PressureHoseOffset",
@@ -1041,7 +1041,7 @@ class StrikeMachine(QMainWindow):
 
         self.data_serial_timer = QTimer(self)
         self.all_timer.append(self.data_serial_timer)
-        self.data_serial_timer.setInterval(1000)
+        self.data_serial_timer.setInterval(200)
         self.data_serial_timer.timeout.connect(lambda: self._data_serial(self._mapping_serial_data()))
 
         # self.timer_stacked_pressure_page = QTimer(self)
@@ -2586,7 +2586,13 @@ class StrikeMachine(QMainWindow):
                 title = "Lỗi"
                 content = "Không tìm thấy dữ liệu DB！Không thể khởi động PLC."
             ltmessage.error(self, title, content, self._current_lang) # type: ignore
-            return 
+            return
+
+        QTimer.singleShot(100, self._start_write_plc_thread)
+
+    def _start_write_plc_thread(self):
+        if getattr(self, "_shutting_down", False):
+            return
 
         if not self._setup_write_plc_thread(
                 ip=self.db_dict["ip_plc"],
@@ -2607,7 +2613,11 @@ class StrikeMachine(QMainWindow):
                 content = "Không thể kết nối với PLC！Vui lòng thử lại sau."
             ltmessage.error(self, title, content, self._current_lang)  # type: ignore
 
-        time.sleep(0.1)
+        QTimer.singleShot(100, self._start_read_plc_thread)
+
+    def _start_read_plc_thread(self):
+        if getattr(self, "_shutting_down", False):
+            return
 
         if not self._setup_read_plc_thread(
                 ip=self.db_dict["ip_plc"],
@@ -2653,11 +2663,6 @@ class StrikeMachine(QMainWindow):
             db_layout: Optional[list[tuple[str, str, int, Any]]] = None,
             logger_parent = None,
         ):
-        """
-        1 luồng / 1 kết nối đọc cả khối INPUT -> ACTUAL -> ERROR (các vùng nằm liền nhau trong DB).
-        
- regions: [(name, offset, size, emit_ms), ...] — data mỗi vùng về qua _on_region_ready
-        """
         try:
             if db_number is None:
                 raise ValueError("DB number is not defined. Cannot start PLC read thread.")
@@ -2718,12 +2723,7 @@ class StrikeMachine(QMainWindow):
             # print("Get: ", len(data))
             self.all_data.update(data)
 
-    _GROUP_UPDATE_S = 0.5  # nhịp tối đa cập nhật nhiệt độ / cycle / I-O (trước đây data_group_timer 500ms)
-
-    # Các handler _data_* bên dưới chạy trên luồng UI (signal từ luồng PLC Read là QueuedConnection).
-    # Luôn gọi xử lý NGOÀI _data_lock: threading.Lock không re-entrant và một số handler
-    # (_data_alarm, setChecked -> handler nút) lại lấy lock / gọi _mapping_*().
-
+    _GROUP_UPDATE_S = 0.5
     def _data_actual(self, data: dict):
         with self._data_lock:
             self.actual_data.update(data)
@@ -2869,10 +2869,13 @@ class StrikeMachine(QMainWindow):
             self.serial_read_connection = ok
         if ok:
             self._clear_alarm("Serial")
+        elif "Serial" not in self._alarm_active_rows:
+            # Giữ nguyên nội dung lỗi chi tiết từ _on_serial_error nếu đã có
+            self._raise_alarm("Serial", ALARM_WARNING, "Port COM lost connection")
 
     def _on_serial_disconnected(self):
         self.logger.warning("Serial disconnected")
-        self._raise_alarm("Serial", ALARM_ERROR, "Port COM lost connection")
+        self._raise_alarm("Serial", ALARM_WARNING, "Port COM lost connection")
 
     def _serial_port_check(self, is_name: str):
         if self.ui.port_display.text() != is_name:
@@ -3237,10 +3240,9 @@ class StrikeMachine(QMainWindow):
             with self._data_lock:
                 bit_alarm = bool(self.actual_data.get('Bit_Alarm', False))
                 alarm_text = str(self.error_data.get('Alarm_Info', '') or '').strip()
-            if alarm_text:
-                content = alarm_text
-            elif bit_alarm:
-                content = "PLC Alarm"
+            # Chỉ báo động khi Bit_Alarm = True, ngược lại xoá alarm PLC
+            if bit_alarm:
+                content = alarm_text or "PLC Alarm"
             else:
                 content = ""
             self._raise_alarm("PLC", ALARM_ERROR, content)
@@ -3270,7 +3272,7 @@ class StrikeMachine(QMainWindow):
     def _detect_btn_obj(self, data: dict, read_ts: float):
         """
         Đồng bộ trạng thái nút theo PLC, gọi mỗi khi luồng PLC Read (input) có data mới.
-        \n read_ts: time.time() lúc luồng đọc bắt đầu db_read gói data này
+        \n read_ts: time.perf_counter() lúc luồng đọc bắt đầu db_read gói data này
         """
         if self.init_signal:
             return
@@ -3299,16 +3301,13 @@ class StrikeMachine(QMainWindow):
             if btn.isChecked() != plc_value:
                 setattr(self, flag_name, True)
                 btn.setChecked(plc_value)
-                # toggled gọi handler đồng bộ; nếu handler return sớm thì flag
-                # vẫn còn True và sẽ nuốt mất lệnh write của lần bấm kế tiếp
                 setattr(self, flag_name, False)
-                # Đồng bộ theo PLC không gửi lệnh write -> không có gì để chờ xác nhận
+                # Đồng bộ theo PLC không gửi lệnh write
                 self._pending_cmd.pop(tag, None)
 
     _PULSE_HOLD_MS = 200  # thời gian giữ mức True của lệnh xung STOP / T0_Stop_Heat
 
     def _is_start_checked(self, data: dict, read_ts: float):
-        """Đồng bộ nút Start/Stop theo bit START của PLC (bỏ qua khi lệnh bấm chưa được PLC xác nhận)"""
         if self._should_ignore_status("START", read_ts):
             return
         if self.ui.start_stop_stacked.currentIndex() == 1 and not data.get("START", False):
@@ -3317,7 +3316,6 @@ class StrikeMachine(QMainWindow):
             self.ui.start_stop_btn.click()
 
     def _is_heat_t0_checked(self, data: dict, read_ts: float):
-        """Đồng bộ nút Heat T0 theo bit T0_Start_Heat của PLC"""
         if self._should_ignore_status("T0_Start_Heat", read_ts):
             return
         if self.ui.heat_t0_stacked.currentIndex() == 1 and not data.get("T0_Start_Heat", False):
@@ -3325,18 +3323,17 @@ class StrikeMachine(QMainWindow):
         elif self.ui.heat_t0_stacked.currentIndex() == 0 and data.get("T0_Start_Heat", False):
             self.ui.heat_on_btn_t0.click()
 
-    _CMD_ACK_TIMEOUT = 10.0  # giây — dự phòng khi không nhận được write_bool_done/failed
+    _CMD_ACK_TIMEOUT = 10.0  # dự phòng khi không nhận được write_bool_done/failed
 
     def _mark_cmd(self, tag: str, value: bool):
         """Ghi nhận lệnh bấm nút vừa gửi xuống PLC, chờ PLC Write xác nhận"""
         if self.init_signal:
             return
-        self._pending_cmd[tag] = {"value": bool(value), "t_sent": time.time(), "t_done": None}
+        self._pending_cmd[tag] = {"value": bool(value), "t_sent": time.perf_counter(), "t_done": None}
 
     def _on_write_bool_done(self, name: str, value: bool, t_done: float):
         cmd = self._pending_cmd.get(name)
-        # Bỏ qua xác nhận của lệnh cũ nếu user đã bấm lại giá trị khác
-        if cmd is not None and cmd["value"] == value:
+        if cmd is not None and cmd["value"] == value: # Bỏ qua xác nhận của lệnh cũ nếu đã toggle lại giá trị khác
             cmd["t_done"] = t_done
 
     def _on_write_multi_done(self, group: str, ok: bool):
@@ -3344,7 +3341,6 @@ class StrikeMachine(QMainWindow):
             self._clear_alarm(f"PLC Save {group}")
 
     def _on_write_multi_failed(self, group: str, reason: str):
-        """Lưu thông số group thất bại: mở lại các nút đã bị khoá lúc lưu và báo alarm"""
         self.logger.warning("[Main]-[write_multi]: Group %s save failed: %s", group, reason)
         self.disable_btn(group, True)
         self._raise_alarm(f"PLC Save {group}", ALARM_WARNING, f"Ghi thông số Group {group} xuống PLC thất bại")
@@ -3352,22 +3348,18 @@ class StrikeMachine(QMainWindow):
     def _on_write_bool_failed(self, name: str, value: bool):
         cmd = self._pending_cmd.get(name)
         if cmd is not None and cmd["value"] == value:
-            # Ghi thất bại -> lần đọc kế tiếp đồng bộ nút theo PLC ngay
             del self._pending_cmd[name]
 
     def _should_ignore_status(self, tag: str, read_ts: float) -> bool:
         """
-        Bỏ qua trạng thái PLC của tag khi lệnh bấm nút chưa được xác nhận:
-        \n - Chưa ghi xong (chưa nhận write_bool_done) -> bỏ qua
-        \n - Đã ghi xong nhưng gói data được đọc TRƯỚC lúc ghi xong -> data cũ, bỏ qua
-        \n - Gói data đọc SAU lúc ghi xong -> data đã phản ánh lệnh, đồng bộ bình thường
+        Bỏ qua trạng thái PLC của tag khi lệnh bấm nút chưa được xác nhận
         """
         cmd = self._pending_cmd.get(tag)
         if cmd is None:
             return False
 
         if cmd["t_done"] is None:
-            if time.time() - cmd["t_sent"] < self._CMD_ACK_TIMEOUT:
+            if time.perf_counter() - cmd["t_sent"] < self._CMD_ACK_TIMEOUT:
                 return True
             del self._pending_cmd[tag]
             return False
@@ -3397,10 +3389,23 @@ class StrikeMachine(QMainWindow):
             self.list_for_import_t0[i].setValue(list_init_t0[i])
             self.list_for_import_t0[i].blockSignals(False)
 
+        self._sync_temp_sv_mirror()
+
+    def _sync_temp_sv_mirror(self):
+        """Đồng bộ at_sv / bt_sv / ct_sv theo pressure_sv_X_1 (không phát signal)"""
+        for widget_name, (_, mirror_widget) in TEMP_SV_MIRROR.items():
+            mirror = getattr(self.ui, mirror_widget)
+            mirror.blockSignals(True)
+            mirror.setValue(getattr(self.ui, widget_name).value())
+            mirror.blockSignals(False)
+
+    def _unblock_import_widgets(self):
+        for obj in self.list_for_import_a + self.list_for_import_b + self.list_for_import_c + self.list_for_import_t0:
+            obj.blockSignals(False)
+        for mirror_widget in TEMP_SV_REVERSE_MIRROR:
+            getattr(self.ui, mirror_widget).blockSignals(False)
+
     def _read_status_plc(self, connected: bool):
-        # Luôn cập nhật đèn trạng thái: lần kết nối đầu tiên thất bại thì connected (False)
-        # trùng giá trị mặc định của cờ -> nếu return sớm thì đèn kẹt ở page mặc định (2)
-        # Page: 0 = running (xanh), 1 = error (đỏ), 2 = warning (vàng, mặc định lúc chưa kết nối)
         page = 0 if connected else 1
         if self.ui.sys_state_stacked_wid_40.currentIndex() != page:
             self.ui.sys_state_stacked_wid_40.setCurrentIndex(page)
@@ -3414,7 +3419,6 @@ class StrikeMachine(QMainWindow):
             self.data_serial_timer.start()
 
     def _write_status_plc(self, connected: bool):
-        # Xem _read_status_plc: luôn cập nhật đèn trạng thái
         page = 0 if connected else 1
         if self.ui.sys_state_stacked_wid_42.currentIndex() != page:
             self.ui.sys_state_stacked_wid_42.setCurrentIndex(page)
@@ -3659,8 +3663,14 @@ class StrikeMachine(QMainWindow):
             self._clear_alarm(source)
             return
 
-        if source in self._alarm_active_rows:
-            return
+        item = self._alarm_active_rows.get(source)
+        if item is not None:
+            row = item.row()
+            content_item = self.ui.list_alarm.item(row, 4) if row >= 0 else None
+            if content_item is not None and content_item.text() == content:
+                return
+            # Nội dung alarm thay đổi → xoá dòng cũ, thêm dòng mới
+            self._clear_alarm(source)
 
         # self.logger.error("[ALARM][%s]: %s", source, content)
         self._alarm_active_rows[source] = self._add_alarm_row(source, alarm_type, content)
@@ -3753,13 +3763,6 @@ class StrikeMachine(QMainWindow):
 
         self._mark_cmd(tag, checked)
 
-        if checked:
-            self.ui.new_data_btn.setEnabled(False)
-            self.ui.clear_data_btn.setEnabled(False)
-        else:
-            self.ui.new_data_btn.setEnabled(True)
-            self.ui.clear_data_btn.setEnabled(True)
-
         if channel == "A":
             if not self.init_signal:
                 if self._heating_a_flag:
@@ -3787,6 +3790,8 @@ class StrikeMachine(QMainWindow):
             self.disable_heat_group(channel, not checked)
             self.logger.info(f"[Main]-[heating_btn]: Group C Heating {'On' if checked else 'Off'}!")
 
+        self._update_data_btns()
+
     def heating_btn_t0(self, channel: str, btn=None):
         if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_stacked.currentIndex() == 1:
             return
@@ -3805,6 +3810,8 @@ class StrikeMachine(QMainWindow):
             self.disable_heat_group(channel, True)
             self.logger.info("[Main]-[heating_btn]: T0 Heating Off!")
             self.ui.heat_t0_stacked.setCurrentIndex(0)
+
+        self._update_data_btns()
 
     def pumping_btn(self, channel: str, checked: bool, btn=None):
         if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_stacked.currentIndex() == 1:
@@ -3826,13 +3833,6 @@ class StrikeMachine(QMainWindow):
         self._mark_cmd(tag, checked)
 
         try:
-            if checked:
-                self.ui.new_data_btn.setEnabled(False)
-                self.ui.clear_data_btn.setEnabled(False)
-            else:
-                self.ui.new_data_btn.setEnabled(True)
-                self.ui.clear_data_btn.setEnabled(True)
-
             if not self.init_signal:
                 if self._vacuum_a_flag and channel == "A":
                     self._vacuum_a_flag = False
@@ -3851,6 +3851,24 @@ class StrikeMachine(QMainWindow):
             )
         except Exception as e:
             self.logger.error(f"[Main]-[pumping_btn]: Error occurred - {str(e)}")
+        finally:
+            self._update_data_btns()
+
+    def _any_plc_toggle_on(self) -> bool:
+        """True nếu có bất kỳ nút bật/tắt PLC nào (trừ Start/Stop) đang ON"""
+        toggle_btns = (
+            self.ui.heat_btn_a, self.ui.heat_btn_b, self.ui.heat_btn_c,
+            self.ui.vacuum_btn_a, self.ui.vacuum_btn_b, self.ui.vacuum_btn_c,
+            self.ui.refuel_btn_a, self.ui.refuel_btn_b, self.ui.refuel_btn_c,
+            self.ui.set_cycle_a_btn, self.ui.set_cycle_b_btn, self.ui.set_cycle_c_btn,
+        )
+        return any(b.isChecked() for b in toggle_btns) or self.ui.heat_t0_stacked.currentIndex() == 1
+
+    def _update_data_btns(self):
+        """Tạm ngắt new_data_btn & clear_data_btn khi có nút bật/tắt PLC đang ON"""
+        enabled = not self._any_plc_toggle_on()
+        self.ui.new_data_btn.setEnabled(enabled)
+        self.ui.clear_data_btn.setEnabled(enabled)
 
     def fill_oil_btn(self, channel: str, checked: bool, btn=None):
         if (not self.plc_writer_connection and not self.init_signal) or not self.ui.start_stop_stacked.currentIndex() == 1:
@@ -3890,6 +3908,8 @@ class StrikeMachine(QMainWindow):
             )
         except Exception as e:
             self.logger.error(f"[Main]-[fill_oil_btn]: Error occurred - {str(e)}")
+        finally:
+            self._update_data_btns()
 
     def cycle_loop_btn(self, channel: str, checked: bool, btn=None):
         buttons_map = {
@@ -3938,6 +3958,8 @@ class StrikeMachine(QMainWindow):
             )
         except Exception as e:
             self.logger.error(f"[Main]-[cycle_loop_btn]: Error occurred - {str(e)}")
+        finally:
+            self._update_data_btns()
 
     def _sv_cycle_state(self, channel, status):
         if channel == "All":
@@ -4001,6 +4023,7 @@ class StrikeMachine(QMainWindow):
                 QTimer.singleShot(150, self._set_off_heating_btn)
                 self.data_table.stop()
                 self.ui.start_stop_stacked.setCurrentIndex(0)
+                self._update_data_btns()
                 self.logger.info("[Main]-[start_stop_btn]: System Off")
         except Exception as e:
             self.logger.error(f"[Main]-[start_stop_btn]: Error occurred - {str(e)}")
@@ -4015,11 +4038,13 @@ class StrikeMachine(QMainWindow):
         self.ui.refuel_btn_b.setChecked(False)
         self.disable_oil_group("B", True)   
         self.ui.refuel_btn_c.setChecked(False)
-        self.disable_oil_group("C", True)   
+        self.disable_oil_group("C", True)
+        self._sv_cycle_state("All", True)
+        self._update_data_btns()
 
-        self.ui.refuel_btn_a.blockSignals(True)
-        self.ui.refuel_btn_b.blockSignals(True)
-        self.ui.refuel_btn_c.blockSignals(True)
+        self.ui.refuel_btn_a.blockSignals(False)
+        self.ui.refuel_btn_b.blockSignals(False)
+        self.ui.refuel_btn_c.blockSignals(False)
 
     def _set_off_vacuum_btn(self):
         self.ui.vacuum_btn_a.blockSignals(True)
@@ -4030,8 +4055,10 @@ class StrikeMachine(QMainWindow):
         self.disable_pressure_group("A", True)
         self.ui.vacuum_btn_b.setChecked(False)        
         self.disable_pressure_group("B", True)
-        self.ui.vacuum_btn_c.setChecked(False)        
+        self.ui.vacuum_btn_c.setChecked(False)
         self.disable_pressure_group("C", True)
+        self._sv_cycle_state("All", True)
+        self._update_data_btns()
 
         self.ui.vacuum_btn_a.blockSignals(False)
         self.ui.vacuum_btn_b.blockSignals(False)
@@ -4052,6 +4079,7 @@ class StrikeMachine(QMainWindow):
         self.disable_heat_group("C", True)
         self.ui.heat_t0_stacked.setCurrentIndex(0)
         self.disable_heat_group("T0", True)
+        self._update_data_btns()
 
         self.ui.heat_btn_a.blockSignals(False)
         self.ui.heat_btn_b.blockSignals(False)
@@ -4060,12 +4088,7 @@ class StrikeMachine(QMainWindow):
         self.ui.heat_off_btn_t0.blockSignals(False)
 
     def clear_data_btn(self):
-        buttons = [
-            self.ui.refuel_btn_a, self.ui.vacuum_btn_a, self.ui.heat_btn_a,
-            self.ui.refuel_btn_b, self.ui.vacuum_btn_b, self.ui.heat_btn_b,
-            self.ui.refuel_btn_c, self.ui.vacuum_btn_c, self.ui.heat_btn_c,
-        ]
-        if any(btn.isChecked() for btn in buttons) and self.ui.heat_t0_stacked.currentIndex() == 1:
+        if self._any_plc_toggle_on():
             return
 
         if self._current_lang == "en":
@@ -4520,12 +4543,7 @@ class StrikeMachine(QMainWindow):
         return True, ""
 
     def new_data_btn(self):
-        buttons = [
-            self.ui.refuel_btn_a, self.ui.vacuum_btn_a, self.ui.heat_btn_a,
-            self.ui.refuel_btn_b, self.ui.vacuum_btn_b, self.ui.heat_btn_b,
-            self.ui.refuel_btn_c, self.ui.vacuum_btn_c, self.ui.heat_btn_c,
-        ]
-        if any(btn.isChecked() for btn in buttons) and self.ui.heat_t0_stacked.currentIndex() == 1:
+        if self._any_plc_toggle_on():
             return
         try:
             stk_mch_file = Path(self.stk_mch_folder)/ "Setting File"
@@ -4662,22 +4680,15 @@ class StrikeMachine(QMainWindow):
             self.plc_writer_worker.write_multi.emit(items_c, "C")                                                                       # type: ignore
             self.plc_writer_worker.write_multi.emit(items_t0, "T0")                                                                     # type: ignore
             
-            for i in range(len(self.list_for_import_a)):
-                self.list_for_import_a[i].blockSignals(False)
-                self.list_for_import_b[i].blockSignals(False)
-                self.list_for_import_c[i].blockSignals(False)
-            for i in range(len(self.list_for_import_t0)):
-                self.list_for_import_t0[i].blockSignals(False)
-            
-            self.ui.at_sv.blockSignals(False)
-            self.ui.bt_sv.blockSignals(False)
-            self.ui.ct_sv.blockSignals(False)
+            self._unblock_import_widgets()
 
             self.disable_btn("A", False)
             self.disable_btn("B", False)
             self.disable_btn("C", False)
             self.disable_btn("T0", False)
         except Exception as e:
+            # Mở lại signal, tránh các ô SV bị khoá vĩnh viễn (mất đồng bộ + không ghi PLC)
+            self._unblock_import_widgets()
             self.logger.error(f"[Main]-[new_data_btn]: Error occurred - {str(e)}")
 
     def set_language_en(self):

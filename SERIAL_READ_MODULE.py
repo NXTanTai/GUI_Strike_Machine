@@ -185,7 +185,7 @@ class HYFWSerialRead(QObject):
             self.logger.addHandler(stream_handler)
 
         self.logger.setLevel(logging.INFO)
-        self.logger.propagate = True
+        self.logger.propagate = False  # tránh in trùng qua root logger
 
     @Slot()
     def run(self):

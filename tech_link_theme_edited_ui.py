@@ -10689,7 +10689,7 @@ class Ui_MainWindow(object):
         self.vn_language.setText("")
         self.cn_language.setText("")
         self.date_displ.setDisplayFormat(QCoreApplication.translate("MainWindow", u"dd/MM/yyyy hh:mm:ss", None))
-        self.home_page_btn.setText(QCoreApplication.translate("MainWindow", u" Group", None))
+        self.home_page_btn.setText(QCoreApplication.translate("MainWindow", u" Monitor", None))
         self.chart_page_btn.setText(QCoreApplication.translate("MainWindow", u" Chart", None))
         self.device_page_btn.setText(QCoreApplication.translate("MainWindow", u" Setting", None))
         self.history_page_btn.setText(QCoreApplication.translate("MainWindow", u" History", None))
