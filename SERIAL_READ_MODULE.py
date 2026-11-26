@@ -28,9 +28,9 @@ REALTIME_REGISTERS = {
     "I_B_HEATER_0":         dict(address=4106, count=1, scale=100, signed=False, apply_ct=True),
     "I_C_HEATER_0":         dict(address=4107, count=1, scale=100, signed=False, apply_ct=True),
 
-    "LINE_A_B_HEATER_0":         dict(address=4096, count=1, scale=100, signed=False, apply_ct=False),
-    "LINE_B_C_HEATER_0":         dict(address=4097, count=1, scale=100, signed=False, apply_ct=False),
-    "LINE_C_A_HEATER_0":         dict(address=4098, count=1, scale=100, signed=False, apply_ct=False),
+    # "LINE_A_B_HEATER_0":         dict(address=4096, count=1, scale=100, signed=False, apply_ct=False),
+    # "LINE_B_C_HEATER_0":         dict(address=4097, count=1, scale=100, signed=False, apply_ct=False),
+    # "LINE_C_A_HEATER_0":         dict(address=4098, count=1, scale=100, signed=False, apply_ct=False),
     
     # Công suất: tỉ lệ thuận với dòng nên cũng nhân CT_RATIO
     "total_active_power_kW_HEATER_0":     dict(address=4113, count=1, scale=100, signed=True,  apply_ct=True),

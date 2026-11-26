@@ -52,6 +52,7 @@ from PLC_READ_MODULE import PLCRead, PLCReadBlock
 from PLC_WRITE_MODULE import PLCWrite
 from SERIAL_READ_MODULE import HYFWSerialRead
 from export_excel_worker import ExportWorker
+from db_layout_parser import parse_db_layout
 from LogFileHandler import MonthlyRotatingFileHandler
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
@@ -61,6 +62,14 @@ os.environ["QT_FONT_DPI"] = "96" # 1024x768
 BASE_DIR = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent
 
 settings_path = str(BASE_DIR / "settings.ini")
+
+def fmt_hms(sec: int) -> str:
+    h, r = divmod(int(sec), 3600)
+    return f"{h:02d}:{r // 60:02d}:{r % 60:02d}"
+
+def fmt_hm(sec: int) -> str:
+    h, r = divmod(int(sec), 3600)
+    return f"{h} h {r // 60:02d} m"
 
 def resource_path(relative_path):
     try:
@@ -625,7 +634,58 @@ class StrikeMachine(QMainWindow):
         self.alarm_data_folder = Path(self.stk_mch_folder) / "Alarm_Log"
         self.alarm_data_folder.mkdir(parents=True, exist_ok=True)
 
+        # Tự động xoá file cũ: lúc khởi động + mỗi 6 giờ (máy chạy liên tục nhiều ngày)
+        self._cleanup_old_data_files()
+        self._cleanup_timer = QTimer(self)
+        self._cleanup_timer.setInterval(6 * 60 * 60 * 1000)
+        self._cleanup_timer.timeout.connect(self._cleanup_old_data_files)
+        self._cleanup_timer.start()
+
         # self.logger.info("Fast sampling (100ms) enabled for pressure & critical tags")
+
+    # Thời gian lưu giữ (tháng)
+    _AI_DATA_KEEP_MONTHS = 3
+    _ALARM_KEEP_MONTHS   = 1
+
+    @staticmethod
+    def _months_ago(months: int) -> datetime:
+        """Mốc 00:00 cách hôm nay `months` tháng (theo lịch, VD 31/05 - 3 tháng -> 28/02)"""
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        y, m = divmod(today.year * 12 + today.month - 1 - months, 12)
+        m += 1
+        last_day = (datetime(y + (m == 12), m % 12 + 1, 1) - datetime(y, m, 1)).days
+        return today.replace(year=y, month=m, day=min(today.day, last_day))
+
+    def _delete_old_files(self, folder: Path, prefix: str, keep_months: int) -> int:
+        """Xoá file <prefix>YYYYMMDD.csv cũ hơn keep_months. Ngày lấy từ tên file,
+        tên không đúng định dạng thì dùng thời gian sửa đổi của file."""
+        cutoff = self._months_ago(keep_months)
+        deleted = 0
+        for f in folder.glob(f"{prefix}*.csv"):
+            try:
+                try:
+                    file_date = datetime.strptime(f.stem[len(prefix):], "%Y%m%d")
+                except ValueError:
+                    file_date = datetime.fromtimestamp(f.stat().st_mtime)
+                if file_date < cutoff:
+                    f.unlink()
+                    deleted += 1
+            except Exception as e:
+                if self.logger:
+                    self.logger.warning("[Cleanup] Không xoá được %s: %s", f, e)
+        if deleted and self.logger:
+            self.logger.info("[Cleanup] Đã xoá %d file %s* cũ hơn %s trong %s",
+                             deleted, prefix, cutoff.strftime("%Y-%m-%d"), folder)
+        return deleted
+
+    def _cleanup_old_data_files(self):
+        """AI data giữ 3 tháng, alarm log giữ 1 tháng"""
+        try:
+            self._delete_old_files(self.ai_data_folder, "ai_", self._AI_DATA_KEEP_MONTHS)
+            self._delete_old_files(self.alarm_data_folder, "alarm_", self._ALARM_KEEP_MONTHS)
+        except Exception as e:
+            if self.logger:
+                self.logger.error("[Cleanup] Error: %s", e)
 
     def showEvent(self, event):# type: ignore
         super().showEvent(event)
@@ -693,76 +753,39 @@ class StrikeMachine(QMainWindow):
                 self.show_loading.emit()
             return
 
-        db_layout: List[Tuple[str, str, int, Any]] = []
-        max_byte = 0
-        
-        for i in range(10, len(df)):
-            row = df.iloc[i]
-            # Cột B: Name
-            name_raw = str(row[1]).strip() if pd.notna(row[1]) else ""
-            if name_raw == "" or name_raw.lower() == "nan":
-                break
-                
-            # Chuẩn hóa tên
-            name = name_raw.replace(" ", "_").replace("-", "_")
-            
-            # Cột C: Type
-            data_type = str(row[2]).strip().upper() if pd.notna(row[2]) else ""
-            
-            # Cột D: Address
-            try:
-                addr_str = str(row[3]).strip()
+        # Tự nhận diện vùng INPUT / ACTUAL (output) / ERROR (alarm) — hỗ trợ cả file có header (bản cũ)
+        # và file chỉ có nhãn vùng Bit_Input / Input / Bit_Output / Output (bản mới)
+        try:
+            db_dict = parse_db_layout(df, string_max_chars=PLC_STRING_MAX_CHARS, logger=self.logger)
+        except Exception as e:
+            if self.logger:
+                self.logger.error("[INIT]: Invalid DB address file (%s): %s", path, e)
+            self.show_loading.emit()
+            return
 
-                if '.' in addr_str:
-                    parts = addr_str.split('.')
-                    byte_addr = int(float(parts[0]))
-                    bit_from_addr = int(parts[1])
-                else:
-                    byte_addr = int(float(addr_str))
-                    bit_from_addr = 0
-
-            except:
-                byte_addr = 0
-                bit_from_addr = 0
-
-            if byte_addr > max_byte:
-                max_byte = byte_addr
-
-            # Xử lý Bit cho BOOL
-            bit: Any = None
-            if data_type == "BOOL":
-                bit = bit_from_addr
-
-            db_layout.append((name, data_type, byte_addr, bit))
-        
-        last_item = db_layout[-1] if db_layout else None
-        if last_item and last_item[1] == "STRING":
-            string_start = last_item[2]
-            db_total_bytes = string_start + 2 + PLC_STRING_MAX_CHARS
+        # File mới không có header -> lấy IP / thời gian ghi đã dùng lần trước
+        if db_dict["DB_FORMAT"] == "auto":
+            db_dict["ip_plc"]     = self.app_settings.value("plc_ip", db_dict["ip_plc"], type=str)      # type: ignore
+            db_dict["write_time"] = self.app_settings.value("plc_write_time", db_dict["write_time"], type=int)  # type: ignore
         else:
-            db_total_bytes = max_byte + 4
-        
-        self.db_dict =  {
-            "ip_plc": str(df.iloc[0, 1]).strip() if not PLC_SIM else "172.16.100.50",
-            "write_time": int(str(df.iloc[1, 1]).strip()), 
-            "db_name": int(str(df.iloc[8, 0]).strip().replace("DB", "")),
+            self.app_settings.setValue("plc_ip", db_dict["ip_plc"])
+            self.app_settings.setValue("plc_write_time", db_dict["write_time"])
+            self.app_settings.sync()
 
-            "offsets_data": int(str(df.iloc[2, 1]).strip()), 
-            "data_size": int(str(df.iloc[3, 1]).strip()), 
-            "data_read": int(str(df.iloc[2, 3]).strip()), 
+        if PLC_SIM:
+            db_dict["ip_plc"] = "172.16.100.50"
 
-            "offsets_input": int(str(df.iloc[4, 1]).strip()), 
-            "input_size": int(str(df.iloc[5, 1]).strip()), 
-            "input_read": int(str(df.iloc[4, 3]).strip()), 
+        if self.logger:
+            self.logger.info(
+                "[INIT]: DB%d (%s) | INPUT [%d..%d) %d tags | ACTUAL [%d..%d) %d tags | ERROR [%d..%d) %d tags | total %d bytes",
+                db_dict["db_name"], db_dict["DB_FORMAT"],
+                db_dict["offsets_input"], db_dict["offsets_input"] + db_dict["input_size"], len(db_dict["DB_REGIONS"]["INPUT"]),
+                db_dict["offsets_data"],  db_dict["offsets_data"]  + db_dict["data_size"],  len(db_dict["DB_REGIONS"]["ACTUAL"]),
+                db_dict["offsets_error"], db_dict["offsets_error"] + db_dict["error_size"], len(db_dict["DB_REGIONS"]["ERROR"]),
+                db_dict["DB_TOTAL_BYTES"],
+            )
 
-            "offsets_error": int(str(df.iloc[6, 1]).strip()), 
-            "error_size": int(str(df.iloc[7, 1]).strip()), 
-            "error_read": int(str(df.iloc[6, 3]).strip()), 
-
-            "DB_LAYOUT": db_layout,
-            "DB_TOTAL_BYTES": db_total_bytes
-        }
-        # self.logger.info(f"{self.db_dict}")
+        self.db_dict = db_dict
         self._gui_update_connection_group(stk_mch_file)
 
     def _read_protected_excel(self, path, password=None, sheet_name=None):
@@ -868,6 +891,7 @@ class StrikeMachine(QMainWindow):
         self.ai_sql_db = None
         self._history_batch_counter = 0
         self._ai_data_batch_counter = 0
+        self._ai_warned_keys: set = set()
         self._db_offset = 0
         self._history_at_latest = True
         self._charts_paused = False
@@ -939,6 +963,11 @@ class StrikeMachine(QMainWindow):
             "total_active_power_kW_HEATER_0", "total_reactive_power_kvar_HEATER_0",
             "total_apparent_power_kVA_HEATER_0", "power_factor_HEATER_0", "frequency_Hz_HEATER_0",
             "T0_Current_Temp",
+
+            "Out_Heat0", "Out_Fan1", "Out_Fan2",
+            "Out_Heat1", "Out_Valve1_IN", "Out_Valve1_OUT", "Out_Valve1_OIL",
+            "Out_Heat2", "Out_Valve2_IN", "Out_Valve2_OUT", "Out_Valve2_OIL",
+            "Out_Heat3", "Out_Valve3_IN", "Out_Valve3_OUT", "Out_Valve3_OIL",
 
             "P1_Current_Air_FillingTime", "P1_Current_Air_HoldingTime", "P1_Current_Air_ReleaseTime",
             "P1_Current_Oil_End_Time", "P1_Current_Oil_Start_Time", "P1_Current_PressureHose",
@@ -1024,7 +1053,7 @@ class StrikeMachine(QMainWindow):
         # Data PLC (INPUT / ACTUAL / ERROR) được xử lý ngay khi luồng PLC Read emit data
         # -> xem _data_input / _data_actual / _data_error. Không dùng timer đọc lại cache nữa.
         self._last_group_update = 0.0
-        self._last_bit_alarm = False
+        self._last_actual_alarm = (None, None)
 
         self.data_table = QTimer(self)
         self.all_timer.append(self.data_table)
@@ -1066,6 +1095,12 @@ class StrikeMachine(QMainWindow):
         self.datetime_timer.timeout.connect(self.update_clock)
         self.datetime_timer.start(1000)
         self.update_clock()
+
+        self._init_run_time()
+        self.run_time_timer = QTimer(self)
+        self.all_timer.append(self.run_time_timer)
+        self.run_time_timer.timeout.connect(self._update_run_time)
+        self.run_time_timer.start(1000)
         
         self.data_training_ai_timer = QTimer(self)
         self.all_timer.append(self.data_training_ai_timer)
@@ -1309,9 +1344,21 @@ class StrikeMachine(QMainWindow):
             self.ui.t0_offset_value
         )
 
-        self.io_group_1_switch_obj = tuple(
-            getattr(self.ui, f"i_o_group_1_switch_{i}") for i in range(1, 14)
-        )
+        _sw = lambda i: getattr(self.ui, f"i_o_group_1_switch_{i}")
+        # (tag PLC, switch) theo từng nhóm
+        self.io_heat_obj  = tuple(zip(("Out_Heat0", "Out_Heat1", "Out_Heat2", "Out_Heat3"),
+                                      (_sw(1), _sw(2), _sw(6), _sw(10))))
+        # Valve: (tag IN, tag OUT, switch)
+        # Tên tag đã qua normalize_name (db_layout_parser): '-' -> '_'
+        self.io_valve_obj = (("Out_Valve1_IN", "Out_Valve1_OUT", _sw(3)),
+                             ("Out_Valve2_IN", "Out_Valve2_OUT", _sw(7)),
+                             ("Out_Valve3_IN", "Out_Valve3_OUT", _sw(11)))
+        self.io_oil_obj   = tuple(zip(("Out_Valve1_OIL", "Out_Valve2_OIL", "Out_Valve3_OIL"),
+                                      (_sw(4), _sw(8), _sw(12))))
+        # Switch hiển thị trạng thái nút cycle A/B/C
+        self.io_cycle_obj = ((self.ui.set_cycle_a_btn, _sw(5)),
+                             (self.ui.set_cycle_b_btn, _sw(9)),
+                             (self.ui.set_cycle_c_btn, _sw(13)))
         self.i_o_group_3_obj = (
             self.ui.t0_value,
             self.ui.t1_1_value,
@@ -2731,10 +2778,10 @@ class StrikeMachine(QMainWindow):
 
         self._data_pressure(snapshot)
 
-        # Bit_Alarm nằm trong vùng ACTUAL (Alarm_Info ở vùng ERROR) -> đánh giá lại alarm khi bit đổi
-        bit_alarm = bool(snapshot.get('Bit_Alarm', False))
-        if bit_alarm != self._last_bit_alarm:
-            self._last_bit_alarm = bit_alarm
+        # Tag alarm có thể nằm ở ACTUAL hoặc ERROR tuỳ file DB -> chỉ đánh giá lại khi giá trị ở ACTUAL đổi
+        alarm_key = (snapshot.get('Bit_Alarm'), snapshot.get('Alarm_Info'))
+        if alarm_key != self._last_actual_alarm:
+            self._last_actual_alarm = alarm_key
             self._data_alarm()
 
         now = time.monotonic()
@@ -2743,6 +2790,11 @@ class StrikeMachine(QMainWindow):
             self._data_temp(snapshot)
             self._data_cycle(snapshot)
             self._data_temp_group(snapshot)
+
+            self._heat_data_filter(snapshot)
+            self._valve_data_filter(snapshot)
+            self._oil_data_filter(snapshot)
+            self._cycle_btn_filter()
 
     def _data_input(self, data: dict, read_ts: float):
         with self._data_lock:
@@ -2919,19 +2971,22 @@ class StrikeMachine(QMainWindow):
             record = dict.fromkeys(self._ai_expected_keys)
             record["datetime"] = time.strftime("%H:%M:%S")
             record["No."] = str(self._ai_data_batch_counter)
-            record["PLC Connection"] = str(self.plc_read_connection)
-            record["Serial Connection"] = str(self.serial_read_connection)
+            record["PLC Connection"] = int(bool(self.plc_read_connection))
+            record["Serial Connection"] = int(bool(self.serial_read_connection))
 
             with self._data_lock:  
                 for d in (data_actual, data_input, data_error, data_serial):
                     if not isinstance(d, dict) or not d:
                         continue
 
-                    unknown_keys = d.keys() - record.keys()
+                    unknown_keys = d.keys() - record.keys() - self._ai_warned_keys
+                    self._ai_warned_keys |= unknown_keys
                     if unknown_keys and self.logger:
                         self.logger.warning(f"[AI Training] Key chưa khai báo trong schema: {unknown_keys}")
 
-                    record.update({k: v for k, v in d.items() if k in record})
+                    # Bit BOOL ghi dạng 1/0 thay vì True/False
+                    record.update({k: int(v) if isinstance(v, bool) else v
+                                   for k, v in d.items() if k in record})
 
             self.data_buffer.append(record)
 
@@ -3102,24 +3157,6 @@ class StrikeMachine(QMainWindow):
                 self.init_signal = False
                 return
             
-            # _t("input_data", lambda: 
-            self._input_data_filter([
-                bool(self.ui.heat_t0_stacked.currentIndex()),
-                self.ui.heat_btn_a.isChecked(),
-                self.ui.vacuum_btn_a.isChecked(),
-                self.ui.refuel_btn_a.isChecked(),
-                self.ui.set_cycle_a_btn.isChecked(),
-                self.ui.heat_btn_b.isChecked(),
-                self.ui.vacuum_btn_b.isChecked(),
-                self.ui.refuel_btn_b.isChecked(),
-                self.ui.set_cycle_b_btn.isChecked(),
-                self.ui.heat_btn_c.isChecked(),
-                self.ui.vacuum_btn_c.isChecked(),
-                self.ui.refuel_btn_c.isChecked(),
-                self.ui.set_cycle_c_btn.isChecked(),
-            ])
-            # )
-
         except Exception as e:
             self.logger.error("[Main]-[_data_ready]:PLC Data Processing Error: %s", e)
 
@@ -3235,11 +3272,16 @@ class StrikeMachine(QMainWindow):
             self.add_row_to_list_history(self.ui.code_display.text(), groups)
 
     def _data_alarm(self):
-        """Bit_Alarm (vùng ACTUAL) + Alarm_Info (vùng ERROR)"""
+        """Bit_Alarm + Alarm_Info. Thường Bit_Alarm ở vùng ACTUAL, Alarm_Info ở vùng ERROR,
+        nhưng tuỳ nhãn vùng trong file DB mà tag có thể rơi vào vùng còn lại -> tìm ở cả 2."""
+        def _get(tag, default):
+            if tag in self.actual_data:
+                return self.actual_data[tag]
+            return self.error_data.get(tag, default)
         try:
             with self._data_lock:
-                bit_alarm = bool(self.actual_data.get('Bit_Alarm', False))
-                alarm_text = str(self.error_data.get('Alarm_Info', '') or '').strip()
+                bit_alarm = bool(_get('Bit_Alarm', False))
+                alarm_text = str(_get('Alarm_Info', '') or '').strip()
             # Chỉ báo động khi Bit_Alarm = True, ngược lại xoá alarm PLC
             if bit_alarm:
                 content = alarm_text or "PLC Alarm"
@@ -3490,9 +3532,35 @@ class StrikeMachine(QMainWindow):
             if list_t0_input_recv[0]:
                 self.ui.i_o_group_1_switch_1.setCurrentIndex(0)
 
-    def _input_data_filter(self, list_input_recv):
-        for obj, value in zip(self.io_group_1_switch_obj, list_input_recv):
-            obj.setCurrentIndex(value)
+    @staticmethod
+    def _apply_switch(pairs, data: dict):
+        for tag, obj in pairs:
+            obj.setCurrentIndex(int(bool(data.get(tag, False))))
+
+    def _heat_data_filter(self, data: dict):
+        """Out_Heat0..3 -> switch 1, 2, 6, 10"""
+        self._apply_switch(self.io_heat_obj, data)
+
+    def _valve_data_filter(self, data: dict):
+        """Out_Valve1..3-IN/OUT -> switch 3, 7, 11
+        0 (off): IN = OUT = False | 1 (on): IN = True | 2 (wait): OUT = True"""
+        for tag_in, tag_out, obj in self.io_valve_obj:
+            if data.get(tag_in, False):
+                idx = 1
+            elif data.get(tag_out, False):
+                idx = 2
+            else:
+                idx = 0
+            obj.setCurrentIndex(idx)
+
+    def _oil_data_filter(self, data: dict):
+        """Out_Valve1..3-OIL -> switch 4, 8, 12"""
+        self._apply_switch(self.io_oil_obj, data)
+
+    def _cycle_btn_filter(self):
+        """Trạng thái nút cycle A/B/C -> switch 5, 9, 13"""
+        for btn, obj in self.io_cycle_obj:
+            obj.setCurrentIndex(int(btn.isChecked()))
 
     def _i_o_group_3_filter(self, values):
         for i, (obj, value) in enumerate(zip(self.i_o_group_3_obj, values)):
@@ -3701,7 +3769,15 @@ class StrikeMachine(QMainWindow):
             item.setText(str(row + 1))
 
     def _update_alarm_badge(self):
-        self._alarm_badge.set_count(len(self._alarm_active_rows))
+        """Badge chỉ đếm alarm khác Warning (Warning vẫn hiện trong bảng + ghi file)"""
+        table = self.ui.list_alarm
+        count = 0
+        for item in self._alarm_active_rows.values():
+            row = item.row()
+            type_item = table.item(row, 2) if row >= 0 else None
+            if type_item is None or type_item.text() != ALARM_WARNING:
+                count += 1
+        self._alarm_badge.set_count(count)
 
     def _add_alarm_row(self, source: str, alarm_type: str, content: str):
         table = self.ui.list_alarm
@@ -4883,6 +4959,85 @@ class StrikeMachine(QMainWindow):
     def update_clock(self):
         self.ui.date_displ.setDateTime(QDateTime.currentDateTime())
 
+    # ---------------- Run time / Heat up time ----------------
+    _RUN_TIME_SAVE_S = 60      # chu kỳ lưu Total Run Time vào settings.ini
+    _HEAT_UP_TOL_C = 1.0       # coi như đạt nhiệt khi PV >= SV - sai số (°C)
+
+    def _init_run_time(self):
+        """Khởi tạo bộ đếm thời gian chạy máy và thời gian gia nhiệt."""
+        self._total_run_s = self.app_settings.value("total_run_time_s", 0, type=int)  # type: ignore
+        self._run_start = None          # time.monotonic() lúc nhấn Start, None khi đang Stop
+        self._since_start_s = 0
+        self._last_run_save = time.monotonic()
+        # T0 (Heat Up Time chung), A, B, C: [mốc bắt đầu gia nhiệt, đã đạt nhiệt, số giây hiển thị]
+        self._heat_up = {k: [None, False, 0] for k in ("T0", "A", "B", "C")}
+        self.ui.total_run_time_val.setText(fmt_hm(self._total_run_s))
+
+    def _save_run_time(self):
+        total = self._total_run_s
+        if self._run_start is not None:
+            total += int(time.monotonic() - self._run_start)
+        self.app_settings.setValue("total_run_time_s", total)
+        self._last_run_save = time.monotonic()
+
+    def _update_run_time(self):
+        try:
+            now = time.monotonic()
+            running = self.ui.start_stop_stacked.currentIndex() == 1
+
+            # Cur.Run Time: đếm từ lúc Start, giữ nguyên giá trị khi Stop
+            if running and self._run_start is None:
+                self._run_start = now
+            elif not running and self._run_start is not None:
+                self._total_run_s += int(now - self._run_start)
+                self._run_start = None
+                self._save_run_time()
+            if self._run_start is not None:
+                self._since_start_s = int(now - self._run_start)
+                if now - self._last_run_save >= self._RUN_TIME_SAVE_S:
+                    self._save_run_time()
+
+            total_s = self._total_run_s + (self._since_start_s if self._run_start is not None else 0)
+            self.ui.total_run_time_val.setText(fmt_hm(total_s))
+            self.ui.since_start_time_val.setText(fmt_hms(self._since_start_s))
+
+            # Heat Up Time: đếm từ lúc bật gia nhiệt đến khi nhiệt độ PV đạt Temp Setting
+            with self._data_lock:
+                actual = dict(self.actual_data)
+                inp = dict(self.input_data)
+
+            def _f(tag):
+                v = actual.get(tag, inp.get(tag))
+                return None if v is None else float(v)
+
+            groups = (
+                ("T0", self.ui.heat_t0_stacked.currentIndex() == 1, ("T0_Current_Temp",),
+                 "T0_TemperatureSetting", self.ui.heat_up_time_val),
+                ("A", self.ui.heat_btn_a.isChecked(), ("P1_Current_Temp1", "P1_Current_Temp2", "P1_Current_Temp3"),
+                 "P1_TemperatureSetting", self.ui.a_heat_up_time_val),
+                ("B", self.ui.heat_btn_b.isChecked(), ("P2_Current_Temp1", "P2_Current_Temp2", "P2_Current_Temp3"),
+                 "P2_TemperatureSetting", self.ui.b_heat_up_time_val),
+                ("C", self.ui.heat_btn_c.isChecked(), ("P3_Current_Temp1", "P3_Current_Temp2", "P3_Current_Temp3"),
+                 "P3_TemperatureSetting", self.ui.c_heat_up_time_val),
+            )
+            for key, heating, pv_tags, sv_tag, widget in groups:
+                state = self._heat_up[key]
+                if not heating:
+                    state[0] = None             # tắt gia nhiệt -> giữ giá trị cuối, lần bật sau đếm lại
+                else:
+                    if state[0] is None:
+                        state[0], state[1], state[2] = now, False, 0
+                    if not state[1]:
+                        state[2] = int(now - state[0])
+                        pvs = [_f(t) for t in pv_tags]
+                        sv = _f(sv_tag)
+                        if sv and sv > 0 and all(p is not None for p in pvs) \
+                                and min(pvs) >= sv - self._HEAT_UP_TOL_C:  # type: ignore
+                            state[1] = True     # đã đạt nhiệt -> dừng đếm
+                widget.setText(fmt_hms(state[2]))
+        except Exception as e:
+            self.logger.error(f"[Main]-[_update_run_time]: Error occurred - {str(e)}")
+
     def disable_oil_group(self, channel, status):
         """
         Enable or disable UI controls during system operation.
@@ -5141,6 +5296,10 @@ class StrikeMachine(QMainWindow):
             event.ignore()
         
     def _cleanup(self):
+        try:
+            self._save_run_time()
+        except Exception:
+            pass
         for timer in getattr(self, 'all_timer', []):
             if timer.isActive():
                 timer.stop()

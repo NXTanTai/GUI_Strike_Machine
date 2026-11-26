@@ -4,7 +4,7 @@
 a = Analysis(
     ['main_edited.py'],
     pathex=[],
-    binaries=[('lib\\snap7.dll', '.')],
+    binaries=[('lib/snap7.dll', '.')],
     datas=[('gifs', 'gifs'), ('tech_link_theme_vn.qm', '.'), ('tech_link_theme_cn.qm', '.')],
     hiddenimports=[],
     hookspath=[],
@@ -32,7 +32,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['icons\\strike_machine.png'],
+    icon=['icons/Industrial_Furnace.png'],
 )
 coll = COLLECT(
     exe,

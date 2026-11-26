@@ -7492,3 +7492,393 @@ Current thread's C stack trace (most recent call first):
 2026-10-22 14:16:46,290 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
 2026-10-22 14:16:46,291 - [main] - INFO - app.exec() returned exit_code=0
 2026-10-22 14:16:46,414 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=16356 at 2026-10-28 09:24:19.909748 =====
+2026-10-28 09:24:19,911 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 09:24:19,913 - [main] - INFO - Watchdog initialized. PID=16356 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=19964 at 2026-10-28 09:24:20.742436 =====
+2026-10-28 09:24:20,742 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 09:24:20,743 - [loading] - INFO - Watchdog initialized. PID=19964 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+2026-10-28 09:24:55,002 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-10-28 09:24:55,021 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00004ae8 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-28 09:39:55,558 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-10-28 09:39:55,559 - [main] - INFO - app.exec() returned exit_code=0
+2026-10-28 09:39:55,650 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=952 at 2026-10-28 09:39:59.427903 =====
+2026-10-28 09:39:59,428 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 09:39:59,429 - [main] - INFO - Watchdog initialized. PID=952 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=5320 at 2026-10-28 09:39:59.965270 =====
+2026-10-28 09:39:59,968 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 09:39:59,975 - [loading] - INFO - Watchdog initialized. PID=5320 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+2026-10-28 09:40:05,910 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-10-28 09:40:05,927 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Thread 0x00005414 [QThread] (most recent call first):
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\connection.py", line 458 in _recv_exact
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\connection.py", line 204 in receive_data
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\client.py", line 404 in _send_receive
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\client.py", line 434 in _send_receive_with_reconnect
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\client.py", line 987 in read_area
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\client.py", line 867 in db_read
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\PLC_READ_MODULE.py", line 457 in _read_group
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\PLC_READ_MODULE.py", line 438 in _poll
+
+Current thread 0x00004c84 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-28 09:55:30,537 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-10-28 09:55:30,537 - [main] - INFO - app.exec() returned exit_code=0
+2026-10-28 09:55:30,611 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=21024 at 2026-10-28 09:55:32.747527 =====
+2026-10-28 09:55:32,747 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 09:55:32,748 - [main] - INFO - Watchdog initialized. PID=21024 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=2244 at 2026-10-28 09:55:33.253846 =====
+2026-10-28 09:55:33,254 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 09:55:33,255 - [loading] - INFO - Watchdog initialized. PID=2244 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00002250 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-28 09:55:55,200 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-10-28 09:55:55,208 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00002ca8 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-28 10:04:35,202 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-10-28 10:04:35,202 - [main] - INFO - app.exec() returned exit_code=0
+2026-10-28 10:04:35,317 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=7656 at 2026-10-28 10:12:26.442125 =====
+2026-10-28 10:12:26,442 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 10:12:26,443 - [main] - INFO - Watchdog initialized. PID=7656 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=13448 at 2026-10-28 10:12:27.133539 =====
+2026-10-28 10:12:27,134 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 10:12:27,135 - [loading] - INFO - Watchdog initialized. PID=13448 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+2026-10-28 10:12:34,348 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-10-28 10:12:34,363 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00003c64 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-28 10:23:14,661 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-10-28 10:23:14,662 - [main] - INFO - app.exec() returned exit_code=0
+2026-10-28 10:23:14,741 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=16116 at 2026-10-28 10:23:17.861725 =====
+2026-10-28 10:23:17,862 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 10:23:17,862 - [main] - INFO - Watchdog initialized. PID=16116 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=17356 at 2026-10-28 10:23:18.194615 =====
+2026-10-28 10:23:18,194 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 10:23:18,195 - [loading] - INFO - Watchdog initialized. PID=17356 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x0000511c (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-28 10:23:23,211 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-10-28 10:23:23,220 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00000218 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-28 10:28:44,375 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-10-28 10:28:44,375 - [main] - INFO - app.exec() returned exit_code=0
+2026-10-28 10:28:44,466 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=17468 at 2026-10-28 10:31:22.622316 =====
+2026-10-28 10:31:22,622 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 10:31:22,623 - [main] - INFO - Watchdog initialized. PID=17468 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=5220 at 2026-10-28 10:31:22.894549 =====
+2026-10-28 10:31:22,894 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-10-28 10:31:22,895 - [loading] - INFO - Watchdog initialized. PID=5220 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00001fec (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-28 10:31:28,681 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-10-28 10:31:28,689 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00000590 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-10-28 10:54:26,223 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-10-28 10:54:26,223 - [main] - INFO - app.exec() returned exit_code=0
+2026-10-28 10:54:26,305 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=15332 at 2026-11-14 09:09:34.068204 =====
+2026-11-14 09:09:34,069 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 09:09:34,070 - [main] - INFO - Watchdog initialized. PID=15332 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=6184 at 2026-11-14 09:09:34.543379 =====
+2026-11-14 09:09:34,543 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 09:09:34,544 - [loading] - INFO - Watchdog initialized. PID=6184 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00003bb4 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 09:09:49,760 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-11-14 09:09:49,768 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00004b60 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+
+===== [main] Process start: PID=17080 at 2026-11-14 09:12:24.766508 =====
+2026-11-14 09:12:24,776 - [main] - WARNING - PREVIOUS_SESSION_DID_NOT_EXIT_CLEANLY -> lần chạy trước có thể đã bị kill cứng (Task Manager 'End task', kill -9, mất điện, treo máy...). Thông tin phiên trước: pid=15332
+started_at=2026-11-14T09:09:34.069333
+
+2026-11-14 09:12:24,777 - [main] - INFO - Watchdog initialized. PID=17080 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=20168 at 2026-11-14 09:12:25.273110 =====
+2026-11-14 09:12:25,273 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 09:12:25,274 - [loading] - INFO - Watchdog initialized. PID=20168 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x0000071c (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 09:12:32,818 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-11-14 09:12:32,831 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Thread 0x00002bd0 [QThread] (most recent call first):
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\connection.py", line 458 in _recv_exact
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\connection.py", line 204 in receive_data
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\client.py", line 404 in _send_receive
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\client.py", line 434 in _send_receive_with_reconnect
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\client.py", line 987 in read_area
+  File "C:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\.venv\Lib\site-packages\snap7\client.py", line 867 in db_read
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\PLC_READ_MODULE.py", line 457 in _read_group
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\PLC_READ_MODULE.py", line 438 in _poll
+
+Current thread 0x00004714 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 09:13:42,013 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-11-14 09:13:42,014 - [main] - INFO - app.exec() returned exit_code=0
+2026-11-14 09:13:42,084 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=20356 at 2026-11-14 11:04:17.837273 =====
+2026-11-14 11:04:17,838 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 11:04:17,840 - [main] - INFO - Watchdog initialized. PID=20356 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=2392 at 2026-11-14 11:04:18.628440 =====
+2026-11-14 11:04:18,628 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 11:04:18,630 - [loading] - INFO - Watchdog initialized. PID=2392 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x000037ac (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 11:04:45,378 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-11-14 11:04:45,386 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x000054e4 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 11:05:11,344 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-11-14 11:05:11,345 - [main] - INFO - app.exec() returned exit_code=0
+2026-11-14 11:05:11,413 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=21140 at 2026-11-14 11:11:52.656396 =====
+2026-11-14 11:11:52,657 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 11:11:52,658 - [main] - INFO - Watchdog initialized. PID=21140 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=12080 at 2026-11-14 11:11:53.916263 =====
+2026-11-14 11:11:53,916 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 11:11:53,919 - [loading] - INFO - Watchdog initialized. PID=12080 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00003088 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x0000589c (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 302 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 11:12:06,498 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-11-14 11:12:06,511 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+2026-11-14 11:28:20,119 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-11-14 11:28:20,119 - [main] - INFO - app.exec() returned exit_code=0
+2026-11-14 11:28:20,239 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=21900 at 2026-11-14 11:29:08.266107 =====
+2026-11-14 11:29:08,266 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 11:29:08,267 - [main] - INFO - Watchdog initialized. PID=21900 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=19960 at 2026-11-14 11:29:08.632564 =====
+2026-11-14 11:29:08,632 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 11:29:08,633 - [loading] - INFO - Watchdog initialized. PID=19960 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00005bf4 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 11:29:24,232 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-11-14 11:29:24,238 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00002524 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 11:41:11,354 - [main] - WARNING - OS_SIGNAL nhận được: SIGINT (2) -> app bị yêu cầu tắt từ bên ngoài (Task Manager, kill, logoff, tắt máy...).
+2026-11-14 11:41:11,354 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: terminated_by_signal=SIGINT
+
+===== [main] Process start: PID=21320 at 2026-11-14 11:41:18.161364 =====
+2026-11-14 11:41:18,171 - [main] - WARNING - PREVIOUS_SESSION_DID_NOT_EXIT_CLEANLY -> lần chạy trước có thể đã bị kill cứng (Task Manager 'End task', kill -9, mất điện, treo máy...). Thông tin phiên trước: pid=21900
+started_at=2026-11-14T11:29:08.266682
+
+2026-11-14 11:41:18,172 - [main] - INFO - Watchdog initialized. PID=21320 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=20484 at 2026-11-14 11:41:18.695330 =====
+2026-11-14 11:41:18,695 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-14 11:41:18,696 - [loading] - INFO - Watchdog initialized. PID=20484 log_file=c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x000003c0 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 11:41:26,562 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-11-14 11:41:26,576 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00004020 (most recent call first):
+  File "c:\Users\automation02\Desktop\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-14 11:47:36,543 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-11-14 11:47:36,543 - [main] - INFO - app.exec() returned exit_code=0
+2026-11-14 11:47:36,654 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=18192 at 2026-11-26 08:25:28.937090 =====
+2026-11-26 08:25:28,938 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-26 08:25:28,939 - [main] - INFO - Watchdog initialized. PID=18192 log_file=d:\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=19256 at 2026-11-26 08:25:30.558150 =====
+2026-11-26 08:25:30,558 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-26 08:25:30,559 - [loading] - INFO - Watchdog initialized. PID=19256 log_file=d:\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+2026-11-26 08:26:01,328 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-11-26 08:26:01,340 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00004bac (most recent call first):
+  File "d:\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-26 10:33:43,227 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-11-26 10:33:43,227 - [main] - INFO - app.exec() returned exit_code=0
+2026-11-26 10:33:43,331 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=23812 at 2026-11-26 10:56:43.030647 =====
+2026-11-26 10:56:43,030 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-26 10:56:43,031 - [main] - INFO - Watchdog initialized. PID=23812 log_file=d:\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=22592 at 2026-11-26 10:56:43.906402 =====
+2026-11-26 10:56:43,906 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-26 10:56:43,907 - [loading] - INFO - Watchdog initialized. PID=22592 log_file=d:\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+2026-11-26 10:57:02,576 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-11-26 10:57:02,586 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x000056ec (most recent call first):
+  File "d:\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-26 11:54:18,375 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-11-26 11:54:18,375 - [main] - INFO - app.exec() returned exit_code=0
+2026-11-26 11:54:18,439 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
+
+===== [main] Process start: PID=12648 at 2026-11-26 13:00:11.101305 =====
+2026-11-26 13:00:11,101 - [main] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-26 13:00:11,101 - [main] - INFO - Watchdog initialized. PID=12648 log_file=d:\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+
+===== [loading] Process start: PID=15412 at 2026-11-26 13:00:11.333596 =====
+2026-11-26 13:00:11,333 - [loading] - INFO - Không tìm thấy lock file cũ -> phiên chạy trước (nếu có) đã thoát sạch.
+2026-11-26 13:00:11,334 - [loading] - INFO - Watchdog initialized. PID=15412 log_file=d:\GUI\Strike_Machine\GUI_Strike_Machine\sm_crash.log
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x000071d8 (most recent call first):
+  File "d:\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 194 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-26 13:00:15,510 - [loading] - INFO - CLEAN_EXIT được đánh dấu. Detail: loading window event loop returned exit_code=0
+2026-11-26 13:00:15,519 - [loading] - INFO - CLEAN_EXIT xác nhận qua atexit.
+Windows fatal exception: code 0x8001010d
+
+Current thread 0x00005250 (most recent call first):
+  File "d:\GUI\Strike_Machine\GUI_Strike_Machine\main_edited.py", line 322 in <module>
+
+Current thread's C stack trace (most recent call first):
+  <cannot get C stack on this system>
+2026-11-26 13:03:13,867 - [main] - INFO - CLEAN_EXIT được đánh dấu. Detail: QApplication.aboutToQuit fired
+2026-11-26 13:03:13,869 - [main] - INFO - app.exec() returned exit_code=0
+2026-11-26 13:03:14,043 - [main] - INFO - CLEAN_EXIT xác nhận qua atexit.
