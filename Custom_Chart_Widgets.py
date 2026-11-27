@@ -6,8 +6,8 @@ from typing import List
 
 import numpy as np
 import pyqtgraph as pg
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont
+from PySide6.QtCore import QPointF, Qt, Signal
+from PySide6.QtGui import QFont, QFontMetrics
 from PySide6.QtWidgets import (
     QFrame,
     QGraphicsOpacityEffect,
@@ -385,15 +385,17 @@ class CustomChartWidget(QWidget):
 
     def _create_plot_widget(self) -> None:
         self.plot = pg.PlotWidget()
-        self.plot.setBackground(None)
-        self.plot.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.plot.setBackground("#E6F1FA")
+        # self.plot.setBackground(None)
+        # self.plot.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
         self.plot.showGrid(x=True, y=True, alpha=0.1)
         self.plot.setYRange(*self.temp_range)
         self.plot.disableAutoRange()
         self.plot.setMouseEnabled(x=False, y=False)
         self.plot.plotItem.getViewBox().setDefaultPadding(0)
-        self.plot.plotItem.layout.setContentsMargins(0, 0, 0, 0)
+        # Chừa 10px phía trên để số trên cùng của trục (vd "1.00") không bị cắt nửa
+        self.plot.plotItem.layout.setContentsMargins(0, 10, 0, 0)
         self.plot.plotItem.layout.setHorizontalSpacing(0)
 
         # Tắt antialiasing adjust và dùng NoIndex để scene nhanh hơn
@@ -483,6 +485,11 @@ class CustomChartWidget(QWidget):
         self._pressure_labels: list[pg.TextItem] = []
 
         font = QFont(self._font_family, FONT_SIZE_SM, QFont.Weight.Bold)
+        # Khoảng cách dọc tối thiểu giữa 2 nhãn cùng nhóm (px)
+        self._label_h = QFontMetrics(font).height() + 2
+        # Giá trị Y (data) thật của từng nhãn trong frame hiện tại
+        self._temp_label_y:     list[float] = [0.0] * self.num_temp
+        self._pressure_label_y: list[float] = [0.0] * self.num_pressure
 
         for i in range(self.num_temp):
             item = pg.TextItem(text="", color=TEMP_COLORS[i], anchor=(0, 0.5))
@@ -506,17 +513,52 @@ class CustomChartWidget(QWidget):
         last_text: list[str | None],
         i: int,
         text: str,
-        x: float,
-        y: float,
     ) -> None:
         # Chỉ setText khi chuỗi hiển thị thực sự đổi → không nhấp nháy,
         # và không bao giờ bị "đứng" khi giá trị tăng/giảm chậm.
+        # Vị trí do _layout_end_labels() đặt.
         if text != last_text[i]:
             item.setText(text)
             last_text[i] = text
-        item.setPos(x - 0.1, y)
         if not item.isVisible():
             item.show()
+
+    def _layout_end_labels(
+        self,
+        labels: list[pg.TextItem],
+        label_y: list[float],
+        vb: pg.ViewBox,
+        x: float,
+    ) -> None:
+        """
+        Đặt vị trí nhãn cuối đường của MỘT nhóm (nhiệt độ hoặc áp suất).
+        Nhãn cùng nhóm quá gần nhau thì dàn ra theo chiều dọc (theo thứ tự
+        giá trị, trùng giá trị thì theo thứ tự series). Nhãn nhiệt độ và
+        nhãn áp suất xếp độc lập → 2 nhóm có thể đè lên nhau.
+        """
+        entries = []   # [scene_y, index, item, scene_x]
+        for k, (item, y) in enumerate(zip(labels, label_y)):
+            if item.isVisible():
+                p = vb.mapViewToScene(QPointF(x, y))
+                entries.append([p.y(), k, item, p.x()])
+        if not entries:
+            return
+
+        h = self._label_h
+        rect = vb.sceneBoundingRect()
+        top, bottom = rect.top() + h / 2, rect.bottom() - h / 2
+
+        entries.sort(key=lambda e: (e[0], e[1]))
+        ys = [min(max(e[0], top), bottom) for e in entries]
+        for j in range(1, len(ys)):             # đẩy xuống nếu đè nhãn phía trên
+            ys[j] = max(ys[j], ys[j - 1] + h)
+        if ys[-1] > bottom:                     # tràn đáy → đẩy ngược lên
+            ys[-1] = bottom
+            for j in range(len(ys) - 2, -1, -1):
+                ys[j] = min(ys[j], ys[j + 1] - h)
+
+        for e, sy in zip(entries, ys):
+            e[2].setPos(vb.mapSceneToView(QPointF(e[3], sy)))
 
     def _render_frame(self) -> None:
         """Vẽ lại chart từ buffer. Gọi trên GUI thread."""
@@ -579,10 +621,14 @@ class CustomChartWidget(QWidget):
             else:
                 self._temp_curves[i].setData(t, y_all[start:])
             ly = float(y_all[-1])
+            self._temp_label_y[i] = ly
             self._update_end_label(
                 self._temp_labels[i], self._last_temp_text, i,
-                f"{ly:.1f}{self._temp_unit} ", lx, ly,
+                f"{ly:.1f}{self._temp_unit} ",
             )
+        if has_data:
+            self._layout_end_labels(self._temp_labels, self._temp_label_y,
+                                    self.plot.getViewBox(), lx - 0.1)
 
         if self.num_pressure == 0:
             return
@@ -614,10 +660,14 @@ class CustomChartWidget(QWidget):
             else:
                 self._pressure_curves[i].setData(t, y_all[start:])
             ly = float(y_all[-1])
+            self._pressure_label_y[i] = ly
             self._update_end_label(
                 self._pressure_labels[i], self._last_pressure_text, i,
-                f"{ly:.2f} bar ", lx, ly,
+                f"{ly:.2f} bar ",
             )
+        if has_data:
+            self._layout_end_labels(self._pressure_labels, self._pressure_label_y,
+                                    self._vb_pressure, lx - 0.1)
 
     @staticmethod
     def _px_scale(vb: pg.ViewBox) -> tuple[float, float]:

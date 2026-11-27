@@ -472,10 +472,7 @@ class PLCWrite(QObject):
         before = self._client.db_read(self._db_number, offset, 1) if verify else None  # type: ignore
 
         try:
-            self._client.write_area(  # type: ignore
-                Area.DB, self._db_number, offset * 8 + bit,
-                bytearray([1 if value else 0]), WordLen.Bit,
-            )
+            self._write_bit_raw(offset, bit, value)
         except Exception as exc:
             if not self._client or not self._client.get_connected():
                 raise  # mất kết nối -> để _dispatch retry
@@ -493,6 +490,10 @@ class PLCWrite(QObject):
         set_bool(expected, 0, bit, value)
         after = self._client.db_read(self._db_number, offset, 1)  # type: ignore
         ok = after[0] == expected[0]
+        if ok and expected[0] == before[0]:  # type: ignore
+            # Bit đã có sẵn giá trị này → chưa chứng minh được lệnh ghi có tác dụng.
+            # Chưa kết luận, lần ghi BOOL sau (có làm đổi bit) sẽ kiểm tra lại.
+            return True
         self._bit_write_supported = ok
         if not ok:
             # Khôi phục các bit khác bị ghi sai
@@ -505,6 +506,40 @@ class PLCWrite(QObject):
             )
         # FAIL: byte đã được khôi phục đúng giá trị mong muốn -> coi như đã ghi xong
         return True
+
+    def _write_bit_raw(self, offset: int, bit: int, value: bool) -> None:
+        """
+        Ghi 1 bit DBx.offset.bit qua S7 (transport size BIT).
+
+        python-snap7 3.0.0 (s7protocol.build_write_request) ghi trường độ dài của
+        data item = len(data) * 8 = 8 bit cho cả WordLen.Bit, trong khi giao thức S7
+        yêu cầu = 1 bit khi ghi 1 bit → PLC báo "Data type inconsistent (0x07)".
+        → Dựng gói bằng chính build_write_request của thư viện rồi sửa đúng trường
+          độ dài thành 1 (giống thư viện snap7 bản C).
+        """
+        client = self._client
+        proto  = getattr(client, "protocol", None)
+        send   = getattr(client, "_send_receive", None)
+        to_s7  = getattr(client, "_map_area", None)
+        if proto is None or send is None or to_s7 is None:
+            # Client không phải bản pure-python (VD snap7 bản C) → API chuẩn đã đúng
+            client.write_area(  # type: ignore
+                Area.DB, self._db_number, offset * 8 + bit,
+                bytearray([1 if value else 0]), WordLen.Bit,
+            )
+            return
+
+        from snap7.datatypes import S7WordLen
+        req = bytearray(proto.build_write_request(
+            area=to_s7(Area.DB), db_number=self._db_number,
+            start=offset * 8 + bit, word_len=S7WordLen.BIT,
+            data=bytes([1 if value else 0]),
+        ))
+        # Data section ở cuối gói: [0x00][transport 0x03][độ dài bit: 2 byte][giá trị]
+        if req[-4] != 0x03:
+            raise RuntimeError(f"Unexpected S7 bit-write layout: {req.hex()}")
+        req[-3:-1] = (1).to_bytes(2, "big")
+        proto.check_write_response(send(bytes(req)))
 
     def _write_value(self, name: str, value: Any):
         """Ghi REAL, INT, DINT, STRING."""

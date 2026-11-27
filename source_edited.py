@@ -1139,17 +1139,21 @@ class StrikeMachine(QMainWindow):
         self._history_flush_timer.start()
 
 
+        # Đồng hồ & bộ đếm giờ tick 250 ms (chỉ vẽ lại khi số giây đổi).
+        # Tick 1000 ms + sai số QTimer (~5-10%) làm số giây hiển thị bị nhảy
+        # (VD 00:00:05 -> 00:00:07) vì có lúc 2 tick rơi vào 2 giây cách nhau.
+        self._last_clock_s = None
         self.datetime_timer = QTimer(self)
         self.all_timer.append(self.datetime_timer)
         self.datetime_timer.timeout.connect(self.update_clock)
-        self.datetime_timer.start(1000)
+        self.datetime_timer.start(250)
         self.update_clock()
 
         self._init_run_time()
         self.run_time_timer = QTimer(self)
         self.all_timer.append(self.run_time_timer)
         self.run_time_timer.timeout.connect(self._update_run_time)
-        self.run_time_timer.start(1000)
+        self.run_time_timer.start(250)
         
         self.data_training_ai_timer = QTimer(self)
         self.all_timer.append(self.data_training_ai_timer)
@@ -1493,6 +1497,8 @@ class StrikeMachine(QMainWindow):
             self.ui.stacked_cel_fah_temp_a_5,
             self.ui.stacked_cel_fah_temp_a_6,
             self.ui.stacked_cel_fah_temp_a_7,
+            self.ui.stacked_cel_fah_temp_a_8,
+            self.ui.stacked_cel_fah_temp_a_9,
 
             self.ui.stacked_cel_fah_temp_b_1,
             self.ui.stacked_cel_fah_temp_b_2,
@@ -1501,6 +1507,8 @@ class StrikeMachine(QMainWindow):
             self.ui.stacked_cel_fah_temp_b_5,
             self.ui.stacked_cel_fah_temp_b_6,
             self.ui.stacked_cel_fah_temp_b_7,
+            self.ui.stacked_cel_fah_temp_b_8,
+            self.ui.stacked_cel_fah_temp_b_9,
 
             self.ui.stacked_cel_fah_temp_c_1,
             self.ui.stacked_cel_fah_temp_c_2,
@@ -1508,7 +1516,9 @@ class StrikeMachine(QMainWindow):
             self.ui.stacked_cel_fah_temp_c_4,
             self.ui.stacked_cel_fah_temp_c_5,
             self.ui.stacked_cel_fah_temp_c_6,
-            self.ui.stacked_cel_fah_temp_c_7
+            self.ui.stacked_cel_fah_temp_c_7,
+            self.ui.stacked_cel_fah_temp_c_8,
+            self.ui.stacked_cel_fah_temp_c_9
         ]
 
     def _create_charts(self):
@@ -1642,6 +1652,7 @@ class StrikeMachine(QMainWindow):
     ###########################################################################################
     #############################------ Button Function Setup ------###########################
     def _setup_btn_signals(self):
+        # Duration = 1 ms → expand/collapse gần như tức thì (thư viện bỏ qua giá trị 0)
         self.ui.left_side_menu_widget.customizeQCustomSlideMenu(
             defaultWidth = 70,
             defaultHeight = "parent",
@@ -1649,11 +1660,11 @@ class StrikeMachine(QMainWindow):
             collapsedHeight = "parent",
             expandedWidth = 175,
             expandedHeight = "parent",
-            animationDuration = 200,
+            animationDuration = 1,
             animationEasingCurve = QEasingCurve.Linear,  # type: ignore
-            collapsingAnimationDuration = 200,
+            collapsingAnimationDuration = 1,
             collapsingAnimationEasingCurve = QEasingCurve.Linear,  # type: ignore
-            expandingAnimationDuration = 200,
+            expandingAnimationDuration = 1,
             expandingAnimationEasingCurve = QEasingCurve.Linear,  # type: ignore
         )
         self.ui.open_side_menu_btn.clicked.connect(self._on_menu_toggle)
@@ -1723,6 +1734,10 @@ class StrikeMachine(QMainWindow):
         self.ui.export_all_tables_to_excel_btn.clicked.connect(self.export_all_tables_to_excel_btn)
         self.ui.list_history_2.verticalScrollBar().valueChanged.connect(self._on_search_scroll)
         self.ui.stackedWidget_2.currentChanged.connect(self._on_main_page_changed)
+        # Chart nằm ở menu_page → rời trang này thì dừng render (data vẫn append)
+        self.ui.stackedWidget_2.currentChanged.connect(
+            lambda i: setattr(self, "_charts_paused",
+                              self.ui.stackedWidget_2.widget(i) is not self.ui.menu_page))
 
         # NOTE (refactor): Trước đây ở đây có 1 dict `spinbox_map` trỏ tới 47 hàm
         # on_*_changed riêng lẻ (~90 dòng lặp theo pattern group A/B/C). Toàn bộ
@@ -2590,36 +2605,7 @@ class StrikeMachine(QMainWindow):
         webbrowser.open("https://www.techlinksilicones.com/")
 
     def _on_menu_toggle(self):
-        charts = [
-            self.chart_temp,
-            self.chart_pressure_a,
-            self.chart_pressure_b,
-            self.chart_pressure_c,
-        ]
-
-        on_chart_page = self.ui.stackedWidget_2.currentIndex() == 0
-
-        if on_chart_page:
-            self._pause_charts()
-            for c in charts:
-                c.hide()
-
         self.ui.left_side_menu_widget.slideMenu()
-
-        def _restore():
-            if on_chart_page:
-                for c in charts:
-                    c.show()
-                self._resume_charts()
-
-        QTimer.singleShot(250, _restore)
-        
-    def _pause_charts(self):
-        """Chỉ dừng render, data vẫn được append để chart không bị hụt đoạn"""
-        self._charts_paused = True
-
-    def _resume_charts(self):
-        self._charts_paused = False
 
     def home_page_btn(self):
         if self.user == True:
@@ -3836,7 +3822,7 @@ class StrikeMachine(QMainWindow):
     # ── Lưu trữ alarm (SQLite: DB_address/alarm.db, cùng thư mục history.db) ──
     # Bảng list_alarm hiển thị LỊCH SỬ alarm: mới nhất ở trên cùng, cột No. là
     # số thứ tự của alarm (id trong DB, tăng dần theo thời điểm phát sinh),
-    # KHÔNG phải số thứ tự hàng. Alarm hết lỗi vẫn giữ trong bảng (chữ xám).
+    # KHÔNG phải số thứ tự hàng. Alarm hết lỗi vẫn giữ trong bảng (cột Type xám).
     _ALARM_RESOLVED_COLOR = "#94A3B8"
 
     def _init_alarm_database(self):
@@ -3910,12 +3896,14 @@ class StrikeMachine(QMainWindow):
             self._mark_alarm_row_resolved(row, cleared_at)
 
     def _mark_alarm_row_resolved(self, row: int, cleared_at: str):
+        """Alarm đã hết lỗi: chỉ làm xám cột Type (các cột khác giữ màu bình thường)."""
         table = self.ui.list_alarm
-        color = QColor(self._ALARM_RESOLVED_COLOR)
+        type_item = table.item(row, 2)
+        if type_item is not None:
+            type_item.setForeground(QColor(self._ALARM_RESOLVED_COLOR))
         for col in range(table.columnCount()):
             item = table.item(row, col)
             if item is not None:
-                item.setForeground(color)
                 item.setToolTip(f"Resolved: {cleared_at}")
 
     def _find_alarm_row(self, alarm_id) -> int:
@@ -5171,7 +5159,11 @@ class StrikeMachine(QMainWindow):
             )
 
     def update_clock(self):
-        self.ui.date_displ.setDateTime(QDateTime.currentDateTime())
+        now = QDateTime.currentDateTime()
+        sec = now.toSecsSinceEpoch()
+        if sec != self._last_clock_s:          # chỉ vẽ lại khi sang giây mới
+            self._last_clock_s = sec
+            self.ui.date_displ.setDateTime(now)
 
     # ---------------- Run time / Heat up time ----------------
     _RUN_TIME_SAVE_S = 60      # chu kỳ lưu Total Run Time vào settings.ini
@@ -5211,9 +5203,13 @@ class StrikeMachine(QMainWindow):
                 if now - self._last_run_save >= self._RUN_TIME_SAVE_S:
                     self._save_run_time()
 
+            def _set(widget, text):             # tick 250 ms -> chỉ setText khi chữ đổi
+                if widget.text() != text:
+                    widget.setText(text)
+
             total_s = self._total_run_s + (self._since_start_s if self._run_start is not None else 0)
-            self.ui.total_run_time_val.setText(fmt_hm(total_s))
-            self.ui.since_start_time_val.setText(fmt_hms(self._since_start_s))
+            _set(self.ui.total_run_time_val, fmt_hm(total_s))
+            _set(self.ui.since_start_time_val, fmt_hms(self._since_start_s))
 
             # Heat Up Time: đếm từ lúc bật gia nhiệt đến khi nhiệt độ PV đạt Temp Setting
             with self._data_lock:
@@ -5248,7 +5244,7 @@ class StrikeMachine(QMainWindow):
                         if sv and sv > 0 and all(p is not None for p in pvs) \
                                 and min(pvs) >= sv - self._HEAT_UP_TOL_C:  # type: ignore
                             state[1] = True     # đã đạt nhiệt -> dừng đếm
-                widget.setText(fmt_hms(state[2]))
+                _set(widget, fmt_hms(state[2]))
         except Exception as e:
             self.logger.error(f"[Main]-[_update_run_time]: Error occurred - {str(e)}")
 
