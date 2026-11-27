@@ -910,7 +910,7 @@ QPushButton:pressed{
            <item>
             <widget class="QStackedWidget" name="stackedWidget_2">
              <property name="currentIndex">
-              <number>2</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="temp_press_page">
               <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -17925,7 +17925,7 @@ QFrame:hover {
                        <property name="frameShape">
                         <enum>QFrame::NoFrame</enum>
                        </property>
-                       <layout class="QVBoxLayout" name="verticalLayout_24" stretch="4,0">
+                       <layout class="QVBoxLayout" name="verticalLayout_24" stretch="4,7">
                         <property name="spacing">
                          <number>5</number>
                         </property>
@@ -18083,7 +18083,7 @@ QLineEdit:focus {
                                <property name="title">
                                 <string>Connection Settings</string>
                                </property>
-                               <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,0,0,0,0,0" columnstretch="0,0">
+                               <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1,1,1,1,1" columnstretch="0,0">
                                 <property name="leftMargin">
                                  <number>10</number>
                                 </property>

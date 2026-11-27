@@ -52,7 +52,7 @@ from PLC_READ_MODULE import PLCRead, PLCReadBlock
 from PLC_WRITE_MODULE import PLCWrite
 from SERIAL_READ_MODULE import HYFWSerialRead
 from export_excel_worker import ExportWorker
-from db_layout_parser import parse_db_layout
+from db_layout_parser import parse_db_layout, DTYPE_SIZE
 from LogFileHandler import MonthlyRotatingFileHandler
 
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
@@ -102,7 +102,7 @@ SIMULATE = (get_exe_dir() / "simulate.txt").is_file()
 PLC_SIM = (get_exe_dir() / "plcsim.txt").is_file()
 
 EXCEL_PASSWORD = 'tl@12345'
-PLC_STRING_MAX_CHARS = 50   # độ dài tối đa của tag STRING trong DB (Alarm_Info = String[50])
+PLC_STRING_MAX_CHARS = 254  # độ dài tối đa của tag STRING trong DB (Alarm_Info = String[254])
 
 EXPECTED_ROW_NAMES = [
     "Cycle Setting",
@@ -174,6 +174,11 @@ SPINBOX_PLC_MAP = {
     "ct_t1_offset_value":   ("P3_Temp1Offset",  "fah_to_cel"),
     "ct_t2_offset_value":   ("P3_Temp2Offset",  "fah_to_cel"),
     "ct_t3_offset_value":   ("P3_Temp3Offset",  "fah_to_cel"),
+
+    # ── Tube (heater) limit ───────────────────────────────────────────────────
+    "at_tube_sv":           ("P1_TempLimitHeater", "fah_to_cel"),
+    "bt_tube_sv":           ("P2_TempLimitHeater", "fah_to_cel"),
+    "ct_tube_sv":           ("P3_TempLimitHeater", "fah_to_cel"),
 }
 
 TEMP_SV_MIRROR = {
@@ -355,6 +360,7 @@ class StrikeMachine(QMainWindow):
         self._init_list_unit()
         self._create_charts()
         self._init_history_database()
+        self._init_alarm_database()
         self._init_table_list_history()
         self._paint_pv_obj("#E53935")
         self._paint_sv_obj("#43A047")
@@ -772,6 +778,10 @@ class StrikeMachine(QMainWindow):
             self.app_settings.setValue("plc_write_time", db_dict["write_time"])
             self.app_settings.sync()
 
+        # Không đọc tag Spare + thu gọn vùng đọc theo tag thực dùng
+        db_dict["DB_LAYOUT"] = [t for t in db_dict["DB_LAYOUT"] if not t[0].lower().startswith("spare")]
+        self._shrink_read_regions(db_dict)
+
         if PLC_SIM:
             db_dict["ip_plc"] = "172.16.100.50"
 
@@ -787,6 +797,43 @@ class StrikeMachine(QMainWindow):
 
         self.db_dict = db_dict
         self._gui_update_connection_group(stk_mch_file)
+
+    @staticmethod
+    def _shrink_read_regions(db_dict: dict) -> None:
+        """
+        Tính lại [offset, size) từng vùng đọc CHỈ theo tag thực dùng (đã bỏ Spare).
+
+        PLC PDU 240 → mỗi request tối đa 222 byte; vùng lớn hơn bị snap7 tách
+        thành nhiều request. Bỏ byte Spare ở đầu/cuối vùng giúp vùng vừa 1
+        request (VD INPUT 252 B → 212 B).
+        Tag ACTUAL nằm SAU vùng ERROR (nếu có) → tách thành vùng ACTUAL_2.
+        """
+        def tag_end(dt: str, off: int) -> int:
+            return off + (2 + PLC_STRING_MAX_CHARS if dt == "STRING" else DTYPE_SIZE.get(dt, 1))
+
+        region_of = {n: rg for rg, names in db_dict["DB_REGIONS"].items() for n in names}
+        spans: dict[str, list[tuple[int, int]]] = {}
+        for n, dt, off, _ in db_dict["DB_LAYOUT"]:
+            spans.setdefault(region_of.get(n), []).append((off, tag_end(dt, off)))
+
+        def apply(k_off: str, k_size: str, sp: list[tuple[int, int]]) -> None:
+            if sp:
+                start = min(s for s, _ in sp)
+                db_dict[k_off], db_dict[k_size] = start, max(e for _, e in sp) - start
+
+        apply("offsets_input", "input_size", spans.get("INPUT", []))
+        apply("offsets_error", "error_size", spans.get("ERROR", []))
+
+        err_start = db_dict["offsets_error"]
+        err_end   = err_start + db_dict["error_size"]
+        actual    = spans.get("ACTUAL", [])
+        has_error = bool(spans.get("ERROR"))
+        main = [sp for sp in actual if not has_error or sp[0] < err_start]
+        ext  = [sp for sp in actual if has_error and sp[0] >= err_end]
+        apply("offsets_data", "data_size", main)
+
+        db_dict["offsets_data_2"] = min(s for s, _ in ext) if ext else 0
+        db_dict["data_size_2"]    = (max(e for _, e in ext) - db_dict["offsets_data_2"]) if ext else 0
 
     def _read_protected_excel(self, path, password=None, sheet_name=None):
         df_dict = None
@@ -969,6 +1016,9 @@ class StrikeMachine(QMainWindow):
             "Out_Heat2", "Out_Valve2_IN", "Out_Valve2_OUT", "Out_Valve2_OIL",
             "Out_Heat3", "Out_Valve3_IN", "Out_Valve3_OUT", "Out_Valve3_OIL",
 
+            "P1_Current_TempHeater", "P2_Current_TempHeater", "P3_Current_TempHeater",
+            "P1_TempLimitHeater", "P2_TempLimitHeater", "P3_TempLimitHeater",
+
             "P1_Current_Air_FillingTime", "P1_Current_Air_HoldingTime", "P1_Current_Air_ReleaseTime",
             "P1_Current_Oil_End_Time", "P1_Current_Oil_Start_Time", "P1_Current_PressureHose",
             "P1_Current_PressureITV", "P1_Current_Temp1", "P1_Current_Temp2", "P1_Current_Temp3",
@@ -1048,12 +1098,11 @@ class StrikeMachine(QMainWindow):
     def _init_timer(self):
         self.all_timer = []
 
-        # Đồng bộ nút Start/Stop & Heat T0 theo PLC: chạy trong _data_input (xem _is_start_checked)
-
-        # Data PLC (INPUT / ACTUAL / ERROR) được xử lý ngay khi luồng PLC Read emit data
-        # -> xem _data_input / _data_actual / _data_error. Không dùng timer đọc lại cache nữa.
         self._last_group_update = 0.0
         self._last_actual_alarm = (None, None)
+        self._alarm_err_seq = 0          # số lần đã nhận dữ liệu vùng ERROR
+        self._alarm_pending = None       # (err_seq lúc Bit_Alarm bật, token) khi đang chờ Alarm_Info
+        self._alarm_pending_token = 0
 
         self.data_table = QTimer(self)
         self.all_timer.append(self.data_table)
@@ -1115,7 +1164,6 @@ class StrikeMachine(QMainWindow):
     def _render_all_charts(self) -> None:
         """
         Render tuần tự 4 chart trong 1 lần gọi.
-        Adaptive FPS: tự giảm xuống 5Hz nếu render > 80ms. (Loại bỏ)
         """
         if self._charts_paused:
             return
@@ -1279,6 +1327,9 @@ class StrikeMachine(QMainWindow):
             self.ui.ct_l_alm_value
         )
 
+        self.tube_pv_obj = (self.ui.at_tube_pv, self.ui.bt_tube_pv, self.ui.ct_tube_pv)
+        self.tube_sv_obj = (self.ui.at_tube_sv, self.ui.bt_tube_sv, self.ui.ct_tube_sv)
+
         self.temp_offset_obj = (
             self.ui.t0_offset_value,
             self.ui.at_t1_offset_value,
@@ -1389,7 +1440,7 @@ class StrikeMachine(QMainWindow):
         )
 
     def _paint_pv_obj(self, color):
-        for obj in self.pressure_a_pv_obj + self.pressure_b_pv_obj + self.pressure_c_pv_obj + self.temp_pv_obj:
+        for obj in self.pressure_a_pv_obj + self.pressure_b_pv_obj + self.pressure_c_pv_obj + self.temp_pv_obj + self.tube_pv_obj:
             obj.setStyleSheet(f"""
                 QDoubleSpinBox {{
                     color: {color};}}
@@ -1397,7 +1448,8 @@ class StrikeMachine(QMainWindow):
                     color: {color};}}""")
             
     def _paint_sv_obj(self, color):
-        for obj in self.pressure_a_sv_obj + self.pressure_b_sv_obj + self.pressure_c_sv_obj + self.temp_offset_obj + self.temp_h_alm_obj + self.temp_l_alm_obj + self.temp_sv_obj:
+        for obj in self.pressure_a_sv_obj + self.pressure_b_sv_obj + self.pressure_c_sv_obj\
+              + self.temp_offset_obj + self.temp_h_alm_obj + self.temp_l_alm_obj + self.temp_sv_obj + self.tube_sv_obj:
             obj.setStyleSheet(f"""
                 QDoubleSpinBox {{
                     color: {color};}}
@@ -2674,7 +2726,8 @@ class StrikeMachine(QMainWindow):
                     ("INPUT",  self.db_dict["offsets_input"], self.db_dict["input_size"], self.db_dict["input_read"]),
                     ("ACTUAL", self.db_dict["offsets_data"],  self.db_dict["data_size"],  self.db_dict["data_read"]),
                     ("ERROR",  self.db_dict["offsets_error"], self.db_dict["error_size"], self.db_dict["error_read"]),
-                ],
+                ] + ([("ACTUAL_2", self.db_dict["offsets_data_2"], self.db_dict["data_size_2"], self.db_dict["data_read"])]
+                     if self.db_dict.get("data_size_2") else []),
                 logger_parent=self.stk_mch_folder
             ):
             if self._current_lang == "en":
@@ -2756,6 +2809,10 @@ class StrikeMachine(QMainWindow):
             self._data_actual(data)
         elif region == "ERROR":
             self._data_error(data)
+        elif region == "ACTUAL_2":
+            with self._data_lock:
+                self.actual_data.update(data)
+            self._tube_data_filter(data)
 
     def _on_plc_read_error(self, message: str):
         self.logger.warning("PLC Read error: %s", message)
@@ -2794,6 +2851,7 @@ class StrikeMachine(QMainWindow):
             self._heat_data_filter(snapshot)
             self._valve_data_filter(snapshot)
             self._oil_data_filter(snapshot)
+            self._tube_data_filter(snapshot)   # Px_Current_TempHeater (nay nằm trong vùng ACTUAL)
             self._cycle_btn_filter()
 
     def _data_input(self, data: dict, read_ts: float):
@@ -2809,6 +2867,7 @@ class StrikeMachine(QMainWindow):
     def _data_error(self, data: dict):
         with self._data_lock:
             self.error_data.update(data)
+        self._alarm_err_seq += 1
         self._data_alarm()
 
     def _mapping_actual_data(self):
@@ -3003,7 +3062,18 @@ class StrikeMachine(QMainWindow):
             return
 
         date_str = time.strftime("%Y%m%d")
-        file_path = self.ai_data_folder / f"ai_{date_str}.csv"
+        if getattr(self, "_ai_csv_date", None) != date_str:
+            # File trong ngày có header khác schema hiện tại -> ghi sang ai_YYYYMMDD_v2.csv, _v3...
+            file_path = self.ai_data_folder / f"ai_{date_str}.csv"
+            n = 1
+            while file_path.exists():
+                with open(file_path, newline='', encoding='utf-8') as f:
+                    if next(csv.reader(f), None) == self._ai_expected_keys:
+                        break
+                n += 1
+                file_path = self.ai_data_folder / f"ai_{date_str}_v{n}.csv"
+            self._ai_csv_date, self._ai_csv_path = date_str, file_path
+        file_path = self._ai_csv_path
         file_exists = file_path.exists()
 
         try:
@@ -3154,6 +3224,11 @@ class StrikeMachine(QMainWindow):
                     self.for_display_temp(float(data.get('T0_TempLimitLOW', 0.0))),
                     self.for_display_temp(float(data.get('T0_TempOffset', 0.0)))
                 ])
+                for tag, obj in zip(("P1_TempLimitHeater", "P2_TempLimitHeater", "P3_TempLimitHeater"),
+                                    self.tube_sv_obj):
+                    obj.blockSignals(True)
+                    obj.setValue(self.for_display_temp(float(data.get(tag, 0.0))))
+                    obj.blockSignals(False)
                 self.init_signal = False
                 return
             
@@ -3271,9 +3346,15 @@ class StrikeMachine(QMainWindow):
         if groups:
             self.add_row_to_list_history(self.ui.code_display.text(), groups)
 
-    def _data_alarm(self):
+    def _data_alarm(self, timeout_token=None):
         """Bit_Alarm + Alarm_Info. Thường Bit_Alarm ở vùng ACTUAL, Alarm_Info ở vùng ERROR,
-        nhưng tuỳ nhãn vùng trong file DB mà tag có thể rơi vào vùng còn lại -> tìm ở cả 2."""
+        nhưng tuỳ nhãn vùng trong file DB mà tag có thể rơi vào vùng còn lại -> tìm ở cả 2.
+
+        Bit_Alarm (ACTUAL, ~100 ms) thường về TRƯỚC Alarm_Info (ERROR, ~1500 ms). Nếu ghi
+        alarm ngay lúc Bit_Alarm bật thì nội dung là "PLC Alarm" hoặc nội dung CŨ của lỗi
+        trước, rồi khi Alarm_Info về lại sinh thêm 1 dòng → lịch sử bị dòng thừa/sai.
+        → Khi Bit_Alarm vừa bật: chờ lần đọc vùng ERROR kế tiếp rồi mới ghi; quá thời gian
+          chờ (error_read + 1 s) thì vẫn ghi với nội dung đang có để không bỏ sót lỗi."""
         def _get(tag, default):
             if tag in self.actual_data:
                 return self.actual_data[tag]
@@ -3282,12 +3363,31 @@ class StrikeMachine(QMainWindow):
             with self._data_lock:
                 bit_alarm = bool(_get('Bit_Alarm', False))
                 alarm_text = str(_get('Alarm_Info', '') or '').strip()
-            # Chỉ báo động khi Bit_Alarm = True, ngược lại xoá alarm PLC
-            if bit_alarm:
-                content = alarm_text or "PLC Alarm"
-            else:
-                content = ""
-            self._raise_alarm("PLC", ALARM_ERROR, content)
+                info_in_actual = 'Alarm_Info' in self.actual_data
+
+            if not bit_alarm:
+                self._alarm_pending = None
+                self._raise_alarm("PLC", ALARM_ERROR, "")
+                return
+
+            if "PLC" not in self._alarm_active_rows and not info_in_actual:
+                if self._alarm_pending is None:
+                    # Bit_Alarm vừa bật → bắt đầu chờ Alarm_Info mới
+                    self._alarm_pending_token += 1
+                    token = self._alarm_pending_token
+                    self._alarm_pending = (self._alarm_err_seq, token)
+                    db = getattr(self, "db_dict", None) or {}
+                    wait_ms = int(db.get("error_read", 1500)) + 1000
+                    QTimer.singleShot(wait_ms, self, lambda t=token: self._data_alarm(timeout_token=t))
+                    return
+                seq0, token = self._alarm_pending
+                fresh = self._alarm_err_seq > seq0          # đã có lần đọc ERROR sau khi bit bật
+                timed_out = timeout_token == token
+                if not (fresh or timed_out):
+                    return
+
+            self._alarm_pending = None
+            self._raise_alarm("PLC", ALARM_ERROR, alarm_text or "PLC Alarm")
         except Exception as e:
             self.logger.error("[Main]-[_data_alarm]:PLC Data Processing Error: %s", e)
 
@@ -3719,6 +3819,13 @@ class StrikeMachine(QMainWindow):
             self.ui.bt_pv.setValue(v)
             self._last_bt = v
 
+    def _tube_data_filter(self, data: dict):
+        """Px_Current_TempHeater -> at/bt/ct_tube_pv"""
+        for tag, obj in zip(("P1_Current_TempHeater", "P2_Current_TempHeater", "P3_Current_TempHeater"),
+                            self.tube_pv_obj):
+            if tag in data:
+                obj.setValue(round(self.for_display_temp(float(data[tag])), 2))
+
     def _ct_data_filter(self, list_group_ct_recv):
         v = round(self.for_display_temp(
             (list_group_ct_recv[0]+list_group_ct_recv[1]+list_group_ct_recv[2])/3), 2)
@@ -3726,83 +3833,189 @@ class StrikeMachine(QMainWindow):
             self.ui.ct_pv.setValue(v)
             self._last_ct = v
 
-    def _raise_alarm(self, source: str, alarm_type: str, content: str):
-        if not content:
-            self._clear_alarm(source)
-            return
+    # ── Lưu trữ alarm (SQLite: DB_address/alarm.db, cùng thư mục history.db) ──
+    # Bảng list_alarm hiển thị LỊCH SỬ alarm: mới nhất ở trên cùng, cột No. là
+    # số thứ tự của alarm (id trong DB, tăng dần theo thời điểm phát sinh),
+    # KHÔNG phải số thứ tự hàng. Alarm hết lỗi vẫn giữ trong bảng (chữ xám).
+    _ALARM_RESOLVED_COLOR = "#94A3B8"
 
-        item = self._alarm_active_rows.get(source)
-        if item is not None:
-            row = item.row()
-            content_item = self.ui.list_alarm.item(row, 4) if row >= 0 else None
-            if content_item is not None and content_item.text() == content:
+    def _init_alarm_database(self):
+        db_folder = Path(self.stk_mch_folder) / "DB_address"
+        db_folder.mkdir(parents=True, exist_ok=True)
+        self.alarm_db_path = db_folder / "alarm.db"
+        self.alarm_conn = None
+        try:
+            conn = sqlite3.connect(str(self.alarm_db_path), check_same_thread=False)
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("PRAGMA synchronous=NORMAL")
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS alarm (
+                    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                    raised_at  TEXT NOT NULL,
+                    source     TEXT NOT NULL,
+                    type       TEXT NOT NULL,
+                    content    TEXT NOT NULL,
+                    cleared_at TEXT
+                )
+            """)
+            # Alarm còn mở từ phiên chạy trước → đóng lại tại thời điểm khởi động
+            # (nếu lỗi vẫn còn, PLC/worker sẽ báo lại thành alarm mới)
+            conn.execute("UPDATE alarm SET cleared_at = ? WHERE cleared_at IS NULL",
+                         (time.strftime("%Y-%m-%d %H:%M:%S"),))
+            conn.commit()
+            self.alarm_conn = conn
+        except Exception as e:
+            self.logger.error("[Alarm DB] Init error: %s", e)
+        self._load_alarm_history()
+
+    def _load_alarm_history(self):
+        """Nạp lại bảng từ DB: _alarm_row_limit alarm mới nhất, mới nhất ở trên."""
+        table = self.ui.list_alarm
+        table.setUpdatesEnabled(False)
+        try:
+            table.setRowCount(0)
+            if self.alarm_conn is None:
                 return
-            # Nội dung alarm thay đổi → xoá dòng cũ, thêm dòng mới
-            self._clear_alarm(source)
+            rows = self.alarm_conn.execute(
+                "SELECT id, raised_at, source, type, content, cleared_at "
+                "FROM alarm ORDER BY id DESC LIMIT ?", (self._alarm_row_limit,)
+            ).fetchall()
+            for r in rows:
+                self._insert_alarm_row(table.rowCount(), *r)
+        except Exception as e:
+            self.logger.error("[Alarm DB] Load error: %s", e)
+        finally:
+            table.setUpdatesEnabled(True)
 
-        # self.logger.error("[ALARM][%s]: %s", source, content)
-        self._alarm_active_rows[source] = self._add_alarm_row(source, alarm_type, content)
-        self._update_alarm_badge()
-
-    def _clear_alarm(self, source: str):
-        item = self._alarm_active_rows.pop(source, None)
-        if item is None:
-            return
-        alarm_type = ""
-        row = item.row()
-        if row >= 0:
-            type_item = self.ui.list_alarm.item(row, 2)
-            alarm_type = type_item.text() if type_item else ""
-            self.ui.list_alarm.removeRow(row)
-            self._renumber_alarm_rows()
-        # self.logger.info("[ALARM][%s]: Resolved", source)
-        self._flush_alarm_to_file(source, alarm_type, "(resolved)", event="CLEAR")
-        self._update_alarm_badge()
-
-    def _renumber_alarm_rows(self):
+    def _insert_alarm_row(self, row: int, alarm_id, raised_at: str, source: str,
+                          alarm_type: str, content: str, cleared_at=None):
         table = self.ui.list_alarm
-        for row in range(table.rowCount()):
-            item = table.item(row, 0)
-            if item is None:
-                item = QTableWidgetItem()
-                table.setItem(row, 0, item)
-            item.setText(str(row + 1))
+        table.insertRow(row)
 
-    def _update_alarm_badge(self):
-        """Badge chỉ đếm alarm khác Warning (Warning vẫn hiện trong bảng + ghi file)"""
-        table = self.ui.list_alarm
-        count = 0
-        for item in self._alarm_active_rows.values():
-            row = item.row()
-            type_item = table.item(row, 2) if row >= 0 else None
-            if type_item is None or type_item.text() != ALARM_WARNING:
-                count += 1
-        self._alarm_badge.set_count(count)
-
-    def _add_alarm_row(self, source: str, alarm_type: str, content: str):
-        table = self.ui.list_alarm
-
-        table.insertRow(0)
-        no_item = QTableWidgetItem()
+        no_item = QTableWidgetItem("-" if alarm_id is None else str(alarm_id))
+        no_item.setData(Qt.ItemDataRole.UserRole, alarm_id)
         type_item = QTableWidgetItem(alarm_type)
         type_item.setForeground(QColor(ALARM_TYPE_COLORS.get(alarm_type, "#000000")))
         type_font = type_item.font()
         type_font.setBold(True)
         type_item.setFont(type_font)
 
-        table.setItem(0, 0, no_item)                                        # No.
-        table.setItem(0, 1, QTableWidgetItem(source))                       # Name.
-        table.setItem(0, 2, type_item)                                      # Type.
-        table.setItem(0, 3, QTableWidgetItem(time.strftime("%H:%M:%S")))   # Time.
-        table.setItem(0, 4, QTableWidgetItem(content))                      # Content
+        table.setItem(row, 0, no_item)                       # No.
+        table.setItem(row, 1, QTableWidgetItem(source))      # Name.
+        table.setItem(row, 2, type_item)                     # Type.
+        table.setItem(row, 3, QTableWidgetItem(raised_at))   # Time.
+        table.setItem(row, 4, QTableWidgetItem(content))     # Content
 
+        if cleared_at:
+            self._mark_alarm_row_resolved(row, cleared_at)
+
+    def _mark_alarm_row_resolved(self, row: int, cleared_at: str):
+        table = self.ui.list_alarm
+        color = QColor(self._ALARM_RESOLVED_COLOR)
+        for col in range(table.columnCount()):
+            item = table.item(row, col)
+            if item is not None:
+                item.setForeground(color)
+                item.setToolTip(f"Resolved: {cleared_at}")
+
+    def _find_alarm_row(self, alarm_id) -> int:
+        table = self.ui.list_alarm
+        for row in range(table.rowCount()):
+            item = table.item(row, 0)
+            if item is not None and item.data(Qt.ItemDataRole.UserRole) == alarm_id:
+                return row
+        return -1
+
+    def _raise_alarm(self, source: str, alarm_type: str, content: str):
+        if not content:
+            self._clear_alarm(source)
+            return
+
+        active = self._alarm_active_rows.get(source)
+        if active is not None:
+            if active["content"] == content and active["type"] == alarm_type:
+                return
+            # Nội dung alarm thay đổi → đóng alarm cũ, ghi alarm mới
+            self._clear_alarm(source)
+
+        raised_at = time.strftime("%Y-%m-%d %H:%M:%S")
+        alarm_id = None
+        if self.alarm_conn is not None:
+            try:
+                cur = self.alarm_conn.execute(
+                    "INSERT INTO alarm (raised_at, source, type, content) VALUES (?, ?, ?, ?)",
+                    (raised_at, source, alarm_type, content),
+                )
+                self.alarm_conn.commit()
+                alarm_id = cur.lastrowid
+            except Exception as e:
+                self.logger.error("[Alarm DB] Insert error: %s", e)
+
+        table = self.ui.list_alarm
+        self._insert_alarm_row(0, alarm_id, raised_at, source, alarm_type, content)
         while table.rowCount() > self._alarm_row_limit:
             table.removeRow(table.rowCount() - 1)
 
-        self._renumber_alarm_rows()
-
+        self._alarm_active_rows[source] = {"id": alarm_id, "type": alarm_type, "content": content}
         self._flush_alarm_to_file(source, alarm_type, content, event="RAISE")
-        return no_item
+        self._update_alarm_badge()
+
+    def _clear_alarm(self, source: str):
+        active = self._alarm_active_rows.pop(source, None)
+        if active is None:
+            return
+        cleared_at = time.strftime("%Y-%m-%d %H:%M:%S")
+        if active["id"] is not None:
+            if self.alarm_conn is not None:
+                try:
+                    self.alarm_conn.execute("UPDATE alarm SET cleared_at = ? WHERE id = ?",
+                                            (cleared_at, active["id"]))
+                    self.alarm_conn.commit()
+                except Exception as e:
+                    self.logger.error("[Alarm DB] Update error: %s", e)
+            row = self._find_alarm_row(active["id"])
+            if row >= 0:
+                self._mark_alarm_row_resolved(row, cleared_at)
+        self._flush_alarm_to_file(source, active["type"], "(resolved)", event="CLEAR")
+        self._update_alarm_badge()
+
+    def delete_alarm_history(self):
+        """
+        Xoá lịch sử alarm (cả DB lẫn bảng) — dùng cho nút "Xoá lỗi" (chưa gán, sẽ gán khi sửa UI):
+            self.ui.<ten_nut>.clicked.connect(self.delete_alarm_history)
+
+        - Hỏi xác nhận trước khi xoá.
+        - Alarm ĐANG còn lỗi được giữ lại (nếu xoá, lỗi vẫn còn mà không thấy trên bảng).
+        - Số thứ tự (No.) tiếp tục tăng, không đánh lại từ 1.
+        """
+        titles = {"en": "Delete Alarms", "cn": "删除报警", "vn": "Xoá lỗi"}
+        texts = {
+            "en": "Delete all resolved alarms?",
+            "cn": "删除所有已解除的报警？",
+            "vn": "Xoá toàn bộ lỗi đã hết?",
+        }
+        lang = self._current_lang if self._current_lang in titles else "en"
+        if ltmessage.question(self, titles[lang], texts[lang], lang=lang) != ltmessage.Yes:  # type: ignore
+            return
+
+        if self.alarm_conn is not None:
+            try:
+                active_ids = [a["id"] for a in self._alarm_active_rows.values() if a["id"] is not None]
+                if active_ids:
+                    marks = ",".join("?" * len(active_ids))
+                    self.alarm_conn.execute(f"DELETE FROM alarm WHERE id NOT IN ({marks})", active_ids)
+                else:
+                    self.alarm_conn.execute("DELETE FROM alarm")
+                self.alarm_conn.commit()
+                self.logger.info("[Alarm DB] Alarm history deleted (kept %d active)", len(active_ids))
+            except Exception as e:
+                self.logger.error("[Alarm DB] Delete error: %s", e)
+        self._load_alarm_history()
+
+    def _update_alarm_badge(self):
+        """Badge chỉ đếm alarm đang active khác Warning (Warning vẫn hiện trong bảng + ghi file)"""
+        count = sum(1 for a in self._alarm_active_rows.values() if a["type"] != ALARM_WARNING)
+        self._alarm_badge.set_count(count)
 
     def _flush_alarm_to_file(self, source: str, alarm_type: str, content: str, event: str = "RAISE"):
         try:
@@ -4895,18 +5108,19 @@ class StrikeMachine(QMainWindow):
             self.temp_offset_obj[i].setValue(self.convert_cel_fah(self.temp_offset_obj[i].value())) # type: ignore
             self.temp_offset_obj[i].blockSignals(False)
 
-    def _set_chart_unit(self):
-        if self._current_unit == 0:
-            self.chart_temp.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_temp.set_temp_label("温度 (°C)", unit="°C")
-            self.chart_pressure_a.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_pressure_a.set_temp_label("温度 (°C)", unit="°C")
-            self.chart_pressure_b.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_pressure_b.set_temp_label("温度 (°C)", unit="°C")
-            self.chart_pressure_c.set_temp_label("Temperature (°C)", unit="°C") if self._current_lang == "en" else self.chart_pressure_c.set_temp_label("温度 (°C)", unit="°C")
+        for obj in self.tube_sv_obj + self.tube_pv_obj:
+            obj.blockSignals(True)
+            obj.setValue(self.convert_cel_fah(obj.value()))   # type: ignore
+            obj.blockSignals(False)
 
-        elif self._current_unit == 1:
-            self.chart_temp.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_temp.set_temp_label("温度 (°F)", unit="°F")
-            self.chart_pressure_a.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_pressure_a.set_temp_label("温度 (°F)", unit="°F")
-            self.chart_pressure_b.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_pressure_b.set_temp_label("温度 (°F)", unit="°F")
-            self.chart_pressure_c.set_temp_label("Temperature (°F)", unit="°F") if self._current_lang == "en" else self.chart_pressure_c.set_temp_label("温度 (°F)", unit="°F")
+    def _set_chart_unit(self):
+        if self._current_unit not in (0, 1):
+            return
+        unit = "°C" if self._current_unit == 0 else "°F"
+        name = "Temperature" if self._current_lang == "en" else "温度"
+        for chart in (self.chart_temp, self.chart_pressure_a,
+                      self.chart_pressure_b, self.chart_pressure_c):
+            chart.set_temp_label(f"{name} ({unit})", unit=unit)
     
     def for_display_temp(self, celsius):
         if self._current_unit == 1:
@@ -5298,6 +5512,12 @@ class StrikeMachine(QMainWindow):
     def _cleanup(self):
         try:
             self._save_run_time()
+        except Exception:
+            pass
+        try:
+            if getattr(self, "alarm_conn", None) is not None:
+                self.alarm_conn.close()
+                self.alarm_conn = None
         except Exception:
             pass
         for timer in getattr(self, 'all_timer', []):

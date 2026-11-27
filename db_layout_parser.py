@@ -300,6 +300,10 @@ def parse_db_layout(df: pd.DataFrame, string_max_chars: int = 50, logger=None) -
     # ---- Tính offset / size từng vùng ----
     bounds: dict[str, list[int]] = {}
     for t in tags:
+        # Tag Spare không được đọc → không dùng để xác định biên vùng
+        # (VD Spare1..10 nằm sau Alarm_Info làm vùng ACTUAL "chồng" lên ERROR)
+        if t["name"].lower().startswith("spare"):
+            continue
         end = t["byte"] + _tag_size(t["dtype"], string_max_chars)
         b = bounds.setdefault(t["region"], [t["byte"], end])
         b[0] = min(b[0], t["byte"])

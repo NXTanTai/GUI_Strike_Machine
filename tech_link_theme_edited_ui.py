@@ -9138,6 +9138,11 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.write_table_label, 2, 0, 1, 1)
 
         self.gridLayout_4.setRowStretch(0, 1)
+        self.gridLayout_4.setRowStretch(1, 1)
+        self.gridLayout_4.setRowStretch(2, 1)
+        self.gridLayout_4.setRowStretch(3, 1)
+        self.gridLayout_4.setRowStretch(4, 1)
+        self.gridLayout_4.setRowStretch(5, 1)
 
         self.verticalLayout_9.addWidget(self.connection_group)
 
@@ -9386,6 +9391,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_24.addLayout(self.horizontalLayout_63)
 
         self.verticalLayout_24.setStretch(0, 4)
+        self.verticalLayout_24.setStretch(1, 7)
 
         self.verticalLayout_27.addWidget(self.device_frame)
 
@@ -11548,7 +11554,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget_2.setCurrentIndex(2)
+        self.stackedWidget_2.setCurrentIndex(0)
         self.sys_state_stacked_wid_39.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
         self.stacked_pressure_sv_a_11.setCurrentIndex(1)
